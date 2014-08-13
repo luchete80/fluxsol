@@ -1,0 +1,401 @@
+Equation System Info
+Eqn 0
+ap : 0
+an : 
+source: 0
+Eqn 1
+ap : 0
+an : 
+source: 0
+Eqn 2
+ap : 0
+an : 
+source: 0
+Eqn 3
+ap : 0
+an : 
+source: 0
+Eqn 4
+ap : 0
+an : 
+source: 0
+Eqn 5
+ap : 0
+an : 
+source: 0
+Eqn 6
+ap : -0.2
+an : 
+source: 0
+Eqn 7
+ap : 0
+an : 
+source: 0
+Eqn 8
+ap : -0.2
+an : 
+source: 0
+Eqn 9
+ap : 0
+an : 
+source: 0
+Eqn 10
+ap : -0.2
+an : 
+source: 0
+Eqn 11
+ap : -0.2
+an : 
+source: 0
+Eqn 12
+ap : 0
+an : 
+source: 0
+Eqn 13
+ap : 0
+an : 
+source: 0
+Eqn 14
+ap : 0
+an : 
+source: 0
+Eqn 15
+ap : 0
+an : 
+source: 0
+Eqn 16
+ap : -0.4
+an : 
+source: 0
+Eqn 17
+ap : -0.2
+an : 
+source: 0
+Eqn 18
+ap : -0.2
+an : 
+source: 0
+Eqn 19
+ap : -0.2
+an : 
+source: 0
+Eqn 20
+ap : -0.2
+an : 
+source: 0
+Eqn 21
+ap : 0
+an : 
+source: 0
+Eqn 22
+ap : 0
+an : 
+source: 0
+Eqn 23
+ap : 0
+an : 
+source: 0
+Eqn 24
+ap : 0
+an : 
+source: 0
+Eqn 25
+ap : 0
+an : 
+source: 0
+Eqn 26
+ap : -0.2
+an : 
+source: -0.2
+Eqn 27
+ap : 0
+an : 
+source: 0
+Eqn 28
+ap : -0.2
+an : 
+source: -0.2
+Eqn 29
+ap : 0
+an : 
+source: 0
+Eqn 30
+ap : 0
+an : 
+source: 0
+Eqn 31
+ap : 0
+an : 
+source: 0
+Eqn 32
+ap : 0
+an : 
+source: 0
+Eqn 33
+ap : 0
+an : 
+source: 0
+Eqn 34
+ap : 0
+an : 
+source: 0
+Eqn 35
+ap : -0.2
+an : 
+source: 0
+Eqn 36
+ap : -0.4
+an : 
+source: -0.2
+Eqn 37
+ap : 0
+an : 
+source: 0
+Eqn 38
+ap : -0.2
+an : 
+source: -0.2
+Eqn 39
+ap : 0
+an : 
+source: 0
+Eqn 40
+ap : -0.2
+an : 
+source: -0.2
+Eqn 41
+ap : -0.2
+an : 
+source: 0
+Eqn 42
+ap : -0.2
+an : 
+source: 0
+Eqn 43
+ap : -0.2
+an : 
+source: 0
+Eqn 44
+ap : 0
+an : 
+source: 0
+Eqn 45
+ap : 0
+an : 
+source: 0
+Eqn 46
+ap : 0
+an : 
+source: 0
+Eqn 47
+ap : 0
+an : 
+source: 0
+Eqn 48
+ap : 0
+an : 
+source: 0
+Eqn 49
+ap : 0
+an : 
+source: 0
+Eqn 50
+ap : 0
+an : 
+source: 0
+Eqn 51
+ap : 0
+an : 
+source: 0
+Eqn 52
+ap : -0.2
+an : 
+source: 0
+Eqn 53
+ap : -0.2
+an : 
+source: 0
+Eqn 54
+ap : 0
+an : 
+source: 0
+Eqn 55
+ap : -0.2
+an : 
+source: 0
+Eqn 56
+ap : -0.2
+an : 
+source: 0
+Eqn 57
+ap : 0
+an : 
+source: 0
+Eqn 58
+ap : -0.4
+an : 
+source: 0
+Eqn 59
+ap : -0.2
+an : 
+source: 0
+Eqn 60
+ap : 0
+an : 
+source: 0
+Eqn 61
+ap : 0
+an : 
+source: 0
+Eqn 62
+ap : 0
+an : 
+source: 0
+Eqn 63
+ap : 0
+an : 
+source: 0
+Eqn 64
+ap : 0
+an : 
+source: 0
+Eqn 65
+ap : 0
+an : 
+source: 0
+Eqn 66
+ap : -0.2
+an : 
+source: 0
+Eqn 67
+ap : 0
+an : 
+source: 0
+Eqn 68
+ap : 0
+an : 
+source: 0
+Eqn 69
+ap : -0.2
+an : 
+source: 0
+Eqn 70
+ap : -0.2
+an : 
+source: 0
+Eqn 71
+ap : 0
+an : 
+source: 0
+Eqn 72
+ap : 0
+an : 
+source: 0
+Eqn 73
+ap : 0
+an : 
+source: 0
+Eqn 74
+ap : 0
+an : 
+source: 0
+Eqn 75
+ap : -0.2
+an : 
+source: -0.2
+Eqn 76
+ap : -0.4
+an : 
+source: -0.2
+Eqn 77
+ap : 0
+an : 
+source: 0
+Eqn 78
+ap : -0.2
+an : 
+source: 0
+Eqn 79
+ap : 0
+an : 
+source: 0
+Eqn 80
+ap : -0.2
+an : 
+source: 0
+Eqn 81
+ap : 0
+an : 
+source: 0
+Eqn 82
+ap : 0
+an : 
+source: 0
+Eqn 83
+ap : -0.2
+an : 
+source: 0
+Eqn 84
+ap : -0.2
+an : 
+source: 0
+Eqn 85
+ap : 0
+an : 
+source: 0
+Eqn 86
+ap : -0.2
+an : 
+source: -0.2
+Eqn 87
+ap : 0
+an : 
+source: 0
+Eqn 88
+ap : -0.2
+an : 
+source: -0.2
+Eqn 89
+ap : 0
+an : 
+source: 0
+Eqn 90
+ap : -0.2
+an : 
+source: -0.2
+Eqn 91
+ap : 0
+an : 
+source: 0
+Eqn 92
+ap : 0
+an : 
+source: 0
+Eqn 93
+ap : 0
+an : 
+source: 0
+Eqn 94
+ap : 0
+an : 
+source: 0
+Eqn 95
+ap : 0
+an : 
+source: 0
+Eqn 96
+ap : 0
+an : 
+source: 0
+Eqn 97
+ap : 0
+an : 
+source: 0
+Eqn 98
+ap : 0
+an : 
+source: 0
+Eqn 99
+ap : 0
+an : 
+source: 0
