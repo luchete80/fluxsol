@@ -30,13 +30,13 @@ void CDTest()
 	
 	//CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(U));
 
-	CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(U));
+	//CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(U));
 
 	cout<<"Solving system"<<endl;
-	Solve(CDEqn);
+	//Solve(CDEqn);
 
 	
-	CDEqn.Log("EqLog.txt");
+	//CDEqn.Log("EqLog.txt");
 
 	cout<<"Generating field"<<endl;
 	CenterToVertexInterpolation <Scalar> interp(phi);

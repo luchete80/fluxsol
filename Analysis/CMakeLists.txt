@@ -4,8 +4,5 @@ set (SOURCES
 Analysis.cpp
 )
 
-add_library(${NAME} STATIC ${SOURCES} )
+add_library(${NAME} OBJECT ${SOURCES} )
 
-install (FILES ${NAME}.h DESTINATION include)
-install (FILES lib${NAME}.a DESTINATION lib)
- 

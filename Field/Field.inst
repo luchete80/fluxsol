@@ -1,0 +1,33 @@
+namespace FluxSol {
+
+template
+Vertex_Fv_Field<Scalar>::Vertex_Fv_Field(Fv_CC_Grid &grid);
+
+template
+Vertex_Fv_Field<Vec3D>::Vertex_Fv_Field(Fv_CC_Grid &grid);
+
+template
+void _Field<Scalar>::operator=(const Scalar &val);
+
+template
+void _Field<Vec3D>::operator=(const Vec3D &val);
+
+template
+_Field<Scalar> _Field<Scalar>::operator=(const double &val);
+
+template
+_Field<Vec3D> _Field<Vec3D>::operator=(const double &val);
+
+template
+_Field<Scalar>::_Field(const int &numval, const double &number =0.);
+
+template
+_Field<Vec3D>::_Field(const int &numval, const double &number =0.);
+
+template
+const Scalar MaxDiff(const _Field<Vec3D> &field1, const _Field<Vec3D> &field2);
+
+template
+const Scalar MaxDiff(const _Field<Scalar> &field1, const _Field<Scalar> &field2);
+
+}//FluxSol

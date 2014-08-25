@@ -35,12 +35,12 @@ namespace FluxSol
 		return temp;
 	}
 
+	Scalar & Scalar::operator= (const Scalar & right) {
 
-	const Scalar & Scalar::operator= (const Scalar &right) {
 		val = right.val;
 		return *this;
 	}
-
+	
 	Scalar & Scalar::operator= (const double & right) {
 
 		val = right;

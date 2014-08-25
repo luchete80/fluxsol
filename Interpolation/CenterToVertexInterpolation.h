@@ -24,7 +24,7 @@
 #ifndef _CENTERTOVERTEX_INTERPOLATION_H_
 #define _CENTERTOVERTEX_INTERPOLATION_H_
 
-#include "Interpolation.h"
+#include "Interpolation_.h"
 #include "../Type/Scalar.h"
 #include "../Field/Field.h"
 #include "../FiniteVolume/Mesh/FvGrid.h"
@@ -48,7 +48,7 @@ class CenterToVertexInterpolation
 	public:
 	CenterToVertexInterpolation():Interpolation<T>(){};
 	//references must be set in list
-	CenterToVertexInterpolation(Fv_CC_Grid &grida):grid(grida){};
+	CenterToVertexInterpolation(Fv_CC_Grid &grida):Interpolation<T>(grida){};
 	CenterToVertexInterpolation(_CC_Fv_Field<T> &fi) :Interpolation<T>(fi){};
 
 	Vertex_Fv_Field <T> Interpolate(_CC_Fv_Field<T> &);

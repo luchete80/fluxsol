@@ -37,7 +37,7 @@ class Archivo
         //vector <SistCoord> Archivo::Cargar_SistCoord(conect,ind_cbush,numcbush,numnodos);
 
 	public:
-		Archivo();
+		Archivo(){};
 		//Archivo::Archivo(std::string cad);	//Constructor que abre el archivo
 
 		void Iniciar(std::string cad);	//Esto es porque no se como iniciarlo
@@ -76,7 +76,7 @@ class Archivo
 class Archivo_sal
 {
 	public:
-		Archivo_sal::Archivo_sal();
+		Archivo_sal::Archivo_sal(){};
 		void Archivo_sal::Iniciar(string nombre);
 		void Archivo_sal::Escribir_Parte_cadena(const vector<string> cad,const vector <int> pos);
 		void Archivo_sal::Escribir_cadenas(const vector<string> cad);

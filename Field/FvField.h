@@ -26,6 +26,7 @@ see <http://www.gnu.org/licenses/>.
 #include "Field.h"
 #include "GeometricField.h"
 //A general FvField can inherit fields below
+#include "FvGrid.h"
 
 namespace FluxSol
 {
@@ -63,7 +64,7 @@ namespace FluxSol
 	protected:
 
 	public:
-		_Surf_Fv_Field(const int &numval, const double &value = 0.) :_Field(numval, value){}
+		_Surf_Fv_Field(const int &numval, const double &value = 0.) :_Field<T>(numval, value){}
 		_Surf_Fv_Field(){};         //Constructor
 		Fv_CC_Grid  & Grid(){ return *GridPtr; }
 		//Adding boundary face
@@ -129,7 +130,7 @@ namespace FluxSol
 
 
 	public:
-		explicit _Fv_FixedValue_Patch_Field(const Patch &p) :_Fv_Patch_Field(p){ type = FIXEDVALUE; };
+		explicit _Fv_FixedValue_Patch_Field(const Patch &p) :_Fv_Patch_Field<T>(p){ this->type = FIXEDVALUE; };
 	};
 
 	//Newmann Field
@@ -139,7 +140,7 @@ namespace FluxSol
 
 
 	public:
-		explicit _Fv_FixedGradient_Patch_Field(const Patch &p) :_Fv_Patch_Field(p){ type = FIXEDGRADIENT; };
+		explicit _Fv_FixedGradient_Patch_Field(const Patch &p) :_Fv_Patch_Field<T>(p){ this->type = FIXEDGRADIENT; };
 	};
 
 
@@ -218,9 +219,9 @@ namespace FluxSol
 
 		_CC_Fv_Field<T> operator=(const double &val)
 		{
-			for (int v = 0; v<value.size(); v++)
+			for (int v = 0; v<this->value.size(); v++)
 			{
-				value[v] = val;
+				this->value[v] = val;
 			}
 			return *this;
 		}
@@ -271,6 +272,23 @@ namespace FluxSol
 	template <typename T>
 	const Scalar MaxDiff(const _Field<T> &field1, const _Field<T> &field2);
 	//#include "Field_Def.h"
+	
+	//Inner Product Field
+	template<typename T>
+	SurfaceField<typename innerProduct < T, T> ::type> operator &(const SurfaceField<T> &left,const SurfaceField<T> &right)
+	{
+	SurfaceField<typename innerProduct < T, T> ::type> ret(left.Numberofvals());
+	typename innerProduct < T, T> ::type val;
+	//Sizes must be equal and rank must be large than zero?
+	for (int c = 0; c < left.Numberofvals(); c++)
+	{
+		val = left.Val(c) & right.Val(c);
+		ret.Val(c,val);
+	}
+
+	return ret;
+}
+
 
 }//FluxSol
 

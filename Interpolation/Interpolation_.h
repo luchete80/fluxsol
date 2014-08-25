@@ -2,10 +2,10 @@
 #define _INTERPOLATION_H_
 
 
-#include "../Type/Scalar.h"
-#include "../Field/Field.h"
-#include "../FiniteVolume/Mesh/FvGrid.h"
-#include "../Type/Vec3d.h"
+#include "Scalar.h"
+#include "Vec3d.h"
+#include "Field.h"
+#include "FvGrid.h"
 
 namespace FluxSol
 {
@@ -24,8 +24,9 @@ class Interpolation
 	
 	public:
 		//Must be initialized in initialization list
-		Interpolation():field(nullfield),grid(nullgrid){};
-		Interpolation(const _CC_Fv_Field<T> &f) :field(f),grid(field.ConstGrid()){};
+		Interpolation():field(nullfield),grid(nullgrid){}
+		Interpolation(Fv_CC_Grid &grida):grid(grida){}
+		Interpolation(const _CC_Fv_Field<T> &f) :field(f),grid(field.ConstGrid()){}
 		
 		//Must be called by a const
 		const _CC_Fv_Field<T> & Field() const { return field; };

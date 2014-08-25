@@ -1,25 +1,48 @@
-#set (CMAKE_CXX_FLAGS "-O3 -fpermissive")
-#set (CMAKE_CXX_FLAGS "-fpermissive")
-set (CMAKE_CXX_COMPILER g++)
-
-#Temporalmente no lo incluyo (freecfd)
-#set (CGNS_INCLUDE_DIRS /Users/esozer/fcfd/deps/cgnslib_2.5/include)
-set (CGNS_INCLUDE_DIRS .\Libs\cgns3.1.4)
-set (ALGLIB_INCLUDE_DIRS .\Libs\alglib3.x)
-#set (CGNS_LIBRARY_DIRS /Users/esozer/fcfd/deps/cgnslib_2.5/lib)
-#set (PARMETIS_INCLUDE_DIRS /Users/esozer/fcfd/deps/ParMetis-3.1.1)
-#set (PARMETIS_LIBRARY_DIRS /Users/esozer/fcfd/deps/ParMetis-3.1.1)
-#set (PETSC_INCLUDE_DIRS /Users/esozer/fcfd/deps/petsc-3.1-p2/include /Users/esozer/fcfd/deps/petsc-3.1-p2/darwin9.8.0-c-debug/include)
-#set (PETSC_LIBRARY_DIRS /Users/esozer/fcfd/deps/petsc-3.1-p2/darwin9.8.0-c-debug/lib)
-
 cmake_minimum_required(VERSION 2.6)
+include (CheckSymbolExists)
+include (CheckCXXSymbolExists)
+include (CheckIncludeFiles)
+include (CheckIncludeFileCXX)
+include (CheckCXXSourceCompiles)
 
+#######################################################################
+######################## Options ######################################
+#######################################################################
+option (USE_PETSC "Enable PETSc support (required for parallel)" OFF)
+option (USE_METIS "Enable METIS support	                       " OFF)
+if (${CMAKE_VERSION} VERSION_GREATER "2.8.7") # Compability with older version of cmake
+    option (USE_SHARED_LIB "Build shared library" ON)
+    option (USE_STATIC_LIB "Build static library" OFF)
+endif ()
+option (DEBUG_MODE "Enable FLUXSOL DEBUG" OFF)
 
-project(fluxsol)
+if(DEBUG_MODE)
+# Default is debug build
+#if (NOT CMAKE_BUILD_TYPE)
+	set (CMAKE_BUILD_TYPE Debug)
+else()
+	set (CMAKE_BUILD_TYPE Release)
+endif ()
+
+set (NAME fluxsol)
+
+project(${NAME})
+
+set (CMAKE_CXX_FLAGS "-fpermissive")
+
+set (FLUXSOL_DIR  /cygdrive/c/Users/samsung/Dropbox/Numerico/MecSol/FluxSol)
+set (LASPACK_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/laspack/src)
+set (CGNS_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src)
+set (ALGLIB_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/src)
+
+set (CGNS_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src/lib)
+set (ALGLIB_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/bin)
+set (LASPACK_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/laspack/bin)
+
 #set (fluxsol_VERSION_MAJOR 2)
 #set (fluxsol_VERSION_MINOR 0)
 
-list (APPEND CMAKE_MODULE_PATH "${fluxsol_SOURCE_DIR}/CMake")
+#list (APPEND CMAKE_MODULE_PATH "${fluxsol_SOURCE_DIR}/CMake")
 
 # Temporalmente no lo incluyo
 # Pass some CMake settings to source code through a header file
@@ -36,11 +59,11 @@ include_directories("${PROJECT_SOURCE_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/Analysis")
 include_directories("${PROJECT_SOURCE_DIR}/Boundary")
 include_directories("${PROJECT_SOURCE_DIR}/Field")
-include_directories("${PROJECT_SOURCE_DIR}/Finite Volume")
-include_directories("${PROJECT_SOURCE_DIR}/Finite Volume/Div")
-include_directories("${PROJECT_SOURCE_DIR}/Finite Volume/Grad")
-include_directories("${PROJECT_SOURCE_DIR}/Finite Volume/Laplacian")
-include_directories("${PROJECT_SOURCE_DIR}/Finite Volume/Mesh")
+include_directories("${PROJECT_SOURCE_DIR}/FiniteVolume")
+include_directories("${PROJECT_SOURCE_DIR}/FiniteVolume/Div")
+include_directories("${PROJECT_SOURCE_DIR}/FiniteVolume/Grad")
+include_directories("${PROJECT_SOURCE_DIR}/FiniteVolume/Laplacian")
+include_directories("${PROJECT_SOURCE_DIR}/FiniteVolume/Mesh")
 include_directories("${PROJECT_SOURCE_DIR}/Input")
 include_directories("${PROJECT_SOURCE_DIR}/Libs/Laspack")
 include_directories("${PROJECT_SOURCE_DIR}/Mesh")
@@ -54,9 +77,13 @@ include_directories("${PROJECT_SOURCE_DIR}/Utils")
 
 #Temporalmente no lo incluyo (librerias)
 include_directories(${CGNS_INCLUDE_DIRS})
+include_directories(${LASPACK_INCLUDE_DIRS})
+include_directories(${ALGLIB_INCLUDE_DIRS})
 #include_directories(${PARMETIS_INCLUDE_DIRS})
 #include_directories(${PETSC_INCLUDE_DIRS})
 link_directories(${CGNS_LIBRARY_DIRS})
+link_directories(${ALGLIB_LIBRARY_DIRS})
+link_directories(${LASPACK_LIBRARY_DIRS})
 #link_directories(${PARMETIS_LIBRARY_DIRS})
 #link_directories(${PETSC_LIBRARY_DIRS})
 
@@ -70,7 +97,6 @@ add_subdirectory(FiniteVolume/Laplacian)
 add_subdirectory(FiniteVolume/Mesh)
 add_subdirectory(Input)
 add_subdirectory(Interpolation)
-add_subdirectory(Libs/Laspack)
 add_subdirectory(Mesh)
 add_subdirectory(Model)
 add_subdirectory(Output)
@@ -80,24 +106,67 @@ add_subdirectory(Tests)
 add_subdirectory(Type)
 add_subdirectory(Utils)
 
-set (FSOL_LIBS Analysis Boundary Mesh FvMesh Input Tests Type Utils Laspack Output)
-#set (EXTRA_LIBS cgns metis parmetis petsc f2cblas f2clapack)
-set (EXTRA_LIBS cgns alglib)
+set (FSOL_LIBS Analysis Boundary Mesh Field FvMesh Input Tests Type Utils Output)
+
+set (EXTRA_LIBS cgns alglib laspack)
 
 #add the executable
 set (SOURCES
-#Analysis.cpp Boundary.cpp FvExpGrad.cpp CC_Cell.cpp FvFace.cpp FvGrid.cpp MeshInfo.cpp Mesh.cpp Model.cpp
-#Cadenas.cpp Caract.cpp Elementos.cpp Material.cpp Modelo.cpp Nastran.cpp Nodo.cpp Orientaciones.cpp Prop.cpp Rod.cpp SistCoord.cpp Varios.cpp
-#SistEcuac.cpp Simple.cpp 
-#Scalar.cpp Vec3d.cpp Operations.cpp
 FluxSol.cpp
 )
-add_executable(fluxsol ${SOURCES})
 
 #Para cuando agregue las librerias
 #target_link_libraries (fluxsol ${FCFD_LIBS} ${EXTRA_LIBS})
 
-target_link_libraries (fluxsol ${FSOL_LIBS} ${EXTRA_LIBS})
+if (USE_SHARED_LIB)
+#Before creating library
+set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all-symbols")
 
-install (TARGETS fluxsol RUNTIME DESTINATION bin)
+add_library(${NAME}lib SHARED FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
+												$<TARGET_OBJECTS:Boundary>
+												$<TARGET_OBJECTS:Field>
+												$<TARGET_OBJECTS:Input>
+												$<TARGET_OBJECTS:Mesh>
+												$<TARGET_OBJECTS:FvMesh>												
+												$<TARGET_OBJECTS:Output>
+												$<TARGET_OBJECTS:SistEcuac>
+												$<TARGET_OBJECTS:Solver>	
+												$<TARGET_OBJECTS:Tests>
+												$<TARGET_OBJECTS:Type>
+												$<TARGET_OBJECTS:Utils>
+											)
+#target_link_libraries (${NAME} ${EXTRA_LIBS} ${EXT_LIBS})
+target_link_libraries (${NAME}lib ${EXTRA_LIBS} ${EXT_LIBS})
+else ()
+    set (USE_STATIC_LIB ON)
+endif ()
+
+if (USE_STATIC_LIB)
+add_library(${NAME}lib_static STATIC FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
+														$<TARGET_OBJECTS:Boundary>
+														$<TARGET_OBJECTS:Field>
+														$<TARGET_OBJECTS:Input>
+														$<TARGET_OBJECTS:Mesh>	
+														$<TARGET_OBJECTS:FvMesh>
+														$<TARGET_OBJECTS:Output>
+														$<TARGET_OBJECTS:SistEcuac>
+														$<TARGET_OBJECTS:Solver>	
+														$<TARGET_OBJECTS:Tests>
+														$<TARGET_OBJECTS:Type>
+														$<TARGET_OBJECTS:Utils>
+											)
+
+#target_link_libraries (${NAME} ${EXTRA_LIBS} ${EXT_LIBS})
+target_link_libraries (${NAME}lib_static ${EXTRA_LIBS} ${EXT_LIBS})
+endif()
+
+
+### INSTALL ####
+
+install (TARGETS ${NAME}lib DESTINATION lib)
+install (FILES ${NAME}.h DESTINATION include)
+
+#FLUXSOL EXECUTABLE
+add_executable(${NAME} ${SOURCES})
+target_link_libraries (${NAME} ${NAME}lib)
  

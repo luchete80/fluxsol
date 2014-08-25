@@ -23,7 +23,7 @@
 #ifndef _CC_FVFIELD_DEF_H_
 #define _CC_FVFIELD_DEF_H_
 
-#include "Field.h"
+#include "FvField.h"
 
 namespace FluxSol
 {

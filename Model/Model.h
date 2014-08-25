@@ -47,7 +47,7 @@ class Fv_CC_Model:public Model
 														 	 //Que a su vez genera la malla
 	
 	Fv_CC_Model(const Modelo &nasmod);
-	Fv_CC_Model(const std::string);
+	Fv_CC_Model(const std::string){};
 	void Fv_CC_Model::Extract_Cells_and_BoundaryFromNastran();
 
 	////////////////////////////////////

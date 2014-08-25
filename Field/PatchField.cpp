@@ -23,7 +23,7 @@
 #ifndef _PATCHFIELD_H_
 #define _PATCHFIELD_H_
 
-#include "Field.h"
+#include "FvField.h"
 
 namespace FluxSol
 {
@@ -52,5 +52,7 @@ void _Fv_Patch_Field<T>::AssignValue(const T &val)
 }
 
 }
+
+#include "PatchField.inst"
 
 #endif

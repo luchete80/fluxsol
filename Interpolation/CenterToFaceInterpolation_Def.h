@@ -24,7 +24,7 @@ see <http://www.gnu.org/licenses/>.
 #ifndef _CENTERTOFACE_INTERPOLATION_DEF_H_
 #define _CENTERTOFACE_INTERPOLATION_DEF_H_
 
-#include "Interpolation.h"
+#include "Interpolation_.h"
 #include "CenterToFaceInterpolation.h"
 
 //template<typename T>

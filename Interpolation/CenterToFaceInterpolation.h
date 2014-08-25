@@ -24,7 +24,7 @@ see <http://www.gnu.org/licenses/>.
 #ifndef _CENTERTOFACE_INTERPOLATION_H_
 #define _CENTERTOFACE_INTERPOLATION_H_
 
-#include "Interpolation.h"
+#include "Interpolation_.h"
 #include "../Type/Scalar.h"
 #include "../Field/Field.h"
 #include "../FiniteVolume/Mesh/FvGrid.h"
@@ -48,24 +48,24 @@ class CenterToFaceInterpolation
 		SurfaceField <T> intfield;	//Not constant because can be reinterpolated
 
 	public:
-		CenterToFaceInterpolation():field(nullfield), grid(nullgrid){};
+		CenterToFaceInterpolation():Interpolation<T>(){};
 		CenterToFaceInterpolation(const _CC_Fv_Field <T> &fi) :Interpolation<T>(fi)
 		{
 
 			//Pending to Generate constructor
-			SurfaceField <T> r(field.GridPtr->Num_Faces());
+			SurfaceField <T> r(this->field.GridPtr->Num_Faces());
 
 
 			//Loop throug faces
-			for (int f = 0; f<field.GridPtr->Num_Faces(); f++)
+			for (int f = 0; f<this->field.GridPtr->Num_Faces(); f++)
 			{
-				_FvFace &face = field.GridPtr->Face(f);
+				_FvFace &face = this->field.GridPtr->Face(f);
 				T prom;
 				//Scalar fp
-				if (!field.GridPtr->Face(f).Boundaryface())
-					prom = (field[face.Cell(0)] * (1.0 - face.Fp()) + field[face.Cell(1)] * face.Fp())*0.5;
+				if (!this->field.GridPtr->Face(f).Boundaryface())
+					prom = (this->field[face.Cell(0)] * (1.0 - face.Fp()) + this->field[face.Cell(1)] * face.Fp())*0.5;
 				else
-					prom = field[face.Cell(0)];
+					prom = this->field[face.Cell(0)];
 
 				r[f] = prom;
 			}

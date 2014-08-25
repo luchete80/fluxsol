@@ -29,6 +29,8 @@
 #include "../Type/pTraits.h"
 #include "../Type/Products.h"
 
+#include <math.h> //fabs
+
 using namespace std;
 
 namespace FluxSol{
@@ -65,7 +67,7 @@ public:
 
 	//Binary
 	//Modify & return lvalue
-	const Scalar & operator= (const Scalar &s);
+	Scalar & operator= (const Scalar &s);		//MUST NOT BE CONST
 	Scalar & operator= (vector<double> &v) ; //Common to templates to conversion
 	Scalar & operator= (const double &right) ;
 		

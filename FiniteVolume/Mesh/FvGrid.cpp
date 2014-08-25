@@ -23,7 +23,8 @@
 #include "FvGrid.h"
 
 //To utils
-template <class T> const T& max(const T& a, const T& b) {
+//Redundance with vector c++ lib
+template <class T> const T& max_int(const T& a, const T& b) {
 	return (a<b) ? b : a;     // or: return comp(a,b)?b:a; for version (2)
 }
 
@@ -301,7 +302,7 @@ void Fv_CC_Grid::Iniciar_Caras()
 					int nvenc=NumVecElemFound(tempNodes,tempNodes2);
 					//if (NumVecElemFound(tempNodes,cellit2->Conect())==tempNodes.size())
 					//Si no lo coloco asi no anda
-					int maxfaces=max(numfaceverts,numfaceverts2);
+					int maxfaces=max_int(numfaceverts,numfaceverts2);
 					//Found an internal face
 					if (nvenc==maxfaces)
 					{

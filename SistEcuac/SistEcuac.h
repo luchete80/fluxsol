@@ -77,7 +77,7 @@ public:
 	void X(const T &v){x=v;}
 	int & Neighbour(const int &i){return this->neighbour_id[i];}
 	int MinNeigbourId();
-	std::vector <int> NeighboursIds(){return neighbour_id;} 
+	const std::vector <int> & NeighboursIds()const{return neighbour_id;} 
 
     std::vector <T>& An(){return an;};
 
@@ -146,7 +146,7 @@ class EqnSystem{   //Es un vector de ecuaciones
 	void Insert (const Eqn<T> &ec, std::vector <int> &);
 
 	void Log(std::string str);
-	vector<Eqn<T>> & EqnV(){ return eqn; }
+	vector< Eqn<T> > & EqnV(){ return eqn; }
 	Eqn<T> & Eqn(const int &i){return eqn[i];}
 
 	//Operators
@@ -178,5 +178,5 @@ class EqnSystem{   //Es un vector de ecuaciones
 }
 
 //This is needed
-#include "./SistEcuac/SistEcuacDef.h"
+
 #endif

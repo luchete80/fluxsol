@@ -1,0 +1,52 @@
+
+namespace FluxSol
+{
+template
+int FluxSol::Eqn<Scalar>::Width();
+
+template
+int FluxSol::Eqn<Scalar>::MinNeigbourId();
+
+template
+void FluxSol::EqnSystem<Scalar>::Insert (const FluxSol::Eqn <Scalar> &ec);
+
+template
+Eqn<Scalar> & Eqn<Scalar>::operator ==(const Eqn<Scalar> &right) const;
+
+template
+EqnSystem <Scalar> & EqnSystem <Scalar>::operator==(const double &d);
+
+template
+void EqnSystem<Scalar>::Log(std::string str);
+
+template
+EqnSystem<Scalar>::EqnSystem(const Fv_CC_Grid &FvG);
+
+template
+EqnSystem <Scalar> EqnSystem <Scalar>::operator==(EqnSystem <Scalar> &right);
+
+template
+int FluxSol::Eqn<Vec3D>::Width();
+
+template
+int FluxSol::Eqn<Vec3D>::MinNeigbourId();
+
+template
+void FluxSol::EqnSystem<Vec3D>::Insert (const FluxSol::Eqn <Vec3D> &ec);
+
+template
+Eqn<Vec3D> & Eqn<Vec3D>::operator ==(const Eqn<Vec3D> &right) const;
+
+template
+EqnSystem <Vec3D> & EqnSystem <Vec3D>::operator==(const double &d);
+
+template
+void EqnSystem<Vec3D>::Log(std::string str);
+
+template
+EqnSystem<Vec3D>::EqnSystem(const Fv_CC_Grid &FvG);
+
+template
+EqnSystem <Vec3D> EqnSystem <Vec3D>::operator==(EqnSystem <Vec3D> &right);
+
+}

@@ -46,7 +46,7 @@ double Vec3D::dot(const Vec3D &right) {
 	return (comp[0]*right.comp[0]+comp[1]*right.comp[1]+comp[2]*right.comp[2]);
 }
 
-double FluxSol::fabs(const Vec3D& vec) {
+double fabs(const Vec3D& vec) {
 	return sqrt(vec.comp[0]*vec.comp[0]+vec.comp[1]*vec.comp[1]+vec.comp[2]*vec.comp[2]);
 }
 

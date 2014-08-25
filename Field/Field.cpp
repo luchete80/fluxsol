@@ -44,15 +44,15 @@ Vertex_Fv_Field<T>::Vertex_Fv_Field(Fv_CC_Grid &grid)
 
 	T val;
 	int nv= grid.Num_Verts();
-	value.assign(nv,val);	
+	this->value.assign(nv,val);	
 }
 
 template <typename T>
 void _Field<T>::operator=(const T &val)
 {
-	for (int v=0;v<value.size();v++)
+	for (int v=0;v<this->value.size();v++)
 	{
-		value[v]=val;
+		this->value[v]=val;
 	}
 }
 
@@ -115,25 +115,12 @@ const Scalar MaxDiff(const _Field<T> &field1, const _Field<T> &field2)
 
 //}
 
-//Inner Product Field
-template<typename T>
-SurfaceField<typename innerProduct < T, T> ::type> operator &(const SurfaceField<T> &left,const SurfaceField<T> &right)
-{
-	SurfaceField<typename innerProduct < T, T> ::type> ret(left.Numberofvals());
-	typename innerProduct < T, T> ::type val;
-	//Sizes must be equal and rank must be large than zero?
-	for (int c = 0; c < left.Numberofvals(); c++)
-	{
-		val = left.Val(c) & right.Val(c);
-		ret.Val(c,val);
-	}
 
-	return ret;
-}
 
 
 
 }//FluxSol
 
+#include "Field.inst"
 
 #endif

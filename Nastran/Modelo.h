@@ -83,8 +83,8 @@ class Modelo{
 		Archivo Nastran;	//Aca ya le digo el constructor
 		
 		Modelo(){};
-		Modelo(string cad);	//Lee de un archivo NASTRAN
-		~Modelo();
+		Modelo(string cad){};	//Lee de un archivo NASTRAN
+		~Modelo(){};
 		void Modelo::Lectura_Rapida (string cad);
 
 		//Porque no a todos los modelos me interesa buscarle edge clamps, solo al reducido

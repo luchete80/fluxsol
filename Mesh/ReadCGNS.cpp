@@ -22,14 +22,14 @@
 *************************************************************************/
 // THIS FILE IS BASED IN FREE-CFD
 #include "Grid.h"
-#include "../FiniteVolume/Mesh/CC_Cell.h"
+#include "CC_Cell.h"
 
-#include "../FiniteVolume/Mesh/FvGrid.h"
-#include "../Type/Vec3d.h"
-#include "../Type/Operations.h"	//Mixed Types
+#include "FvGrid.h"
+#include "Vec3d.h"
+#include "Operations.h"	//Mixed Types
 
-#include "../Libs/cgns3.1.4/src/cgnslib.h"
-#include "../Utils/Utils.h"
+#include "cgnslib.h"
+#include "Utils.h"
 #include <map>
 #include <set>
 #include <vector>
@@ -72,9 +72,9 @@ void _Grid::Read_InitialCGNS() {
 	vector<int> zoneNodeCount(nZones),zoneCellCount(nZones);
 	if (Rank==0) cout << "[I] Number of Zones= " << nZones << endl;
 
-	std::vector< std::vector <double>> coordX(nZones),coordY(nZones),coordZ(nZones);
+	std::vector< std::vector <double> > coordX(nZones),coordY(nZones),coordZ(nZones);
 	// zoneCoordMap returns the global id of a given node in a given zone
-	std::vector <std::vector<int>> zoneCoordMap(nZones);
+	std::vector <std::vector<int> > zoneCoordMap(nZones);
 
 	map<string,int>::iterator mit;
 
@@ -214,7 +214,7 @@ void _Grid::Read_InitialCGNS() {
 				for (int i=list[0];i<=list[1];++i) bc_element_list[bcIndex].insert(i);
 			} else {
 				if (Rank==0) cerr << "[E] Boundary condition specification is not recognized" << endl;
-				exit(1);
+				//exit(1);
 			}
 			
 		} // for boco
@@ -331,7 +331,7 @@ void _Grid::Read_InitialCGNS() {
 	}
 	if (raw.node.size()!=globalNodeCount) {
 		cerr << "[E] raw.node.size() (=" << raw.node.size() << ") is different from globalNodeCount (=" << globalNodeCount << ")" << endl;
-		exit(1);
+		//exit(1);
 	}
 	if (Rank==0) cout << "[I] Total Cell Count= " << globalCellCount << endl;
 
@@ -367,7 +367,7 @@ void Fv_CC_Grid::Read_CGNS()
 	vector <Cell_CC> vboundcell;	//For bidimensional cells
 
 	//Read boundary cells - Assuming boundary cell entry
-	vector<vector<int>> bpelem;	
+	vector<vector<int> > bpelem;	
 
 	int boundelem =0;
 	//Boundary Patches bc

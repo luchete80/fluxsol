@@ -1,0 +1,15 @@
+namespace FluxSol{
+
+template
+_Fv_Patch_Field<Scalar>::_Fv_Patch_Field(const Patch &p);
+
+template
+_Fv_Patch_Field<Vec3D>::_Fv_Patch_Field(const Patch &p);
+
+template 
+void _Fv_Patch_Field<Scalar>::AssignValue(const Scalar &val);
+
+template 
+void _Fv_Patch_Field<Vec3D>::AssignValue(const Vec3D &val);
+
+}

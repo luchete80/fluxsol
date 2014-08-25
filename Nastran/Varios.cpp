@@ -52,7 +52,7 @@ void listar_vec(const std::vector <T> v, ofstream f)
     f<<v[i]<<endl;
 }
 
-int & SearchVal(const int &i,std::vector <int> &v)
+int SearchVal(const int &i,std::vector <int> &v)
 {
 	int r=-1;
 	for (int vi=0;vi<v.size();vi++)

@@ -19,7 +19,7 @@ class Material{
 	public:
 		Material::Material(){};
 		Material::Material(Caract c, const int &i,const double &h, const double &p, const double &area);
-		Material::~Material();
+		Material::~Material(){};
 		const int VerId();
 		Material* Material::This();
 		void Material::Crear_strings();

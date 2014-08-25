@@ -1,8 +1,7 @@
-set (NAME Solver)
+set (NAME SistEcuac)
 
 set (SOURCES 
-Simple.cpp
+SistEcuac.cpp
 )
 
 add_library(${NAME} OBJECT ${SOURCES} )
-

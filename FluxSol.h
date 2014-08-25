@@ -21,16 +21,12 @@
 
 #include "./Boundary/Boundary.h"
 
-#include "./Debug/Log.h"
-#include "./Debug/Trace.h"
 
 // FIELD
 #include "./Field/Field.h"
 #include "./Field/GeometricField.h"
 #include "./Field/FieldOperations.h"
-#include "./Field/Field_Def.h"
 #include "./Field/_CC_Fv_field_Def.h"
-#include "./Field/PatchField_Def.h"
 #include "./Field/FvField.h"
 
 //////////////////
@@ -49,7 +45,7 @@
 #include "./FiniteVolume/Grad/FvExpGrad.h"
 #include "./FiniteVolume/Grad/FvGradScheme.h"
 //Interpolation
-#include "./Interpolation/Interpolation.h"
+#include "./Interpolation/Interpolation_.h"
 #include "./Interpolation/CenterToVertexInterpolation.h"
 #include "./Interpolation/CenterToVertexInterpolation_Def.h"
 #include "./Interpolation/CenterToFaceInterpolation.h"
@@ -89,7 +85,7 @@
 
 // SistEcuac //
 #include "./SistEcuac/SistEcuac.h"
-#include "./SistEcuac/SistEcuacDef.h"
+
 
 #include "./Solver/Solver.h"
 #include "./Solver/SIMPLE.h"

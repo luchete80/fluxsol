@@ -6,7 +6,7 @@ Scalar.cpp
 Vec3d.cpp
 )
 
-add_library(${NAME} STATIC ${SOURCES} )
+add_library(${NAME} OBJECT ${SOURCES})
 
 install (FILES 
 #${NAME}.h 
@@ -18,5 +18,5 @@ Scalar.h
 Tensor.h
 Vec3d.h
 DESTINATION include)
-install (FILES lib${NAME}.a DESTINATION lib)
+#install (FILES lib${NAME}.a DESTINATION lib)
  

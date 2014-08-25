@@ -29,7 +29,7 @@
 #include "SistEcuac.h"
 
 //Sparse libraries
-#include "./Libs/Laspack/laspack.h"
+#include "laspack.h"
 #include "./Nastran/Varios.h"
 
 namespace FluxSol{
