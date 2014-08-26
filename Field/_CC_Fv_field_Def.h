@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -31,10 +31,11 @@ namespace FluxSol
 template <typename T>
 _CC_Fv_Field<T>::_CC_Fv_Field(Fv_CC_Grid &grid)
 {
-	{		
+	{
 		GridPtr=&grid;
 
 		//Inicio variables PARA TODOS LOS CELLS (ver luego el borde
+        //cout << "Cell Number" << GridPtr->Num_Cells()<<endl;
 		for (int c=0;c<GridPtr->Num_Cells();c++)
 		{
 			T val;
@@ -54,7 +55,7 @@ _CC_Fv_Field<T>::_CC_Fv_Field(Fv_CC_Grid &grid, const _Fv_Boundary_Field <T> &bf
 {
 	_Fv_Boundary_Field <T> bf = bfield;
 
-	{		
+	{
 		GridPtr=&grid;
 
 		//Inicio variables PARA TODOS LOS CELLS (ver luego el borde
@@ -77,7 +78,7 @@ _CC_Fv_Field<T>::_CC_Fv_Field(Fv_CC_Grid &grid, const _Fv_Boundary_Field <T> &bf
 //	for (int e=0;e<eqnsys.Num_Eqn();e++)
 //	{
 //		this->value[e]=eqnsys.Eqn(e).X();
-//	
+//
 //	}
 //
 //}

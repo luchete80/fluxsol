@@ -37,6 +37,8 @@ int main()
 	//Campo de temperatura
 	_CC_Fv_Field <Scalar> T(malla);
 
+	cout << "Grid Faces "<<T.Grid().Num_Faces()<<endl;
+
 	//Boundary conditions
 	Scalar wallvalue=0.;
 	Scalar topvalue=1.;
@@ -47,13 +49,16 @@ int main()
 	//Construir aca con la malla
 	Scalar k(1.);	//Difusion, puede ser un escalar
 
-	
+
 	//Different ways
 	//1) EqnSystem <Scalar> TEqn(FvImp::Laplacian(k,T))
 	//TEqn=FvImp::Laplacian(k,T);
-	
+
+    cout << "Creating Eqn System"<<endl;
 	TEqn=(FvImp::Laplacian(k,T)==0.);
+	cout << "Solving system.."<<endl;
 	Solve(TEqn);
+	cout << "Writing log.."<<endl;
 	TEqn.Log("EqLog.txt");
 	//solve(Laplacian(k,T)==0);
 
@@ -61,7 +66,7 @@ int main()
 
 	/////////
 	//Div test
-	
+
 	EqnSystem <Scalar> PruEqn;
 	_Surf_Fv_Field<Scalar> fip;
 	_CC_Fv_Field <Vec3D> Tpru(malla);
@@ -69,9 +74,9 @@ int main()
 
 	//Prueba de lectura de malla
 	//Mesh readers test
-	Fv_CC_Grid malla2;
-	
-	malla2.Read_CGNS();
-	
+	//Fv_CC_Grid malla2;
+
+	//malla2.Read_CGNS();
+
 	return 0;
 }

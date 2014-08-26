@@ -14,7 +14,7 @@ if (${CMAKE_VERSION} VERSION_GREATER "2.8.7") # Compability with older version o
     option (USE_SHARED_LIB "Build shared library" ON)
     option (USE_STATIC_LIB "Build static library" OFF)
 endif ()
-option (DEBUG_MODE "Enable FLUXSOL DEBUG" OFF)
+option (DEBUG_MODE "Enable FLUXSOL DEBUG" ON)
 
 if(DEBUG_MODE)
 # Default is debug build
@@ -30,7 +30,7 @@ project(${NAME})
 
 set (CMAKE_CXX_FLAGS "-fpermissive")
 
-set (FLUXSOL_DIR  /cygdrive/c/Users/samsung/Dropbox/Numerico/MecSol/FluxSol)
+set (FLUXSOL_DIR c:/Users/samsung/Dropbox/Numerico/MecSol/FluxSol)
 set (LASPACK_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/laspack/src)
 set (CGNS_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src)
 set (ALGLIB_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/src)

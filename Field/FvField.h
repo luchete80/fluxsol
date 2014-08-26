@@ -41,7 +41,7 @@ namespace FluxSol
 		Vertex_Fv_Field(Fv_CC_Grid &grid);
 
 		//Later it will be inherited
-		Fv_CC_Grid  & Grid(){ return *GridPtr; }
+		const Fv_CC_Grid  & Grid()const{ return *GridPtr; }
 
 	};
 
@@ -84,8 +84,8 @@ namespace FluxSol
 
 		}
 
-		//Devuelve el valor en una Surface 
-		T& GridIdSurFaceVal(const int &i)		//El valor de una 
+		//Devuelve el valor en una Surface
+		T& GridIdSurFaceVal(const int &i)		//El valor de una
 		{
 			//Tengo que ver cual es la face i del field
 			for (int fid = 0; fid<this->Numberofvals(); fid++)
@@ -174,7 +174,7 @@ namespace FluxSol
 	};
 
 	//CAMPO VOLUMETRICO DE VOLUMENES FINITOS
-	//CONVIENE QUE DERIVE 
+	//CONVIENE QUE DERIVE
 	// La T es Scalar, vector o tensor
 	template<typename T>
 	class _CC_Fv_Field :public _Field<T>{
@@ -194,7 +194,7 @@ namespace FluxSol
 	public:
 
 		//EVALUATE IF IT IS CONST
-		Fv_CC_Grid  *GridPtr;       //Se podria probar con un puntero general	
+		Fv_CC_Grid  *GridPtr;       //Se podria probar con un puntero general
 
 		_CC_Fv_Field(Fv_CC_Grid &grid);
 		_CC_Fv_Field(Fv_CC_Grid &grid, const _Fv_Boundary_Field <T> &bfield);
@@ -211,7 +211,7 @@ namespace FluxSol
 		//THIS IS OLD. FIELD DOES NOT RETURN AN EQ SYSTEM BECAUSE REFER TO EQSYS AND THIS TO FVGRID
 		//AT THE SAME TIME FVGRID REFERS TO GEOMFIELD AND THIS TO FIELD, AND FIELD TO EQSYS
 		//const Eqn <T> ToFaces(const int &icell, const std::vector <Scalar> flux) const;
-		
+
 		_Fv_Boundary_Field <T> &  Boundaryfield(){ return BoundaryField; }
 
 		//void ToCellCenters(EqnSystem <T> &eqnsys);
@@ -272,7 +272,7 @@ namespace FluxSol
 	template <typename T>
 	const Scalar MaxDiff(const _Field<T> &field1, const _Field<T> &field2);
 	//#include "Field_Def.h"
-	
+
 	//Inner Product Field
 	template<typename T>
 	SurfaceField<typename innerProduct < T, T> ::type> operator &(const SurfaceField<T> &left,const SurfaceField<T> &right)

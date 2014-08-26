@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -87,7 +87,7 @@ Eqn<T> & Eqn<T>::operator ==(const Eqn<T> &right) const
 		ret.ap = this->ap - right.ap;
 
 		bool lfound;
-		//left eqn could have a bigger stencil 
+		//left eqn could have a bigger stencil
 		for (int nleft = 0; nleft < this->an.size(); nleft++)
 		{
 			lfound = false;
@@ -111,7 +111,7 @@ Eqn<T> & Eqn<T>::operator ==(const Eqn<T> &right) const
 				ret.an[nleft] = this->an[nleft] - right.an[nright];
 				tempright.erase(tempright.begin() + nright);
 			}
-				
+
 		}//for nleft
 
 
@@ -194,7 +194,7 @@ EqnSystem<T>::EqnSystem(const Fv_CC_Grid &FvG)
     {
 		vector <T> an;
 		T init_an;
-
+        cout << "Cell "<<endl;
 		//Insert empty Values
 		T ap,source;
 		vector <int> nbr_id;

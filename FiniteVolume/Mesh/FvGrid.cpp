@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -39,7 +39,7 @@ _Grid(nex,ney)
 	elx=lx/nex; ely=ly/ney;
 	//Hasta aca genero los vertices
 	GenerarMallaRectangular(elx,ely,(*this));
-	
+
 	//Ahora debo generar los nodos
 	CreateNodesFromCellVerts();
 	//Inicio las caras
@@ -72,14 +72,14 @@ void FluxSol::Fv_CC_Grid::Log(string s)
 		for (int f=0;f<(*ccellit).Num_Faces();f++)
 			meshlog<<(*ccellit).Id_Face(f)<< "  ";
 		meshlog <<endl;
-	
+
 	}
     //Ahora viene la diferencia
 	//Busco las coordenadas de los nodos
 	meshlog<<"Coordenadas de nodos"<<endl;
 	for (nodeit=node.begin();nodeit!=node.end();nodeit++)
 		meshlog<<nodeit->Imprimir_Coord()<<endl;
-	
+
 	//Informacion de faces
 	int f=0;
 	meshlog<<"Face Conectivity"<<endl;
@@ -155,6 +155,8 @@ void FluxSol::Fv_CC_Grid::CreateNodesFromCellVerts()
 		node.push_back(nod);
 	}
 
+	inicie_nodes=true;
+
 }
 
 // Constructor que sirva para construir por ejemplo desde un archivo
@@ -173,7 +175,7 @@ Fv_CC_Grid::Fv_CC_Grid(vector <_Vertex> &vvert,vector <Cell_CC> &vcell, Boundary
 	//Creo los nodos
 	inicie_nodes=true;
 
-	//Chequeo si es 2D y agrego los vertices que corresponden para convertirlo en 3D 
+	//Chequeo si es 2D y agrego los vertices que corresponden para convertirlo en 3D
 	//(Recordar que para ensamblar se hace como 2D)
 	//Chequeo la cantidad de vertices
 	_Vertex vp;
@@ -194,14 +196,14 @@ Fv_CC_Grid::Fv_CC_Grid(vector <_Vertex> &vvert,vector <Cell_CC> &vcell, Boundary
 
 	}
 
-	
+
 
 	//Chequeo si no queda una parte libre del boundary
 }
 
 void Fv_CC_Grid::AssignNeigboursCells()
 {
-	
+
 	int c=0;
 	for (cellit=cell.begin();cellit!=cell.end();cellit++)
 	{
@@ -223,9 +225,9 @@ void Fv_CC_Grid::AssignNeigboursCells()
 
 
 //Esto supone que el tipo de elementos ya esta definido
+//Virtual function
 void Fv_CC_Grid::Iniciar_Caras()
 {
-
 	//Numero de faces dependiendo de los numeros de vertices
 	int numcellfaces [9]={0,0,0,0,4,5,5,0,6};
 
@@ -242,21 +244,25 @@ void Fv_CC_Grid::Iniciar_Caras()
 //    //Declaro otro iterador que no esta aca
 //
 //    //Inicio las celdas
+    cout << "Cell initialized "<<inicie_cells<<endl;
+    cout << "Node initialized "<<inicie_nodes<<endl;
     if (!inicie_cells || !inicie_nodes)
     return;
 
 	vector <int> v(0);
 	//vector<vector<int> > vec(4, vector<int>(4))
-	
+
 
 	//Para borde
 	int numdummycells=0;
 
 	vector < vector <bool> > cellfacefound;
-	//Control for 
+	//cout << "cell loop"<<endl;
+	//Control for
 	//Init cell face containers
 	for (cellit=cell.begin();cellit!=cell.end();cellit++)
 	{
+	    cout <<"cell loop"<<endl;
 		cellit->Init_Idface(numcellfaces[cellit->Num_Vertex()]);
 		cellit->Init_NumberofFaces(numcellfaces[cellit->Num_Vertex()]);
 		vector <bool> cellfaces;
@@ -269,6 +275,7 @@ void Fv_CC_Grid::Iniciar_Caras()
 	//Celda primera
     for (cellit=cell.begin();cellit!=cell.end();cellit++)
     {
+        //cout <<"cell loop"<<endl;
 		//cout <<"Rcorriendo celda"<<c1<<endl;
 		vector <int> intverts;				//Los vertices interiores que voy encontrando
 
@@ -276,7 +283,7 @@ void Fv_CC_Grid::Iniciar_Caras()
 		int c2=c1+1;
 		//Recorro las caras
 		int numfaceverts;
-		vector <int> tempNodes;							//Nodos de cada cara 
+		vector <int> tempNodes;							//Nodos de cada cara
 
 		for (int nf=0;nf<numcellfaces[cellit->Num_Vertex()];nf++)
 		{
@@ -298,7 +305,7 @@ void Fv_CC_Grid::Iniciar_Caras()
 				{
 					tempNodes2=cellit2->GlobalVertFace(nf2);
 					numfaceverts2=tempNodes2.size();
-					//Compare tempNodes (vertices of cell1 face) with 
+					//Compare tempNodes (vertices of cell1 face) with
 					int nvenc=NumVecElemFound(tempNodes,tempNodes2);
 					//if (NumVecElemFound(tempNodes,cellit2->Conect())==tempNodes.size())
 					//Si no lo coloco asi no anda
@@ -326,7 +333,7 @@ void Fv_CC_Grid::Iniciar_Caras()
 						_FvFace f(nf,tempNodes,facevertex,facenodes,false);
 
 						cellfacefound[c2][nf2]=true;
-							
+
 						//Adding global face indexes for each cell
 						this->Cell(c1).Id_Face(nf,numfaces);
 						this->Cell(c2).Id_Face(nfenc2,numfaces);
@@ -334,20 +341,20 @@ void Fv_CC_Grid::Iniciar_Caras()
 						face.push_back(f);
 						nfi++;
 						numfaces++;
-				
+
 					} //Fin del if	found internal face
 
 
-				}//End of search faces 
+				}//End of search faces
 				c2++;
 				cellit2++;
 			}//fin del while
-		
+
 			//Tengo que agrupar los vertices del cell1  que no fueron encontrados
 			//Puede ser que haya mas de 2 faces, para esto puedo hacer lo siguiente
 			//1)tengo que ver las normales
 			//2) Puedo asociar las conectividades de acuerdo a Nastran
-			//Busco que 
+			//Busco que
 			//De todos los vertices del cell1 no encontre 3 o mas comunes con otros cells
 			//Boundary faces
 			if (!intfacefound && !cellfacefound[c1][nf])	//Si tengo vertices que no son interiores
@@ -373,7 +380,7 @@ void Fv_CC_Grid::Iniciar_Caras()
 				numdummycells++;
 				numfaces++;
 			}
-			
+
 		}//Fin del for de faces para cell c2
 		c1++;
 	}// Fin de for de cell c1
