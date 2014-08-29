@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -65,19 +65,19 @@ private:
     //generada la malla y cargo la malla rectangular
     //Por que la paso como argumento??
     Fv_CC_Grid(const int &nex,const int &ney,const double &lx,const double &ly);
-   	Fv_CC_Grid(const char *name){fileName=name;this->Read_CGNS();}; 
-	Fv_CC_Grid(string name){fileName=name;this->Read_CGNS();}; 
+   	Fv_CC_Grid(const char *name){fileName=name;this->Read_CGNS();};
+	Fv_CC_Grid(string name){fileName=name;this->Read_CGNS();};
 	//Constructor para leer desde NASTRAN
 	//El boundary deberia salir solo, pero es bueno para colocarle indices
 	//Colocando al boundary me ahorro el trabajo de buscar caras libres
-	//Deberia arrojar un error si no 
+	//Deberia arrojar un error si no
 	Fv_CC_Grid(vector<_Vertex> &,vector <Cell_CC> &, Boundary &);
 	void Iniciar_Caras();
 	void AddBoundary(Boundary &bound){boundary=bound;};
 	void CalcCellVolumes();
 
-	
-	
+
+
 	//Manejo de Celdas
     void PushCell(Cell_CC c){cell.push_back(c);};  //Esto podria ser una plantilla
 	void PushCell(const std::vector<int> vc); //Inserto una celda segun conectividad
@@ -91,15 +91,15 @@ private:
 	void Fv_CC_Grid::CreateNodesFromCellVerts();
 
 	const SurfaceField<Vec3D> & Sf(); //Face Normals
-	
+
 	//FUNCIONES DE LOG
     void Log(string );    //ES una funcion virtual en la clase base
 
     // VISUALIZACION DE VARIABLES DE MALLA
 	//THE RETURN VALUE COULD BE MODIFIED OR NOT, BECAUSE IT IS NOT CONST
-     Cell_CC & Cell(int c){return cell[c];}   //devuelvo celda
+     const Cell_CC & Cell(int c)const{return cell[c];}   //devuelvo celda
 	_FvFace & Face(const int &i) {return face[i];}
-	
+
 	void AssignNeigboursCells();
 
     std::vector<Cell_CC>::iterator BeginCell(){return cell.begin();}

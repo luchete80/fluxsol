@@ -186,25 +186,26 @@ void EqnSystem<T>::Log(std::string str)
 template <typename T>
 EqnSystem<T>::EqnSystem(const Fv_CC_Grid &FvG)
 {
-	Fv_CC_Grid FvGrid;
 
 	dimension=int(pTraits<T>::rank);
 
-	for (int c=0;c<FvGrid.Num_Cells();c++)
+    //cout << "Num cells" << FvG.Num_Cells() <<endl;
+	for (int c=0;c<FvG.Num_Cells();c++)
     {
 		vector <T> an;
 		T init_an;
-        cout << "Cell "<<endl;
+        //cout << "Cell "<<endl;
 		//Insert empty Values
 		T ap,source;
 		vector <int> nbr_id;
-		an.assign(FvGrid.Cell(c).Num_Neighbours(),init_an),
-		nbr_id.assign(FvGrid.Cell(c).Num_Neighbours(),0);
+		an.assign(FvG.Cell(c).Num_Neighbours(),init_an),
+		nbr_id.assign(FvG.Cell(c).Num_Neighbours(),0);
 
-		for (int n=0;n<FvGrid.Cell(c).Num_Neighbours();n++)
-			nbr_id[n]=FvGrid.Cell(c).Neigbour(n);
+		for (int n=0;n<FvG.Cell(c).Num_Neighbours();n++)
+			nbr_id[n]=FvG.Cell(c).Neigbour(n);
 
 		FluxSol::Eqn <T> eq(c,ap,an,source,nbr_id);
+		//cout << "Pushing back eqn..."<<endl;
 		eqn.push_back(eq);
 
 	}//End for cells

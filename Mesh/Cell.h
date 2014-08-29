@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -59,19 +59,19 @@ class _Cell
 		_Cell(const int &id, std::vector<int> conect);
 
 		// VARIABLES DE CEDAS
-		int &  Num_Vertex(){return num_vertex;}
-		int &  Num_Faces (){return num_faces; }
+		const int &  Num_Vertex()const{return num_vertex;}
+		const int &  Num_Faces ()const{return num_faces; }
 
 		void Conect(const std::vector<int> c);
 		std::vector<int> & Conect(){return id_vert;}
-		int & Vert(const int &i){return id_vert[i];}
+		const int & Vert(const int &i)const{return id_vert[i];}
 
-        int Id(){return id;};   //Devuelve el id del Cell
+        const int Id()const{return id;};   //Devuelve el id del Cell
 		void Id(const int &Id){id=Id;}
 
 		//Funcion para ver el id de un vertice
-		int & Id_Vert (int i){return id_vert[i];}
-		int & Id_Face (int i){return id_face[i];}
+		const int & Id_Vert (int i)const{return id_vert[i];}
+		const int & Id_Face (int i)const{return id_face[i];}
 		void Id_Face (const int &i, const int &val){id_face[i]=val;}
 
 		void Init_Idface(const int &i){id_face.assign(i,0);}
@@ -93,12 +93,12 @@ class _Cell
 		//Faces
 		void AddIdFace(const int &id){id_face.push_back(id);num_faces++;};
 		vector <int> GlobalVertFace(const int &nf);
-		
+
 		//Neighbours
 		void AssignNeighbours(std::vector <int> nc) {id_neigbourcell=nc;};
 		void AddNeighbour(const int &i) {id_neigbourcell.push_back(i);};
-		int Neigbour(const int &i){return id_neigbourcell[i];}
-		unsigned int Num_Neighbours(){return id_neigbourcell.size();}
+		const int Neigbour(const int &i)const {return id_neigbourcell[i];}
+		const unsigned int Num_Neighbours()const {return id_neigbourcell.size();}
 
 		~_Cell(){};
 
