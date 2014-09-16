@@ -33,13 +33,20 @@ using namespace FluxSol;
 #define NS 1
 #define HEAT 2
 
+void CDTest();
+void maintest();
+
 //int argc, char *argv[]
 int main ()
 {
 
-	//CDTest();
+	CDTest();
+}
 
-    Fv_CC_Grid malla(2,2,1.0,1.0);
+
+void maintest()
+{
+        Fv_CC_Grid malla(2,2,1.0,1.0);
 //	MyList<int>wallfaces = { 1, 2};
 //	MyVector<int> hola={1,2};
 	int wallfaces[]={2,5,8,10,13,18};
@@ -86,5 +93,60 @@ int main ()
 	EqnSystem <Scalar> PruEqn;
 	_Surf_Fv_Field<Scalar> fip;
 	_CC_Fv_Field <Vec3D> Tpru(malla);
+
+}
+void CDTest()
+{
+
+
+	string inputFileName="Input.in";
+	InputFile input(inputFileName);
+
+	vector<int> equations;
+
+	Fv_CC_Grid mesh(input.section("grid",0).get_string("file"));
+
+	_CC_Fv_Field<Vec3D> U;
+	_CC_Fv_Field<Scalar> phi;
+
+	ReadFieldFromInput(input, U,mesh);
+
+
+	mesh.Log("Log.txt");
+
+
+	EqnSystem <Scalar> CDEqn;
+
+	Scalar k(1.);	//Diffusion
+
+	cout<<"Generating system"<<endl;
+
+
+	CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(U));
+
+	cout<<"Solving system"<<endl;
+	//Solve(CDEqn);
+
+
+	//CDEqn.Log("EqLog.txt");
+
+	cout<<"Generating field"<<endl;
+	CenterToVertexInterpolation <Scalar> interp(phi);
+
+	Vertex_Fv_Field<Scalar> intphi;    //interpolated phi
+
+
+	//phi.ToCellCenters(CDEqn);
+
+
+	cout<<"Interpolating to vertices"<<endl;
+	intphi=interp.Interpolate(phi);
+
+	cout<<"Writing files"<<endl;
+	OutputFile("CellField.vtu",phi);
+	OutputFile("VertexField.vtu",intphi);
+
+	//	---- The End -------
+	return 0;
 
 }

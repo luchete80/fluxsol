@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -52,8 +52,8 @@ public:
 	//Modificaciones del original free-cfd asumiendo en principio una sola zona
 	//Modification of the original free-cfd
 	std::vector<set<int> > bc_elem_list;	//Asummed at first one single zone
-};	
-	
+};
+
 //Malla GENERICA
 //de elementos finitos, o de volumenes finitos en cualquier variante
 class _Grid{
@@ -62,7 +62,7 @@ class _Grid{
 
 
     protected:
-	
+
 	GridRawData raw;
 	//Archivos y logs
 	//Que conviene???
@@ -127,19 +127,19 @@ class _Grid{
     void Inicie_Cells(bool b){inicie_cells=true;}
 
 	//In those case with built in types, const return value is not importat
-    int & Num_Verts(){return num_verts;}    //polimorfismo
+    const int & Num_Verts()const {return num_verts;}    //polimorfismo
 	int & Num_Faces(){return num_faces;}    //polimorfismo
 	int & Num_Boundary_Faces(){return num_boundary_faces;}    //polimorfismo
-	int & Num_Cells() {return num_cells;}	//es el numero total
+	const int & Num_Cells() const {return num_cells;}	//es el numero total
 	void Bidim_Mesh (bool b){bidim_mesh=b;}
 	std::vector <int> & Num_Verts_xyz(){return num_verts_xyz;}    //polimorfismo
 
     //Puedo hacer una funcion con varios argumentos en lugar de un vector para los indices
     vector <_Vertex> & Verts(vector<int> indvert);
 	//Devuelvo el vertice v
-	_Vertex & Vertex(const int &v){return vert[v];}
+	const _Vertex & Vertex(const int &v)const {return vert[v];}
 
-	
+
 
     //////////
     // LOGS //
@@ -155,7 +155,7 @@ class _Grid{
 
     void Log_Abrir(std::string nombre){meshlog.open(nombre.c_str());}
     void Log_Verts();
-	
+
 	void Read_InitialCGNS();
 	virtual void Read_CGNS();
 

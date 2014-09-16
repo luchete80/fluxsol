@@ -198,9 +198,14 @@ EqnSystem<T>::EqnSystem(const Fv_CC_Grid &FvG)
 		//Insert empty Values
 		T ap,source;
 		vector <int> nbr_id;
+		cout << "Neighbours number" <<endl;
+		//_Cell cc(FvGrid.Cell(c));
+		//cout << "Assigned"<<endl;
+		//cout << FvGrid.Cell(c).Num_Neighbours()<<endl;
 		an.assign(FvGrid.Cell(c).Num_Neighbours(),init_an),
 		nbr_id.assign(FvGrid.Cell(c).Num_Neighbours(),0);
 
+        //cout << "Neighbours"<<endl;
 		for (int n=0;n<FvGrid.Cell(c).Num_Neighbours();n++)
 			nbr_id[n]=FvGrid.Cell(c).Neigbour(n);
 
@@ -215,20 +220,20 @@ EqnSystem<T>::EqnSystem(const Fv_CC_Grid &FvG)
 //Arguments Can not be defined as constants
 //Passing right coeffs to left and left source to sight
 template <typename T>
-EqnSystem <T> EqnSystem <T>::operator==(EqnSystem <T> &right)
+EqnSystem <T> & EqnSystem <T>::operator==(const EqnSystem <T> &right)
 {
-	EqnSystem <T> ret;
+	//EqnSystem <T> ret;
 
 	if (EqnV().size() == right.EqnV().size())
 	{
 		//Check if both eqns have same size
 		for (int e = 0; e<EqnV().size(); e++)
 		{
-			ret.Eqn(e) = (eqn[e] == right.Eqn(e));
+			this->eqn[e] = (this->eqn[e] == right.Eqn(e));
 		}
 	}
 
-	return ret;
+	return *this;
 }
 
 

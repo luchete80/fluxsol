@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -32,7 +32,7 @@ class OutputFile
 {
 	protected:
 	//To check if new fields have same mesh
-	Fv_CC_Grid &grid;
+	const Fv_CC_Grid &grid;
 
 
 	public:
@@ -40,10 +40,10 @@ class OutputFile
 	OutputFile(string name, Fv_CC_Grid &grid);
 	template <typename T>
 	OutputFile(string name, _CC_Fv_Field<T> &field);
-	
+
 	template <typename T>
 	OutputFile(string name, Vertex_Fv_Field<T> &field);
-	
+
 	template <typename T>
 	void AddFieldValues(_CC_Fv_Field<T>);
 

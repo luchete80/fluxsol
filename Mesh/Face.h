@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -74,16 +74,16 @@ class _Face
 //      _Face(const vector<int> & cells, const vector<int> & verts, _Grid *malla);
 		const int & Cell(const int &i){return cell[i];};
 		const int & Vert(const int &i){return vertex[i];};
-		vector<int> &Vert(){return this->vertex;} 
+		vector<int> &Vert(){return this->vertex;}
 		const int & NumCells(){return cell.size();}
 		const int & NumVerts(){return num_vertex;}
 		Vec3D& Af(){return af;}
 
 		Vec3D& Center(){return sm;}
 
-		bool Boundaryface(){return boundaryface;}
+		const bool & Boundaryface()const {return boundaryface;}
 		void Null_Flux_Face(bool b){null_flux_face=b;}
-		bool Is_Null_Flux_Face(){return null_flux_face;}
+		const bool & Is_Null_Flux_Face()const{return null_flux_face;}
 
 		~_Face(){};
 

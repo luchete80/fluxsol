@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -60,7 +60,7 @@ Vec3D Vec3D::cross(const Vec3D &right) {
 
 
 //Equal to inner
-const Scalar Vec3D::operator& (const Vec3D &right) const 
+const Scalar Vec3D::operator& (const Vec3D &right) const
 {
 	Scalar temp;
 	for (int c=0;c<3;c++) temp.Val()+=comp[c]*right.comp[c];
@@ -301,13 +301,13 @@ Vec3D Vec3D::Val()
     return (*this);
 }
 
-vector<double> Vec3D::Comp()
+const vector<double> Vec3D::Comp()const
 {
 	vector<double> r;
 	for (int i=0;i<3;i++)
 	{
 		r.push_back(this->comp[i]);
-	}	
+	}
 	return r;
 }
 
@@ -343,7 +343,7 @@ Vec3D operator/ (Vec3D &vector, Scalar &sc)
 
 Scalar operator& (Vec3D &left, Vec3D &right)
 {
-	
+
 	double d=0.;
 	for (int c=0;c<3;c++)
 		d+=left.comp[c]*right.comp[c];

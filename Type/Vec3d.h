@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -62,14 +62,14 @@ public:
 	Vec3D & operator= (const double &);
 	Vec3D & operator= (const std::vector<double> &);
 	Vec3D & operator*= (const double &);
-	
+
 
 	Vec3D &operator/= (const double &);
 	Vec3D &operator+= (const double &);
 	Vec3D &operator+= (const Vec3D &);
 	Vec3D &operator-= (const double &);
 	Vec3D &operator-= (const Vec3D &);
-	
+
 
 	const Vec3D operator* (const double &)const;
 	const Vec3D operator/ (const double &)const;
@@ -91,17 +91,17 @@ public:
 	bool operator!= (const Vec3D &);
 	double &operator[] (int i);
 	const Scalar Norm()const;							//This must be moved to operations
-	
+
 	const Vec3D normalize(void) ;	//Versor
 
-	
+
     //Componentes
     inline double & x(){return comp[0];}
     inline double & y(){return comp[1];}
     inline double & z(){return comp[2];}
 
 
-	vector<double> Comp();	//Common to all templates 
+	const vector<double> Comp()const ;	//Common to all templates
 
 	//Operaciones de Log``
 	std::string Imprimir_Coord();

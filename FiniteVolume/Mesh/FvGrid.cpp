@@ -41,14 +41,17 @@ _Grid(nex,ney)
 	GenerarMallaRectangular(elx,ely,(*this));
 
 	//Ahora debo generar los nodos
+	cout << "Creating Nodes..."<<endl;
 	CreateNodesFromCellVerts();
 	//Inicio las caras
+	cout << "Initializing faces..."<<endl;
 	Iniciar_Caras();
+	cout << "Assigning Neighbours..."<<endl;
 	AssignNeigboursCells();
 }
 
 //Inserto una celda
-void FluxSol::Fv_CC_Grid::PushCell(const std::vector <int> vc)
+void FluxSol::Fv_CC_Grid::PushCell(const std::vector <int> &vc)
 {
     Cell_CC c;
     c.Conect(vc);
@@ -205,10 +208,13 @@ void Fv_CC_Grid::AssignNeigboursCells()
 {
 
 	int c=0;
+	cout <<"neigh assign" <<endl;
 	for (cellit=cell.begin();cellit!=cell.end();cellit++)
 	{
+        cout <<"neigh assign cell"<<endl;
 		for (int intface=0;intface<cellit->Num_Faces();intface++)
 		{
+		    cout << "Int face" << intface<<endl;
 			int idface=cellit->Id_Face(intface);
 			_FvFace fvface=this->Face(idface);
 			if (!fvface.Is_Null_Flux_Face() && !fvface.Boundaryface())

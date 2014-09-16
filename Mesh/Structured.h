@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -30,7 +30,7 @@ namespace FluxSol{
 //Sirve para cualquier tipo de Malla, de volumenes finitos o de elementos finitos
 //Con las variables ya iniciadas
 //Se debio iniciar como una malla estructurada con sus numeros de vertices
-//La plantilla es el tipo de malla
+//Typename is the mesh type
 template<typename T>
 void GenerarMallaRectangular(const double &lex,const double &ley, T& t)
 {
@@ -46,7 +46,7 @@ void GenerarMallaRectangular(const double &lex,const double &ley, T& t)
 
 	double posx,posy,posz;
 
-    posx=posy=posz=0.0;	
+    posx=posy=posz=0.0;
 	//Creo vertices
     for (int k=0;k<2;k++)   //Vertices en z
     {

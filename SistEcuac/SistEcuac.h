@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -40,8 +40,8 @@ class Eqn{
     int id;										//eqn Id
 	T ap;                                       //Central coefficient
 	std::vector <T> an;                         //Neighbours
-    
-	//Neighbours 
+
+	//Neighbours
 	//Tis information is duplicated, is in mesh and in system eqn
 	//This can be improved by referring the mesh with a reference in eqnsystem
 	int num_neighbours;                         //Number of neighbours
@@ -77,7 +77,7 @@ public:
 	void X(const T &v){x=v;}
 	int & Neighbour(const int &i){return this->neighbour_id[i];}
 	int MinNeigbourId();
-	const std::vector <int> & NeighboursIds()const{return neighbour_id;} 
+	const std::vector <int> & NeighboursIds()const{return neighbour_id;}
 
     std::vector <T>& An(){return an;};
 
@@ -85,7 +85,7 @@ public:
 	//OPERATORS
 	//Is more general in case of vectors
 	Eqn<T>  operator +=(const double &d){source+=d; return *this;};
-	
+
 	//Binary operators
 	//Eqn<T> & operator +(const Eqn<T> &right);
 	//Eqn<T> & operator -(const Eqn<T> &right);
@@ -155,7 +155,7 @@ class EqnSystem{   //Es un vector de ecuaciones
 	EqnSystem <T> & operator==(const double &);
 
 	//Binary operators, U
-	EqnSystem <T> operator==(EqnSystem <T> &right);
+	EqnSystem <T> & operator==(const EqnSystem <T> &right);
 
 	//Output to field
 	//void ToCellCenterField();

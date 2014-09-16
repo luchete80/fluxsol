@@ -59,7 +59,7 @@ class CenterToFaceInterpolation
 			//Loop throug faces
 			for (int f = 0; f<this->field.GridPtr->Num_Faces(); f++)
 			{
-				_FvFace &face = this->field.GridPtr->Face(f);
+				_FvFace face = this->field.GridPtr->Face(f);
 				T prom;
 				//Scalar fp
 				if (!this->field.GridPtr->Face(f).Boundaryface())
