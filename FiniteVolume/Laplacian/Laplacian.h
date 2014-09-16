@@ -54,9 +54,9 @@ template<typename T>
 EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 {
 
-    cout << "Defining eqn..."<<endl;
+    //cout << "Defining eqn..."<<endl;
 	EqnSystem <T> eqnsys(VolField.Grid());
-	cout << "Eqn created."<<endl;
+	//cout << "Eqn created."<<endl;
 	//EqnSystem <T> eqnsys(VolField);
 	//EqnSystem <T> eqnsys(VolField.Grid().Num_Cells());   //Como no le doy parametros inicia todo en cero, salvo las dimensiones
 
@@ -72,11 +72,11 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 	vector <int> nbr_eqn;
 
 	//Internal field
-	cout << "Face Number"<<VolField.Grid().Num_Faces()<<endl;
-	cout << "Cell Number"<<VolField.Grid().Num_Cells()<<endl;
+	//cout << "Face Number"<<VolField.Grid().Num_Faces()<<endl;
+	//cout << "Cell Number"<<VolField.Grid().Num_Cells()<<endl;
 	for (int f=0;f<VolField.Grid().Num_Faces();f++)
 	{
-	    cout << "Face "<<f<<endl;
+	    //cout << "Face "<<f<<endl;
 		_FvFace face=VolField.Grid().Face(f);
 		if (!face.Is_Null_Flux_Face())
 		{
@@ -84,22 +84,26 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 
 			if (!VolField.Grid().Face(f).Boundaryface())
 			{
-			    cout << "Not boundary face"<<endl;
+			    //cout << "Not boundary face"<<endl;
 				ap=-face.Norm_ad()/face.Dist_pn()*fi;
 				an=-ap;
 				//nbr_eqn.push_back(VolField.Grid().Cell(c));
 				//eqnsys.Eqn(face.Cell(0)).Coeffs(ap,an);
 
-				cout << "Look through neighbours"<<endl;
+				//cout << "Look through neighbours"<<endl;
 				for (int nb=0;nb<2;nb++)
 				{
+				    //cout << "Neighbour" <<endl;
 					int localnid;	//Id of local neigbour
 					if (nb==0)localnid=1;	else localnid=0;
 					//p cell
 					int pcellid=face.Cell(nb);
 					int ncellid=face.Cell(localnid);
+					//cout << "Eqn size" << eqnsys.Num_Eqn()<<endl;
+                    //cout << "Creating Eqn ... pcell id"<< pcellid<<endl;
 
 					eqnsys.Eqn(pcellid).Ap()+=ap;
+					//cout << "Created" <<endl;
 					int neigbour_cell;
 					int localneighbourid;	//local cell neigbour
 					//Neighbours are
@@ -107,6 +111,7 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 					Cell_CC cell=VolField.Grid().Cell(face.Cell(nb));
 					for (int localncell=0;localncell<cell.Num_Neighbours();localncell++)
 					{
+					    //cout << "Local cell" <<localncell<<endl;
 						if (cell.Neigbour(localncell)==ncellid)
 							localneighbourid=localncell;
 					}
@@ -119,7 +124,7 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 	}//End look trough faces
 
 	// BORDE - BOUNDARY
-	cout << "Laplacian, look through boundary.."<<endl;
+	//cout << "Laplacian, look through boundary.."<<endl;
 	for (int p=0;p<VolField.Grid().vBoundary().Num_Patches();p++)
 	{
 		for (int f=0;f<VolField.Grid().vBoundary().vPatch(p).Num_Faces();f++)
@@ -145,7 +150,7 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 		}
 
 	}
-    cout << "Returning laplacian"<<endl;
+    //cout << "Returning laplacian"<<endl;
     return eqnsys;
 }
 

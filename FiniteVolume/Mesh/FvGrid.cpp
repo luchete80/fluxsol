@@ -151,7 +151,7 @@ void FluxSol::Fv_CC_Grid::CreateNodesFromCellVerts()
 		{
 			nod+=this->Vertex(cell.Id_Vert(n));
 		}
-		cout <<cellid<<endl;
+		//cout <<cellid<<endl;
 		//Ahora divido por la cantidad de vertices
 		nod/=(double)cell.Num_Vertex();
 		nod.Id(cellid);
@@ -250,8 +250,8 @@ void Fv_CC_Grid::Iniciar_Caras()
 //    //Declaro otro iterador que no esta aca
 //
 //    //Inicio las celdas
-    cout << "Cell initialized "<<inicie_cells<<endl;
-    cout << "Node initialized "<<inicie_nodes<<endl;
+    //cout << "Cell initialized "<<inicie_cells<<endl;
+    //cout << "Node initialized "<<inicie_nodes<<endl;
     if (!inicie_cells || !inicie_nodes)
     return;
 
@@ -268,7 +268,7 @@ void Fv_CC_Grid::Iniciar_Caras()
 	//Init cell face containers
 	for (cellit=cell.begin();cellit!=cell.end();cellit++)
 	{
-	    cout <<"cell loop"<<endl;
+	    //cout <<"cell loop"<<endl;
 		cellit->Init_Idface(numcellfaces[cellit->Num_Vertex()]);
 		cellit->Init_NumberofFaces(numcellfaces[cellit->Num_Vertex()]);
 		vector <bool> cellfaces;
