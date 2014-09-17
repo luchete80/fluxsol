@@ -209,24 +209,41 @@ void Fv_CC_Grid::AssignNeigboursCells()
 
 	int c=0;
 	cout <<"neigh assign" <<endl;
-	for (cellit=cell.begin();cellit!=cell.end();cellit++)
-	{
-        cout <<"neigh assign cell"<<endl;
-		for (int intface=0;intface<cellit->Num_Faces();intface++)
-		{
-		    cout << "Int face" << intface<<endl;
-			int idface=cellit->Id_Face(intface);
-			_FvFace fvface=this->Face(idface);
-			if (!fvface.Is_Null_Flux_Face() && !fvface.Boundaryface())
-			{
-				if (Face(idface).Cell(0)==c)
-					cellit->AddNeighbour(Face(idface).Cell(1));
-				else
-					cellit->AddNeighbour(Face(idface).Cell(0));
-			}
-		}
-		c++;
-	}
+    cout << "Grid Num Faces" <<this->Num_Faces()<<endl;
+    cout << "Grid Face Size" <<this->face.size()<<endl;
+    cout << "Grid Cell Size" <<this->cell.size()<<endl;
+    bool end=false;
+    if (!this->Num_Faces() || this->face.size()==0 || this->cell.size()==0)
+        end=true;
+    if (!end)
+    {
+
+        for (cellit=cell.begin();cellit!=cell.end();cellit++)
+        {
+            cout << "neigh assign cell "<<c<<endl;
+            cout << "Num Faces" <<cellit->Num_Faces()<<endl;
+            for (int intface=0;intface<cellit->Num_Faces();intface++)
+            {
+                cout << "Int face" << intface<<endl;
+                cout << "Id Face"<<cellit->Id_Face(intface);
+                int idface=cellit->Id_Face(intface);
+                _FvFace fvface=this->Face(idface);
+                if (!fvface.Is_Null_Flux_Face() && !fvface.Boundaryface())
+                {
+                    cout << "Flux Internal Face"<<endl;
+                    if (Face(idface).Cell(0)==c)
+                        cellit->AddNeighbour(Face(idface).Cell(1));
+                    else
+                        cellit->AddNeighbour(Face(idface).Cell(0));
+                }
+            }
+            c++;
+        }
+    }
+    else
+    {
+        cout <<"ERROR: Grid does not have any face..." <<endl;
+    }
 }
 
 

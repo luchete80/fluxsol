@@ -24,14 +24,13 @@ else()
 	set (CMAKE_BUILD_TYPE Release)
 endif ()
 
-set (NAME fluxsol)
+set (NAME fluxsol-nb)
 
 project(${NAME})
 
 set (CMAKE_CXX_FLAGS "-fpermissive")
 
-#set (FLUXSOL_DIR c:/Users/samsung/Dropbox/Numerico/MecSol/FluxSol)
-set (FLUXSOL_DIR d:/Luciano/Numerico/MecSol/FluxSol)
+set (FLUXSOL_DIR c:/Users/samsung/Dropbox/Numerico/MecSol/FluxSol)
 set (LASPACK_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/laspack/src)
 set (CGNS_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src)
 set (ALGLIB_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/src)

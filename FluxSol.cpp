@@ -34,6 +34,8 @@ using namespace FluxSol;
 #define HEAT 2
 
 void CDTest();
+void CDTest2();
+
 void maintest();
 
 //int argc, char *argv[]
@@ -104,11 +106,13 @@ void CDTest()
 
 	vector<int> equations;
 
+    cout << "Creating Mesh..."<<endl;
 	Fv_CC_Grid mesh(input.section("grid",0).get_string("file"));
 
 	_CC_Fv_Field<Vec3D> U;
 	_CC_Fv_Field<Scalar> phi;
 
+    cout << "Reading Fields"<<endl;
 	ReadFieldFromInput(input, U,mesh);
 
 
@@ -119,8 +123,87 @@ void CDTest()
 
 	Scalar k(1.);	//Diffusion
 
-	cout<<"Generating system"<<endl;
+	cout<<"Generating Eqn system"<<endl;
 
+	CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(U));
+
+	cout<<"Solving system"<<endl;
+	//Solve(CDEqn);
+
+
+	//CDEqn.Log("EqLog.txt");
+
+	cout<<"Generating field"<<endl;
+	CenterToVertexInterpolation <Scalar> interp(phi);
+
+	Vertex_Fv_Field<Scalar> intphi;    //interpolated phi
+
+
+	//phi.ToCellCenters(CDEqn);
+
+
+	cout<<"Interpolating to vertices"<<endl;
+	intphi=interp.Interpolate(phi);
+
+	cout<<"Writing files"<<endl;
+	OutputFile("CellField.vtu",phi);
+	OutputFile("VertexField.vtu",intphi);
+
+	//	---- The End -------
+	return 0;
+
+}
+
+void CDTest2()
+{
+
+        Fv_CC_Grid malla(2,2,1.0,1.0);
+//	MyList<int>wallfaces = { 1, 2};
+//	MyVector<int> hola={1,2};
+	int wallfaces[]={2,5,8,10,13,18};
+	int movwallfaces[]={15,19};
+	list <int> lmovwallfaces;	for (int i=0;i<2;i++)	lmovwallfaces.push_back(movwallfaces[i]);
+	list <int> lwallfaces;	for (int i=0;i<6;i++)	lwallfaces.push_back(wallfaces[i]);
+	Patch fwall(lwallfaces);
+	Patch mwall(lmovwallfaces);
+	vector<Patch> vpatch;
+	//Must be a verification - Debe haber una verificacion
+	vpatch.push_back(lwallfaces); 	vpatch.push_back(lmovwallfaces);
+	//(fwall,mwall);
+
+	Boundary bound(vpatch);
+	malla.AddBoundary(bound);
+	//Campo de temperatura
+	_CC_Fv_Field <Scalar> T(malla);
+
+	//Boundary conditions
+	Scalar wallvalue=0.;
+	Scalar topvalue=1.;
+	T.Boundaryfield().PatchField(0).AssignValue(wallvalue);
+	T.Boundaryfield().PatchField(1).AssignValue(topvalue);
+
+
+	//string inputFileName="Input.in";
+	//InputFile input(inputFileName);
+
+    //cout << "Creating Mesh..."<<endl;
+	//Fv_CC_Grid mesh(input.section("grid",0).get_string("file"));
+
+	_CC_Fv_Field<Vec3D> U;
+	_CC_Fv_Field<Scalar> phi;
+
+    cout << "Reading Fields"<<endl;
+	ReadFieldFromInput(input, U,mesh);
+
+
+	mesh.Log("Log.txt");
+
+
+	EqnSystem <Scalar> CDEqn;
+
+	Scalar k(1.);	//Diffusion
+
+	cout<<"Generating Eqn system"<<endl;
 
 	CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(U));
 
