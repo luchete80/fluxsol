@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -44,16 +44,27 @@ Vertex_Fv_Field<T>::Vertex_Fv_Field(Fv_CC_Grid &grid)
 
 	T val;
 	int nv= grid.Num_Verts();
-	this->value.assign(nv,val);	
+	this->value.assign(nv,val);
 }
 
 template <typename T>
-void _Field<T>::operator=(const T &val)
+_Field<T> & _Field<T>::operator=(const T &val)
 {
 	for (int v=0;v<this->value.size();v++)
 	{
 		this->value[v]=val;
 	}
+	return *this;
+}
+
+template <typename T>
+_Field<T> & _Field<T>::operator=(T val)
+{
+	for (int v=0;v<this->value.size();v++)
+	{
+		this->value[v]=val;
+	}
+	return *this;
 }
 
 //template <typename T>
@@ -90,9 +101,9 @@ template <typename T>
 const Scalar MaxDiff(const _Field<T> &field1, const _Field<T> &field2)
 {
 	Scalar r;
-	//Check for 
+	//Check for
 	if (field1.Numberofvals() != field2.Numberofvals() )
-		return r; 
+		return r;
 
 	Scalar maxdiff(1.0e10);
 	for (int c=0;c<field1.Numberofvals();c++)

@@ -128,8 +128,8 @@ class _Grid{
 
 	//In those case with built in types, const return value is not importat
     const int & Num_Verts()const {return num_verts;}    //polimorfismo
-	int & Num_Faces(){return num_faces;}    //polimorfismo
-	int & Num_Boundary_Faces(){return num_boundary_faces;}    //polimorfismo
+	const int & Num_Faces()const {return num_faces;}    //polimorfismo
+	const int & Num_Boundary_Faces()const{return num_boundary_faces;}    //polimorfismo
 	const int & Num_Cells() const {return num_cells;}	//es el numero total
 	void Bidim_Mesh (bool b){bidim_mesh=b;}
 	std::vector <int> & Num_Verts_xyz(){return num_verts_xyz;}    //polimorfismo

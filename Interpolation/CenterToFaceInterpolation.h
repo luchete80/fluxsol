@@ -53,6 +53,7 @@ class CenterToFaceInterpolation
 		{
 
 			//Pending to Generate constructor
+			cout << "Grid Faces " <<this->field.GridPtr->Num_Faces()<<endl;
 			SurfaceField <T> r(this->field.GridPtr->Num_Faces());
 
 

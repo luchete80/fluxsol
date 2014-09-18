@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -63,11 +63,12 @@ class _Field{
 	void  Insert_Idgrid_domain(const int &i){idgrid_domain.push_back(i);}
 	int & Idgrid_domain(const int &i){return idgrid_domain[i];}
 	void Log();
-	
+
 
 	//Operations
 
-	void operator=(const T &val);
+	_Field<T> & operator=(const T &val);
+	_Field<T> & operator=(T val);
 	//It is not const since it can be changed
 	//Declare both operators to modify or not field
 	T& operator[](const int &x){return value[x];}
