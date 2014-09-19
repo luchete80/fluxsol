@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -23,6 +23,7 @@
 #include "Utils.h"
 
 using namespace std;
+using namespace FluxSol;
 
 string int2str(int number) {
         std::stringstream ss;
@@ -69,43 +70,49 @@ int SearchVal(const int &i,const std::vector <int> &v)
 }
 
 //Devuelve verdadero si los encontro a todos los ind en v
-bool FindAllVals(std::vector <int> &ind, std::vector <int> &v)
-{
-	bool enc=true;
-	int vi=0;
-	while (vi<v.size() && enc)
-	{
-		bool enc_elem=false;
-		for (int vind=0;vind<ind.size();vind++)
-			if (ind[vind]==v[vi])
-				enc_elem=true;
-		
-		if(!enc_elem)
-			enc=false;
-
-		vi++;
-	}
-	return enc;
-}
+//bool FindAllVals(std::vector <int> &ind, std::vector <int> &v)
+//{
+//	bool enc=true;
+//	int vi=0;
+//	while (vi<v.size() && enc)
+//	{
+//		bool enc_elem=false;
+//		for (int vind=0;vind<ind.size();vind++)
+//			if (ind[vind]==v[vi])
+//				enc_elem=true;
+//
+//		if(!enc_elem)
+//			enc=false;
+//
+//		vi++;
+//	}
+//	return enc;
+//}
 
 //Indica la cantidad de elementos del vector ind que encuentra en v
 //Si no encuentra devuelve 0
-int & NumVecElemFound(std::vector <int> &ind, std::vector <int> &v)
-{
-	int r=0;
-
-	int vi=0;
-	while (vi<v.size())
-	{
-		bool enc_elem=false;
-		for (int vind=0;vind<ind.size();vind++)
-			if (ind[vind]==v[vi])
-				r++;
-		vi++;
-	}
-	return r;
-
-}
+//int NumVecElemFound(std::vector <int> &ind, std::vector <int> &v)
+//{
+//	int r=0;
+//
+//	int vi=0;
+//	while (vi<v.size())
+//	{
+//		bool enc_elem=false;
+//		for (int vind=0;vind<ind.size();vind++)
+//        {
+//            if (ind[vind]==v[vi])
+//				r++;
+//            cout << "vi vind " <<vi << " " <<vind<<endl;
+//        }
+//        cout << "r"<<r<<endl;
+//		vi++;
+//	}
+//	cout <<"extiting"<<endl;
+//
+//	return r;
+//
+//}
 
 //Valores en comun que tienen
 std::vector <int> & CommonValues(std::vector <int> &ind, std::vector <int> &v)
@@ -124,8 +131,8 @@ std::vector <int> & CommonValues(std::vector <int> &ind, std::vector <int> &v)
 	return r;
 }
 
-bool ValueFound(const int &val, std::vector<int> vec) 					
-{	
+bool ValueFound(const int &val, std::vector<int> vec)
+{
 	bool esta=false;
 	for (int nvint=0;nvint<vec.size();nvint++)
 	{

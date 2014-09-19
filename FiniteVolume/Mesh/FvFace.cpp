@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -31,6 +31,7 @@ using namespace FluxSol;
 _FvFace::_FvFace(const int &Id, std::vector<int> &idverts,const vector <_Vertex> &verts,
                                  vector <Node> & nodospn, bool bf):_Face(Id,verts)//El primer nodo es el p, el otro el n
 {
+    num_cells=0;
 	int idnode[2];
 	boundaryface=bf;
 	//Es una celda interior
@@ -59,16 +60,16 @@ _FvFace::_FvFace(const int &Id, std::vector<int> &idverts,const vector <_Vertex>
 		vec_pf_LR.push_back(sm-nodospn[idnode[0]]);
 		vec_pf_LR.push_back(sm-nodospn[idnode[1]]);
 
-		this->cell.push_back(nodospn[idnode[0]].Id());
-		this->cell.push_back(nodospn[idnode[1]].Id());
+		this->cell.push_back(nodospn[idnode[0]].Id()); num_cells++;
+		this->cell.push_back(nodospn[idnode[1]].Id()); num_cells++;
 
-	
+
 		//norm_ad=Af.Af/(Af.ePN)
-		//Ad is ths component collineal to pn   
+		//Ad is ths component collineal to pn
 		norm_ad=(af.dot(af)/af.dot(e_pn));
 		ad=norm_ad*e_pn;
-	
-		
+
+
 		at=af-ad;   norm_at=fabs(at);
 
 		//Factores
@@ -83,14 +84,14 @@ _FvFace::_FvFace(const int &Id, std::vector<int> &idverts,const vector <_Vertex>
 		//Relacion con vertice central de la cara
 		//Vector que va de P/N al baricentro de la cara
 		vec_pf_LR.push_back(sm-nodospn[0]);
-		this->cell.push_back(nodospn[0].Id());
-		
+		this->cell.push_back(nodospn[0].Id()); num_cells++;
+
 		//Case first order
 		Vec3D e_pf_LR=vec_pf_LR[0]/fabs(vec_pf_LR[0]);
 
 		norm_ad=(af.dot(af)/af.dot(e_pf_LR));
 		ad=norm_ad*vec_pf_LR[0];
-	
+
 	}
 
 }

@@ -334,6 +334,13 @@ void Fv_CC_Grid::Iniciar_Caras()
 					//Si no lo coloco asi no anda
 					int maxfaces=max_int(numfaceverts,numfaceverts2);
 					//Found an internal face
+					cout << "nf1 nf2 " << nf << " "<<nf2<<endl;
+					cout << "c1 c2" << c1 << " " << c2<<endl;
+					cout << "TempNodes"<<endl;
+                    for (int nn=0;nn<tempNodes.size();nn++)cout << tempNodes[nn]<<endl;
+                    cout << "TempNodes2"<<endl;
+                    for (int nn=0;nn<tempNodes2.size();nn++)cout << tempNodes2[nn]<<endl;
+                    cout << "nvenc maxfaces" <<nvenc<< maxfaces<<endl;
 					if (nvenc==maxfaces)
 					{
 						intfacefound=true;
@@ -360,7 +367,8 @@ void Fv_CC_Grid::Iniciar_Caras()
 						//Adding global face indexes for each cell
 						this->Cell(c1).Id_Face(nf,numfaces);
 						this->Cell(c2).Id_Face(nfenc2,numfaces);
-
+                        cout << "Found internal face"<<numfaces<<endl;
+                        cout << "Internal faces"<<nfi<<endl;
 						face.push_back(f);
 						nfi++;
 						numfaces++;

@@ -45,6 +45,7 @@ int main ()
 {
     //Ex1();
 	Ex1();
+	//Ex2();
 }
 
 
@@ -397,11 +398,11 @@ void Ex2()
 	//T.ToCellCenters(TEqn);
 
 	cout<<"Interpolating to vertices"<<endl;
-	vT=interp.Interpolate(T);
+	//vT=interp.Interpolate(T);
 
 	cout<<"Writing files"<<endl;
 	OutputFile("CellField.vtu",T);
-	OutputFile("VertexField.vtu",vT);
+	//OutputFile("VertexField.vtu",vT);
 	return 0;
 }
 

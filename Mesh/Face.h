@@ -40,6 +40,7 @@ class _Face
 	std::vector <int> vertex;                    //indice del vertice
 	std::vector <int> cell;
 	int num_vertex;
+	int num_cells;
 	//VARIABLES QUE PUEDEN ESTAR EN UNA CLASE DERIVADA
 	Vec3D sm;                                 //Punto central de la cara
 
@@ -75,8 +76,8 @@ class _Face
 		const int & Cell(const int &i){return cell[i];};
 		const int & Vert(const int &i){return vertex[i];};
 		vector<int> &Vert(){return this->vertex;}
-		const int & NumCells(){return cell.size();}
-		const int & NumVerts(){return num_vertex;}
+		const int NumCells()const{return cell.size();}
+		const int & NumVerts()const{return num_vertex;}
 		Vec3D& Af(){return af;}
 
 		Vec3D& Center(){return sm;}

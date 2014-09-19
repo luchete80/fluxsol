@@ -98,7 +98,7 @@ class _Cell
 		void AssignNeighbours(std::vector <int> nc) {id_neigbourcell=nc;};
 		void AddNeighbour(const int &i) {id_neigbourcell.push_back(i);};
 		const int & Neigbour(const int &i)const {return id_neigbourcell[i];}
-		const unsigned int Num_Neighbours()const {return id_neigbourcell.size();}
+		const int Num_Neighbours()const {return id_neigbourcell.size();}
 
 		~_Cell(){};
 
