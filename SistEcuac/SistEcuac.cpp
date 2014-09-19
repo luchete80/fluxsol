@@ -184,9 +184,8 @@ void EqnSystem<T>::Log(std::string str)
 }
 
 template <typename T>
-EqnSystem<T>::EqnSystem(const Fv_CC_Grid &FvG)
+EqnSystem<T>::EqnSystem(const Fv_CC_Grid &FvG):grid(Fv_CC_Grid(FvG))
 {
-
 	dimension=int(pTraits<T>::rank);
 
 	for (int c=0;c<FvG.Num_Cells();c++)

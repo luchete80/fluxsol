@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -30,8 +30,8 @@
 
 //Sparse libraries
 #include "laspack.h"
-#include "./Nastran/Varios.h"
-
+//#include "./Nastran/Varios.h"
+#include "Utils.h"
 namespace FluxSol{
 class _Solver{
 
@@ -67,12 +67,12 @@ void Solve (EqnSystem <T> &eq)
 	{
 		vector <double> ap=eq.Eqn(e).Ap().Comp();
 		int width=(eq.Eqn(e).Width()-1)*numberofcomp+1;
-	
-		int sparsecol=0;	
+
+		int sparsecol=0;
 		int row=e*numberofcomp;
 
 		for (int dim=0;dim<numberofcomp;dim++)	Q_SetLen(&K,row+dim+1,width);
-		
+
 		vector <double> nullval;
 		nullval.assign(numberofcomp,0.);
 
@@ -84,21 +84,21 @@ void Solve (EqnSystem <T> &eq)
 		for (int width_cells=0;width_cells<eq.Eqn(e).Width();width_cells++)
 		{
 			realcellid=width_cells+fisrt_nonzero_col;
-			
+
 			vector <double> col;
 			int columnid;
 			//Found central
 			bool foundcell=false;
 			int localneighbourfound=SearchVal(realcellid,eq.Eqn(e).NeighboursIds());
 			if (eq.Eqn(e).Id()==realcellid)
-			{col=ap;columnid=row;foundcell=true;}//row is equal to 
+			{col=ap;columnid=row;foundcell=true;}//row is equal to
 			//Neighbours ids are not neccesarily ordered, then must search for cellid in all neighbours
 			//else if (eq.Eqn(e).Neighbour(neighb)==realcellid) //Found an
 			else if(localneighbourfound>-1)
 			{col=eq.Eqn(e).An(localneighbourfound).Comp();columnid=numberofcomp*realcellid;foundcell=true;}
 			else //column index is not a neighbour neither central cell
 			{columnid=numberofcomp*realcellid;}
-			
+
 			//Write Matrix
 			if (foundcell)
 			{
@@ -107,7 +107,7 @@ void Solve (EqnSystem <T> &eq)
 					//Rows and columns start at 1 but sparse index start at 1
 					//Look throug neighbours
 					Q_SetEntry(&K,row+dim+1,numberofcomp*width_cells+dim,columnid+dim+1,col[dim]);
-				}		
+				}
 
 			}
 			else
@@ -116,8 +116,8 @@ void Solve (EqnSystem <T> &eq)
 					Q_SetEntry(&K,row+dim+1,numberofcomp*width_cells+dim,columnid+dim+1,0.0);
 
 			}
-			
-			
+
+
 		}//En of width
 
 		vector<double> val;
@@ -140,7 +140,7 @@ void Solve (EqnSystem <T> &eq)
 		vector <double> source=eq.Eqn(e).Source().Comp();
 		for (int dim=0;dim<numberofcomp;dim++)
 			V_SetCmp(&R,e*numberofcomp+dim+1,source[dim]);
-		
+
 	}
 	std::vector <double> Ui,Ri;
 	Ui.assign(totrows,0.);

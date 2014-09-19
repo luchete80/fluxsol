@@ -25,7 +25,16 @@ int Leer_Campo(const std::string cad,const int campo);
 template <typename T>
 void listar_vec(const std::vector <T>, ofstream f);
 //Estas funciones solo buscan la primera posicion del vector (o la unica)
-int SearchVal(const int &i,const std::vector <int> &v);
+inline int SearchVal(const int &i,const std::vector <int> &v)
+{
+	int r=-1;
+	for (int vi=0;vi<v.size();vi++)
+		if (v[vi]==i)
+			r=vi;
+
+	return r;
+
+}
 inline bool  FindAllVals(std::vector <int> &ind, std::vector <int> &v)	//Devuelve true si encuentra todos
 {
 	bool enc=true;

@@ -59,15 +59,15 @@ void listar_vec(const std::vector <T> v, ofstream f)
     f<<v[i]<<endl;
 }
 
-int SearchVal(const int &i,const std::vector <int> &v)
-{
-	int r=-1;
-	for (int vi=0;vi<v.size();vi++)
-		if (v[vi]==i)
-			r=vi;
+// int SearchVal(const int &i,const std::vector <int> &v)
+// {
+	// int r=-1;
+	// for (int vi=0;vi<v.size();vi++)
+		// if (v[vi]==i)
+			// r=vi;
 
-	return r;
-}
+	// return r;
+// }
 
 //Devuelve verdadero si los encontro a todos los ind en v
 //bool FindAllVals(std::vector <int> &ind, std::vector <int> &v)

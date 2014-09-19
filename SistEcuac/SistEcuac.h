@@ -28,7 +28,7 @@
 #include <fstream>
 //Is important to note that must not be recursively
 #include "./FiniteVolume/Mesh/FvGrid.h"
-//#include "../Field/Field.h"
+#include "FvField.h"
 
 using namespace std;
 //EL SISTEMA DE ECUACIONES PODRIA TENER UNA MATRIZ Y UN VECTOR
@@ -69,7 +69,7 @@ public:
     T& Ap(){return ap;};  //Coeficiente central
 	T& An(const int &i){return an[i];}
 	T& Source(){return source;}
-	T& X(){return x;}
+	const T& X()const{return x;}
 	//void Ap(const double &);
 	void Ap(const T &iap){ap=iap;}
 	void An(const int &i, const T &val){an[i]=val;}
@@ -126,7 +126,8 @@ class EqnSystem{   //Es un vector de ecuaciones
 	int dimension;
     std::vector <Eqn <T> > eqn;
     std::vector <unsigned int> first_nonzero_column;    //Primer columna con valor distinto de cero
-	std::vector <int> nbr_eqn;							//To which neighbour eqn belongs each coefficient an                                          //Esto sirve para sistemas esparsos
+	std::vector <int> nbr_eqn;							//To which neighbour eqn belongs each coefficient an
+	Fv_CC_Grid &grid;                                      //Esto sirve para sistemas esparsos
 
 	//_CC_Fv_Field <T> &field;										//Can be any tipe of field
 
@@ -159,10 +160,21 @@ class EqnSystem{   //Es un vector de ecuaciones
 
 	//Output to field
 	//void ToCellCenterField();
+    const _CC_Fv_Field<T> RHS()
+    {
+        _CC_Fv_Field<T> field(grid);
+        //Can compare number of cells vs number of eqn
+        for (int e=0;e<this->Num_Eqn();e++)
+        {
+            field.value[e]=this->Eqn(e).X();
+
+        }
+        return field;
+    }
+	//template <typename T>
+	operator=(const EqnSystem <T> &r){}
 
 };
-
-
 
 
 //Puedo generar una matriz a partir de un sistema de ecuaciones con un typedef

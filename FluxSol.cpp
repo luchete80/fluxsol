@@ -285,6 +285,13 @@ void Ex1()
 	TEqn.Log("EqLog.txt");
 	//solve(Laplacian(k,T)==0);
 
+    T=TEqn.RHS();
+	cout << "Results"<<endl;
+	for (int e=0;e<TEqn.Num_Eqn();e++)
+    {
+        cout << TEqn.Eqn(e).X().Val()<<endl;
+
+    }
 	malla.Log("LogMalla.txt");
 
 	/////////
