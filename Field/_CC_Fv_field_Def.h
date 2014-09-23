@@ -29,7 +29,7 @@ namespace FluxSol
 {
 
 template <typename T>
-_CC_Fv_Field<T>::_CC_Fv_Field(Fv_CC_Grid &grid)
+_CC_Fv_Field<T>::_CC_Fv_Field(const Fv_CC_Grid &grid)
 {
 	{
 		GridPtr=&grid;
@@ -51,7 +51,7 @@ _CC_Fv_Field<T>::_CC_Fv_Field(Fv_CC_Grid &grid)
 
 //Must be verified the patch fields against mesh patches
 template <typename T>
-_CC_Fv_Field<T>::_CC_Fv_Field(Fv_CC_Grid &grid, const _Fv_Boundary_Field <T> &bfield)
+_CC_Fv_Field<T>::_CC_Fv_Field(const Fv_CC_Grid &grid, const _Fv_Boundary_Field <T> &bfield)
 {
 	_Fv_Boundary_Field <T> bf = bfield;
 

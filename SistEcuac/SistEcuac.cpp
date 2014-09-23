@@ -70,7 +70,7 @@ void EqnSystem<T>::Insert (const FluxSol::Eqn <T> &ec)
 //roght coeffs pass negative and left term pass as positive to rhs
 //If neighbours refer to differents id, neighbour ids will be added
 template <typename T>
-Eqn<T> & Eqn<T>::operator ==(const Eqn<T> &right) const
+Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right) const
 {
 	Eqn<T> ret;
 
@@ -87,6 +87,8 @@ Eqn<T> & Eqn<T>::operator ==(const Eqn<T> &right) const
 		ret.ap = this->ap - right.ap;
 
 		bool lfound;
+        cout <<"left an size" <<this->an.size()<<endl;
+        cout <<"right an size" <<right.an.size()<<endl;
 		//left eqn could have a bigger stencil
 		for (int nleft = 0; nleft < this->an.size(); nleft++)
 		{
@@ -104,6 +106,7 @@ Eqn<T> & Eqn<T>::operator ==(const Eqn<T> &right) const
 			}
 
 			//
+			cout << "ret an size"<<ret.an.size()<<endl;
 			if (!lfound)
 				ret.an[nleft] = this->an[nleft];
 			else
@@ -184,19 +187,20 @@ void EqnSystem<T>::Log(std::string str)
 }
 
 template <typename T>
-EqnSystem<T>::EqnSystem(const Fv_CC_Grid &FvG):grid(Fv_CC_Grid(FvG))
+EqnSystem<T>::EqnSystem(const Fv_CC_Grid &FvG)//:grid(Fv_CC_Grid(FvG))
 {
+    this->GridPtr=&FvG;
 	dimension=int(pTraits<T>::rank);
 
 	for (int c=0;c<FvG.Num_Cells();c++)
     {
 		vector <T> an;
 		T init_an;
-        cout << "Cell "<<endl;
+        //cout << "Cell "<<endl;
 		//Insert empty Values
 		T ap,source;
 		vector <int> nbr_id;
-		cout << "Neighbours number" <<endl;
+		//cout << "Neighbours number" <<endl;
 		//_Cell cc(FvGrid.Cell(c));
 		//cout << "Assigned"<<endl;
 		//cout << FvGrid.Cell(c).Num_Neighbours()<<endl;

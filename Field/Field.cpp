@@ -38,7 +38,7 @@ namespace FluxSol {
 //}
 
 template <typename T>
-Vertex_Fv_Field<T>::Vertex_Fv_Field(Fv_CC_Grid &grid)
+Vertex_Fv_Field<T>::Vertex_Fv_Field(const Fv_CC_Grid &grid)
 {
 	GridPtr=&grid;
 

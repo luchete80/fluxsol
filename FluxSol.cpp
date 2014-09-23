@@ -44,7 +44,10 @@ void maintest();
 int main ()
 {
     //Ex1();
+    cout << "Thermal test"<<endl;
 	Ex1();
+	cout << "Convection Diffusion Test" <<endl;
+	CDTest2();
 	//Ex2();
 }
 
@@ -224,11 +227,11 @@ void CDTest2()
 
 
 	cout<<"Interpolating to vertices"<<endl;
-	intphi=interp.Interpolate(phi);
+	//intphi=interp.Interpolate(phi);
 
 	cout<<"Writing files"<<endl;
 	OutputFile("CellField.vtu",phi);
-	OutputFile("VertexField.vtu",intphi);
+	//OutputFile("VertexField.vtu",intphi);
 
 	//	---- The End -------
 	return 0;
@@ -285,12 +288,12 @@ void Ex1()
 	TEqn.Log("EqLog.txt");
 	//solve(Laplacian(k,T)==0);
 
-    T=TEqn.RHS();
+    T=TEqn.Field();
 	cout << "Results"<<endl;
 	for (int e=0;e<TEqn.Num_Eqn();e++)
     {
         cout << TEqn.Eqn(e).X().Val()<<endl;
-
+        cout << T.Val(e).Val()<<endl;
     }
 	malla.Log("LogMalla.txt");
 
@@ -310,7 +313,7 @@ void Ex1()
 
     CenterToVertexInterpolation <Scalar> interp(malla);
     Vertex_Fv_Field<Scalar> vT;
-//	vT=interp.Interpolate(T);
+	//vT=interp.Interpolate(T);
 
 	cout<<"Writing files"<<endl;
 	OutputFile("CellField.vtu",T);

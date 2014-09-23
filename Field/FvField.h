@@ -38,7 +38,7 @@ namespace FluxSol
 
 	public:
 		Vertex_Fv_Field(){};
-		Vertex_Fv_Field(Fv_CC_Grid &grid);
+		Vertex_Fv_Field(const Fv_CC_Grid &grid);
 
 		//Later it will be inherited
 		const Fv_CC_Grid  & Grid()const{ return *GridPtr; }
@@ -68,7 +68,7 @@ namespace FluxSol
 		_Surf_Fv_Field(){};         //Constructor
 		Fv_CC_Grid  & Grid(){ return *GridPtr; }
 		//Adding boundary face
-		_Surf_Fv_Field(Fv_CC_Grid &grid)
+		_Surf_Fv_Field(const Fv_CC_Grid &grid)
 		{
 			GridPtr = &grid;
 			//LO HAGO PARA TODOS LOS FACES
@@ -196,8 +196,8 @@ namespace FluxSol
 		//EVALUATE IF IT IS CONST
 		Fv_CC_Grid  *GridPtr;       //Se podria probar con un puntero general
 
-		_CC_Fv_Field(Fv_CC_Grid &grid);
-		_CC_Fv_Field(Fv_CC_Grid &grid, const _Fv_Boundary_Field <T> &bfield);
+		_CC_Fv_Field(const Fv_CC_Grid &grid);
+		_CC_Fv_Field(const Fv_CC_Grid &grid, const _Fv_Boundary_Field <T> &bfield);
 
 		Fv_CC_Grid  & Grid(){ return *GridPtr; }
 

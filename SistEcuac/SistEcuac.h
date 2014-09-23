@@ -127,8 +127,8 @@ class EqnSystem{   //Es un vector de ecuaciones
     std::vector <Eqn <T> > eqn;
     std::vector <unsigned int> first_nonzero_column;    //Primer columna con valor distinto de cero
 	std::vector <int> nbr_eqn;							//To which neighbour eqn belongs each coefficient an
-	Fv_CC_Grid &grid;                                      //Esto sirve para sistemas esparsos
-
+	//Fv_CC_Grid &grid;                                      //Esto sirve para sistemas esparsos
+    Fv_CC_Grid *GridPtr;    //OpenFOAM Style, TO MODIFY;
 	//_CC_Fv_Field <T> &field;										//Can be any tipe of field
 
     public:
@@ -152,7 +152,7 @@ class EqnSystem{   //Es un vector de ecuaciones
 
 	//Operators
 	const int & Dim(){return dimension;}
-	const int & Num_Eqn(){return eqn.size();}
+	const int Num_Eqn(){return eqn.size();}
 	EqnSystem <T> & operator==(const double &);
 
 	//Binary operators, U
@@ -160,19 +160,20 @@ class EqnSystem{   //Es un vector de ecuaciones
 
 	//Output to field
 	//void ToCellCenterField();
-    const _CC_Fv_Field<T> RHS()
+    const _CC_Fv_Field<T> Field()const
     {
-        _CC_Fv_Field<T> field(grid);
+        _CC_Fv_Field<T> field(this->Grid());
         //Can compare number of cells vs number of eqn
         for (int e=0;e<this->Num_Eqn();e++)
         {
-            field.value[e]=this->Eqn(e).X();
-
+            field.Val(e,this->Eqn(e).X());
         }
         return field;
     }
 	//template <typename T>
-	operator=(const EqnSystem <T> &r){}
+	//operator=(const EqnSystem <T> &r){}
+
+	const Fv_CC_Grid  & Grid()const{ return *GridPtr; }
 
 };
 

@@ -1,10 +1,10 @@
 namespace FluxSol {
 
 template
-Vertex_Fv_Field<Scalar>::Vertex_Fv_Field(Fv_CC_Grid &grid);
+Vertex_Fv_Field<Scalar>::Vertex_Fv_Field(const Fv_CC_Grid &grid);
 
 template
-Vertex_Fv_Field<Vec3D>::Vertex_Fv_Field(Fv_CC_Grid &grid);
+Vertex_Fv_Field<Vec3D>::Vertex_Fv_Field(const Fv_CC_Grid &grid);
 
 template
 _Field<Scalar> & _Field<Scalar>::operator=(Scalar val);

@@ -105,7 +105,7 @@ private:
     std::vector<Cell_CC>::iterator BeginCell(){return cell.begin();}
     std::vector<Cell_CC>::iterator EndCell()  {return cell.end();}
 
-	Boundary& vBoundary(){return boundary;}
+	const Boundary& vBoundary()const {return boundary;}
 
     //////////////////////
     //      LOG         //

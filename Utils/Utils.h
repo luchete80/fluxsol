@@ -67,12 +67,12 @@ inline int NumVecElemFound(std::vector <int> &ind, std::vector <int> &v)
         {
             if (ind[vind]==v[vi])
 				r++;
-            cout << "vi vind " <<vi << " " <<vind<<endl;
+            //cout << "vi vind " <<vi << " " <<vind<<endl;
         }
-        cout << "r"<<r<<endl;
+        //cout << "r"<<r<<endl;
 		vi++;
 	}
-	cout <<"extiting"<<endl;
+	//cout <<"extiting"<<endl;
 
 	return r;
 
