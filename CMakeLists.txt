@@ -16,21 +16,23 @@ if (${CMAKE_VERSION} VERSION_GREATER "2.8.7") # Compability with older version o
 endif ()
 option (DEBUG_MODE "Enable FLUXSOL DEBUG" ON)
 
+set (CMAKE_CXX_FLAGS "-fpermissive -g")
+
 if(DEBUG_MODE)
 # Default is debug build
-#if (NOT CMAKE_BUILD_TYPE)
+if (NOT CMAKE_BUILD_TYPE)
 	set (CMAKE_BUILD_TYPE Debug)
 else()
 	set (CMAKE_BUILD_TYPE Release)
 endif ()
 
-set (NAME fluxsol-nb)
+set (NAME fluxsol)
 
 project(${NAME})
 
-set (CMAKE_CXX_FLAGS "-fpermissive -g")
 
-set (FLUXSOL_DIR c:/Users/samsung/Dropbox/Numerico/MecSol/FluxSol)
+set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
+
 set (LASPACK_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/laspack/src)
 set (CGNS_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src)
 set (ALGLIB_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/src)
