@@ -32,6 +32,7 @@ project(${NAME})
 set (CMAKE_CXX_FLAGS "-fpermissive -g")
 
 set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
+#set (FLUXSOL_DIR ${PROJECT_SOURCE_DIR}/../)
 
 set (LASPACK_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/laspack/src)
 set (CGNS_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src)

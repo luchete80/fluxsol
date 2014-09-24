@@ -152,7 +152,7 @@ void CDTest()
 	intphi=interp.Interpolate(phi);
 
 	cout<<"Writing files"<<endl;
-	OutputFile("CellField.vtu",phi);
+	OutputFile("CellFieldCD.vtu",phi);
 	OutputFile("VertexField.vtu",intphi);
 
 	//	---- The End -------
@@ -180,13 +180,13 @@ void CDTest2()
 	Boundary bound(vpatch);
 	mesh.AddBoundary(bound);
 	//Campo de temperatura
-	_CC_Fv_Field <Scalar> T(mesh);
+	_CC_Fv_Field <Scalar> phi(mesh);
 
 	//Boundary conditions
 	Scalar wallvalue=0.;
 	Scalar topvalue=1.;
-	T.Boundaryfield().PatchField(0).AssignValue(wallvalue);
-	T.Boundaryfield().PatchField(1).AssignValue(topvalue);
+	phi.Boundaryfield().PatchField(0).AssignValue(wallvalue);
+	phi.Boundaryfield().PatchField(1).AssignValue(topvalue);
 
 
 	//string inputFileName="Input.in";
@@ -196,7 +196,6 @@ void CDTest2()
 	//Fv_CC_Grid mesh(input.section("grid",0).get_string("file"));
 
 	_CC_Fv_Field<Vec3D> U(mesh);
-	_CC_Fv_Field<Scalar> phi(mesh);
 
     U=1.0;
 
@@ -211,9 +210,19 @@ void CDTest2()
 
 	CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(U));
 
-	cout<<"Solving system"<<endl;
-	//Solve(CDEqn);
+	cout << "Writing log.."<<endl;
+	CDEqn.Log("CDEqLog.txt");
 
+	cout<<"Solving system"<<endl;
+	Solve(CDEqn);
+    phi=CDEqn.Field();
+
+    cout << "Results"<<endl;
+	for (int e=0;e<CDEqn.Num_Eqn();e++)
+    {
+        cout << CDEqn.Eqn(e).X().Val()<<endl;
+        cout << phi.Val(e).Val()<<endl;
+    }
 
 	//CDEqn.Log("EqLog.txt");
 
@@ -230,7 +239,7 @@ void CDTest2()
 	//intphi=interp.Interpolate(phi);
 
 	cout<<"Writing files"<<endl;
-	OutputFile("CellField.vtu",phi);
+	OutputFile("CellFieldCD.vtu",phi);
 	//OutputFile("VertexField.vtu",intphi);
 
 	//	---- The End -------
@@ -285,7 +294,7 @@ void Ex1()
 	cout << "Solving system.."<<endl;
 	Solve(TEqn);
 	cout << "Writing log.."<<endl;
-	TEqn.Log("EqLog.txt");
+	TEqn.Log("CEqLog.txt");
 	//solve(Laplacian(k,T)==0);
 
     T=TEqn.Field();
@@ -316,7 +325,7 @@ void Ex1()
 	//vT=interp.Interpolate(T);
 
 	cout<<"Writing files"<<endl;
-	OutputFile("CellField.vtu",T);
+	OutputFile("CellFieldC.vtu",T);
 //	OutputFile("VertexField.vtu",vT);
 
 }

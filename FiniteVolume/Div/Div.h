@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -67,7 +67,7 @@ FvImp::Div(const _CC_Fv_Field <T> &VolField)
 		//EqnSystem <T> < typename innerProduct < Vec3D, T> ::type > eqnsys(VolField.Grid());
 		EqnSystem <typename innerProduct < Vec3D, T> ::type> eqnsys(VolField.ConstGrid());
 
-		//Interpolate face fluxes and then upwind 
+		//Interpolate face fluxes and then upwind
 		CenterToFaceInterpolation <T> interp(VolField);
 		//Flux, inner producto
 		//Can be a vector, or a scalar
@@ -92,7 +92,7 @@ FvImp::Div(const _CC_Fv_Field <T> &VolField)
 	        //Tengo que pasar a vector el campo de flujo
 			const int nfaces = VolField.GridPtr->Cell(cid).Num_Faces();
 
-			
+
 			//Calculate Face Flux
 	        //eqn=VolField.ToFaces(cid,flux); //Puedo hacer una funcion que no itere por elemento pero esta la memoria
 
@@ -101,7 +101,7 @@ FvImp::Div(const _CC_Fv_Field <T> &VolField)
 	//    {
 	//
 	//    }
-	
+
 	    return eqnsys;
 }
 
@@ -141,7 +141,7 @@ FvImp::Div(const _CC_Fv_Field <T> &VolField)
 //Flux Field may have been not related to volume field (such convection-diffusion test)
 
 template <class T>
-EqnSystem < typename innerProduct < Vec3D, T> ::type > 
+EqnSystem < typename innerProduct < Vec3D, T> ::type >
 FvImp::Div(_Surf_Fv_Field<Scalar> fi,_CC_Fv_Field <T> VolField)
 {
 	//Defined in Products.h
@@ -149,7 +149,7 @@ FvImp::Div(_Surf_Fv_Field<Scalar> fi,_CC_Fv_Field <T> VolField)
 	//eqnsys.Insertar(0,ec);
 	//EqnSystem <Vec3D> eqnsys;
 
-	//Interpolate face fluxes and then upwind 
+	//Interpolate face fluxes and then upwind
 	CenterToFaceInterpolation <T> interp(VolField);
 	//Flux, inner producto
 	//Can be a vector, or a scalar

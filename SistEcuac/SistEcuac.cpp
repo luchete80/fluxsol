@@ -69,15 +69,17 @@ void EqnSystem<T>::Insert (const FluxSol::Eqn <T> &ec)
 //Both ap must refer to the same id
 //roght coeffs pass negative and left term pass as positive to rhs
 //If neighbours refer to differents id, neighbour ids will be added
+//THIS FUNCTION ASSUMES THAT COEFFS ON BOTH EQNS ARE NOT REPEATED
 template <typename T>
 Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right) const
 {
 	Eqn<T> ret;
 
 	vector <int> tempright;
+	vector <T> temprval;
 
 	tempright = right.neighbour_id;
-
+    temprval = right.an;
 	vector<int> ids;	//checked neighbours ids
 
 	//Che if both central coeff are the same
@@ -90,20 +92,24 @@ Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right) const
         cout <<"left an size" <<this->an.size()<<endl;
         cout <<"right an size" <<right.an.size()<<endl;
 		//left eqn could have a bigger stencil
+		//At first assign left an size to ret eqn
+		ret.an.assign(this->an.size(),0.);
 		for (int nleft = 0; nleft < this->an.size(); nleft++)
 		{
 			lfound = false;
 			int id;
-			int nright = -1;
-			while (!lfound && nright <= right.an.size())
+			int nright = 0;
+			while (!lfound && nright < tempright.size())
 			{
-				nright++;
-				if (this->neighbour_id[nleft] == right.neighbour_id[nright])
+
+				if (this->neighbour_id[nleft] == tempright[nright])
 				{
 					lfound = true;
 					ids.push_back(nleft);
 				}
+				nright++;
 			}
+			nright--;
 
 			//
 			cout << "ret an size"<<ret.an.size()<<endl;
@@ -111,8 +117,9 @@ Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right) const
 				ret.an[nleft] = this->an[nleft];
 			else
 			{
-				ret.an[nleft] = this->an[nleft] - right.an[nright];
+				ret.an[nleft] = this->an[nleft] - temprval[nright];
 				tempright.erase(tempright.begin() + nright);
+				temprval.erase(temprval.begin() + nright);
 			}
 
 		}//for nleft
@@ -124,26 +131,27 @@ Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right) const
 		{
 			//if ids[]
 			rfound = false;
-			int nleft = -1;
-			while (!rfound)
+			int nleft = 0;
+			while (!rfound && nleft < this->an.size())
 			{
-				nleft++;
-				if (this->neighbour_id[nleft] == right.neighbour_id[nright])
+				if (this->neighbour_id[nleft] == tempright[nright])
 				{
 					rfound = true;
 					ids.push_back(nleft);
 				}
+				nleft++;
 			}
+			nleft--;
 
-			//if (!rfound)
-			//	ret.an[ind] = this->an[ind];
-			//else
-			//	ret.an[ind] = this->an[ind] - right.an[nright];
+			if (!rfound)
+				ret.an.push_back(-(temprval[nright]));
+			else
+				ret.an.push_back( this->an[nleft] - temprval[nright]);
 		}
 
 		//ret.An(this->Ap() - right.Ap());
 
-		ret.source = right.source - this->source;
+		ret.source = this->source - right.source;
 
 		return ret;
 	}
