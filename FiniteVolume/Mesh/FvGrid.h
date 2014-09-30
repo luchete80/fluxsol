@@ -90,7 +90,7 @@ private:
     Node & CreateNodeFromCellVerts(const int &cellid);
 	void Fv_CC_Grid::CreateNodesFromCellVerts();
 
-	const SurfaceField<Vec3D> & Sf(); //Face Normals
+	const SurfaceField<Vec3D> Sf(); //Face Normals
 
 	//FUNCIONES DE LOG
     void Log(string );    //ES una funcion virtual en la clase base

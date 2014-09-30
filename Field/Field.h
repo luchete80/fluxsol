@@ -77,7 +77,7 @@ class _Field{
 
 	_Field<T> operator=(const double &val);
 
-	const _Field<T> & operator&(const _Field<T> &right) const;
+	const _Field<T> operator&(const _Field<T> &right) const;
 
 };//Field
 

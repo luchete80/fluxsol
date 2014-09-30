@@ -51,6 +51,9 @@ template <typename T>
 EqnSystem < typename innerProduct<Vec3D, T>::type > //typename is written because it can not be compiled in gcc
 Div(_Surf_Fv_Field<Scalar> fi,_CC_Fv_Field <T> VolField);
 
+template <typename T>
+EqnSystem < typename innerProduct<Vec3D, T>::type > //typename is written because it can not be compiled in gcc
+Div(_CC_Fv_Field<Scalar> fi,_CC_Fv_Field <T> VolField);
 
 //Operadores laplacianos
 

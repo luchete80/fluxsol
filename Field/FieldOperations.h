@@ -32,10 +32,10 @@ namespace FluxSol
 {
 
 
-//THIS MUST BE DONE ONCE 
+//THIS MUST BE DONE ONCE
 //Inner product
 template<typename T>
-const _Field<T> & _Field<T>::operator &(const _Field<T> &right) const
+const _Field<T> _Field<T>::operator &(const _Field<T> &right) const
 {
 	_Field<T> ret(this->Numberofvals());
 	//Sizes must be equal and rank must be large than zero?

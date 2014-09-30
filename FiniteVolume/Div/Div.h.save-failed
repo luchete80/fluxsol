@@ -74,7 +74,7 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
     //Sf is a vector
     SurfaceField <typename innerProduct < Vec3D, Vec3D> ::type> FluxField(VolField.Numberofvals());
     //_CC_Fv_Field <typename innerProduct < Vec3D, Vec3D> ::type> Prueba(VolField.Numberofvals(),0.);
-    FluxField= VolField.Grid().Sf() & interp.Interpolate();
+    FluxField= VolField.GridPtr->Sf() & interp.Interpolate();
 
 
     //A continuacion se muestra una forma de calculo de divergencia

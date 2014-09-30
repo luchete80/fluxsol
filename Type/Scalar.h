@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -46,19 +46,19 @@ public:
     {
 		dim=3,
         rank = 0, // Rank of Vector is 1
-		nComponents = 1 
+		nComponents = 1
     };
 
     //Constructores
     //Scalar(){};
     Scalar(const double &value=0.){val=value;}
-    double & Val(){return val;} 
+    double & Val(){return val;}
 	vector <double> Comp ();	//Common all templates
 
     ~Scalar(){};
 
     //Operadores - Operators
-	//El operador que devuelve es igual al 
+	//El operador que devuelve es igual al
 	//Estas funciones deben ser inline - These must be inline
 	// Operator = can only be a member function
 
@@ -70,7 +70,7 @@ public:
 	Scalar & operator= (const Scalar &s);		//MUST NOT BE CONST
 	Scalar & operator= (vector<double> &v) ; //Common to templates to conversion
 	Scalar & operator= (const double &right) ;
-		
+
 	Scalar & operator+= (const double &right);
 	Scalar & operator+= (const Scalar &right);
 	Scalar & operator-= (const double &right);
@@ -99,6 +99,18 @@ public:
 		return r;
 	}
 
+	const bool operator>(const double &d)const
+	{
+        if (this->val>d)    return true;
+        else                return false;
+	}
+
+	const bool operator<(const double &d)const
+	{
+        if (this->val<d)    return true;
+        else                return false;
+	}
+
 	friend const Scalar operator* (const double &left, Scalar &right)
 	{
 		Scalar r;
@@ -112,7 +124,7 @@ public:
 		r.Val()=left/right.Val();
 		return r;
 	}
-	friend const Scalar operator- (const double &left, Scalar &right)	
+	friend const Scalar operator- (const double &left, Scalar &right)
 	{
 		Scalar r;
 		r.Val()=left-right.Val();

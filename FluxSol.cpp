@@ -208,7 +208,7 @@ void CDTest2()
 
 	cout<<"Generating Eqn system"<<endl;
 
-	CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(U));
+	CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(phi,U));
 
 	cout << "Writing log.."<<endl;
 	CDEqn.Log("CDEqLog.txt");
