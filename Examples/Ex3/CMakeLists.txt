@@ -10,13 +10,14 @@ set (NAME Ex3)
 project(${NAME})
 
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -fpermissive")
-set (CMAKE_CXX_FLAGS "-fpermissive")
+set (CMAKE_CXX_FLAGS "-fpermissive -g")
 
 
 # add to the include search path
 include_directories(.)
 #include_directories("${FLUXSOL_INCLUDE_DIR}/../..")
-set(FLUXSOL_DIR c:/Users/samsung/Dropbox/Numerico/MecSol/FluxSol)
+#set(FLUXSOL_DIR c:/Users/samsung/Dropbox/Numerico/MecSol/FluxSol)
+set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
 include_directories(${FLUXSOL_DIR}/Src)
 
 set (FLUXSOL_INCLUDE_DIR ${FLUXSOL_DIR}/Src)
