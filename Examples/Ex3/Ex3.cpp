@@ -20,6 +20,7 @@
     see <http://www.gnu.org/licenses/>.
 
 *************************************************************************/
+// EXAMPLE 3 - CONVECTION DIFUSSION UNIDIMENSIONAL EXAMPLE //
 
 #include <iostream>
 #include "FluxSol.h"
@@ -30,18 +31,32 @@ using namespace FluxSol;
 int main()
 {
 
-    Fv_CC_Grid mesh(2,2,1.0,1.0);
+    Fv_CC_Grid mesh(5,1,1.0,1.0);
+	mesh.Log("MeshLog.txt");
+
 //	MyList<int>wallfaces = { 1, 2};
 //	MyVector<int> hola={1,2};
-	int wallfaces[]={2,5,8,10,13,18};
-	int movwallfaces[]={15,19};
-	list <int> lmovwallfaces;	for (int i=0;i<2;i++)	lmovwallfaces.push_back(movwallfaces[i]);
-	list <int> lwallfaces;	for (int i=0;i<6;i++)	lwallfaces.push_back(wallfaces[i]);
-	Patch fwall(lwallfaces);
-	Patch mwall(lmovwallfaces);
+	int abfacesl[]={2}; //left
+    int abfacesr[]={23};    //right
+	list <int> lbfacesl;	for (int i=0;i<1;i++)	lbfacesl.push_back(abfacesl[i]);
+	list <int> lbfacesr;	for (int i=0;i<1;i++)	lbfacesr.push_back(abfacesr[i]);
+
+    for (int f=0;f<mesh.Num_Faces();f++)
+    {
+        if(mesh.Face(f).Boundaryface())
+            mesh.Face(f).Null_Flux_Face(true);
+    }
+    //TO MODIFY
+    mesh.Face(2).Null_Flux_Face(false);
+    mesh.Face(23).Null_Flux_Face(false);
+
+	Patch bfpl(lbfacesl);
+	Patch bfpr(lbfacesr);
+	//Patch mwall(lmovwallfaces);
 	vector<Patch> vpatch;
 	//Must be a verification - Debe haber una verificacion
-	vpatch.push_back(lwallfaces); 	vpatch.push_back(lmovwallfaces);
+	vpatch.push_back(bfpl);
+	vpatch.push_back(bfpr);
 	//(fwall,mwall);
 
 	Boundary bound(vpatch);
@@ -50,10 +65,10 @@ int main()
 	_CC_Fv_Field <Scalar> phi(mesh);
 
 	//Boundary conditions
-	Scalar wallvalue=0.;
-	Scalar topvalue=1.;
-	phi.Boundaryfield().PatchField(0).AssignValue(wallvalue);
-	phi.Boundaryfield().PatchField(1).AssignValue(topvalue);
+	Scalar left=0.;
+	Scalar right=1.;
+	phi.Boundaryfield().PatchField(0).AssignValue(left);
+	phi.Boundaryfield().PatchField(1).AssignValue(right);
 
 
 	//string inputFileName="Input.in";
@@ -64,20 +79,19 @@ int main()
 
 	_CC_Fv_Field<Vec3D> U(mesh);
 
-    U=1.0;
-
-	mesh.Log("Log.txt");
-
+    U=Vec3D(0.1,0.,0.);
 
 	EqnSystem <Scalar> CDEqn;
 
-	Scalar k(1.);	//Diffusion
+	Scalar k(0.1);	//Diffusion
 
 	cout<<"Generating Eqn system"<<endl;
 
     cout << "Field U Number of Values" << U.Numberofvals()<<endl;
 
-	CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(phi,U));
+    CDEqn=FvImp::Div(phi,U);
+
+	//CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(phi,U));
 
 	cout << "Writing log.."<<endl;
 	CDEqn.Log("CDEqLog.txt");

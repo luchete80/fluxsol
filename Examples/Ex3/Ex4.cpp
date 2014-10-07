@@ -30,7 +30,7 @@ using namespace FluxSol;
 int main()
 {
 
-    Fv_CC_Grid mesh(5,1,1.0,1.0);
+    Fv_CC_Grid mesh(2,2,1.0,1.0);
 //	MyList<int>wallfaces = { 1, 2};
 //	MyVector<int> hola={1,2};
 	int wallfaces[]={2,5,8,10,13,18};

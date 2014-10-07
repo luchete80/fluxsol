@@ -51,9 +51,9 @@ void GenerarMallaRectangular(const double &lex,const double &ley, T& t)
     for (int k=0;k<2;k++)   //Vertices en z
     {
 		posy=0.0;
-        for (int j=0;j<vx;j++)	//Fila
+        for (int j=0;j<vy;j++)	//Fila
         {
-            for (int i=0;i<vy;i++)	//Columna
+            for (int i=0;i<vx;i++)	//Columna
             {
                 _Vertex pos(posx,posy,posz);				//Se va moviendo
                 t.PushVert(pos);
