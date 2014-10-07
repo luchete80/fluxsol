@@ -72,7 +72,9 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
     //Flux, inner producto
     //Can be a vector, or a scalar
     //Sf is a vector
-    SurfaceField <typename innerProduct < Vec3D, Vec3D> ::type> FluxField(VolField.Numberofvals());
+    cout << "VolField number of vals"<<VolField.Numberofvals()<<endl;
+    //TO MODIFY, CORRECT NUMBER OF VALS
+    SurfaceField <typename innerProduct < Vec3D, Vec3D> ::type> FluxField(VolField.ConstGrid().Num_Faces());
     //_CC_Fv_Field <typename innerProduct < Vec3D, Vec3D> ::type> Prueba(VolField.Numberofvals(),0.);
     FluxField= VolField.Grid().Sf() & interp.Interpolate();
 

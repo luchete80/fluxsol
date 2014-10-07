@@ -63,7 +63,7 @@ int main()
 	//solve(Laplacian(k,T)==0);
 
 	malla.Log("LogMalla.txt");
-
+    T=TEqn.Field();
 	/////////
 	//Div test
 
@@ -72,6 +72,7 @@ int main()
 	_CC_Fv_Field <Vec3D> Tpru(malla);
 	//PruEqn=FvImp::Div(fip,Tpru);
 
+    OutputFile("CellField-Temp.vtu",T);
 	//Prueba de lectura de malla
 	//Mesh readers test
 	//Fv_CC_Grid malla2;
