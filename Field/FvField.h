@@ -226,6 +226,14 @@ namespace FluxSol
 			return *this;
 		}
 
+		_CC_Fv_Field<T> operator=(const Vec3D &val)
+		{
+			for (int v = 0; v<this->value.size(); v++)
+			{
+				this->value[v] = val;
+			}
+			return *this;
+		}
 
 	};
 

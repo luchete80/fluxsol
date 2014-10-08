@@ -242,6 +242,10 @@ EqnSystem <T> & EqnSystem <T>::operator==(const EqnSystem <T> &right)
 			this->eqn[e] = (this->eqn[e] == right.Eqn(e));
 		}
 	}
+	else
+    {
+        cout << "Eqn Systems have different size. Operator == fails"<<endl;
+    }
 
 	return *this;
 }
