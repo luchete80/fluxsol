@@ -8,7 +8,7 @@ time marching {
 }
 
 grid_1 {
-        file=cylinder.cgns;
+        file=square.cgns;
         dimension=2;
         equations=navier stokes;
 

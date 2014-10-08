@@ -1,14 +1,14 @@
-#include "../FluxSol.h"
-#include "TempTests.h"
-
+#include "FluxSol.h"
 
 //Former temp test
 // TEMPERATURE EXAMPLE 2
 // READS FROM A FILE
+void DefTempTest();
 
 int main()
 {
 
+    cout << "Reading square.cgns ..."<<endl;
 	Fv_CC_Grid malla("square.cgns");
 	//malla.ReadCGNS();
 
@@ -33,19 +33,22 @@ int main()
 	TEqn.Log("EqLog.txt");
 
 	cout<<"Generating field"<<endl;
-	CenterToVertexInterpolation interp(malla);
+//	CenterToVertexInterpolation interp(malla);
 
 	Vertex_Fv_Field<Scalar> vT;
 
 
-	T.ToCellCenters(TEqn);
+	T=TEqn.Field();
 
 	cout<<"Interpolating to vertices"<<endl;
-	vT=interp.Interpolate(T);
+//	vT=interp.Interpolate(T);
 
 	cout<<"Writing files"<<endl;
 	OutputFile("CellField.vtu",T);
-	OutputFile("VertexField.vtu",vT);
+//	OutputFile("VertexField.vtu",vT);
+
+	cout << "End. Now Reading input.in"<<endl;
+	DefTempTest();
 	return 0;
 }
 
@@ -55,11 +58,11 @@ void DefTempTest()
 {
 	string inputFileName="Input.in";
 	InputFile input(inputFileName);
-	
+
 	vector<int> equations;
 
 	Fv_CC_Grid mesh(input.section("grid",0).get_string("file"));
-	
+
 	_CC_Fv_Field<Scalar> T;
 
 	ReadFieldFromInput(input, T,mesh);
@@ -71,33 +74,33 @@ void DefTempTest()
 	Scalar k(1.);	//Diffusion
 
 	cout<<"Generating system"<<endl;
-	
-	TEqn=(FvImp::Laplacian(k,T)==0.); 
+
+	TEqn=(FvImp::Laplacian(k,T)==0.);
 
 
 	cout<<"Solving system"<<endl;
 	Solve(TEqn);
 
-	
+
 	TEqn.Log("EqLog.txt");
 
 	cout<<"Generating field"<<endl;
-	CenterToVertexInterpolation interp(mesh);
+//	CenterToVertexInterpolation interp(mesh);
 
 	Vertex_Fv_Field<Scalar> vT;
 
 
-	T.ToCellCenters(TEqn);
+	T=TEqn.Field();
 	//_CC_Fv_Field<Vec3D> gradT = FvExp::Grad(T);
 
 	//_CC_Fv_Field <Vec3D> gradT=FvExp::Grad(T);
 
 	cout<<"Interpolating to vertices"<<endl;
-	vT=interp.Interpolate(T);
+	//vT=interp.Interpolate(T);
 
 	cout<<"Writing files"<<endl;
-	OutputFile("CellField.vtu",T);
-	OutputFile("VertexField.vtu",vT);
+	OutputFile("CellField-2.vtu",T);
+	//OutputFile("VertexField.vtu",vT);
 
 	//	---- The End -------
 }
