@@ -45,7 +45,7 @@ _CC_Fv_Field<T>::_CC_Fv_Field(const Fv_CC_Grid &grid)
 	_Fv_Boundary_Field <T> bf(grid.vBoundary());
 	//Para igualar los boundaryfield debo ver el Scalar =
 	BoundaryField=bf;
-
+    this->numberofvals=GridPtr->Num_Cells();
 	}
 }
 

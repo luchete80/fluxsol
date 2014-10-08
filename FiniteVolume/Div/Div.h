@@ -78,7 +78,14 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
     //_CC_Fv_Field <typename innerProduct < Vec3D, Vec3D> ::type> Prueba(VolField.Numberofvals(),0.);
     FluxField= VolField.Grid().Sf() & interp.Interpolate();
 
+    cout << "Sf values "<<endl;
 
+    for (int f=0;f<VolField.GridPtr->Num_Faces();f++)
+        cout << "Face "<< f<< " " <<VolField.Grid().Sf().Val(f).outstr() <<endl;
+
+//    cout << "Interp values "<<endl;
+//    for (int f=0;f<VolField.GridPtr->Num_Faces();f++)
+//       cout << "Face "<< f<< " " <<interp.Interpolate().Val(f).outstr() <<endl;
     //A continuacion se muestra una forma de calculo de divergencia
     //Sum_f (Sf * (ro * U)f * fi(f) )
     //En OpenFoam ro*U es fi
@@ -123,7 +130,7 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
             //then phi_face=phi_cell0
             //TO MODIFY: CHANGE FOR (Min[-mf,0])
             double d=FluxField.Val(f).Val();
-           // cout << "f"<< f << " " <<"FluxField Val " <<FluxField.Val(f).Val() <<endl;
+            //cout << "f"<< f << " " <<"FluxField Val " <<FluxField.Val(f).Val() <<endl;
             if(FluxField.Val(f)>0.)
             {
                 coeff_ap= 1.;
@@ -161,6 +168,7 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
             //Instead of if sentence it is convenient to use inheritance
             if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
             {
+                //cout << "Boundary Field Value"<<phi.Boundaryfield().PatchField(p).Val(f).Val()<<endl;
                 eqnsys.Eqn(bface.Cell(0)).Source()+=phi.Boundaryfield().PatchField(p).Val(f);
             }
             else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)

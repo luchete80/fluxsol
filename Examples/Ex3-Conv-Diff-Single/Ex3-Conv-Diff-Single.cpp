@@ -67,8 +67,8 @@ int main()
 	//Boundary conditions
 	Scalar left=0.;
 	Scalar right=1.;
-	phi.Boundaryfield().PatchField(0).AssignValue(left);
-	phi.Boundaryfield().PatchField(1).AssignValue(right);
+	phi.Boundaryfield().PatchField(1).AssignValue(left);
+	phi.Boundaryfield().PatchField(0).AssignValue(right);
 
 
 	//string inputFileName="Input.in";
@@ -81,7 +81,7 @@ int main()
 
     U=Vec3D(0.1,0.,0.);
 
-	EqnSystem <Scalar> CDEqn;
+
 
 	Scalar k(0.1);	//Diffusion
 
@@ -89,10 +89,13 @@ int main()
 
     cout << "Field U Number of Values" << U.Numberofvals()<<endl;
 
-    CDEqn=FvImp::Div(phi,U);
+    EqnSystem <Scalar> CDEqn;
+    //CDEqn=FvImp::Div(phi,U);
+    //CDEqn=FvImp::Laplacian(k, phi) ;
 
-	//CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(phi,U));
+	CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(phi,U));
 
+    //EqnSystem <Scalar> CDEqn(FvImp::Laplacian(k, phi) == FvImp::Div(phi,U));
 	cout << "Writing log.."<<endl;
 	CDEqn.Log("CDEqLog.txt");
 

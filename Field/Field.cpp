@@ -89,6 +89,7 @@ _Field<T> _Field<T>::operator=(const double &val)
 template <typename T>
 _Field<T>::_Field(const int &numval, const double &number =0.)
 {
+    this->numberofvals=numval;
 	for (int v=0;v<numval;v++)
 	{
 		T num(number);

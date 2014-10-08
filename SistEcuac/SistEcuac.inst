@@ -11,7 +11,7 @@ template
 void FluxSol::EqnSystem<Scalar>::Insert (const FluxSol::Eqn <Scalar> &ec);
 
 template
-Eqn<Scalar> & Eqn<Scalar>::operator ==(const Eqn<Scalar> &right) const;
+Eqn<Scalar> & Eqn<Scalar>::operator ==(const Eqn<Scalar> &right);
 
 template
 EqnSystem <Scalar> & EqnSystem <Scalar>::operator==(const double &d);
@@ -35,7 +35,7 @@ template
 void FluxSol::EqnSystem<Vec3D>::Insert (const FluxSol::Eqn <Vec3D> &ec);
 
 template
-Eqn<Vec3D> & Eqn<Vec3D>::operator ==(const Eqn<Vec3D> &right) const;
+Eqn<Vec3D> & Eqn<Vec3D>::operator ==(const Eqn<Vec3D> &right);
 
 template
 EqnSystem <Vec3D> & EqnSystem <Vec3D>::operator==(const double &d);

@@ -70,8 +70,9 @@ void EqnSystem<T>::Insert (const FluxSol::Eqn <T> &ec)
 //roght coeffs pass negative and left term pass as positive to rhs
 //If neighbours refer to differents id, neighbour ids will be added
 //THIS FUNCTION ASSUMES THAT COEFFS ON BOTH EQNS ARE NOT REPEATED
+//TO MODIFY!! CHANGE TO Reference Return, replacing ret for this->
 template <typename T>
-Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right) const
+Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right)
 {
 	Eqn<T> ret;
 
@@ -153,8 +154,12 @@ Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right) const
 
 		ret.source = this->source - right.source;
 
-		return ret;
+
+		*this=ret;
+		//return ret;
 	}
+
+    return *this;
 
 }
 
@@ -233,7 +238,7 @@ template <typename T>
 EqnSystem <T> & EqnSystem <T>::operator==(const EqnSystem <T> &right)
 {
 	//EqnSystem <T> ret;
-
+    cout << "Eqn sizes"<< EqnV().size() << " "<<right.EqnV().size()<<endl;
 	if (EqnV().size() == right.EqnV().size())
 	{
 		//Check if both eqns have same size

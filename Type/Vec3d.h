@@ -28,6 +28,10 @@
 #include "Scalar.h"
 #include "Tensor.h"
 #include "Products.h"    //Para incluir tipo de Rango
+#include <iostream>     // std::cout, std::right, std::endl
+#include <iomanip>      // std::setw
+#include <sstream>     // std::cout, std::right, std::endl
+
 using namespace std;
 
 //La clase se coloca
@@ -89,6 +93,14 @@ public:
 	}
 
 	const Scalar operator&(const Vec3D &right) const;
+	const string outstr()const
+	{
+        string cad;
+        std::ostringstream strs;
+        strs << comp[0] << " " <<comp[1] << " " << comp[2] << " " << "\n";
+        cad+= strs.str();
+        return cad;
+	}
 
 	//template<>
 	//typename innerProduct<Vec3D, Vec3D> ::type

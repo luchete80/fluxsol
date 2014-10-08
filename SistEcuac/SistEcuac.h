@@ -89,7 +89,7 @@ public:
 	//Binary operators
 	//Eqn<T> & operator +(const Eqn<T> &right);
 	//Eqn<T> & operator -(const Eqn<T> &right);
-	Eqn<T> & operator ==(const Eqn<T> &right) const ;
+	Eqn<T> & operator ==(const Eqn<T> &right) ;
 
 	int Width();
 	int & Num_Neighbours(){return num_neighbours;}
@@ -135,6 +135,9 @@ class EqnSystem{   //Es un vector de ecuaciones
 
     //Constructores
     EqnSystem():dimension(int(pTraits<T>::rank)){};
+    ~EqnSystem(){
+//    	    delete GridPtr;
+    	    }
     EqnSystem(std::vector<Eqn<T> > ec);
 	//EqnSystem(const int);
 	EqnSystem(const Fv_CC_Grid &);
@@ -153,6 +156,12 @@ class EqnSystem{   //Es un vector de ecuaciones
 	//Operators
 	const int & Dim(){return dimension;}
 	const int Num_Eqn(){return eqn.size();}
+//	void operator=(const EqnSystem <T> &right)
+//	{
+//
+//        cout << "TEMP"<<endl;
+//	}
+
 	EqnSystem <T> & operator==(const double &);
 
 	//Binary operators, U

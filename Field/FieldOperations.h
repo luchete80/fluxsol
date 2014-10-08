@@ -42,6 +42,7 @@ const _Field<T> _Field<T>::operator &(const _Field<T> &right) const
 	for (int c = 0; c < this->Numberofvals; c++)
 	{
 		ret[c] = c&right[c];
+		cout << "Interpolate value "<<ret[c].outstr()<<endl;
 	}
 
 	return ret;
