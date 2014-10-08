@@ -5,16 +5,19 @@ include (CheckIncludeFiles)
 include (CheckIncludeFileCXX)
 include (CheckCXXSourceCompiles)
 
-project(Ex1)
+#CONVECTION - DIFFUSION EXAMPLE
+set (NAME Ex4-Thermal-5Cells)
+project(${NAME})
 
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -fpermissive")
-set (CMAKE_CXX_FLAGS "-fpermissive")
+set (CMAKE_CXX_FLAGS "-fpermissive -g")
 
 
 # add to the include search path
 include_directories(.)
 #include_directories("${FLUXSOL_INCLUDE_DIR}/../..")
-set(FLUXSOL_DIR d:/Luciano/Numerico/MecSol/FluxSol)
+#set(FLUXSOL_DIR c:/Users/samsung/Dropbox/Numerico/MecSol/FluxSol)
+set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
 include_directories(${FLUXSOL_DIR}/Src)
 
 set (FLUXSOL_INCLUDE_DIR ${FLUXSOL_DIR}/Src)
@@ -61,8 +64,8 @@ set (FLUXSOL_LIB fluxsollib)
 
 #add the executable
 set (SOURCES
-Ex1.cpp
+${NAME}.cpp
 )
-add_executable(Ex1 ${SOURCES})
+add_executable(${NAME} ${SOURCES})
 
-target_link_libraries (Ex1 ${FLUXSOL_LIB} laspack)
+target_link_libraries (${NAME} ${FLUXSOL_LIB} laspack)

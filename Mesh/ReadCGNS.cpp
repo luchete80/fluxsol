@@ -1,7 +1,7 @@
 /************************************************************************
-	
-	Copyright 2007-2010 Emre Sozer 
- 
+
+	Copyright 2007-2010 Emre Sozer
+
 	Contact: emresozer@freecfd.com
 
 	This file is a part of Free CFD
@@ -50,13 +50,13 @@ void _Grid::Read_InitialCGNS() {
 
 	int POINT_LIST=1;
 	int ELEMENT_LIST=2;
-	
+
 	int globalNodeCount=0;
 	int globalCellCount=0;
 	int globalFaceCount=0;
 
 	cg_open(this->fileName.c_str(),MODE_READ,&fileIndex);
-	
+
 	// Read number of bases
 	cg_nbases(fileIndex,&nBases);
 
@@ -80,11 +80,11 @@ void _Grid::Read_InitialCGNS() {
 
 	//Comienza la lectura por zonas
 	//Read begins by zones
-	for (int zoneIndex=1;zoneIndex<=nZones;++zoneIndex) 
+	for (int zoneIndex=1;zoneIndex<=nZones;++zoneIndex)
 	{ // For each zone
 		vector<int> bc_method;
 		vector<set<int> > bc_element_list;
-		
+
 		// Read the zone
 		cg_zone_read(fileIndex,baseIndex,zoneIndex,zoneName,size);
 		// These are the number of cells and nodes in that zone
@@ -98,7 +98,7 @@ void _Grid::Read_InitialCGNS() {
 		if (Rank==0) cout << "[I] ...Number of Cells= " << size[1] << endl;
 		if (Rank==0) cout << "[I] ...Number of Sections= " << nSections << endl;
 		if (Rank==0) cout << "[I] ...Number of Boundary Conditions= " << nBocos << endl;
-	
+
 		// Read the node coordinates
 		int nodeStart[3],nodeEnd[3];
 		nodeStart[0]=nodeStart[1]=nodeStart[2]=1;
@@ -107,7 +107,7 @@ void _Grid::Read_InitialCGNS() {
 		coordX[zoneIndex-1].resize(size[0]);
 		coordY[zoneIndex-1].resize(size[0]);
 		coordZ[zoneIndex-1].resize(size[0]);
-		
+
 		cg_coord_read(fileIndex,baseIndex,zoneIndex,"CoordinateX",RealDouble,nodeStart,nodeEnd,&coordX[zoneIndex-1][0]);
 		cg_coord_read(fileIndex,baseIndex,zoneIndex,"CoordinateY",RealDouble,nodeStart,nodeEnd,&coordY[zoneIndex-1][0]);
 		cg_coord_read(fileIndex,baseIndex,zoneIndex,"CoordinateZ",RealDouble,nodeStart,nodeEnd,&coordZ[zoneIndex-1][0]);
@@ -123,7 +123,7 @@ void _Grid::Read_InitialCGNS() {
 			for (int c=0;c<coordX[0].size();++c) {
 				// Global node count is incremented as new nodes are found.
 				// When in the first zone, every node is new.
-			
+
 				zoneCoordMap[0][c]=globalNodeCount;
 
 				globalNodeCount++;
@@ -153,7 +153,7 @@ void _Grid::Read_InitialCGNS() {
 		// For each zone and each boundary condition region, store a point list, convert if another method is used
 		for (int bocoIndex=1;bocoIndex<=nBocos;++bocoIndex) {
 			int dummy;
-			// Find out the bc name and specification method 
+			// Find out the bc name and specification method
 			char bocoName[20];
 			BCType_t bocotype;
 			PointSetType_t ptset_type;
@@ -173,26 +173,26 @@ void _Grid::Read_InitialCGNS() {
 					break;
 				}
 			}
-			
+
 			// If no match, create new bc
     				if (new_bc) {
 				bcIndex=raw.bocoNameMap.size();
 				raw.bocoNameMap.insert(pair<string,int>(bcName,bcIndex));
 				raw.bocoNodes.resize(bcIndex+1);
 			}
-			
+
 			if (Rank==0) cout << "[I] ...Found boundary condition BC_" << bcIndex+1 << " : " << bcName << endl;
-			
+
 			if (bc_method.size()<bcIndex+1) {
 				bc_method.resize(bcIndex+1);
 				bc_element_list.resize(bcIndex+1);
-				
+
 				this->raw.bc_elem_list.resize(bcIndex+1);//Modif  - freecfd
 			}
-			
+
 			vector<int> list; list.resize(npnts);
 			cg_boco_read(fileIndex,baseIndex,zoneIndex,bocoIndex,&list[0],&dummy);
-			
+
 			// Check the bc specification method
 			if (ptset_type==PointList) {
 				bc_method[bcIndex]=POINT_LIST;
@@ -216,19 +216,19 @@ void _Grid::Read_InitialCGNS() {
 				if (Rank==0) cerr << "[E] Boundary condition specification is not recognized" << endl;
 				//exit(1);
 			}
-			
+
 		} // for boco
 		nBocos=raw.bocoNameMap.size();
-		
+
 		// Loop sections within the zone
 		// These include connectivities of cells and bonudary faces
 		for (int sectionIndex=1;sectionIndex<=nSections;++sectionIndex) {
-			
+
 			ElementType_t elemType;
 			int elemNodeCount,elemStart,elemEnd,nBndCells,parentFlag;
 			// Read the section
 			cg_section_read(fileIndex,baseIndex,zoneIndex,sectionIndex,sectionName,&elemType,&elemStart,&elemEnd,&nBndCells,&parentFlag);
-			
+
 			switch (elemType) {
 				case TRI_3:
 					elemNodeCount=3; break;
@@ -367,7 +367,7 @@ void Fv_CC_Grid::Read_CGNS()
 	vector <Cell_CC> vboundcell;	//For bidimensional cells
 
 	//Read boundary cells - Assuming boundary cell entry
-	vector<vector<int> > bpelem;	
+	vector<vector<int> > bpelem;
 
 	int boundelem =0;
 	//Boundary Patches bc
@@ -380,8 +380,8 @@ void Fv_CC_Grid::Read_CGNS()
 		//Search bc vertex in each 2D Cell
 		set <int> sbc = this->raw.bc_elem_list[bp];
 		set <int>::iterator sit=sbc.begin();
-		
-		
+
+
 		for (; sit!=sbc.end();sit++)
 		{
 			boundelem++;
@@ -390,7 +390,7 @@ void Fv_CC_Grid::Read_CGNS()
 		bpelem.push_back(temp);
 	}
 
-	//vector<vector<int>> idbcellasoc(boundelem,vector<int>(2,-1));	//Id cells 
+	//vector<vector<int>> idbcellasoc(boundelem,vector<int>(2,-1));	//Id cells
 	vector<int> idbcell(boundelem,-1);
 	int bcell=0;
 
@@ -406,7 +406,7 @@ void Fv_CC_Grid::Read_CGNS()
 			connect.push_back(raw.cellConnectivity[ raw.cellConnIndex [idcell] + cv]);
 
 		Cell_CC scell(idcell,connect);
-		
+
 			//Check if this is a boundary element
 			if (connect.size()>4)	//All connectivity numbers are 3d
 				this->cell.push_back(scell);
@@ -419,15 +419,18 @@ void Fv_CC_Grid::Read_CGNS()
 							idbcell[bcell]=idcell;
 							bcell++;
 						}
-							
+
 			//}
-	
+
 	}
 	//Updating cell number
 	this->num_cells=cell.size();
 
 	// Nodes
 	CreateNodesFromCellVerts();
+
+	this->inicie_nodes=true;
+	this->inicie_cells=true;
 	Iniciar_Caras();
 	AssignNeigboursCells();
 	vector <Patch> vpatch;
@@ -459,7 +462,7 @@ void Fv_CC_Grid::Read_CGNS()
 		}//End element
 		bpfaces.push_back(temp);
 		Patch p(bpfaces[bp]);
-		vpatch.push_back(p);	
+		vpatch.push_back(p);
 	}//boundary patch
 
 	Boundary bound(vpatch);

@@ -270,7 +270,11 @@ void Fv_CC_Grid::Iniciar_Caras()
     //cout << "Cell initialized "<<inicie_cells<<endl;
     //cout << "Node initialized "<<inicie_nodes<<endl;
     if (!inicie_cells || !inicie_nodes)
-    return;
+    {
+        cout << "Nodes or cells not initiated. Grid initiation fails..."<<endl;
+        return;
+
+    }
 
 	vector <int> v(0);
 	//vector<vector<int> > vec(4, vector<int>(4))
@@ -429,6 +433,10 @@ void Fv_CC_Grid::Iniciar_Caras()
 
 	num_faces=numfaces;
 	num_boundary_faces=nfb;
+
+	cout << "Num Faces " <<numfaces<<endl;
+	cout << "Num Boundary Faces" <<num_boundary_faces<<endl;
+
 
 }
 
