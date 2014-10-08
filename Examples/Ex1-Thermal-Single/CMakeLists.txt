@@ -6,7 +6,7 @@ include (CheckIncludeFileCXX)
 include (CheckCXXSourceCompiles)
 
 #CONVECTION - DIFFUSION EXAMPLE
-set (NAME Ex3)
+set (NAME Ex1-Thermal-Single)
 project(${NAME})
 
 #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -fpermissive")
@@ -64,7 +64,7 @@ set (FLUXSOL_LIB fluxsollib)
 
 #add the executable
 set (SOURCES
-Ex3.cpp
+${NAME}.cpp
 )
 add_executable(${NAME} ${SOURCES})
 

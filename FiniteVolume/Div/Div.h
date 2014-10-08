@@ -122,6 +122,8 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
             //If inner prod > 0, then flux is going out face cell 0,
             //then phi_face=phi_cell0
             //TO MODIFY: CHANGE FOR (Min[-mf,0])
+            double d=FluxField.Val(f).Val();
+           // cout << "f"<< f << " " <<"FluxField Val " <<FluxField.Val(f).Val() <<endl;
             if(FluxField.Val(f)>0.)
             {
                 coeff_ap= 1.;

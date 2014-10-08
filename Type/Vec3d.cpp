@@ -63,7 +63,7 @@ Vec3D Vec3D::cross(const Vec3D &right) {
 const Scalar Vec3D::operator& (const Vec3D &right) const
 {
 	Scalar temp;
-	for (int c=0;c<3;c++) temp.Val()+=comp[c]*right.comp[c];
+	for (int c=0;c<3;c++) temp+=comp[c]*right.comp[c];
 	return temp;
 }
 

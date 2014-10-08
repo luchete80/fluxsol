@@ -52,7 +52,8 @@ public:
     //Constructores
     //Scalar(){};
     Scalar(const double &value=0.){val=value;}
-    double & Val(){return val;}
+    const double & Val()const {return val;}
+	void Val(const double &v){val=v;}
 	vector <double> Comp ();	//Common all templates
 
     ~Scalar(){};
@@ -92,10 +93,10 @@ public:
 
 	//inline Scalar &operator= (const std::vector <double> &);
 	//Non member operators
-	friend const Scalar operator+ (const double &left, Scalar &right)
+	friend const Scalar operator+ (const double &left, const Scalar &right)
 	{
 		Scalar r;
-		r.Val()=left+right.Val();
+		r.val=left+right.Val();
 		return r;
 	}
 
@@ -111,23 +112,23 @@ public:
         else                return false;
 	}
 
-	friend const Scalar operator* (const double &left, Scalar &right)
+	friend const Scalar operator* (const double &left, const Scalar &right)
 	{
 		Scalar r;
-		r.Val()=left*right.Val();
+		r.val=left*right.Val();
 		return r;
 	}
 
- 	friend const Scalar operator/ (const double &left, Scalar &right)
+ 	friend const Scalar operator/ (const double &left, const Scalar &right)
 	{
 		Scalar r;
-		r.Val()=left/right.Val();
+		r.val=left/right.Val();
 		return r;
 	}
-	friend const Scalar operator- (const double &left, Scalar &right)
+	friend const Scalar operator- (const double &left, const Scalar &right)
 	{
 		Scalar r;
-		r.Val()=left-right.Val();
+		r.val=left-right.Val();
 		return r;
 	}
 

@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -27,7 +27,7 @@ namespace FluxSol
 
 {
 
-	//Unary 
+	//Unary
 	const Scalar Scalar::operator- () const
 	{
 		Scalar temp;
@@ -40,7 +40,7 @@ namespace FluxSol
 		val = right.val;
 		return *this;
 	}
-	
+
 	Scalar & Scalar::operator= (const double & right) {
 
 		val = right;
@@ -114,7 +114,7 @@ namespace FluxSol
 	const Scalar Scalar::operator/ (const double &right) const
 	{
 		Scalar temp;
-		temp.Val() = val / right;
+		temp.Val(val / right);
 		return temp;
 	}
 
