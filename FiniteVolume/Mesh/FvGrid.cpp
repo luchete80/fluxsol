@@ -97,6 +97,11 @@ void FluxSol::Fv_CC_Grid::Log(string s)
 		for (int i=0;i<faceit->NumVerts();i++)
 			meshlog<<faceit->Vert(i)<<"  ";
 		meshlog<<endl;
+
+		meshlog<<"Face "<< f<<" fp"<<endl;
+        meshlog<<faceit->Fp().outstr()<<"  ";
+		meshlog<<endl;
+
 		f++;
 	}
 	f=0;
@@ -463,7 +468,7 @@ const SurfaceField<Vec3D> Fv_CC_Grid::Sf()
 
 	for (int f = 0; f < this->num_faces; f++)
 	{
-		ret.Val(f, this->face[f].Af().normalize());
+		ret.Val(f, this->face[f].Af().VecNorm());
 	}
 
 	return ret;

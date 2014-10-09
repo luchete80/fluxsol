@@ -52,9 +52,11 @@ _FvFace::_FvFace(const int &Id, std::vector<int> &idverts,const vector <_Vertex>
 		//According to normal orientation the nodes are oriented
 		//Inicio la informacion de nodos
 		vec_pn=nodospn[idnode[1]]-nodospn[idnode[0]];
+		//cout << "Vec_pn" << vec_pn.outstr()<<endl;
+		cout <<"Face vec_pn"<<vec_pn.outstr()<<endl;
 		dist_pn=fabs(vec_pn);
-		e_pn=vec_pn.normalize();
-
+		e_pn=vec_pn.VecNorm(); //CORRECTED, IS NOT NORMALIZE
+		//cout << "Vec_pn norm" << vec_pn.outstr()<<endl;
 		//Relacion con vertice central de la cara
 		//Vector que va de P/N al baricentro de la cara
 		vec_pf_LR.push_back(sm-nodospn[idnode[0]]);
@@ -66,7 +68,8 @@ _FvFace::_FvFace(const int &Id, std::vector<int> &idverts,const vector <_Vertex>
 
 		//norm_ad=Af.Af/(Af.ePN)
 		//Ad is ths component collineal to pn
-		norm_ad=(af.dot(af)/af.dot(e_pn));
+		//af is the norm of ad vector
+		norm_ad=af.Norm();
 		ad=norm_ad*e_pn;
 
 
@@ -74,7 +77,14 @@ _FvFace::_FvFace(const int &Id, std::vector<int> &idverts,const vector <_Vertex>
 
 		//Factores
 		//Aca puedo hacer mas ameno el exponente
-		fp=vec_pf_LR[idnode[0]].dot(e_pn)/(vec_pn.dot(vec_pn)*vec_pn.dot(vec_pn));
+		cout <<"Face pf LR" <<vec_pf_LR[idnode[0]].outstr()<<endl;
+		cout <<"Face e_pn" <<e_pn.outstr()<<endl;
+        cout <<"Face vec_pn"<<vec_pn.outstr()<<endl;
+
+        cout <<"vec_pn norm"<<vec_pn.Norm().outstr()<<endl;
+        cout << "fp . epn" << (vec_pf_LR[idnode[0]].dot(e_pn))<<endl;
+        //fp=Pf/Norm(PN)=Pf.ePN/(PN.PN)^0.5
+		fp=vec_pf_LR[idnode[0]].dot(e_pn)/vec_pn.Norm();
 		fn=1.0-fp;
 
 	}

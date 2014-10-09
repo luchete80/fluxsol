@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -62,7 +62,7 @@ Vec3D &CalcNormal(const vector <_Vertex> &verts)
 		//OpenFoam cross product sintax
 		res += (verts[v - 1] - verts[0]) ^ (verts[v] - verts[0]);
 		//res += (ve).cross((verts[v] - verts[0]));
-		//res += (verts[v - 1] - verts[0]).cross((verts[v] - verts[0])); //PARAMETERS OF THIS FUNCTION MUST BE CONST 
+		//res += (verts[v - 1] - verts[0]).cross((verts[v] - verts[0])); //PARAMETERS OF THIS FUNCTION MUST BE CONST
 																		//BINARY OPERATOR
 		//res+= ve.cross((verts[v]-verts[0]));
 

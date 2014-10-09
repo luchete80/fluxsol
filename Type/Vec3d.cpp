@@ -76,15 +76,24 @@ Vec3D operator^ (const Vec3D &left, const Vec3D &right) {
 }
 
 //Used in Scalar too, and hence in templates
-const Vec3D Vec3D::normalize(void) {
+const Vec3D & Vec3D::normalize(void){
 	return (*this) /= fabs(*this);
+}
+
+//SAME AS NORMALIZE BUT NOT CHANGE VEC
+//TO MODIFY, CONVERT TO BASE CLASS FN
+const Vec3D Vec3D::VecNorm(void) const {
+    Vec3D ret;
+    ret=*this;
+	return (ret /= fabs(ret));
+	return ret;
 }
 
 const Scalar Vec3D::Norm(void) const {
 	//
 	//Scalar r = x()*x() + y()*y() + z()*z();
 	Vec3D v = *this;
-	double r = v.x()*v.x() + v.y()*v.y() + v.z()*v.z();
+	double r = sqrt(v.x()*v.x() + v.y()*v.y() + v.z()*v.z());
 	return r;
 }
 

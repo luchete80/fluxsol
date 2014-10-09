@@ -103,7 +103,7 @@ int main()
     //EqnSystem <Scalar> Lap=FvImp::Laplacian(k, phi);
 	//Lap==FvImp::Div(phi,U);
 	CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(phi,U));
-
+    //CDEqn = FvImp::Laplacian(k, phi) ;
     //EqnSystem <Scalar> CDEqn(FvImp::Laplacian(k, phi) == FvImp::Div(phi,U));
 	cout << "Writing log.."<<endl;
 	CDEqn.Log("CDEqLog.txt");

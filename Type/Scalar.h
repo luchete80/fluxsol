@@ -30,6 +30,9 @@
 #include "../Type/Products.h"
 
 #include <math.h> //fabs
+#include <iostream>     // std::cout, std::right, std::endl
+#include <iomanip>      // std::setw
+#include <sstream>     // std::cout, std::right, std::endl
 
 using namespace std;
 
@@ -133,6 +136,16 @@ public:
 	}
 
 	void Log(ofstream &f){f<<val;}
+
+    const string outstr()const
+	{
+        string cad;
+        std::ostringstream strs;
+        strs << val << "\n";
+        cad+= strs.str();
+        return cad;
+	}
+
 
 };
 

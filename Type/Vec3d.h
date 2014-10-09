@@ -111,7 +111,8 @@ public:
 	double &operator[] (int i);
 	const Scalar Norm()const;							//This must be moved to operations
 
-	const Vec3D normalize(void) ;	//Versor
+	const Vec3D &normalize(void);	//Versor
+	const Vec3D  VecNorm(void) const;	//Versor
 
 
     //Componentes

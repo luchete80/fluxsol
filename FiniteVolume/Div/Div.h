@@ -82,9 +82,9 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
     for (int f=0;f<VolField.GridPtr->Num_Faces();f++)
         cout << "Face "<< f<< " " <<VolField.Grid().Sf().Val(f).outstr() <<endl;
 
-//    cout << "Interp values "<<endl;
-//    for (int f=0;f<VolField.GridPtr->Num_Faces();f++)
-//       cout << "Face "<< f<< " " <<interp.Interpolate().Val(f).outstr() <<endl;
+    cout << "Interp values "<<endl;
+    for (int f=0;f<VolField.GridPtr->Num_Faces();f++)
+       cout << "Face "<< f<< " " <<interp.Interpolate().Val(f).outstr() <<endl;
     //A continuacion se muestra una forma de calculo de divergencia
     //Sum_f (Sf * (ro * U)f * fi(f) )
     //En OpenFoam ro*U es fi
@@ -117,24 +117,26 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
             //If inner prod > 0, then flux is going out face cell 0,
             //then phi_face=phi_cell0
             //TO MODIFY: CHANGE FOR (Min[-mf,0])
+            //THESE COEFFS REFERS TO CELL 0
+            //IF FACE IS NOT BOUNDARY, THEN COEFFS IN CELL 1 ARE INVERTED
             double d=FluxField.Val(f).Val();
             //cout << "f"<< f << " " <<"FluxField Val " <<FluxField.Val(f).Val() <<endl;
             if(FluxField.Val(f)>0.)
             {
-                coeff_ap= 1.;
+                coeff_ap= FluxField.Val(f);
                 coeff_an= 0.;
             }
             else
             {
                 coeff_ap= 0.;
-                coeff_an= 1.;
+                coeff_an= FluxField.Val(f);
             }
-            //Contribution of central coefficient, flux field if the flux is outwards from cell
-            eqnsys.Eqn(cell[0]).Ap()+=coeff_ap;
-
             //If face is internal, assign to cell 0 neighbour an coefficient
             if (!face.Boundaryface())
             {
+                //Contribution of central coefficient, flux field if the flux is outwards from cell
+                eqnsys.Eqn(cell[0]).Ap()+=coeff_ap;
+
                 cell[1]=face.Cell(1);
                 cout << "Global Cell 1: "<< cell[1]<<endl;
                 //Search global neighbour cell
@@ -147,11 +149,12 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
                     //eqnsys.Eqn(cell[0]).An(neigh,coeff_an);
                     eqnsys.Eqn(cell[0]).An(neigh)+=coeff_an;
 
-                eqnsys.Eqn(cell[1]).Ap()+=coeff_an;
+                //Cell 1 has opposite flux direction
+                eqnsys.Eqn(cell[1]).Ap()-=coeff_an;
 
                 if (neigh2>=0 /*&& neigh <VolField.ConstGrid().Cell(cell[1]).Num_Neighbours()*/)
                     //eqnsys.Eqn(cell[1]).An(neigh2,coeff_ap);
-                    eqnsys.Eqn(cell[1]).An(neigh2)+=coeff_ap;
+                    eqnsys.Eqn(cell[1]).An(neigh2)-=coeff_ap;
             }
 		}//End if !NullFluxFace
     }
@@ -169,6 +172,7 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
             //Instead of if sentence it is convenient to use inheritance
             if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
             {
+                //If flux is inwards, source is positive (is RHS)
                 //cout << "Boundary Field Value"<<phi.Boundaryfield().PatchField(p).Val(f).Val()<<endl;
                 eqnsys.Eqn(bface.Cell(0)).Source()+=phi.Boundaryfield().PatchField(p).Val(f);
             }

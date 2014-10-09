@@ -49,7 +49,7 @@ class _Face
 	std::vector <Vec3D> *pvertex;
 
 
-	Vec3D af;											//Area escalar
+	Vec3D af;											//SCALAR AREA
 	double  norm_af;									//Vector de area = area x n, esto lo hago para evitar hacer siempre el producto
 
     //Las areas cambian
