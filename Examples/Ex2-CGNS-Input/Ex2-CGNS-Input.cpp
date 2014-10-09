@@ -26,6 +26,7 @@ int main()
 	EqnSystem <Scalar> TEqn;
 	//Construir aca con la malla
 	Scalar k(1.);	//Difusion, puede ser un escalar
+
 	cout<<"Generating system"<<endl;
 	TEqn=(FvImp::Laplacian(k,T)==0.);
 	cout<<"Solving system"<<endl;
@@ -37,6 +38,7 @@ int main()
 
 	Vertex_Fv_Field<Scalar> vT;
 
+    _CC_Fv_Field <Scalar> U(malla);
 
 	T=TEqn.Field();
 

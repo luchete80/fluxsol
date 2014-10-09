@@ -59,7 +59,6 @@ template <class T>
 EqnSystem < typename innerProduct < Vec3D, T> ::type >
 FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
 {
-    Eqn <T> eqn;            //Ecuacion para cada una de las cells
                             //No hace falta construirla porque la devuelve el VolField
     //EqnSystem <T> eqnsys(VolField.GridPtr->Num_Cells());   //Como no le doy parametros inicia todo en cero, salvo las dimensiones
     //EqnSystem <T> < typename innerProduct < Vec3D, T> ::type > eqnsys(VolField.Grid());
@@ -92,19 +91,8 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
     //Esta forma de calculo es para cuando las partes de la cara no son iguales
     //--------------
     //RECORRO CELLS
-    const std::vector<Cell_CC>::iterator cellit;
-    vector <Scalar> flux;	//Flujo en la celda y en las vecina
     const int numcells = VolField.GridPtr->Num_Cells();
-    for (int cid=0; cid<numcells; cid++)
-    {
-        //const int &icell, std::vector <Scalar> flux
-        //Tengo que pasar a vector el campo de flujo
-        const int nfaces = VolField.GridPtr->Cell(cid).Num_Faces();
 
-        //Calculate Face Flux
-        //eqn=VolField.ToFaces(cid,flux); //Puedo hacer una funcion que no itere por elemento pero esta la memoria
-
-    }
     for (int f=0;f<VolField.ConstGrid().Num_Faces();f++)
     {
         _FvFace face=VolField.ConstGrid().Face(f);
@@ -141,16 +129,29 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
                 coeff_ap= 0.;
                 coeff_an= 1.;
             }
+            //Contribution of central coefficient, flux field if the flux is outwards from cell
+            eqnsys.Eqn(cell[0]).Ap()+=coeff_ap;
 
-            eqnsys.Eqn(cell[0]).Ap(coeff_ap);
-
+            //If face is internal, assign to cell 0 neighbour an coefficient
             if (!face.Boundaryface())
             {
                 cell[1]=face.Cell(1);
+                cout << "Global Cell 1: "<< cell[1]<<endl;
                 //Search global neighbour cell
                 int neigh=VolField.ConstGrid().Cell(cell[0]).SearchNeighbour(cell[1]);
-                if (neigh>=0)
-                    eqnsys.Eqn(cell[1]).An(neigh,coeff_an);
+                int neigh2=VolField.ConstGrid().Cell(cell[1]).SearchNeighbour(cell[0]);
+                cout << "Cell "<<cell[0]<< "neighbour: "<<neigh<<endl;
+ // TO MODIFY!!!!
+ //This Way is too expensive, only for evaluation
+                if (neigh>=0 /*&& neigh <VolField.ConstGrid().Cell(cell[0]).Num_Neighbours()*/)
+                    //eqnsys.Eqn(cell[0]).An(neigh,coeff_an);
+                    eqnsys.Eqn(cell[0]).An(neigh)+=coeff_an;
+
+                eqnsys.Eqn(cell[1]).Ap()+=coeff_an;
+
+                if (neigh2>=0 /*&& neigh <VolField.ConstGrid().Cell(cell[1]).Num_Neighbours()*/)
+                    //eqnsys.Eqn(cell[1]).An(neigh2,coeff_ap);
+                    eqnsys.Eqn(cell[1]).An(neigh2)+=coeff_ap;
             }
 		}//End if !NullFluxFace
     }
@@ -215,7 +216,7 @@ FvImp::Div(const _CC_Fv_Field <T> &VolField)
 	    //--------------
 	    //RECORRO CELLS
 	    const std::vector<Cell_CC>::iterator cellit;
-		vector <Scalar> flux;	//Flujo en la celda y en las vecina
+
 		const int numcells = VolField.GridPtr->Num_Cells();
 		for (int cid=0; cid<numcells; cid++)
 	    {

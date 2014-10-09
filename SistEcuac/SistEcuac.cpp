@@ -237,7 +237,6 @@ EqnSystem<T>::EqnSystem(const Fv_CC_Grid &FvG)//:grid(Fv_CC_Grid(FvG))
 template <typename T>
 EqnSystem <T> & EqnSystem <T>::operator==(const EqnSystem <T> &right)
 {
-	//EqnSystem <T> ret;
     cout << "Eqn sizes"<< EqnV().size() << " "<<right.EqnV().size()<<endl;
 	if (EqnV().size() == right.EqnV().size())
 	{

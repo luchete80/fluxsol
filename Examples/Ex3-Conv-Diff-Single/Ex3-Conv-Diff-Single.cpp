@@ -28,9 +28,13 @@
 using namespace std;
 using namespace FluxSol;
 
+void Test();
+
 int main()
 {
 
+    //Test();
+    //cout << "Now Ex3"<<endl;
     Fv_CC_Grid mesh(5,1,1.0,1.0);
 	mesh.Log("MeshLog.txt");
 
@@ -90,9 +94,14 @@ int main()
     cout << "Field U Number of Values" << U.Numberofvals()<<endl;
 
     EqnSystem <Scalar> CDEqn;
-    //CDEqn=FvImp::Div(phi,U);
-    //CDEqn=FvImp::Laplacian(k, phi) ;
+    CDEqn=FvImp::Div(phi,U);
+    CDEqn.Log("Convection Eqn Log.txt");
 
+    CDEqn=FvImp::Laplacian(k, phi) ;
+    CDEqn.Log("Diffusion Eqn Log.txt");
+
+    //EqnSystem <Scalar> Lap=FvImp::Laplacian(k, phi);
+	//Lap==FvImp::Div(phi,U);
 	CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(phi,U));
 
     //EqnSystem <Scalar> CDEqn(FvImp::Laplacian(k, phi) == FvImp::Div(phi,U));
@@ -129,6 +138,63 @@ int main()
 	//OutputFile("VertexField.vtu",intphi);
 
 	//	---- The End -------
+	return 0;
+
+}
+
+void Test()
+{
+
+    cout << "Reading square.cgns ..."<<endl;
+	Fv_CC_Grid malla("square.cgns");
+	//malla.ReadCGNS();
+
+	malla.Log("Log.txt");
+
+	_CC_Fv_Field <Scalar> T(malla);
+
+	_CC_Fv_Field <Vec3D> U(malla);
+	_CC_Fv_Field <Scalar> phi(malla);
+	U=Vec3D(1.,0,0);
+
+
+	//Boundary conditions
+	Scalar wallvalue=0.;
+	Scalar topvalue=1.;
+	for (int p=0;p<3;p++)
+	T.Boundaryfield().PatchField(p).AssignValue(wallvalue);
+	T.Boundaryfield().PatchField(3).AssignValue(topvalue);
+
+	EqnSystem <Scalar> TEqn;
+	//Construir aca con la malla
+	Scalar k(1.);	//Difusion, puede ser un escalar
+
+	cout<<"Generating system"<<endl;
+	TEqn=(FvImp::Laplacian(k,T)==0.);
+
+	EqnSystem <Scalar> CDEqn;
+	CDEqn=(FvImp::Laplacian(k,T)==FvImp::Div(phi,U));
+	cout<<"Solving system"<<endl;
+	Solve(TEqn);
+	TEqn.Log("EqLog.txt");
+
+	cout<<"Generating field"<<endl;
+//	CenterToVertexInterpolation interp(malla);
+
+	Vertex_Fv_Field<Scalar> vT;
+
+
+	T=TEqn.Field();
+
+	cout<<"Interpolating to vertices"<<endl;
+//	vT=interp.Interpolate(T);
+
+	cout<<"Writing files"<<endl;
+	OutputFile("CellField.vtu",T);
+//	OutputFile("VertexField.vtu",vT);
+
+	cout << "End. Now Reading input.in"<<endl;
+
 	return 0;
 
 }

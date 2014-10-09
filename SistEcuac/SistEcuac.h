@@ -134,7 +134,7 @@ class EqnSystem{   //Es un vector de ecuaciones
     public:
 
     //Constructores
-    EqnSystem():dimension(int(pTraits<T>::rank)){};
+    EqnSystem():dimension(int(pTraits<T>::rank)){cout << "Eqn Sys created w/o dim"<<endl;}
     ~EqnSystem(){
 //    	    delete GridPtr;
     	    }
