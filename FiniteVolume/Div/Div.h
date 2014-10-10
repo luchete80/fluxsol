@@ -132,10 +132,12 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
                 coeff_an= FluxField.Val(f);
             }
             //If face is internal, assign to cell 0 neighbour an coefficient
+            eqnsys.Eqn(cell[0]).Ap()+=coeff_ap;
+
             if (!face.Boundaryface())
             {
                 //Contribution of central coefficient, flux field if the flux is outwards from cell
-                eqnsys.Eqn(cell[0]).Ap()+=coeff_ap;
+                //eqnsys.Eqn(cell[0]).Ap()+=coeff_ap;
 
                 cell[1]=face.Cell(1);
                 cout << "Global Cell 1: "<< cell[1]<<endl;
@@ -158,10 +160,10 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
             }
 		}//End if !NullFluxFace
     }
-    //------------------
-    //Loop through faces
-    //------------------
-    //TO MODIFY, CHAMGE ORDER BETWEEN IF AND FOR
+//    ------------------
+//    Loop through faces
+//    ------------------
+//    TO MODIFY, CHAMGE ORDER BETWEEN IF AND FOR
     for (int p=0;p<VolField.Grid().vBoundary().Num_Patches();p++)
     {
         for (int f=0;f<VolField.Grid().vBoundary().vPatch(p).Num_Faces();f++)
@@ -172,9 +174,11 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
             //Instead of if sentence it is convenient to use inheritance
             if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
             {
-                //If flux is inwards, source is positive (is RHS)
-                //cout << "Boundary Field Value"<<phi.Boundaryfield().PatchField(p).Val(f).Val()<<endl;
-                eqnsys.Eqn(bface.Cell(0)).Source()+=phi.Boundaryfield().PatchField(p).Val(f);
+
+                if(FluxField.Val(idface)<0.)
+                    //If flux is inwards, source is positive (is RHS)
+                    //cout << "Boundary Field Value"<<phi.Boundaryfield().PatchField(p).Val(f).Val()<<endl;
+                    eqnsys.Eqn(bface.Cell(0)).Source()+=phi.Boundaryfield().PatchField(p).Val(f);
             }
             else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
             {
