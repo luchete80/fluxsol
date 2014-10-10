@@ -83,7 +83,7 @@ int main()
 
 	_CC_Fv_Field<Vec3D> U(mesh);
 
-    U=Vec3D(0.1,0.,0.);
+    U=Vec3D(2.5,0.,0.);
 
 
 

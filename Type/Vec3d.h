@@ -97,7 +97,7 @@ public:
 	{
         string cad;
         std::ostringstream strs;
-        strs << comp[0] << " " <<comp[1] << " " << comp[2] << " " << "\n";
+        strs << comp[0] << " " << comp[1] << " " << comp[2] << " " << "\n";
         cad+= strs.str();
         return cad;
 	}
