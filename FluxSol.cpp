@@ -220,7 +220,7 @@ void CDTest2()
     cout << "Results"<<endl;
 	for (int e=0;e<CDEqn.Num_Eqn();e++)
     {
-        cout << CDEqn.Eqn(e).X().Val()<<endl;
+        //cout << CDEqn.Eqn(e).X().Val()<<endl;
         cout << phi.Val(e).Val()<<endl;
     }
 
@@ -272,7 +272,7 @@ void Ex1()
 	//Campo de temperatura
 	_CC_Fv_Field <Scalar> T(malla);
 
-	cout << "Grid Faces "<<T.Grid().Num_Faces()<<endl;
+//	cout << "Grid Faces "<<T.Grid().Num_Faces()<<endl;
 
 	//Boundary conditions
 	Scalar wallvalue=0.;

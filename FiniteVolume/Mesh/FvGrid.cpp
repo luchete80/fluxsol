@@ -98,9 +98,9 @@ void FluxSol::Fv_CC_Grid::Log(string s)
 			meshlog<<faceit->Vert(i)<<"  ";
 		meshlog<<endl;
 
-		meshlog<<"Face "<< f<<" fp"<<endl;
-        meshlog<<faceit->Fp().outstr()<<"  ";
-		meshlog<<endl;
+		//meshlog<<"Face "<< f<<" fp"<<endl;
+        //meshlog<<faceit->Fp().outstr()<<"  ";
+		//meshlog<<endl;
 
 		f++;
 	}
@@ -213,10 +213,10 @@ void Fv_CC_Grid::AssignNeigboursCells()
 {
 
 	int c=0;
-	cout <<"neigh assign" <<endl;
-    cout << "Grid Num Faces" <<this->Num_Faces()<<endl;
-    cout << "Grid Face Size" <<this->face.size()<<endl;
-    cout << "Grid Cell Size" <<this->cell.size()<<endl;
+//	cout <<"neigh assign" <<endl;
+//    cout << "Grid Num Faces" <<this->Num_Faces()<<endl;
+//    cout << "Grid Face Size" <<this->face.size()<<endl;
+//    cout << "Grid Cell Size" <<this->cell.size()<<endl;
     bool end=false;
     if (!this->Num_Faces() || this->face.size()==0 || this->cell.size()==0)
         end=true;
@@ -225,17 +225,17 @@ void Fv_CC_Grid::AssignNeigboursCells()
 
         for (cellit=cell.begin();cellit!=cell.end();cellit++)
         {
-            cout << "neigh assign cell "<<c<<endl;
-            cout << "Num Faces" <<cellit->Num_Faces()<<endl;
+//            cout << "neigh assign cell "<<c<<endl;
+//            cout << "Num Faces" <<cellit->Num_Faces()<<endl;
             for (int intface=0;intface<cellit->Num_Faces();intface++)
             {
-                cout << "Int face" << intface<<endl;
-                cout << "Id Face"<<cellit->Id_Face(intface);
+//                cout << "Int face" << intface<<endl;
+//                cout << "Id Face"<<cellit->Id_Face(intface);
                 int idface=cellit->Id_Face(intface);
                 _FvFace fvface=this->Face(idface);
                 if (!fvface.Is_Null_Flux_Face() && !fvface.Boundaryface())
                 {
-                    cout << "Flux Internal Face"<<endl;
+//                    cout << "Flux Internal Face"<<endl;
                     if (Face(idface).Cell(0)==c)
                         cellit->AddNeighbour(Face(idface).Cell(1));
                     else
@@ -439,8 +439,8 @@ void Fv_CC_Grid::Iniciar_Caras()
 	num_faces=numfaces;
 	num_boundary_faces=nfb;
 
-	cout << "Num Faces " <<numfaces<<endl;
-	cout << "Num Boundary Faces" <<num_boundary_faces<<endl;
+	cout << "[I] Faces: " <<numfaces<<endl;
+	cout << "[I] Boundary Faces: " <<num_boundary_faces<<endl;
 
 
 }

@@ -53,7 +53,7 @@ _FvFace::_FvFace(const int &Id, std::vector<int> &idverts,const vector <_Vertex>
 		//Inicio la informacion de nodos
 		vec_pn=nodospn[idnode[1]]-nodospn[idnode[0]];
 		//cout << "Vec_pn" << vec_pn.outstr()<<endl;
-		cout <<"Face vec_pn"<<vec_pn.outstr()<<endl;
+//		cout <<"Face vec_pn"<<vec_pn.outstr()<<endl;
 		dist_pn=fabs(vec_pn);
 		e_pn=vec_pn.VecNorm(); //CORRECTED, IS NOT NORMALIZE
 		//cout << "Vec_pn norm" << vec_pn.outstr()<<endl;
@@ -77,12 +77,12 @@ _FvFace::_FvFace(const int &Id, std::vector<int> &idverts,const vector <_Vertex>
 
 		//Factores
 		//Aca puedo hacer mas ameno el exponente
-		cout <<"Face pf LR" <<vec_pf_LR[idnode[0]].outstr()<<endl;
-		cout <<"Face e_pn" <<e_pn.outstr()<<endl;
-        cout <<"Face vec_pn"<<vec_pn.outstr()<<endl;
+		//cout <<"Face pf LR" <<vec_pf_LR[idnode[0]].outstr()<<endl;
+		//cout <<"Face e_pn" <<e_pn.outstr()<<endl;
+        //cout <<"Face vec_pn"<<vec_pn.outstr()<<endl;
 
-        cout <<"vec_pn norm"<<vec_pn.Norm().outstr()<<endl;
-        cout << "fp . epn" << (vec_pf_LR[idnode[0]].dot(e_pn))<<endl;
+        //cout <<"vec_pn norm"<<vec_pn.Norm().outstr()<<endl;
+        //cout << "fp . epn" << (vec_pf_LR[idnode[0]].dot(e_pn))<<endl;
         //fp=Pf/Norm(PN)=Pf.ePN/(PN.PN)^0.5
 		fp=vec_pf_LR[idnode[0]].dot(e_pn)/vec_pn.Norm();
 		fn=1.0-fp;

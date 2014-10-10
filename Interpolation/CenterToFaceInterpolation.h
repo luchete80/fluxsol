@@ -53,7 +53,7 @@ class CenterToFaceInterpolation
 		{
 
 			//Pending to Generate constructor
-			cout << "Grid Faces " <<this->field.GridPtr->Num_Faces()<<endl;
+//			cout << "Grid Faces " <<this->field.GridPtr->Num_Faces()<<endl;
 			SurfaceField <T> r(this->field.GridPtr->Num_Faces());
 
 
@@ -63,8 +63,8 @@ class CenterToFaceInterpolation
 				_FvFace face = this->field.GridPtr->Face(f);
 				T prom;
 				//Scalar fp
-				cout <<"Face "<< f<< " "<< this->field[face.Cell(0)].outstr() << " "<< this->field[face.Cell(1)].outstr() <<endl;
-				cout << "Fp "<< face.Fp().outstr()<<endl;
+				//cout <<"Face "<< f<< " "<< this->field[face.Cell(0)].outstr() << " "<< this->field[face.Cell(1)].outstr() <<endl;
+				//cout << "Fp "<< face.Fp().outstr()<<endl;
 				if (!this->field.GridPtr->Face(f).Boundaryface())
 					prom = this->field[face.Cell(0)] * (1.0 - face.Fp()) + this->field[face.Cell(1)] * face.Fp();
 				else

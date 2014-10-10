@@ -71,20 +71,20 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
     //Flux, inner producto
     //Can be a vector, or a scalar
     //Sf is a vector
-    cout << "VolField number of vals"<<VolField.Numberofvals()<<endl;
+//    cout << "VolField number of vals"<<VolField.Numberofvals()<<endl;
     //TO MODIFY, CORRECT NUMBER OF VALS
     SurfaceField <typename innerProduct < Vec3D, Vec3D> ::type> FluxField(VolField.ConstGrid().Num_Faces());
     //_CC_Fv_Field <typename innerProduct < Vec3D, Vec3D> ::type> Prueba(VolField.Numberofvals(),0.);
     FluxField= VolField.Grid().Sf() & interp.Interpolate();
 
-    cout << "Sf values "<<endl;
+//    cout << "Sf values "<<endl;
 
-    for (int f=0;f<VolField.GridPtr->Num_Faces();f++)
-        cout << "Face "<< f<< " " <<VolField.Grid().Sf().Val(f).outstr() <<endl;
+    //for (int f=0;f<VolField.GridPtr->Num_Faces();f++)
+    //    cout << "Face "<< f<< " " <<VolField.Grid().Sf().Val(f).outstr() <<endl;
 
-    cout << "Interp values "<<endl;
-    for (int f=0;f<VolField.GridPtr->Num_Faces();f++)
-       cout << "Face "<< f<< " " <<interp.Interpolate().Val(f).outstr() <<endl;
+//    cout << "Interp values "<<endl;
+   // for (int f=0;f<VolField.GridPtr->Num_Faces();f++)
+    //   cout << "Face "<< f<< " " <<interp.Interpolate().Val(f).outstr() <<endl;
     //A continuacion se muestra una forma de calculo de divergencia
     //Sum_f (Sf * (ro * U)f * fi(f) )
     //En OpenFoam ro*U es fi
@@ -140,11 +140,11 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
                 //eqnsys.Eqn(cell[0]).Ap()+=coeff_ap;
 
                 cell[1]=face.Cell(1);
-                cout << "Global Cell 1: "<< cell[1]<<endl;
+//                cout << "Global Cell 1: "<< cell[1]<<endl;
                 //Search global neighbour cell
                 int neigh=VolField.ConstGrid().Cell(cell[0]).SearchNeighbour(cell[1]);
                 int neigh2=VolField.ConstGrid().Cell(cell[1]).SearchNeighbour(cell[0]);
-                cout << "Cell "<<cell[0]<< "neighbour: "<<neigh<<endl;
+//                cout << "Cell "<<cell[0]<< "neighbour: "<<neigh<<endl;
  // TO MODIFY!!!!
  //This Way is too expensive, only for evaluation
                 if (neigh>=0 /*&& neigh <VolField.ConstGrid().Cell(cell[0]).Num_Neighbours()*/)
@@ -178,7 +178,7 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
                 if(FluxField.Val(idface)<0.)
                     //If flux is inwards, source is positive (is RHS)
                     //cout << "Boundary Field Value"<<phi.Boundaryfield().PatchField(p).Val(f).Val()<<endl;
-                    eqnsys.Eqn(bface.Cell(0)).Source()+=phi.Boundaryfield().PatchField(p).Val(f);
+                    eqnsys.Eqn(bface.Cell(0)).Source()-=phi.Boundaryfield().PatchField(p).Val(f)*FluxField.Val(idface);
             }
             else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
             {

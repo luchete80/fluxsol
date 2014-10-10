@@ -115,7 +115,7 @@ int main()
     cout << "Results"<<endl;
 	for (int e=0;e<CDEqn.Num_Eqn();e++)
     {
-        cout << CDEqn.Eqn(e).X().Val()<<endl;
+//        cout << CDEqn.Eqn(e).X().Val()<<endl;
         cout << phi.Val(e).Val()<<endl;
     }
 

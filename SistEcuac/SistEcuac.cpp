@@ -74,7 +74,7 @@ void EqnSystem<T>::Insert (const FluxSol::Eqn <T> &ec)
 template <typename T>
 Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right)
 {
-	Eqn<T> ret;
+	Eqn<T> ret=*this;    //To equal neighbour id
 
 	vector <int> tempright;
 	vector <T> temprval;
@@ -83,15 +83,27 @@ Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right)
     temprval = right.an;
 	vector<int> ids;	//checked neighbours ids
 
+
+
+//    for (int nleft = 0; nleft < this->an.size(); nleft++)
+//    {
+//        bool found =false;
+//        for (int nr=0;nr<ret.neighbour_id.size();nr++)
+//            if(an[nleft]==ret.neighbour_id[nr])
+//                found==true;
+//
+//    }
+
 	//Che if both central coeff are the same
 	if (id == right.id)
 	{
+	    //ret=Eqn<T>(pid,nids);
 		//Must chek if both neighbour ids are the same and in that case
 		ret.ap = this->ap - right.ap;
 
 		bool lfound;
-        cout <<"left an size" <<this->an.size()<<endl;
-        cout <<"right an size" <<right.an.size()<<endl;
+//        cout <<"left an size" <<this->an.size()<<endl;
+//        cout <<"right an size" <<right.an.size()<<endl;
 		//left eqn could have a bigger stencil
 		//At first assign left an size to ret eqn
 		ret.an.assign(this->an.size(),0.);
@@ -113,7 +125,7 @@ Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right)
 			nright--;
 
 			//
-			cout << "ret an size"<<ret.an.size()<<endl;
+//			cout << "ret an size"<<ret.an.size()<<endl;
 			if (!lfound)
 				ret.an[nleft] = this->an[nleft];
 			else
@@ -145,12 +157,17 @@ Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right)
 			nleft--;
 
 			if (!rfound)
+            {
 				ret.an.push_back(-(temprval[nright]));
+                ret.neighbour_id.push_back(nright);
+            }
 			else
 				ret.an.push_back( this->an[nleft] - temprval[nright]);
 		}
 
 		//ret.An(this->Ap() - right.Ap());
+		//for (int nid=0;nid<ids.size();nid++)
+                //this->neighbour_id.push_back(ids[nid]);
 
 		ret.source = this->source - right.source;
 
@@ -237,13 +254,15 @@ EqnSystem<T>::EqnSystem(const Fv_CC_Grid &FvG)//:grid(Fv_CC_Grid(FvG))
 template <typename T>
 EqnSystem <T> & EqnSystem <T>::operator==(const EqnSystem <T> &right)
 {
-    cout << "Eqn sizes"<< EqnV().size() << " "<<right.EqnV().size()<<endl;
+//    cout << "Eqn sizes"<< EqnV().size() << " "<<right.EqnV().size()<<endl;
 	if (EqnV().size() == right.EqnV().size())
 	{
 		//Check if both eqns have same size
 		for (int e = 0; e<EqnV().size(); e++)
 		{
+//			cout << "operator =="<< this-> eqn[e].NeighboursIds().size()<<endl;
 			this->eqn[e] = (this->eqn[e] == right.Eqn(e));
+//			cout << "operator =="<< this-> eqn[e].NeighboursIds().size()<<endl;
 		}
 	}
 	else

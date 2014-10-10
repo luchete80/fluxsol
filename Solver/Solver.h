@@ -149,18 +149,18 @@ void Solve (EqnSystem <T> &eq)
 	SetRTCAccuracy(1e-5);
 
 
-	for (int i=0;i<10;i++)
-	{
+//	for (int i=0;i<10;i++)
+//	{
 		V_SetAllCmp(&U,0.0);
-		BiCGSTABIter (&K,&U,&R,1000,SSORPrecond,1.0);
-		cout<<"It "<<i<<endl;
+		BiCGSTABIter (&K,&U,&R,1000,SSORPrecond,1.2);
+		//cout<<"It "<<i<<endl;
 		for (int j=0;j<totrows;j++)
 		{
 			Ui[j]=U.Cmp[j+1];
 			Ri[j]=R.Cmp[j+1];
 		}
 
-	}
+//	}
 
 	for (int e=0;e<eq.Num_Eqn();e++)
 	{
