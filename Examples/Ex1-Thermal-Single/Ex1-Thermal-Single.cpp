@@ -37,7 +37,7 @@ int main()
 	//Campo de temperatura
 	_CC_Fv_Field <Scalar> T(malla);
 
-	cout << "Grid Faces "<<T.Grid().Num_Faces()<<endl;
+//	cout << "Grid Faces "<<T.Grid().Num_Faces()<<endl;
 
 	//Boundary conditions
 	Scalar wallvalue=0.;

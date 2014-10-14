@@ -102,9 +102,9 @@ void FluxSol::Fv_CC_Grid::Log(string s)
 			meshlog<<faceit->Vert(i)<<"  ";
 		meshlog<<endl;
 
-		//meshlog<<"Face "<< f<<" fp"<<endl;
-        //meshlog<<faceit->Fp().outstr()<<"  ";
-		//meshlog<<endl;
+		meshlog<<"Face "<< f<<" fp"<<endl;
+        meshlog<<faceit->Fp().outstr()<<"  ";
+		meshlog<<endl;
 
 		f++;
 	}
