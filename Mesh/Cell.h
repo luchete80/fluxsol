@@ -97,7 +97,7 @@ class _Cell
 		//Neighbours
 		void AssignNeighbours(std::vector <int> nc) {id_neigbourcell=nc;};
 		void AddNeighbour(const int &i) {id_neigbourcell.push_back(i);};
-		const int & Neigbour(const int &i)const {return id_neigbourcell[i];}
+		const int & Neighbour(const int &i)const {return id_neigbourcell[i];}
 
 		//Searches cell neighbour position, used by divergence
 		const int SearchNeighbour(const int &i)

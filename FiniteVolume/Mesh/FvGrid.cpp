@@ -75,6 +75,10 @@ void FluxSol::Fv_CC_Grid::Log(string s)
 		for (int f=0;f<(*ccellit).Num_Faces();f++)
 			meshlog<<(*ccellit).Id_Face(f)<< "  ";
 		meshlog <<endl;
+		meshlog << "Neighbours" << endl;
+		for (int n=0; n<(*ccellit).Num_Neighbours(); n++)
+            meshlog << (*ccellit).Neighbour(n) << endl;
+        meshlog << endl;
 
 	}
     //Ahora viene la diferencia

@@ -239,7 +239,7 @@ EqnSystem<T>::EqnSystem(const Fv_CC_Grid &FvG)//:grid(Fv_CC_Grid(FvG))
 
         //cout << "Neighbours"<<endl;
 		for (int n=0;n<FvG.Cell(c).Num_Neighbours();n++)
-			nbr_id[n]=FvG.Cell(c).Neigbour(n);
+			nbr_id[n]=FvG.Cell(c).Neighbour(n);
 
 		FluxSol::Eqn <T> eq(c,ap,an,source,nbr_id);
 		eqn.push_back(eq);
@@ -294,7 +294,7 @@ EqnSystem <T> & EqnSystem <T>::operator==(const EqnSystem <T> &right)
 //		nbr_id.assign(FvGrid.Cell(c).Num_Neighbours(),0);
 //
 //		for (int n=0;n<FvGrid.Cell(c).Num_Neighbours();n++)
-//			nbr_id[n]=FvGrid.Cell(c).Neigbour(n);
+//			nbr_id[n]=FvGrid.Cell(c).Neighbour(n);
 //
 //		FluxSol::Eqn <T> eq(c,ap,an,source,nbr_id);
 //		eqn.push_back(eq);

@@ -112,7 +112,7 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 					for (int localncell=0;localncell<cell.Num_Neighbours();localncell++)
 					{
 					    //cout << "Local cell" <<localncell<<endl;
-						if (cell.Neigbour(localncell)==ncellid)
+						if (cell.Neighbour(localncell)==ncellid)
 							localneighbourid=localncell;
 					}
 					eqnsys.Eqn(pcellid).An(localneighbourid)+=an;
