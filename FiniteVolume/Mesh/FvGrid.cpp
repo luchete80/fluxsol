@@ -62,13 +62,19 @@ void FluxSol::Fv_CC_Grid::Log(string s)
 {
     //ESTO PUEDO COLOCARLO EN UN LOG APARTE PARA CLASE BASE
     Log_Abrir(s.c_str());       //Abro archivo de log
-    meshlog<<"Coordenadas de vertices"<<endl;
+    meshlog << "Vertices Coordinates" << endl;
+    meshlog << endl;
 	Log_Verts();                //El Log de los vertices es el mismo
     std::vector < Cell_CC >::iterator ccellit;
+    meshlog << endl;
 	meshlog<<"//////////////////////////////"<<endl;
+	meshlog << endl;
 	meshlog<<"Mesh Cells"<<endl;
+	meshlog << endl;
+	int i=0;
     for (ccellit=cell.begin();ccellit!=cell.end();ccellit++)
 	{
+		meshlog << "Cell " << i << endl;
 		meshlog<<"Vertices"<<endl;
         meshlog<<(*ccellit).Imprimir_Conect()<<endl;
 		meshlog<<"Faces"<<endl;
@@ -79,17 +85,25 @@ void FluxSol::Fv_CC_Grid::Log(string s)
 		for (int n=0; n<(*ccellit).Num_Neighbours(); n++)
             meshlog << (*ccellit).Neighbour(n) << endl;
         meshlog << endl;
+        i++;
 
 	}
     //Ahora viene la diferencia
 	//Busco las coordenadas de los nodos
-	meshlog<<"Coordenadas de nodos"<<endl;
+	meshlog<<"//////////////////////////////"<<endl;
+	meshlog << endl;
+	meshlog << "Nodes Coordinates" << endl;
+	meshlog << endl;
 	for (nodeit=node.begin();nodeit!=node.end();nodeit++)
 		meshlog<<nodeit->Imprimir_Coord()<<endl;
 
 	//Informacion de faces
 	int f=0;
+    meshlog << endl;
+	meshlog<<"//////////////////////////////"<<endl;
+	meshlog << endl;
 	meshlog<<"Face Conectivity"<<endl;
+	meshlog << endl;
 	for (faceit=this->face.begin();faceit!=face.end();faceit++)
 	{
 		meshlog<<"Face "<< f<<" cells"<<endl;
@@ -97,7 +111,7 @@ void FluxSol::Fv_CC_Grid::Log(string s)
 			meshlog<<faceit->Cell(i)<<"  ";
 		meshlog<<endl;
 
-		meshlog<<"Face "<< f<<" verts"<<endl;
+		meshlog<<"Face "<< f<<" vertices"<<endl;
 		for (int i=0;i<faceit->NumVerts();i++)
 			meshlog<<faceit->Vert(i)<<"  ";
 		meshlog<<endl;
@@ -109,13 +123,18 @@ void FluxSol::Fv_CC_Grid::Log(string s)
 		f++;
 	}
 	f=0;
+	meshlog<<"//////////////////////////////"<<endl;
+	meshlog << endl;
 	meshlog<<"Face Geometry"<<endl;
+	meshlog << endl;
 	for (faceit=this->face.begin();faceit!=face.end();faceit++)
 	{
 
 		meshlog << "Face "<<f<<"Ad:"<<endl;
 		faceit->Ad().Log(meshlog);
 		meshlog<<endl;
+		meshlog << endl;
+
 		f++;
 	}
     //ESTO ES NUEVO PARA LA CLASE DERIVADA
@@ -280,7 +299,7 @@ void Fv_CC_Grid::Iniciar_Caras()
     //cout << "Node initialized "<<inicie_nodes<<endl;
     if (!inicie_cells || !inicie_nodes)
     {
-        cout << "Nodes or cells not initiated. Grid initiation fails..."<<endl;
+        cout << "Nodes or cells not initiated. Grid initiation failed..."<<endl;
         return;
 
     }
