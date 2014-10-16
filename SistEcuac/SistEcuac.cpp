@@ -181,6 +181,12 @@ Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right)
 }
 
 //template <typename T>
+//Eqn<T> & Eqn<T>::operator-()
+//{
+//	Eqn<T> ret=*this;    //To equal neighbour id
+//}
+
+//template <typename T>
 //void EqnSystem<T>::Insert (const Eqn<T> &ec, std::vector<int> & nbreq)
 //{
 //	Insert(ec);

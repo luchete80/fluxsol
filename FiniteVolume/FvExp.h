@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -39,6 +39,35 @@ template<class T>
 _CC_Fv_Field
 < typename outerProduct<Vec3D, T>::type >
 Grad (const _CC_Fv_Field <T>&);
+
+//Like CenterToFaceInterpolation
+template<typename T>
+SurfaceField <T> Interpolate(const _CC_Fv_Field <T> &field)
+    {
+
+        //Pending to Generate constructor
+        cout << "Grid Faces " <<field.GridPtr->Num_Faces()<<endl;
+        SurfaceField <T> r(field.GridPtr->Num_Faces());
+
+
+        //Loop throug faces
+        for (int f = 0; f<field.GridPtr->Num_Faces(); f++)
+        {
+            _FvFace face = field.GridPtr->Face(f);
+            T prom;
+            //Scalar fp
+            cout <<"Face "<< f<< " "<< field[face.Cell(0)].outstr() << " "<< field[face.Cell(1)].outstr() <<endl;
+            cout << "Fp "<< face.Fp().outstr()<<endl;
+            if (!field.GridPtr->Face(f).Boundaryface())
+                prom = field[face.Cell(0)] * (1.0 - face.Fp()) + field[face.Cell(1)] * face.Fp();
+            else
+                prom = field[face.Cell(0)];
+
+            r[f] = prom;
+        }
+
+        return r;
+    };
 
 };//FvExp
 };//FluxSol
