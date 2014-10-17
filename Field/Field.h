@@ -86,7 +86,23 @@ class _Field{
 
 
 
-	virtual const _Field<T> operator&(const _Field<T> &right) const;
+
+    //THIS MUST BE DONE ONCE
+    //Inner product
+//    virtual const _Field<typename innerProduct < T, T> ::type>
+//    operator &(const _Field<T> &right) const
+//    {
+//        _Field<typename innerProduct < T, T> ::type>  ret(this->Numberofvals());
+//        //Sizes must be equal and rank must be large than zero?
+//        for (int c = 0; c < this->numberofvals; c++)
+//        {
+//            ret.value[c] = this->value[c]&right.value[c];
+//            cout << "Interpolate value "<<ret[c].outstr()<<endl;
+//        }
+//
+//        return ret;
+//    }
+
 
 };//Field
 

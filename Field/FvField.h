@@ -298,20 +298,20 @@ namespace FluxSol
 
 	//Inner Product Field
 	//INHERITS FROM FIELD
-//	template<typename T>
-//	SurfaceField<typename innerProduct < T, T> ::type> operator &(const SurfaceField<T> &left,const SurfaceField<T> &right)
-//	{
-//	SurfaceField<typename innerProduct < T, T> ::type> ret(left.Numberofvals());
-//	typename innerProduct < T, T> ::type val;
-//	//Sizes must be equal and rank must be large than zero?
-//	for (int c = 0; c < left.Numberofvals(); c++)
-//	{
-//		val = left.Val(c) & right.Val(c);
-//		ret.Val(c,val);
-//	}
-//
-//	return ret;
-//}
+	template<typename T>
+	SurfaceField<typename innerProduct < T, T> ::type> operator &(const SurfaceField<T> &left,const SurfaceField<T> &right)
+	{
+	SurfaceField<typename innerProduct < T, T> ::type> ret(left.Numberofvals());
+	typename innerProduct < T, T> ::type val;
+	//Sizes must be equal and rank must be large than zero?
+	for (int c = 0; c < left.Numberofvals(); c++)
+	{
+		val = left.Val(c) & right.Val(c);
+		ret.Val(c,val);
+	}
+
+	return ret;
+}
 
 
 }//FluxSol
