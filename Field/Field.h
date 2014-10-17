@@ -57,6 +57,13 @@ class _Field{
     _Field(){};
     const int Order(){return order;};
 	explicit _Field(const int &numval, const double &value =0.);
+
+	_Field(const vector<T> &val)
+	{
+	    for (int v=0;v<val.size();v++)
+            this->value.push_back(val[v]);
+        this->numberofvals=val.size();
+	}
 	const T & Val(const int &i)const{return value[i];};
 	void Val (const int &i,const T &v){value[i]=v;}
 	const int & Numberofvals()const{return numberofvals;}
@@ -77,7 +84,9 @@ class _Field{
 
 	_Field<T> operator=(const double &val);
 
-	const _Field<T> operator&(const _Field<T> &right) const;
+
+
+	virtual const _Field<T> operator&(const _Field<T> &right) const;
 
 };//Field
 

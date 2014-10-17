@@ -51,7 +51,7 @@ int main()
 	//Fields
 	_CC_Fv_Field <Scalar> p(mesh);
 	_CC_Fv_Field <Vec3D>  U(mesh);
-	SurfaceField <Scalar>  phi; //Mass Flux
+	_Surf_Fv_Field <Scalar>  phi; //Mass Flux
 
 
 	//Boundary conditions
@@ -95,7 +95,8 @@ int main()
 
 		//7. Calculate the Flux, inner product with mash faces
 		//Interpolate is like CenterToFaceInterpolation
-		phi= FvExp::Interpolate(U) & mesh.Sf();
+		FvExp::Interpolate(U) & mesh.Sf();
+		//phi= FvExp::Interpolate(U) & mesh.Sf();
 		//AdjustPhi(phi,U,p);		//CHECK THIS
 
 		//8. Define and Solve Pressure Correction And Repeat

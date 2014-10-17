@@ -86,6 +86,17 @@ public:
 	//Is more general in case of vectors
 	Eqn<T>  operator +=(const double &d){source+=d; return *this;};
 
+	Eqn<T> operator-()
+	{
+	    Eqn<T> eq;
+	    T _ap=-this->ap;
+	    vector <T> _an;
+	    for (int n=0;n<this->num_neighbours;n++)
+            _an.push_back(-this->an[n]);
+
+        return Eqn<T>(_ap,_an);
+    }
+
 	//Binary operators
 	//Eqn<T> & operator +(const Eqn<T> &right);
 	//Eqn<T> & operator -(const Eqn<T> &right);
@@ -168,6 +179,8 @@ class EqnSystem{   //Es un vector de ecuaciones
 
 	//Binary operators, U
 	EqnSystem <T> & operator==(const EqnSystem <T> &right);
+
+	EqnSystem <T> & operator==(const _CC_Fv_Field<T> &field);
 
 	//Output to field
 	//void ToCellCenterField();

@@ -279,7 +279,11 @@ EqnSystem <T> & EqnSystem <T>::operator==(const EqnSystem <T> &right)
 	return *this;
 }
 
+template <typename T>
+EqnSystem <T> & EqnSystem <T>::operator==(const _CC_Fv_Field<T> &field)
+{
 
+}
 //
 //template <typename T>
 //EqnSystem<T>::EqnSystem(_CC_Fv_Field<T> &fvfield):field(fvfield)

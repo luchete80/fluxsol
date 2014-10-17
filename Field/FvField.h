@@ -54,8 +54,11 @@ namespace FluxSol
 	//CONVIENE PONER FvField como padre
 
 	//Campo de superficie
+	//TO MODIFY, INHERITS FRoM SURFACEField TO??
 	template<typename T>
-	class _Surf_Fv_Field :public _Field<T>{
+	class _Surf_Fv_Field :
+	    public _Field<T>
+	{
 
 		Fv_CC_Grid *GridPtr;       //Se podria probar con un puntero general
 		// en la clase base
@@ -217,7 +220,7 @@ namespace FluxSol
 		//void ToCellCenters(EqnSystem <T> &eqnsys);
 
 
-		_CC_Fv_Field<T> operator=(const double &val)
+		_CC_Fv_Field<T> & operator=(const double &val)
 		{
 			for (int v = 0; v<this->value.size(); v++)
 			{
@@ -226,13 +229,25 @@ namespace FluxSol
 			return *this;
 		}
 
-		_CC_Fv_Field<T> operator=(const Vec3D &val)
+		_CC_Fv_Field<T> & operator=(const Vec3D &val)
 		{
 			for (int v = 0; v<this->value.size(); v++)
 			{
 				this->value[v] = val;
 			}
 			return *this;
+		}
+
+        //UNARY
+		_CC_Fv_Field<T> operator-()
+		{
+		    _CC_Fv_Field<T> ret(*this);
+			for (int v = 0; v<this->value.size(); v++)
+			{
+				ret.value[v] = -this->value[v];
+			}
+			ret;
+
 		}
 
 	};
@@ -282,20 +297,21 @@ namespace FluxSol
 	//#include "Field_Def.h"
 
 	//Inner Product Field
-	template<typename T>
-	SurfaceField<typename innerProduct < T, T> ::type> operator &(const SurfaceField<T> &left,const SurfaceField<T> &right)
-	{
-	SurfaceField<typename innerProduct < T, T> ::type> ret(left.Numberofvals());
-	typename innerProduct < T, T> ::type val;
-	//Sizes must be equal and rank must be large than zero?
-	for (int c = 0; c < left.Numberofvals(); c++)
-	{
-		val = left.Val(c) & right.Val(c);
-		ret.Val(c,val);
-	}
-
-	return ret;
-}
+	//INHERITS FROM FIELD
+//	template<typename T>
+//	SurfaceField<typename innerProduct < T, T> ::type> operator &(const SurfaceField<T> &left,const SurfaceField<T> &right)
+//	{
+//	SurfaceField<typename innerProduct < T, T> ::type> ret(left.Numberofvals());
+//	typename innerProduct < T, T> ::type val;
+//	//Sizes must be equal and rank must be large than zero?
+//	for (int c = 0; c < left.Numberofvals(); c++)
+//	{
+//		val = left.Val(c) & right.Val(c);
+//		ret.Val(c,val);
+//	}
+//
+//	return ret;
+//}
 
 
 }//FluxSol

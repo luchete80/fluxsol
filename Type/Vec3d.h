@@ -86,10 +86,12 @@ public:
 	const Vec3D operator+ (const Vec3D &)const;
 
 	//Unary
-	const Vec3D & operator-()
+	//DOES NOT MODIFY THE OBJECT
+	const Vec3D operator-()
 	{
-        for (int i=0;i<3;i++)   comp[i]=-comp[i];
-        return *this;
+	    Vec3D ret;
+        for (int i=0;i<3;i++)   ret[i]=-comp[i];
+        return ret;
 	}
 
 	const Scalar operator&(const Vec3D &right) const;
