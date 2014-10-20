@@ -1,9 +1,10 @@
 /************************************************************************
-	
-	Copyright 2012-2013 Luciano Buglioni
- 
-	Contact: luciano.buglioni@gmail.com
 
+	Copyright 2012-2014 Luciano Buglioni - Pablo Zitelli
+
+	Contacts:
+        Luciano Buglioni: luciano.buglioni@gmail.com
+        Pablo Zitelli:    zitelli.pablo@gmail.com
 	This file is a part of FluxSol
 
 	FluxSol is free software: you can redistribute it and/or modify
@@ -11,7 +12,7 @@
     the Free Software Foundation, either version 3 of the License, or
     any later version.
 
-    Free CFD is distributed in the hope that it will be useful,
+    FluxSol is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -64,7 +65,7 @@ ostream &operator<< (ostream &output,const entry<T> &right) {
 }
 
 class InputBaseContainer {
-public:	
+public:
 	string rawData;
 	string name,parentName;
 	int index,parentIndex;
@@ -76,39 +77,39 @@ public:
 	map<string,entry<vector<int> > > intLists;
 	map<string,entry<vector<double> > > doubleLists;
 	map<string,entry<vector<string> > > stringLists;
-	
-	
-	void register_int(string varName,bool is_required=true,int default_value=0) { 
+
+
+	void register_int(string varName,bool is_required=true,int default_value=0) {
 		entry<int>  temp; temp.is_required=is_required; temp.default_value=default_value; ints.insert(pair<string,entry<int> > (varName,temp));
 	}
-	void register_double(string varName,bool is_required=true,double default_value=0) { 
+	void register_double(string varName,bool is_required=true,double default_value=0) {
 		entry<double> temp; temp.is_required=is_required; temp.default_value=default_value; doubles.insert(pair<string,entry<double> > (varName,temp));
 	}
-	void register_string(string varName,bool is_required=true,string default_value="") { 
+	void register_string(string varName,bool is_required=true,string default_value="") {
 		entry<string> temp; temp.is_required=is_required; temp.default_value=default_value; strings.insert(pair<string,entry<string> > (varName,temp));
 	}
-	void register_Vec3D(string varName,bool is_required=true,Vec3D default_value=0) { 
-		entry<Vec3D> temp;  temp.is_required=is_required; 
+	void register_Vec3D(string varName,bool is_required=true,Vec3D default_value=0) {
+		entry<Vec3D> temp;  temp.is_required=is_required;
 		default_value=default_value[0];
-		temp.default_value=default_value; 
+		temp.default_value=default_value;
 		Vec3Ds.insert(pair<string,entry<Vec3D> > (varName,temp));
 	}
-	void register_intList(string varName,bool is_required=true,int default_value=1) { 
+	void register_intList(string varName,bool is_required=true,int default_value=1) {
 		entry<vector<int> > temp;  temp.is_required=is_required;
 		temp.default_value.push_back(default_value);
 		intLists.insert(pair<string,entry<vector<int> > > (varName,temp));
 	}
-	void register_doubleList(string varName,bool is_required=true,double default_value=0) { 
-		entry<vector<double> > temp;  temp.is_required=is_required; 
+	void register_doubleList(string varName,bool is_required=true,double default_value=0) {
+		entry<vector<double> > temp;  temp.is_required=is_required;
 		temp.default_value.push_back(default_value);
 		doubleLists.insert(pair<string,entry<vector<double> > > (varName,temp));
 	}
-	void register_stringList(string varName,bool is_required=true,string default_value=" ") { 
-		entry<vector<string> > temp;  temp.is_required=is_required; 
+	void register_stringList(string varName,bool is_required=true,string default_value=" ") {
+		entry<vector<string> > temp;  temp.is_required=is_required;
 		temp.default_value.push_back(default_value);
 		stringLists.insert(pair<string,entry<vector<string> > > (varName,temp));
 	}
-	
+
 	void readEntries(void);
 	void entry_not_found(string varName) {
 		int Rank;
@@ -119,7 +120,7 @@ public:
 		if (Rank==0) cerr << "[E] Required input entry " << path  <<  varName << " could not be found!!" << endl;
 		exit(1);
 	}
-	
+
 	entry<int> get_int(string varName) {return ints[varName];}
 	entry<double> get_double(string varName) {return doubles[varName];}
 	entry<string> get_string(string varName) {return strings[varName];}
@@ -145,19 +146,19 @@ public:
 	void registerSubsection(string subsectionName, bool is_numbered=false, bool is_required=true) {
 		if (is_numbered) {
 			Subsection temp; temp.numbered=true; temp.count=0; temp.is_required=is_required;
-			temp.name=subsectionName; temp.parentName=name; 
+			temp.name=subsectionName; temp.parentName=name;
 			vector<Subsection> temp2;
 			temp2.push_back(temp);
 			numberedSubsections.insert(pair<string,vector<Subsection> > (subsectionName,temp2));
 		} else {
-			Subsection temp; temp.numbered=false; temp.is_required=is_required; 
+			Subsection temp; temp.numbered=false; temp.is_required=is_required;
 			temp.name=subsectionName; temp.parentName=name;
 			subsections.insert(pair<string,Subsection> (subsectionName,temp));
 		}
 	}
 
 	Subsection &subsection(string subsectionName, int number=-1) {
-		if (number>=0) { return numberedSubsections[subsectionName][number]; } 
+		if (number>=0) { return numberedSubsections[subsectionName][number]; }
 		else { return subsections[subsectionName]; }
 	}
 };
@@ -168,14 +169,14 @@ public:
 	string fileName;
 	map<string,Section> sections;
 	map<string,vector<Section> > numberedSections;
-	
+
 	InputFile(void);
 	InputFile(string filename);
 	void setFile(string);
 	void read(string sectionName, int number=-1); // Reads all components of section if numbered
 	void readSection(string sectionName, int number=-1); // Reads a single section
 	void readSubsection(Subsection &sub);
-	
+
 	void registerSection(string sectionName, bool is_numbered=false, bool is_required=true) {
 		if (is_numbered) {
 			Section temp; temp.numbered=true; temp.count=0; temp.is_required=is_required;
@@ -188,17 +189,17 @@ public:
 			sections.insert(pair<string,Section> (sectionName,temp));
 		}
 	}
-	
+
 	Section &section(string sectionName, int number=-1) {
 		if (number>=0) { return numberedSections[sectionName][number]; }
 		else { return sections[sectionName]; }
 	}
-	
+
 	void stripComments(string &data);
 	void strip_white_spaces(string &data);
 	void read_inputs(void);
-	
-	
+
+
 };
 
 bool extract_in_between(string &data, string begin, string end, string &result,bool check_char_before=false, string acceptList="");

@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -11,7 +11,7 @@
     the Free Software Foundation, either version 3 of the License, or
     any later version.
 
-    Free CFD is distributed in the hope that it will be useful,
+    FluxSol is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -253,7 +253,7 @@ void Elemento::Leer_String(const std::string cad)
 
 
 	//Coloco los primeros 8 caracteres de la cadena
-	
+
 
 }
 
@@ -341,7 +341,7 @@ void Elemento::Leer_StringVec(const std::vector <string> vcad)
         }
 
     }
-	
+
 
 }
 

@@ -1,9 +1,10 @@
 /************************************************************************
 
-	Copyright 2012-2013 Luciano Buglioni
+	Copyright 2012-2014 Luciano Buglioni - Pablo Zitelli
 
-	Contact: luciano.buglioni@gmail.com
-
+	Contacts:
+        Luciano Buglioni: luciano.buglioni@gmail.com
+        Pablo Zitelli:    zitelli.pablo@gmail.com
 	This file is a part of FluxSol
 
 	FluxSol is free software: you can redistribute it and/or modify
@@ -11,7 +12,7 @@
     the Free Software Foundation, either version 3 of the License, or
     any later version.
 
-    Free CFD is distributed in the hope that it will be useful,
+    FluxSol is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.

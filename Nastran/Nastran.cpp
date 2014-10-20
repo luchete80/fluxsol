@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -11,7 +11,7 @@
     the Free Software Foundation, either version 3 of the License, or
     any later version.
 
-    Free CFD is distributed in the hope that it will be useful,
+    FluxSol is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -53,7 +53,7 @@ const vector<int> Archivo::Buscar_ini_fin(string cadena)
 		inifin.push_back(-1);
 		return inifin;	//No encontro nada
 	}
-	
+
 	//Busco desde el final
 	fin =false;
 	j=lineas.size()-1;
@@ -184,7 +184,7 @@ const vector <Nodo> Archivo::Leer_Nodos()
 		}//for dim
 
 		//Ojo con el constructor de Nodos
-		//construyo con id, id sistema de coordenadas, 
+		//construyo con id, id sistema de coordenadas,
 		Nodo n(id,idsc,vectemp);
 		Nodos[indn]=n;
 		//Ubicacion en NASTRAN

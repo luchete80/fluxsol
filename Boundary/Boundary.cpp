@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -11,7 +11,7 @@
     the Free Software Foundation, either version 3 of the License, or
     any later version.
 
-    Free CFD is distributed in the hope that it will be useful,
+    FluxSol is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -24,7 +24,7 @@
 
 using namespace FluxSol;
 
-//template <typename T,unsigned S> 
+//template <typename T,unsigned S>
 //Patch::Patch(T (&v)[S])
 //{
 //	//O sizeof [int]
@@ -46,7 +46,7 @@ Patch::Patch(std::list <int> &idfaces)
 }
 
 Boundary::Boundary (std::vector < Patch > patchlist)
-{ 
+{
 	std::vector< Patch >::iterator it;
 	num_faces=0;
 	num_patches=0;
