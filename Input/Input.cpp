@@ -1,8 +1,8 @@
 /************************************************************************
-	
-	Copyright 2012-2013 Luciano Buglioni
- 
-	Contact: luciano.buglioni@gmail.com
+
+	Copyright 2012-2014 Luciano Buglioni & Pablo Zitelli
+
+	Contact: luciano.buglioni@gmail.com & zitelli.pablo@gmail.com
 
 	This file is a part of FluxSol
 
@@ -11,7 +11,7 @@
     the Free Software Foundation, either version 3 of the License, or
     any later version.
 
-    Free CFD is distributed in the hope that it will be useful,
+    FluxSol is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -46,8 +46,8 @@ void InputFile::setFile(string fName) {
 	int Rank=1; //LB MODIFIED FROM FREE_CFD
 	//MPI_Comm_rank(MPI_COMM_WORLD, &Rank);
 	file.open(fileName.c_str());
-	if (file.is_open()) { 
-		if (Rank==0) cout << "[I] Found input file " << fileName << endl; 
+	if (file.is_open()) {
+		if (Rank==0) cout << "[I] Found input file " << fileName << endl;
 	} else {
 		if (Rank==0) cerr << "[E] Input file " << fileName << " could not be found!!" << endl;
 		exit(1);
@@ -57,7 +57,7 @@ void InputFile::setFile(string fName) {
 	rawData="";
 	while(getline(file, line)) rawData += line + "\n";
 	file.close();
-	
+
 	// Strip all the inline or block comments (C++ style) from the rawData
 	stripComments(rawData);
 	// Strip all the white spaces from the rawData
@@ -66,7 +66,7 @@ void InputFile::setFile(string fName) {
 }
 
 void InputFile::read (string sectionName, int number) {
-	
+
 	if (number!=-1) {
 		int count=number_of_occurances(rawData,sectionName+"_");
 		section(sectionName,0).count=count;
@@ -78,14 +78,14 @@ void InputFile::read (string sectionName, int number) {
 	} else {
 		readSection(sectionName,-1);
 	}
-	
+
 	return;
 }
 
 void InputFile::readSection(string sectionName, int number) {
 	int Rank=1;	//LB MODIFIED FROM FREE_CFD
 	//MPI_Comm_rank(MPI_COMM_WORLD, &Rank);
-	
+
 	string fullName=sectionName;
 	if (number>=0) fullName+="_"+int2str(number+1);
 	// Get section data
@@ -94,22 +94,22 @@ void InputFile::readSection(string sectionName, int number) {
 	if (section(sectionName,number).is_required && !section(sectionName,number).is_found) {
 		if (Rank==0) cerr << "[E] Required input section " << fullName << " could not be found!!" << endl;
 		exit(1);
-	} 
-	
+	}
+
 	// Read subsections
 	map<string,Subsection>::iterator subsectionIter;
 	for (subsectionIter=section(sectionName,number).subsections.begin();subsectionIter!=section(sectionName,number).subsections.end();subsectionIter++) {
 		subsectionIter->second.parentIndex=number;
 		readSubsection(subsectionIter->second);
 	}
-	
+
 	// Read numbered subsections
 	map<string,vector<Subsection> >::iterator nsubsectionIter;
 	for (nsubsectionIter=section(sectionName,number).numberedSubsections.begin();nsubsectionIter!=section(sectionName,number).numberedSubsections.end();nsubsectionIter++) {
 		// Find how many subsections there are
 		int count=number_of_occurances(section(sectionName,number).rawData,nsubsectionIter->first+"_");
-		// First occurance was already initialized when numbered subsection was registered 
-		// Copy duplicate the first entry count-1 times 
+		// First occurance was already initialized when numbered subsection was registered
+		// Copy duplicate the first entry count-1 times
 		nsubsectionIter->second[0].count=count;
 		for (int i=1;i<count;++i) nsubsectionIter->second.push_back(nsubsectionIter->second[0]);
 		// Fill in each one of them
@@ -119,18 +119,18 @@ void InputFile::readSection(string sectionName, int number) {
 			nsubsectionIter->second[i].parentIndex=number;
 			readSubsection(nsubsectionIter->second[i]);
 		}
-		
+
 	}
-	
+
 	// Read variables
 	section(sectionName,number).readEntries();
-	
+
 	if (Rank==0) cout << "[I] Read input section: " << fullName << endl;
-	
+
 }
 
 void InputFile::readSubsection(Subsection &sub) {
-	
+
 	// Get subsection data
 	sub.is_found=extract_in_between(section(sub.parentName,sub.parentIndex).rawData,sub.name+"(",");",sub.rawData,true,"};");
 	// Exit if the subsection is required but couldn't be found
@@ -141,7 +141,7 @@ void InputFile::readSubsection(Subsection &sub) {
 		if (sub.parentIndex!=-1) path+="_"+int2str(sub.parentIndex);
 		if (Rank==0) cerr << "[E] Required input subsection " << path << " -> " << sub.name << " could not be found!!" << endl;
 		exit(1);
-	} 
+	}
 	sub.readEntries();
 	return;
 }
@@ -160,9 +160,9 @@ void InputBaseContainer::readEntries(void) {
 			if (intIter->second.is_required) {
 				entry_not_found(varName);
 			} else {
-				intIter->second.value=intIter->second.default_value;	
+				intIter->second.value=intIter->second.default_value;
 			}
-		}	
+		}
 	} // end loop ints
 	// Loop doubles
  	map<string,entry<double> >::iterator doubleIter;
@@ -177,11 +177,11 @@ void InputBaseContainer::readEntries(void) {
 			if (doubleIter->second.is_required) {
 				entry_not_found(varName);
 			} else {
-				doubleIter->second.value=doubleIter->second.default_value;	
+				doubleIter->second.value=doubleIter->second.default_value;
 			}
 		}
 		//cout << varName << "\t" << doubleIter->second.value << endl; // DEBUG
-		
+
 	} // end loop doubles
 	// Loop strings
 	map<string,entry<string> >::iterator stringIter;
@@ -196,7 +196,7 @@ void InputBaseContainer::readEntries(void) {
 			if (stringIter->second.is_required) {
 				entry_not_found(varName);
 			} else {
-				stringIter->second.value=stringIter->second.default_value;	
+				stringIter->second.value=stringIter->second.default_value;
 			}
 		}
 	} // end loop strings
@@ -217,7 +217,7 @@ void InputBaseContainer::readEntries(void) {
 			if (Vec3DIter->second.is_required) {
 				entry_not_found(varName);
 			} else {
-				Vec3DIter->second.value=Vec3DIter->second.default_value;	
+				Vec3DIter->second.value=Vec3DIter->second.default_value;
 			}
 		}
 	} // end loop Vec3Ds
@@ -237,7 +237,7 @@ void InputBaseContainer::readEntries(void) {
 			if (intListIter->second.is_required) {
 				entry_not_found(varName);
 			} else {
-				intListIter->second.value=intListIter->second.default_value;	
+				intListIter->second.value=intListIter->second.default_value;
 			}
 		}
 	} // end loop intLists
@@ -260,7 +260,7 @@ void InputBaseContainer::readEntries(void) {
 			if (doubleListIter->second.is_required) {
 				entry_not_found(varName);
 			} else {
-				doubleListIter->second.value=doubleListIter->second.default_value;	
+				doubleListIter->second.value=doubleListIter->second.default_value;
 			}
 		}
 	} // end loop doubleLists
@@ -278,7 +278,7 @@ void InputBaseContainer::readEntries(void) {
 			if (stringListIter->second.is_required) {
 				entry_not_found(varName);
 			} else {
-				stringListIter->second.value=stringListIter->second.default_value;	
+				stringListIter->second.value=stringListIter->second.default_value;
 			}
 		}
 	} // end loop stringLists
@@ -298,7 +298,7 @@ void InputFile::strip_white_spaces(string &data) {
 		if (found!=string::npos) data.erase(found,1);
 	}
 }
-	
+
 bool extract_in_between(string &data, string begin, string end, string &result,bool check_char_before, string acceptList) {
 	size_t begin_pos, end_pos;
 	begin_pos=0; end_pos=0;
@@ -318,7 +318,7 @@ bool extract_in_between(string &data, string begin, string end, string &result,b
 			} else {
 				pre=data.substr(begin_pos-1,1);
 				if (pre.find_first_of(acceptList)!=string::npos) found=true;
-				
+
 			}
 		} else {
 			found=true;
@@ -326,7 +326,7 @@ bool extract_in_between(string &data, string begin, string end, string &result,b
 		if (found) {
 			// Extract the what's in between
 			result=data.substr(begin_pos+begin.length(),end_pos-begin_pos-begin.length());
-			// Remove that chunk from the originial data 
+			// Remove that chunk from the originial data
 			data.replace(begin_pos,end_pos+end.length()-begin_pos,"");
 		}
 	}
@@ -366,19 +366,19 @@ void InputFile::read_inputs(void) {
 	// These will make more sense as you read the input registration lines below
 	bool required=true; bool optional=false;
 	bool numbered=true; bool single=false;
-	
+
 	registerSection("reference",single,optional);
 	section("reference").register_double("p",optional,0.);
 	section("reference").register_double("T",optional,0.);
 	section("reference").register_double("Mach",optional,1.);
 	read("reference");
-	
+
 	registerSection("grid",numbered,required);
 	section("grid",0).register_string("file",required);
 	section("grid",0).register_int("dimension",optional,3);
-	
+
 	section("grid",0).register_string("equations",required);
-	
+
 	section("grid",0).registerSubsection("writeoutput",single,required);
 	section("grid",0).subsection("writeoutput").register_string("format",optional,"vtk");
 	section("grid",0).subsection("writeoutput").register_int("plotfrequency",optional,1e10);
@@ -397,7 +397,7 @@ void InputFile::read_inputs(void) {
 	section("grid",0).subsection("material").register_double("thermalconductivity",optional,0.);
 	section("grid",0).subsection("material").register_double("Cp",optional,1000.);
 	section("grid",0).subsection("material").register_double("density",optional,0.);
-	
+
 	section("grid",0).registerSubsection("IC",numbered,required);
 	section("grid",0).subsection("IC",0).register_string("region",optional,"box");
 	section("grid",0).subsection("IC",0).register_Vec3D("corner_1",optional,-1.e20);
@@ -412,12 +412,12 @@ void InputFile::read_inputs(void) {
 	section("grid",0).subsection("IC",0).register_double("rho",optional);
 	section("grid",0).subsection("IC",0).register_double("turbulenceintensity",optional,1.e-2);
 	section("grid",0).subsection("IC",0).register_double("eddyviscosityratio",optional,0.1);
-	
+
 	section("grid",0).registerSubsection("BC",numbered,required);
 	section("grid",0).subsection("BC",0).register_string("type",required);
 	section("grid",0).subsection("BC",0).register_string("kind",optional,"none");
 	section("grid",0).subsection("BC",0).register_string("region",optional,"gridfile");
-	section("grid",0).subsection("BC",0).register_string("interface",optional,"none");	
+	section("grid",0).subsection("BC",0).register_string("interface",optional,"none");
 	section("grid",0).subsection("BC",0).register_Vec3D("corner_1",optional);
 	section("grid",0).subsection("BC",0).register_Vec3D("corner_2",optional);
 	section("grid",0).subsection("BC",0).register_string("pick",optional,"override");
@@ -431,11 +431,11 @@ void InputFile::read_inputs(void) {
 	section("grid",0).subsection("BC",0).register_double("rho",optional);
 	section("grid",0).subsection("BC",0).register_double("turbulenceintensity",optional,1.e-2);
 	section("grid",0).subsection("BC",0).register_double("eddyviscosityratio",optional,0.1);
-	
+
 	section("grid",0).registerSubsection("turbulence",single,optional);
 	section("grid",0).subsection("turbulence").register_double("relativetolerance",optional,1.e-6);
 	section("grid",0).subsection("turbulence").register_double("absolutetolerance",optional,1.e-12);
-	section("grid",0).subsection("turbulence").register_int("maximumiterations",optional,10);	
+	section("grid",0).subsection("turbulence").register_int("maximumiterations",optional,10);
 	section("grid",0).subsection("turbulence").register_string("model",optional,"sst");
 	section("grid",0).subsection("turbulence").register_string("order",optional,"second");
 	section("grid",0).subsection("turbulence").register_double("klowlimit",optional,1.e-8);
@@ -443,17 +443,17 @@ void InputFile::read_inputs(void) {
 	section("grid",0).subsection("turbulence").register_double("omegalowlimit",optional,1.);
 	section("grid",0).subsection("turbulence").register_double("viscosityratiolimit",optional,5.e4);
 	section("grid",0).subsection("turbulence").register_double("turbulentPr",optional,0.9);
-	
+
 	section("grid",0).registerSubsection("navierstokes",single,optional);
 	section("grid",0).subsection("navierstokes").register_double("relativetolerance",optional,1.e-6);
 	section("grid",0).subsection("navierstokes").register_double("absolutetolerance",optional,1.e-12);
-	section("grid",0).subsection("navierstokes").register_int("maximumiterations",optional,10);	
+	section("grid",0).subsection("navierstokes").register_int("maximumiterations",optional,10);
 	section("grid",0).subsection("navierstokes").register_string("limiter",optional,"vk");
 	section("grid",0).subsection("navierstokes").register_double("limiterthreshold",optional,1.);
 	section("grid",0).subsection("navierstokes").register_string("order",optional,"second");
 	section("grid",0).subsection("navierstokes").register_string("jacobianorder",optional,"first");
 	section("grid",0).subsection("navierstokes").register_string("convectiveflux",optional,"AUSM+up");
-	
+
 	section("grid",0).registerSubsection("transform",numbered,optional);
 	section("grid",0).subsection("transform",0).register_string("function",optional);
 	section("grid",0).subsection("transform",0).register_Vec3D("anchor",optional,0.);
@@ -461,9 +461,9 @@ void InputFile::read_inputs(void) {
 	section("grid",0).subsection("transform",0).register_Vec3D("factor",optional,0.);
 	section("grid",0).subsection("transform",0).register_Vec3D("axis",optional,0.);
 	section("grid",0).subsection("transform",0).register_double("angle",optional,0.);
-	
+
 	read("grid",0);
-	
+
 	registerSection("timemarching",single,required);
 	section("timemarching").register_string("integrator",optional,"backwardEuler");
 	section("timemarching").register_double("stepsize",optional,1.);
@@ -476,7 +476,7 @@ void InputFile::read_inputs(void) {
 	read("timemarching");
 
 	readEntries();
-	
+
 	// Read the material file for each grid
 	//material_input.resize(section("grid",0).count);
 	//for (int gid=0;gid<material_input.size();++gid) {
@@ -497,7 +497,7 @@ void InputFile::read_inputs(void) {
 		//	material_input[gid].section("viscosity").register_string("model",optional,"sutherlands");
 		//	material_input[gid].section("viscosity").register_double("referenceviscosity",optional,1.716e-5);
 		//	material_input[gid].section("viscosity").register_double("referencetemperature",optional,273.15);
-		//	material_input[gid].section("viscosity").register_double("sutherlandtemperature",optional,110.4);			
+		//	material_input[gid].section("viscosity").register_double("sutherlandtemperature",optional,110.4);
 		//	material_input[gid].read("viscosity");
 		//	material_input[gid].register_double("Cp",optional,1000.);
 		//	material_input[gid].registerSection("Cp",single,optional);

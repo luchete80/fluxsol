@@ -56,9 +56,9 @@ int main()
 
     cout << "Creating Eqn System"<<endl;
 	TEqn=(FvImp::Laplacian(k,T)==0.);
-	cout << "Solving system.."<<endl;
+	cout << "Solving system..."<<endl;
 	Solve(TEqn);
-	cout << "Writing log.."<<endl;
+	cout << "Writing log..."<<endl;
 	TEqn.Log("EqLog.txt");
 	//solve(Laplacian(k,T)==0);
 
