@@ -1,9 +1,10 @@
 /************************************************************************
 
-	Copyright 2012-2013 Luciano Buglioni
+	Copyright 2012-2014 Luciano Buglioni - Pablo Zitelli
 
-	Contact: luciano.buglioni@gmail.com
-
+	Contacts:
+        Luciano Buglioni: luciano.buglioni@gmail.com
+        Pablo Zitelli:    zitelli.pablo@gmail.com
 	This file is a part of FluxSol
 
 	FluxSol is free software: you can redistribute it and/or modify
@@ -11,7 +12,7 @@
     the Free Software Foundation, either version 3 of the License, or
     any later version.
 
-    Free CFD is distributed in the hope that it will be useful,
+    FluxSol is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -20,7 +21,6 @@
     see <http://www.gnu.org/licenses/>.
 
 *************************************************************************/
-
 #include "SistEcuac.h"
 
 //In templates definitions must be included namespace instead of..
@@ -181,6 +181,12 @@ Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right)
 }
 
 //template <typename T>
+//Eqn<T> & Eqn<T>::operator-()
+//{
+//	Eqn<T> ret=*this;    //To equal neighbour id
+//}
+
+//template <typename T>
 //void EqnSystem<T>::Insert (const Eqn<T> &ec, std::vector<int> & nbreq)
 //{
 //	Insert(ec);
@@ -273,7 +279,11 @@ EqnSystem <T> & EqnSystem <T>::operator==(const EqnSystem <T> &right)
 	return *this;
 }
 
+template <typename T>
+EqnSystem <T> & EqnSystem <T>::operator==(const _CC_Fv_Field<T> &field)
+{
 
+}
 //
 //template <typename T>
 //EqnSystem<T>::EqnSystem(_CC_Fv_Field<T> &fvfield):field(fvfield)

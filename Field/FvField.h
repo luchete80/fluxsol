@@ -1,23 +1,24 @@
 /************************************************************************
 
-Copyright 2012-2013 Luciano Buglioni
+	Copyright 2012-2014 Luciano Buglioni - Pablo Zitelli
 
-Contact: luciano.buglioni@gmail.com
+	Contacts:
+        Luciano Buglioni: luciano.buglioni@gmail.com
+        Pablo Zitelli:    zitelli.pablo@gmail.com
+	This file is a part of FluxSol
 
-This file is a part of FluxSol
+	FluxSol is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    any later version.
 
-FluxSol is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-any later version.
+    FluxSol is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-Free CFD is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-For a copy of the GNU General Public License,
-see <http://www.gnu.org/licenses/>.
+    For a copy of the GNU General Public License,
+    see <http://www.gnu.org/licenses/>.
 
 *************************************************************************/
 #ifndef _FVFIELD_H
@@ -54,8 +55,11 @@ namespace FluxSol
 	//CONVIENE PONER FvField como padre
 
 	//Campo de superficie
+	//TO MODIFY, INHERITS FRoM SURFACEField TO??
 	template<typename T>
-	class _Surf_Fv_Field :public _Field<T>{
+	class _Surf_Fv_Field :
+	    public _Field<T>
+	{
 
 		Fv_CC_Grid *GridPtr;       //Se podria probar con un puntero general
 		// en la clase base
@@ -217,7 +221,7 @@ namespace FluxSol
 		//void ToCellCenters(EqnSystem <T> &eqnsys);
 
 
-		_CC_Fv_Field<T> operator=(const double &val)
+		_CC_Fv_Field<T> & operator=(const double &val)
 		{
 			for (int v = 0; v<this->value.size(); v++)
 			{
@@ -226,13 +230,25 @@ namespace FluxSol
 			return *this;
 		}
 
-		_CC_Fv_Field<T> operator=(const Vec3D &val)
+		_CC_Fv_Field<T> & operator=(const Vec3D &val)
 		{
 			for (int v = 0; v<this->value.size(); v++)
 			{
 				this->value[v] = val;
 			}
 			return *this;
+		}
+
+        //UNARY
+		_CC_Fv_Field<T> operator-()
+		{
+		    _CC_Fv_Field<T> ret(*this);
+			for (int v = 0; v<this->value.size(); v++)
+			{
+				ret.value[v] = -this->value[v];
+			}
+			ret;
+
 		}
 
 	};
@@ -282,6 +298,7 @@ namespace FluxSol
 	//#include "Field_Def.h"
 
 	//Inner Product Field
+	//INHERITS FROM FIELD
 	template<typename T>
 	SurfaceField<typename innerProduct < T, T> ::type> operator &(const SurfaceField<T> &left,const SurfaceField<T> &right)
 	{

@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -11,7 +11,7 @@
     the Free Software Foundation, either version 3 of the License, or
     any later version.
 
-    Free CFD is distributed in the hope that it will be useful,
+    FluxSol is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -157,7 +157,7 @@ void Modelo::Asociar_Ids_Nodos()
 
 	//Le asigno el tamaño del máximo numero de NASTRAN +1
 	IdNodoInterno.assign(nummax+1,-1);
-	
+
 	for (int n=0;n<numnodos;n++)
 	{
 		idn=Nodos[n].VerId_Nastran();
@@ -169,7 +169,7 @@ void Modelo::Asociar_Ids_Nodos()
 		conect=Elementos[i].Conect();
 		v[0]=IdNodoInterno[conect[0]];
 		v[1]=IdNodoInterno[conect[1]];
-		
+
 		Elementos[i].Asignar_Conect_Interna(v);
 	}
 }

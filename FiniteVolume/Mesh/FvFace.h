@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -11,7 +11,7 @@
     the Free Software Foundation, either version 3 of the License, or
     any later version.
 
-    Free CFD is distributed in the hope that it will be useful,
+    FluxSol is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -78,7 +78,7 @@ class _FvFace:public _Face{
 		Vec3D & Ad(){return ad;}
 
 		Scalar & Fp(){return fp;}
-		
+
 		//Gradientes
 		void GradCoeffs_Central();              //Calculo los coeficientes que necesito para los gradientes de cara
 		~_FvFace(){};

@@ -1,23 +1,24 @@
 /************************************************************************
 
-Copyright 2012-2013 Luciano Buglioni
+	Copyright 2012-2014 Luciano Buglioni - Pablo Zitelli
 
-Contact: luciano.buglioni@gmail.com
+	Contacts:
+        Luciano Buglioni: luciano.buglioni@gmail.com
+        Pablo Zitelli:    zitelli.pablo@gmail.com
+	This file is a part of FluxSol
 
-This file is a part of FluxSol
+	FluxSol is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    any later version.
 
-FluxSol is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-any later version.
+    FluxSol is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-Free CFD is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-For a copy of the GNU General Public License,
-see <http://www.gnu.org/licenses/>.
+    For a copy of the GNU General Public License,
+    see <http://www.gnu.org/licenses/>.
 
 *************************************************************************/
 
@@ -32,21 +33,6 @@ namespace FluxSol
 {
 
 
-//THIS MUST BE DONE ONCE
-//Inner product
-template<typename T>
-const _Field<T> _Field<T>::operator &(const _Field<T> &right) const
-{
-	_Field<T> ret(this->Numberofvals());
-	//Sizes must be equal and rank must be large than zero?
-	for (int c = 0; c < this->Numberofvals; c++)
-	{
-		ret[c] = c&right[c];
-		cout << "Interpolate value "<<ret[c].outstr()<<endl;
-	}
-
-	return ret;
-}
 
 
 }

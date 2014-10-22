@@ -1,7 +1,7 @@
 /************************************************************************
-	
+
 	Copyright 2012-2013 Luciano Buglioni
- 
+
 	Contact: luciano.buglioni@gmail.com
 
 	This file is a part of FluxSol
@@ -11,7 +11,7 @@
     the Free Software Foundation, either version 3 of the License, or
     any later version.
 
-    Free CFD is distributed in the hope that it will be useful,
+    FluxSol is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -55,11 +55,11 @@ string int2str(int number) {
 }
 
 //Initially it cat write several meshes
-void Fv_CC_Grid::Write_vtk() 
+void Fv_CC_Grid::Write_vtk()
 {
-	
+
 	int Rank=0;
-	
+
 	//Like in OpenFoam or free-cfd, time steps will be separated into subfolders
 	string filePath="./output/"+int2str(timeStep);
 	//string fileName=filePath+"/grid_" + int2str(gid+1) + "_proc_"+int2str(Rank)+".vtu";
@@ -78,7 +78,7 @@ void Fv_CC_Grid::Write_vtk()
 	file << "</DataArray>" << endl;
 	file << "</Points>" << endl;
 	file << "<Cells>" << endl;
-	
+
 	file << "<DataArray Name=\"connectivity\" type=\"Int32\" format=\"ascii\" >" << endl;
 	for (int c=0;c<this->Num_Cells();++c) {
 		for (int n=0;n<Cell(c).Num_Vertex();++n) {
@@ -86,7 +86,7 @@ void Fv_CC_Grid::Write_vtk()
 		}
 		file << endl;
 	}
-	
+
 	file << "</DataArray>" << endl;
 	file << "<DataArray Name=\"offsets\" type=\"Int32\" format=\"ascii\" >" << endl;
 	int offset=0;
@@ -95,7 +95,7 @@ void Fv_CC_Grid::Write_vtk()
 		file << offset << endl;
 	}
 	file << "</DataArray>" << endl;
-	
+
 	file << "<DataArray Name=\"types\" type=\"UInt8\" format=\"ascii\" >" << endl;
 	for (int c=0;c<Num_Cells();++c) {
 		if (Cell(c).Num_Vertex()==4) file << "10" << endl; // Tetra
@@ -105,14 +105,14 @@ void Fv_CC_Grid::Write_vtk()
 	}
 	file << endl;
 	file << "</DataArray>" << endl;;
-	
+
 	file << "</Cells>" << endl;
-	
+
 	file << "<PointData Scalars=\"scalars\" format=\"ascii\">" << endl;
-	
+
 
 	file << "</PointData>" << endl;
-	
+
 	file << "</Piece>" << endl;
 	file << "</UnstructuredGrid>" << endl;
 	file << "</VTKFile>" << endl;

@@ -11,7 +11,7 @@
     the Free Software Foundation, either version 3 of the License, or
     any later version.
 
-    Free CFD is distributed in the hope that it will be useful,
+    FluxSol is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
@@ -485,7 +485,7 @@ void Fv_CC_Grid::CalcCellVolumes()
 
 }
 
-const SurfaceField<Vec3D> Fv_CC_Grid::Sf()
+const SurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 {
 	SurfaceField<Vec3D> ret(this->num_faces);
 

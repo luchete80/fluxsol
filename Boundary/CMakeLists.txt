@@ -3,4 +3,8 @@ set (SOURCES
 Boundary.cpp
 )
 
-add_library(${NAME} OBJECT ${SOURCES} )
+FILE(GLOB _header
+  ${CMAKE_SOURCE_DIR}/${NAME}/*.h
+  )
+
+add_library(${NAME} OBJECT ${SOURCES} ${_header})
