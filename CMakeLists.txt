@@ -69,7 +69,7 @@ include_directories("${PROJECT_SOURCE_DIR}/FiniteVolume/Laplacian")
 include_directories("${PROJECT_SOURCE_DIR}/FiniteVolume/Mesh")
 include_directories("${PROJECT_SOURCE_DIR}/Input")
 include_directories("${PROJECT_SOURCE_DIR}/Libs/Laspack")
-include_directories("${PROJECT_SOURCE_DIR}/Material")
+include_directories("${PROJECT_SOURCE_DIR}/Materials")
 include_directories("${PROJECT_SOURCE_DIR}/Mesh")
 include_directories("${PROJECT_SOURCE_DIR}/Model")
 include_directories("${PROJECT_SOURCE_DIR}/Output")
@@ -101,7 +101,7 @@ add_subdirectory(FiniteVolume/Laplacian)
 add_subdirectory(FiniteVolume/Mesh)
 add_subdirectory(Input)
 add_subdirectory(Interpolation)
-add_subdirectory(Material)
+add_subdirectory(Materials)
 add_subdirectory(Mesh)
 add_subdirectory(Model)
 add_subdirectory(Output)
@@ -131,7 +131,7 @@ add_library(${NAME}lib SHARED FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 												$<TARGET_OBJECTS:Boundary>
 												$<TARGET_OBJECTS:Field>
 												$<TARGET_OBJECTS:Input>
-												$<TARGET_OBJECTS:Material>
+												$<TARGET_OBJECTS:Materials>
 												$<TARGET_OBJECTS:Mesh>
 												$<TARGET_OBJECTS:FvMesh>												
 												$<TARGET_OBJECTS:Output>
@@ -152,7 +152,7 @@ add_library(${NAME}lib_static STATIC FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 														$<TARGET_OBJECTS:Boundary>
 														$<TARGET_OBJECTS:Field>
 														$<TARGET_OBJECTS:Input>
-														$<TARGET_OBJECTS:Material>														
+														$<TARGET_OBJECTS:Materials>														
 														$<TARGET_OBJECTS:Mesh>	
 														$<TARGET_OBJECTS:FvMesh>
 														$<TARGET_OBJECTS:Output>

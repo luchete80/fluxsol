@@ -26,14 +26,14 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include "Material.h"
+#include "Materials.h"
 
 using namespace std;
 
-int main()
+vector<Materials> SetMaterials()
 {
-    vector <Material> material;                 // Vector of materials
-    vector <string> vline;
+    vector<Materials> material;                 // Vector of materials
+    vector<string> vline;
     fstream in_stream("DataBase.dat");          // File containing materials definitions
     string line,buff,name,Density,Viscosity,Diffusivity,Name;
     stringstream ss;
@@ -49,7 +49,7 @@ int main()
         if (vline[0]==Name)
             {
                 name=vline[1];
-                material.push_back(Material());
+                material.push_back(Materials());
                 material[mat_count].SetName(name);
                 mat_count++;
             }
@@ -88,5 +88,10 @@ int main()
         ss.clear();
         }
 
-    return 0;
+        for (int i=0; i<mat_count-1; i++)
+        {
+            material[i].Print();
+        }
+
+    return material;
 }

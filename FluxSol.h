@@ -75,6 +75,10 @@
 #include "./Interpolation/CenterToFaceInterpolation_Def.h"
 //Laplacian
 #include "./FiniteVolume/Laplacian/Laplacian.h"
+
+//Materials
+#include "./Materials/Materials.h"
+
 //Mesh
 #include "./FiniteVolume/Mesh/CC_Cell.h"
 #include "./FiniteVolume/Mesh/FvFace.h"

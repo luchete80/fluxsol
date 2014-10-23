@@ -21,26 +21,26 @@
     see <http://www.gnu.org/licenses/>.
 
 *************************************************************************/
-#ifndef MATERIAL_H_
-#define MATERIAL_H_
+#ifndef MATERIALS_H_
+#define MATERIASL_H_
 
 #include <iostream>
 #include <string>
 
 using namespace std;
 
-class Material          // Material class definition
+class Materials             // Material class definition
 {
-protected:
+public:
     double rho;            // Density
     double mu;             // Viscosity
     double k;              // Diffusivity
     string name;
 
-public:
-    Material(){};
+//public:
+    Materials(){};
 
-    ~Material(){}
+    ~Materials(){};
 
     void SetDensity(const double &user_rho)
     {
@@ -70,5 +70,7 @@ public:
         cout << "Diffusivity = " << k << endl;
     }
 };
+
+vector<Materials> SetMaterials();
 
 #endif

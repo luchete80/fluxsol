@@ -1,7 +1,7 @@
-set (NAME Material)
+set (NAME Materials)
 
 set (SOURCES 
-Material.cpp
+Materials.cpp
 )
 #Needed OBJECT to make independed linkeable library
 add_library(${NAME} OBJECT ${SOURCES} )

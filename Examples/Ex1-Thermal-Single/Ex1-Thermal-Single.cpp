@@ -45,9 +45,13 @@ int main()
 	T.Boundaryfield().PatchField(0).AssignValue(wallvalue);
 	T.Boundaryfield().PatchField(1).AssignValue(topvalue);
 
+	// Materiales
+	vector<Materials> material=SetMaterials();
+
 	EqnSystem <Scalar> TEqn;
 	//Construir aca con la malla
-	Scalar k(1.);	//Difusion, puede ser un escalar
+	//Scalar k(1.);	//Difusion, puede ser un escalar
+	Scalar kdiff=material[0].k;
 
 
 	//Different ways
@@ -55,7 +59,7 @@ int main()
 	//TEqn=FvImp::Laplacian(k,T);
 
     cout << "Creating Eqn System"<<endl;
-	TEqn=(FvImp::Laplacian(k,T)==0.);
+	TEqn=(FvImp::Laplacian(kdiff,T)==0.);
 	cout << "Solving system..."<<endl;
 	Solve(TEqn);
 	cout << "Writing log..."<<endl;
