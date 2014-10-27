@@ -1,9 +1,10 @@
 /************************************************************************
 
-	Copyright 2012-2013 Luciano Buglioni
+	Copyright 2012-2014 Luciano Buglioni - Pablo Zitelli
 
-	Contact: luciano.buglioni@gmail.com
-
+	Contacts:
+        Luciano Buglioni: luciano.buglioni@gmail.com
+        Pablo Zitelli:    zitelli.pablo@gmail.com
 	This file is a part of FluxSol
 
 	FluxSol is free software: you can redistribute it and/or modify
@@ -73,7 +74,9 @@ int main()
 	Scalar right=1.;
 	phi.Boundaryfield().PatchField(1).AssignValue(left);
 	phi.Boundaryfield().PatchField(0).AssignValue(right);
-
+	
+	// Materiales
+	vector<Materials> material=SetMaterials();
 
 	//string inputFileName="Input.in";
 	//InputFile input(inputFileName);
@@ -85,9 +88,8 @@ int main()
 
     U=Vec3D(2.5,0.,0.);
 
-
-
-	Scalar k(0.1);	//Diffusion
+	//Scalar k(0.1);	//Diffusion
+	Scalar kdiff=material[2].k;
 
 	cout<<"Generating Eqn system"<<endl;
 
@@ -97,12 +99,12 @@ int main()
     CDEqn=FvImp::Div(phi,U);
     CDEqn.Log("Convection Eqn Log.txt");
 
-    CDEqn=FvImp::Laplacian(k, phi) ;
+    CDEqn=FvImp::Laplacian(kdiff, phi) ;
     CDEqn.Log("Diffusion Eqn Log.txt");
 
     //EqnSystem <Scalar> Lap=FvImp::Laplacian(k, phi);
 	//Lap==FvImp::Div(phi,U);
-	CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(phi,U));
+	CDEqn = (FvImp::Laplacian(kdiff, phi) == FvImp::Div(phi,U));
     //CDEqn = FvImp::Laplacian(k, phi) ;
     //EqnSystem <Scalar> CDEqn(FvImp::Laplacian(k, phi) == FvImp::Div(phi,U));
 	cout << "Writing log.."<<endl;
@@ -164,16 +166,20 @@ void Test()
 	for (int p=0;p<3;p++)
 	T.Boundaryfield().PatchField(p).AssignValue(wallvalue);
 	T.Boundaryfield().PatchField(3).AssignValue(topvalue);
+	
+	// Materiales
+	vector<Materials> material=SetMaterials();
 
 	EqnSystem <Scalar> TEqn;
 	//Construir aca con la malla
-	Scalar k(1.);	//Difusion, puede ser un escalar
+	//Scalar k(1.);	//Difusion, puede ser un escalar
+	Scalar kdiff=material[2].k;
 
 	cout<<"Generating system"<<endl;
-	TEqn=(FvImp::Laplacian(k,T)==0.);
+	TEqn=(FvImp::Laplacian(kdiff,T)==0.);
 
 	EqnSystem <Scalar> CDEqn;
-	CDEqn=(FvImp::Laplacian(k,T)==FvImp::Div(phi,U));
+	CDEqn=(FvImp::Laplacian(kdiff,T)==FvImp::Div(phi,U));
 	cout<<"Solving system"<<endl;
 	Solve(TEqn);
 	TEqn.Log("EqLog.txt");

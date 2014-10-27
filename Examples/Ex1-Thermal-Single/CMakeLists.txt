@@ -21,7 +21,7 @@ set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
 include_directories(${FLUXSOL_DIR}/Src)
 
 set (FLUXSOL_INCLUDE_DIR ${FLUXSOL_DIR}/Src)
-set (FLUXSOL_LIB_DIR ${FLUXSOL_DIR}/Bin_CodeBlocks/FluxSol)
+set (FLUXSOL_LIB_DIR ${FLUXSOL_DIR}/Bin)
 
 set (LASPACK_INCLUDE ${FLUXSOL_DIR}/Libs/laspack/src/)
 set (LASPACK_LIBRARY_DIR ${FLUXSOL_DIR}/Libs/laspack/bin)

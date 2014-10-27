@@ -1,3 +1,26 @@
+/************************************************************************
+
+	Copyright 2012-2014 Luciano Buglioni - Pablo Zitelli
+
+	Contacts:
+        Luciano Buglioni: luciano.buglioni@gmail.com
+        Pablo Zitelli:    zitelli.pablo@gmail.com
+	This file is a part of FluxSol
+
+	FluxSol is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    any later version.
+
+    FluxSol is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    For a copy of the GNU General Public License,
+    see <http://www.gnu.org/licenses/>.
+
+*************************************************************************/
 #include "FluxSol.h"
 
 //Former temp test
@@ -22,13 +45,17 @@ int main()
 	for (int p=0;p<3;p++)
 	T.Boundaryfield().PatchField(p).AssignValue(wallvalue);
 	T.Boundaryfield().PatchField(3).AssignValue(topvalue);
+	
+	// Materiales
+	vector<Materials> material=SetMaterials();
 
 	EqnSystem <Scalar> TEqn;
 	//Construir aca con la malla
-	Scalar k(1.);	//Difusion, puede ser un escalar
+	//Scalar k(1.);	//Difusion, puede ser un escalar
+	Scalar kdiff=material[0].k;
 
 	cout<<"Generating system"<<endl;
-	TEqn=(FvImp::Laplacian(k,T)==0.);
+	TEqn=(FvImp::Laplacian(kdiff,T)==0.);
 	cout<<"Solving system"<<endl;
 	Solve(TEqn);
 	TEqn.Log("EqLog.txt");
@@ -69,15 +96,18 @@ void DefTempTest()
 
 	ReadFieldFromInput(input, T,mesh);
 	mesh.Log("Log.txt");
-
+	
+	// Materiales
+	vector<Materials> material=SetMaterials();
 
 	EqnSystem <Scalar> TEqn;
 
-	Scalar k(1.);	//Diffusion
+	//Scalar k(1.);	//Diffusion
+	Scalar kdiff=material[0].k;
 
 	cout<<"Generating system"<<endl;
 
-	TEqn=(FvImp::Laplacian(k,T)==0.);
+	TEqn=(FvImp::Laplacian(kdiff,T)==0.);
 
 
 	cout<<"Solving system"<<endl;

@@ -1,9 +1,10 @@
 /************************************************************************
 
-	Copyright 2012-2013 Luciano Buglioni
+	Copyright 2012-2014 Luciano Buglioni - Pablo Zitelli
 
-	Contact: luciano.buglioni@gmail.com
-
+	Contacts:
+        Luciano Buglioni: luciano.buglioni@gmail.com
+        Pablo Zitelli:    zitelli.pablo@gmail.com
 	This file is a part of FluxSol
 
 	FluxSol is free software: you can redistribute it and/or modify
@@ -69,16 +70,19 @@ int main()
 	Scalar right=500.;
 	T.Boundaryfield().PatchField(0).AssignValue(left);
 	T.Boundaryfield().PatchField(1).AssignValue(right);
-
+	
+	// Materiales
+	vector<Materials> material=SetMaterials();
 
 	EqnSystem <Scalar> TEqn;
 
-	Scalar k(1000.0);	//Diffusion
+	//Scalar k(1000.0);	//Diffusion
+	Scalar kdiff=material[3].k;
 
 	cout<<"Generating Eqn system"<<endl;
 
 
-	TEqn = (FvImp::Laplacian(k, T) == 0);
+	TEqn = (FvImp::Laplacian(kdiff, T) == 0);
 
 	cout << "Writing log.."<<endl;
 	TEqn.Log("CDEqLog.txt");

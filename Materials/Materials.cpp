@@ -21,12 +21,8 @@
     see <http://www.gnu.org/licenses/>.
 
 *************************************************************************/
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include <vector>
 #include "Materials.h"
+#include <stdlib.h>
 
 using namespace std;
 
@@ -39,14 +35,18 @@ vector<Materials> SetMaterials()
     stringstream ss;
     int mat_count=0;
 
+    cout << "" << endl;
+    cout << "Creating Materials..." << endl;
+
     while (!in_stream.eof())
         {
         getline(in_stream, line);
+        scientific;
         ss << line;
         while (ss >> buff)
             vline.push_back(buff);
 
-        if (vline[0]==Name)
+        if (vline[0]=="Name" && vline.size()>0)
             {
                 name=vline[1];
                 material.push_back(Materials());
@@ -54,9 +54,9 @@ vector<Materials> SetMaterials()
                 mat_count++;
             }
 
-        while (vline[0]!=Name)
+        while (vline[0]!="Name" && vline.size()>0)
             {
-                if (vline[0]==Density)
+                if (vline[0]=="Density")
                     {
                         stringstream ssd(vline[1]);
                         double d;
@@ -65,7 +65,7 @@ vector<Materials> SetMaterials()
                         ssd << "";
                         ssd.clear();
                     }
-                else if (vline[0]==Viscosity)
+                else if (vline[0]=="Viscosity")
                 {
                     stringstream ssv(vline[1]);
                     double v;
@@ -74,7 +74,7 @@ vector<Materials> SetMaterials()
                     ssv << "";
                     ssv.clear();
                 }
-                else if (vline[0]==Diffusivity)
+                else if (vline[0]=="Diffusivity")
                 {
                     stringstream ssD(vline[1]);
                     double D;
@@ -83,12 +83,17 @@ vector<Materials> SetMaterials()
                     ssD << "";
                     ssD.clear();
                 }
+                vline.clear();
             }
         ss << "";
         ss.clear();
+        vline.clear();
         }
 
-        for (int i=0; i<mat_count-1; i++)
+        cout << "" << endl;
+        cout << "Materials list:" << endl;
+
+        for (int i=0; i<mat_count; i++)
         {
             material[i].Print();
         }

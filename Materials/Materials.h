@@ -26,6 +26,9 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
+#include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -68,6 +71,7 @@ public:
         cout << "Density = " << rho << endl;
         cout << "Viscosity = " << mu << endl;
         cout << "Diffusivity = " << k << endl;
+        cout << "" << endl;
     }
 };
 
