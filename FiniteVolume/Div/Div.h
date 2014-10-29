@@ -56,13 +56,24 @@ namespace FluxSol{
 
 
 template <class T>
-EqnSystem < typename innerProduct < Vec3D, T> ::type >
+//EqnSystem < typename innerProduct < Vec3D, T> ::type >
+//First arg is flux
+EqnSystem < T >
 FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
 {
-                            //No hace falta construirla porque la devuelve el VolField
+
+//OpenFoam Style
+//00052     return fv::convectionScheme<Type>::New
+//00053     (
+//00054         vf.mesh(),
+//00055         flux,
+//00056         vf.mesh().divScheme(name)
+//00057     )().fvmDiv(flux, vf);
+
+    //No hace falta construirla porque la devuelve el VolField
     //EqnSystem <T> eqnsys(VolField.GridPtr->Num_Cells());   //Como no le doy parametros inicia todo en cero, salvo las dimensiones
     //EqnSystem <T> < typename innerProduct < Vec3D, T> ::type > eqnsys(VolField.Grid());
-    EqnSystem <typename innerProduct < Vec3D, T> ::type> eqnsys(VolField.ConstGrid());
+    EqnSystem < T > eqnsys(VolField.ConstGrid());
 
 
 
@@ -195,6 +206,7 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
 
 //Div fi = Sum_f (Sf * fi_f)
 //Here must be set an upwind scheme
+//TO MODIFY, MUST CALL UPWIND SCHEME
 template<typename T>
 EqnSystem < typename innerProduct < Vec3D, T> ::type >
 FvImp::Div(const _CC_Fv_Field <T> &VolField)
@@ -330,15 +342,16 @@ FvImp::Div(const _CC_Fv_Field <T> &VolField)
 //Flux Field may have been not related to volume field (such convection-diffusion test)
 
 template <class T>
-EqnSystem < typename innerProduct < Vec3D, T> ::type >
+//EqnSystem < typename innerProduct < Vec3D, T> ::type >
+EqnSystem < T >
 FvImp::Div(_Surf_Fv_Field<Scalar> fi,_CC_Fv_Field <T> VolField)
 {
     Eqn <T> eqn;            //Ecuacion para cada una de las cells
                             //No hace falta construirla porque la devuelve el VolField
     //EqnSystem <T> eqnsys(VolField.GridPtr->Num_Cells());   //Como no le doy parametros inicia todo en cero, salvo las dimensiones
     //EqnSystem <T> < typename innerProduct < Vec3D, T> ::type > eqnsys(VolField.Grid());
-    EqnSystem <typename innerProduct < Vec3D, T> ::type> eqnsys(VolField.ConstGrid());
-
+    //EqnSystem <typename innerProduct < Vec3D, T> ::type> eqnsys(VolField.ConstGrid());
+    EqnSystem <T > eqnsys(VolField.ConstGrid());
 
 
     //Interpolate face fluxes and then upwind

@@ -74,7 +74,7 @@ int main()
 	Scalar right=1.;
 	phi.Boundaryfield().PatchField(1).AssignValue(left);
 	phi.Boundaryfield().PatchField(0).AssignValue(right);
-	
+
 	// Materiales
 	vector<Materials> material=SetMaterials();
 
@@ -104,7 +104,16 @@ int main()
 
     //EqnSystem <Scalar> Lap=FvImp::Laplacian(k, phi);
 	//Lap==FvImp::Div(phi,U);
-	CDEqn = (FvImp::Laplacian(kdiff, phi) == FvImp::Div(phi,U));
+	//FORMERLY WAS Div(phi,U)
+
+    //LONG WAY
+    CenterToFaceInterpolation <Vec3D> interp(U);
+    _Surf_Fv_Field <Scalar> FluxField(mesh.Num_Faces());
+    FluxField= mesh.Sf() & interp.Interpolate();
+
+    CDEqn = (FvImp::Laplacian(kdiff, phi) == FvImp::Div(FluxField,phi));
+	//ANOTHER OPTION IS
+	//CDEqn = (FvImp::Laplacian(kdiff, phi) == FvImp::Div(U&mesh.Sf(),phi));
     //CDEqn = FvImp::Laplacian(k, phi) ;
     //EqnSystem <Scalar> CDEqn(FvImp::Laplacian(k, phi) == FvImp::Div(phi,U));
 	cout << "Writing log.."<<endl;
@@ -166,7 +175,7 @@ void Test()
 	for (int p=0;p<3;p++)
 	T.Boundaryfield().PatchField(p).AssignValue(wallvalue);
 	T.Boundaryfield().PatchField(3).AssignValue(topvalue);
-	
+
 	// Materiales
 	vector<Materials> material=SetMaterials();
 

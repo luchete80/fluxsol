@@ -75,7 +75,7 @@ int main()
 		//p.RestorePrevIter();
 
 		//2. U Calculation
-		//UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
+		UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
 
 		//3. Under Relax UEqn
 		//UEqn.Relax();

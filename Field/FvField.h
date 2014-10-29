@@ -58,7 +58,8 @@ namespace FluxSol
 	//TO MODIFY, INHERITS FRoM SURFACEField TO??
 	template<typename T>
 	class _Surf_Fv_Field :
-	    public _Field<T>
+	    //public _Field<T>
+	    public SurfaceField<T>
 	{
 
 		Fv_CC_Grid *GridPtr;       //Se podria probar con un puntero general
