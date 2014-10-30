@@ -54,12 +54,12 @@ namespace FluxSol{
 //}
 //
 
-
+//THIS IS THE ONE WHICH IS ACTUALLY WORKING
 template <class T>
 //EqnSystem < typename innerProduct < Vec3D, T> ::type >
 //First arg is flux
 EqnSystem < T >
-FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
+FvImp::Div(SurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
 {
 
 //OpenFoam Style
@@ -73,20 +73,20 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
     //No hace falta construirla porque la devuelve el VolField
     //EqnSystem <T> eqnsys(VolField.GridPtr->Num_Cells());   //Como no le doy parametros inicia todo en cero, salvo las dimensiones
     //EqnSystem <T> < typename innerProduct < Vec3D, T> ::type > eqnsys(VolField.Grid());
-    EqnSystem < T > eqnsys(VolField.ConstGrid());
+    EqnSystem < T > eqnsys(phi.ConstGrid());
 
 
 
     //Interpolate face fluxes and then upwind
-    CenterToFaceInterpolation <T> interp(VolField);
+
     //Flux, inner producto
     //Can be a vector, or a scalar
     //Sf is a vector
 //    cout << "VolField number of vals"<<VolField.Numberofvals()<<endl;
     //TO MODIFY, CORRECT NUMBER OF VALS
-    SurfaceField <typename innerProduct < Vec3D, Vec3D> ::type> FluxField(VolField.ConstGrid().Num_Faces());
+//    SurfaceField <typename innerProduct < Vec3D, Vec3D> ::type> FluxField(VolField.ConstGrid().Num_Faces());
     //_CC_Fv_Field <typename innerProduct < Vec3D, Vec3D> ::type> Prueba(VolField.Numberofvals(),0.);
-    FluxField= VolField.Grid().Sf() & interp.Interpolate();
+//    FluxField= VolField.Grid().Sf() & interp.Interpolate();
 
 //    cout << "Sf values "<<endl;
 
@@ -102,11 +102,11 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
     //Esta forma de calculo es para cuando las partes de la cara no son iguales
     //--------------
     //RECORRO CELLS
-    const int numcells = VolField.GridPtr->Num_Cells();
+    const int numcells = phi.GridPtr->Num_Cells();
 
-    for (int f=0;f<VolField.ConstGrid().Num_Faces();f++)
+    for (int f=0;f<phi.ConstGrid().Num_Faces();f++)
     {
-        _FvFace face=VolField.ConstGrid().Face(f);
+        _FvFace face=phi.ConstGrid().Face(f);
  		if (!face.Is_Null_Flux_Face())
 		{
 
@@ -153,8 +153,8 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
                 cell[1]=face.Cell(1);
 //                cout << "Global Cell 1: "<< cell[1]<<endl;
                 //Search global neighbour cell
-                int neigh=VolField.ConstGrid().Cell(cell[0]).SearchNeighbour(cell[1]);
-                int neigh2=VolField.ConstGrid().Cell(cell[1]).SearchNeighbour(cell[0]);
+                int neigh=phi.ConstGrid().Cell(cell[0]).SearchNeighbour(cell[1]);
+                int neigh2=phi.ConstGrid().Cell(cell[1]).SearchNeighbour(cell[0]);
 //                cout << "Cell "<<cell[0]<< "neighbour: "<<neigh<<endl;
  // TO MODIFY!!!!
  //This Way is too expensive, only for evaluation
@@ -175,15 +175,15 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
 //    Loop through faces
 //    ------------------
 //    TO MODIFY, CHAMGE ORDER BETWEEN IF AND FOR
-    for (int p=0;p<VolField.Grid().vBoundary().Num_Patches();p++)
+    for (int p=0;p<phi.Grid().vBoundary().Num_Patches();p++)
     {
-        for (int f=0;f<VolField.Grid().vBoundary().vPatch(p).Num_Faces();f++)
+        for (int f=0;f<phi.Grid().vBoundary().vPatch(p).Num_Faces();f++)
         {
-            int idface=VolField.Grid().vBoundary().vPatch(p).Id_Face(f);
-            _FvFace bface=VolField.Grid().Face(idface);  //TO MODIFY idface or face pos??
+            int idface=phi.Grid().vBoundary().vPatch(p).Id_Face(f);
+            _FvFace bface=phi.Grid().Face(idface);  //TO MODIFY idface or face pos??
             //Boundary type
             //Instead of if sentence it is convenient to use inheritance
-            if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
+            if (phi.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
             {
 
                 if(FluxField.Val(idface)<0.)
@@ -191,7 +191,7 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
                     //cout << "Boundary Field Value"<<phi.Boundaryfield().PatchField(p).Val(f).Val()<<endl;
                     eqnsys.Eqn(bface.Cell(0)).Source()-=phi.Boundaryfield().PatchField(p).Val(f)*FluxField.Val(idface);
             }
-            else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
+            else if (phi.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
             {
                 //TO MODIFY
                 //source=VolField.Boundaryfield().PatchField(p).Val(f)*fi;
@@ -211,95 +211,95 @@ template<typename T>
 EqnSystem < typename innerProduct < Vec3D, T> ::type >
 FvImp::Div(const _CC_Fv_Field <T> &VolField)
 {
-	    Eqn <T> eqn;            //Ecuacion para cada una de las cells
-	                            //No hace falta construirla porque la devuelve el VolField
-	    //EqnSystem <T> eqnsys(VolField.GridPtr->Num_Cells());   //Como no le doy parametros inicia todo en cero, salvo las dimensiones
-		//EqnSystem <T> < typename innerProduct < Vec3D, T> ::type > eqnsys(VolField.Grid());
-		EqnSystem <typename innerProduct < Vec3D, T> ::type> eqnsys(VolField.ConstGrid());
-
-
-
-		//Interpolate face fluxes and then upwind
-		CenterToFaceInterpolation <T> interp(VolField);
-		//Flux, inner producto
-		//Can be a vector, or a scalar
-		//Sf is a vector
-		SurfaceField <typename innerProduct < Vec3D, Vec3D> ::type> FluxField(VolField.Numberofvals());
-		//_CC_Fv_Field <typename innerProduct < Vec3D, Vec3D> ::type> Prueba(VolField.Numberofvals(),0.);
-		FluxField= VolField.GridPtr->Sf() & interp.Interpolate();
-
-
-	    //A continuacion se muestra una forma de calculo de divergencia
-	    //Sum_f (Sf * (ro * U)f * fi(f) )
-	    //En OpenFoam ro*U es fi
-	    //Esta forma de calculo es para cuando las partes de la cara no son iguales
-	    //--------------
-	    //RECORRO CELLS
-	    const std::vector<Cell_CC>::iterator cellit;
-
-		const int numcells = VolField.GridPtr->Num_Cells();
-		for (int cid=0; cid<numcells; cid++)
-	    {
-	        //const int &icell, std::vector <Scalar> flux
-	        //Tengo que pasar a vector el campo de flujo
-			const int nfaces = VolField.GridPtr->Cell(cid).Num_Faces();
-
-			//Calculate Face Flux
-	        //eqn=VolField.ToFaces(cid,flux); //Puedo hacer una funcion que no itere por elemento pero esta la memoria
-
-	    }
-	    for (int f=0;f<VolField.ConstGrid().Num_Faces();f++)
-        {
-            _FvFace face=VolField.ConstGrid().Face(f);
-
-            //Eqn eq[2];
-            int cell[2];
-
-
-            //Check sign of inner product
-
-            //eqn[0].An()face.Cell(0);
-            //Take the field norm
-
-            T coeff_ap=-1.;
-            T coeff_an= 1.;
-
-            if (!face.Boundaryface())
-            {
-                for (int i=0;i<2;i++)cell[i]=face.Cell(i);
-                //TO MODIFY-> CHANGE INNER FIELD AND BOUNDARY FIELD
-                //Changed
-
-                if(FluxField.Val(f).Norm()>0.)
-                {
-                    coeff_ap=-1.;
-                    coeff_an= 1.;
-                }
-                else
-                {
-                    coeff_ap= 1.;
-                    coeff_an=-1.;
-                }
-                    //Check cell 0
-                    //If inner prod > 0, then flux is going out face cell 0,
-                    //then
-                    eqnsys.Eqn(cell[0]).Ap(-1.);
-                    //Search global neighbour cell
-                    int neigh=VolField.ConstGrid().Cell(cell[0]).SearchNeighbour(cell[1]);
-                    if (neigh>0)
-                        eqnsys.Eqn(cell[1]).An(neigh,1.);
-            }
-            else             //Boundary face
-                             //If any value is set
-            {
-
-            }
-
-        }
-	//    for (cellit=;icell<VolField.GridPtr->num_cells;icell++)
-	//    {
-	//
-	//    }
+	    EqnSystem <T> eqnsys;            //Ecuacion para cada una de las cells
+//	                            //No hace falta construirla porque la devuelve el VolField
+//	    //EqnSystem <T> eqnsys(VolField.GridPtr->Num_Cells());   //Como no le doy parametros inicia todo en cero, salvo las dimensiones
+//		//EqnSystem <T> < typename innerProduct < Vec3D, T> ::type > eqnsys(VolField.Grid());
+//		EqnSystem <typename innerProduct < Vec3D, T> ::type> eqnsys(VolField.ConstGrid());
+//
+//
+//
+//		//Interpolate face fluxes and then upwind
+//		CenterToFaceInterpolation <T> interp(VolField);
+//		//Flux, inner producto
+//		//Can be a vector, or a scalar
+//		//Sf is a vector
+//		SurfaceField <typename innerProduct < Vec3D, Vec3D> ::type> FluxField(VolField.Numberofvals());
+//		//_CC_Fv_Field <typename innerProduct < Vec3D, Vec3D> ::type> Prueba(VolField.Numberofvals(),0.);
+//		FluxField= VolField.GridPtr->Sf() & interp.Interpolate();
+//
+//
+//	    //A continuacion se muestra una forma de calculo de divergencia
+//	    //Sum_f (Sf * (ro * U)f * fi(f) )
+//	    //En OpenFoam ro*U es fi
+//	    //Esta forma de calculo es para cuando las partes de la cara no son iguales
+//	    //--------------
+//	    //RECORRO CELLS
+//	    const std::vector<Cell_CC>::iterator cellit;
+//
+//		const int numcells = VolField.GridPtr->Num_Cells();
+//		for (int cid=0; cid<numcells; cid++)
+//	    {
+//	        //const int &icell, std::vector <Scalar> flux
+//	        //Tengo que pasar a vector el campo de flujo
+//			const int nfaces = VolField.GridPtr->Cell(cid).Num_Faces();
+//
+//			//Calculate Face Flux
+//	        //eqn=VolField.ToFaces(cid,flux); //Puedo hacer una funcion que no itere por elemento pero esta la memoria
+//
+//	    }
+//	    for (int f=0;f<VolField.ConstGrid().Num_Faces();f++)
+//        {
+//            _FvFace face=VolField.ConstGrid().Face(f);
+//
+//            //Eqn eq[2];
+//            int cell[2];
+//
+//
+//            //Check sign of inner product
+//
+//            //eqn[0].An()face.Cell(0);
+//            //Take the field norm
+//
+//            T coeff_ap=-1.;
+//            T coeff_an= 1.;
+//
+//            if (!face.Boundaryface())
+//            {
+//                for (int i=0;i<2;i++)cell[i]=face.Cell(i);
+//                //TO MODIFY-> CHANGE INNER FIELD AND BOUNDARY FIELD
+//                //Changed
+//
+//                if(FluxField.Val(f).Norm()>0.)
+//                {
+//                    coeff_ap=-1.;
+//                    coeff_an= 1.;
+//                }
+//                else
+//                {
+//                    coeff_ap= 1.;
+//                    coeff_an=-1.;
+//                }
+//                    //Check cell 0
+//                    //If inner prod > 0, then flux is going out face cell 0,
+//                    //then
+//                    eqnsys.Eqn(cell[0]).Ap(-1.);
+//                    //Search global neighbour cell
+//                    int neigh=VolField.ConstGrid().Cell(cell[0]).SearchNeighbour(cell[1]);
+//                    if (neigh>0)
+//                        eqnsys.Eqn(cell[1]).An(neigh,1.);
+//            }
+//            else             //Boundary face
+//                             //If any value is set
+//            {
+//
+//            }
+//
+//        }
+//	//    for (cellit=;icell<VolField.GridPtr->num_cells;icell++)
+//	//    {
+//	//
+//	//    }
 
 	    return eqnsys;
 }
@@ -340,124 +340,124 @@ FvImp::Div(const _CC_Fv_Field <T> &VolField)
 //TO SEE IN OPENFOAM HOW TO RELATE CONVECTION SCHEME WITH PLAIN DIVERGENCE
 
 //Flux Field may have been not related to volume field (such convection-diffusion test)
-
-template <class T>
-//EqnSystem < typename innerProduct < Vec3D, T> ::type >
-EqnSystem < T >
-FvImp::Div(_Surf_Fv_Field<Scalar> fi,_CC_Fv_Field <T> VolField)
-{
-    Eqn <T> eqn;            //Ecuacion para cada una de las cells
-                            //No hace falta construirla porque la devuelve el VolField
-    //EqnSystem <T> eqnsys(VolField.GridPtr->Num_Cells());   //Como no le doy parametros inicia todo en cero, salvo las dimensiones
-    //EqnSystem <T> < typename innerProduct < Vec3D, T> ::type > eqnsys(VolField.Grid());
-    //EqnSystem <typename innerProduct < Vec3D, T> ::type> eqnsys(VolField.ConstGrid());
-    EqnSystem <T > eqnsys(VolField.ConstGrid());
-
-
-    //Interpolate face fluxes and then upwind
-    CenterToFaceInterpolation <T> interp(VolField);
-    //Flux, inner producto
-    //Can be a vector, or a scalar
-    //Sf is a vector
-    SurfaceField <typename innerProduct < Vec3D, Vec3D> ::type> FluxField(VolField.Numberofvals());
-    //_CC_Fv_Field <typename innerProduct < Vec3D, Vec3D> ::type> Prueba(VolField.Numberofvals(),0.);
-    FluxField= VolField.GridPtr->Sf() & interp.Interpolate();
-
-
-    //A continuacion se muestra una forma de calculo de divergencia
-    //Sum_f (Sf * (ro * U)f * fi(f) )
-    //En OpenFoam ro*U es fi
-    //Esta forma de calculo es para cuando las partes de la cara no son iguales
-    //--------------
-    //RECORRO CELLS
-    const std::vector<Cell_CC>::iterator cellit;
-    vector <Scalar> flux;	//Flujo en la celda y en las vecina
-    const int numcells = VolField.GridPtr->Num_Cells();
-    for (int cid=0; cid<numcells; cid++)
-    {
-        //const int &icell, std::vector <Scalar> flux
-        //Tengo que pasar a vector el campo de flujo
-        const int nfaces = VolField.GridPtr->Cell(cid).Num_Faces();
-
-        //Calculate Face Flux
-        //eqn=VolField.ToFaces(cid,flux); //Puedo hacer una funcion que no itere por elemento pero esta la memoria
-
-    }
-    for (int f=0;f<VolField.ConstGrid().Num_Faces();f++)
-    {
-        _FvFace face=VolField.ConstGrid().Face(f);
- 		if (!face.Is_Null_Flux_Face())
-		{
-
-            //Eqn eq[2];
-            int cell[2];
-
-
-            //Check sign of inner product
-
-            //eqn[0].An()face.Cell(0);
-            //Take the field norm
-
-
-            cell[0]=face.Cell(0);
-            T coeff_ap, coeff_an;
-            //TO MODIFY-> CHANGE INNER FIELD AND BOUNDARY FIELD
-            //Changed
-            //Check cell 0
-            //If inner prod > 0, then flux is going out face cell 0,
-            //then phi_face=phi_cell0
-            //TO MODIFY: CHANGE FOR (Min[-mf,0])
-            if(FluxField.Val(f)>0.)
-            {
-                T coeff_ap= 1.;
-                T coeff_an= 0.;
-            }
-            else
-            {
-                T coeff_ap= 0.;
-                T coeff_an= 1.;
-            }
-
-            eqnsys.Eqn(cell[0]).Ap(coeff_ap);
-
-            if (!face.Boundaryface())
-            {
-                cell[1]=face.Cell(1);
-                //Search global neighbour cell
-                int neigh=VolField.ConstGrid().Cell(cell[0]).SearchNeighbour(cell[1]);
-                if (neigh>=0)
-                    eqnsys.Eqn(cell[1]).An(neigh,coeff_an);
-            }
-		}//End if !NullFluxFace
-    }
-    //------------------
-    //Loop through faces
-    //------------------
-    //TO MODIFY, CHAMGE ORDER BETWEEN IF AND FOR
-    for (int p=0;p<VolField.Grid().vBoundary().Num_Patches();p++)
-    {
-        for (int f=0;f<VolField.Grid().vBoundary().vPatch(p).Num_Faces();f++)
-        {
-            int idface=VolField.Grid().vBoundary().vPatch(p).Id_Face(f);
-            _FvFace bface=VolField.Grid().Face(idface);  //TO MODIFY idface or face pos??
-            //Boundary type
-            //Instead of if sentence it is convenient to use inheritance
-            if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
-            {
-                eqnsys.Eqn(bface.Cell(0)).Source()+=VolField.Boundaryfield().PatchField(p).Val(f);
-            }
-            else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
-            {
-                //TO MODIFY
-                //source=VolField.Boundaryfield().PatchField(p).Val(f)*fi;
-                //eqnsys.Eqn(face.Cell(0)).Source()+=source;
-            }
-        }
-
-    }
-
-    return eqnsys;
-}
+//
+//template <class T>
+////EqnSystem < typename innerProduct < Vec3D, T> ::type >
+//EqnSystem < T >
+//FvImp::Div(_Surf_Fv_Field<Scalar> fi,_CC_Fv_Field <T> VolField)
+//{
+//    Eqn <T> eqn;            //Ecuacion para cada una de las cells
+//                            //No hace falta construirla porque la devuelve el VolField
+//    //EqnSystem <T> eqnsys(VolField.GridPtr->Num_Cells());   //Como no le doy parametros inicia todo en cero, salvo las dimensiones
+//    //EqnSystem <T> < typename innerProduct < Vec3D, T> ::type > eqnsys(VolField.Grid());
+//    //EqnSystem <typename innerProduct < Vec3D, T> ::type> eqnsys(VolField.ConstGrid());
+//    EqnSystem <T > eqnsys(VolField.ConstGrid());
+//
+//
+//    //Interpolate face fluxes and then upwind
+//    CenterToFaceInterpolation <T> interp(VolField);
+//    //Flux, inner producto
+//    //Can be a vector, or a scalar
+//    //Sf is a vector
+//    SurfaceField <typename innerProduct < Vec3D, Vec3D> ::type> FluxField(VolField.Numberofvals());
+//    //_CC_Fv_Field <typename innerProduct < Vec3D, Vec3D> ::type> Prueba(VolField.Numberofvals(),0.);
+//    FluxField= VolField.GridPtr->Sf() & interp.Interpolate();
+//
+//
+//    //A continuacion se muestra una forma de calculo de divergencia
+//    //Sum_f (Sf * (ro * U)f * fi(f) )
+//    //En OpenFoam ro*U es fi
+//    //Esta forma de calculo es para cuando las partes de la cara no son iguales
+//    //--------------
+//    //RECORRO CELLS
+//    const std::vector<Cell_CC>::iterator cellit;
+//    vector <Scalar> flux;	//Flujo en la celda y en las vecina
+//    const int numcells = VolField.GridPtr->Num_Cells();
+//    for (int cid=0; cid<numcells; cid++)
+//    {
+//        //const int &icell, std::vector <Scalar> flux
+//        //Tengo que pasar a vector el campo de flujo
+//        const int nfaces = VolField.GridPtr->Cell(cid).Num_Faces();
+//
+//        //Calculate Face Flux
+//        //eqn=VolField.ToFaces(cid,flux); //Puedo hacer una funcion que no itere por elemento pero esta la memoria
+//
+//    }
+//    for (int f=0;f<VolField.ConstGrid().Num_Faces();f++)
+//    {
+//        _FvFace face=VolField.ConstGrid().Face(f);
+// 		if (!face.Is_Null_Flux_Face())
+//		{
+//
+//            //Eqn eq[2];
+//            int cell[2];
+//
+//
+//            //Check sign of inner product
+//
+//            //eqn[0].An()face.Cell(0);
+//            //Take the field norm
+//
+//
+//            cell[0]=face.Cell(0);
+//            T coeff_ap, coeff_an;
+//            //TO MODIFY-> CHANGE INNER FIELD AND BOUNDARY FIELD
+//            //Changed
+//            //Check cell 0
+//            //If inner prod > 0, then flux is going out face cell 0,
+//            //then phi_face=phi_cell0
+//            //TO MODIFY: CHANGE FOR (Min[-mf,0])
+//            if(FluxField.Val(f)>0.)
+//            {
+//                T coeff_ap= 1.;
+//                T coeff_an= 0.;
+//            }
+//            else
+//            {
+//                T coeff_ap= 0.;
+//                T coeff_an= 1.;
+//            }
+//
+//            eqnsys.Eqn(cell[0]).Ap(coeff_ap);
+//
+//            if (!face.Boundaryface())
+//            {
+//                cell[1]=face.Cell(1);
+//                //Search global neighbour cell
+//                int neigh=VolField.ConstGrid().Cell(cell[0]).SearchNeighbour(cell[1]);
+//                if (neigh>=0)
+//                    eqnsys.Eqn(cell[1]).An(neigh,coeff_an);
+//            }
+//		}//End if !NullFluxFace
+//    }
+//    //------------------
+//    //Loop through faces
+//    //------------------
+//    //TO MODIFY, CHAMGE ORDER BETWEEN IF AND FOR
+//    for (int p=0;p<VolField.Grid().vBoundary().Num_Patches();p++)
+//    {
+//        for (int f=0;f<VolField.Grid().vBoundary().vPatch(p).Num_Faces();f++)
+//        {
+//            int idface=VolField.Grid().vBoundary().vPatch(p).Id_Face(f);
+//            _FvFace bface=VolField.Grid().Face(idface);  //TO MODIFY idface or face pos??
+//            //Boundary type
+//            //Instead of if sentence it is convenient to use inheritance
+//            if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
+//            {
+//                eqnsys.Eqn(bface.Cell(0)).Source()+=VolField.Boundaryfield().PatchField(p).Val(f);
+//            }
+//            else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
+//            {
+//                //TO MODIFY
+//                //source=VolField.Boundaryfield().PatchField(p).Val(f)*fi;
+//                //eqnsys.Eqn(face.Cell(0)).Source()+=source;
+//            }
+//        }
+//
+//    }
+//
+//    return eqnsys;
+//}
 
 
 }//Fin FluxSol

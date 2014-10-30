@@ -95,21 +95,20 @@ int main()
 
     cout << "Field U Number of Values" << U.Numberofvals()<<endl;
 
+
+    //LONG WAY
+    CenterToFaceInterpolation <Vec3D> interp(U);
+    _Surf_Fv_Field <Scalar> FluxField(mesh);
+    //This equals different fields
+    FluxField= mesh.Sf() & interp.Interpolate();
+
+    //TO VISUALIZE SEPARATELY
     EqnSystem <Scalar> CDEqn;
-    CDEqn=FvImp::Div(phi,U);
+    CDEqn=FvImp::Div(FluxField,phi);
     CDEqn.Log("Convection Eqn Log.txt");
 
     CDEqn=FvImp::Laplacian(kdiff, phi) ;
     CDEqn.Log("Diffusion Eqn Log.txt");
-
-    //EqnSystem <Scalar> Lap=FvImp::Laplacian(k, phi);
-	//Lap==FvImp::Div(phi,U);
-	//FORMERLY WAS Div(phi,U)
-
-    //LONG WAY
-    CenterToFaceInterpolation <Vec3D> interp(U);
-    _Surf_Fv_Field <Scalar> FluxField(mesh.Num_Faces());
-    FluxField= mesh.Sf() & interp.Interpolate();
 
     CDEqn = (FvImp::Laplacian(kdiff, phi) == FvImp::Div(FluxField,phi));
 	//ANOTHER OPTION IS
@@ -133,7 +132,7 @@ int main()
 	//CDEqn.Log("EqLog.txt");
 
 	cout<<"Generating field"<<endl;
-	CenterToVertexInterpolation <Scalar> interp(phi);
+	CenterToVertexInterpolation <Scalar> interp_phi(phi);
 
 	Vertex_Fv_Field<Scalar> intphi;    //interpolated phi
 
@@ -153,63 +152,63 @@ int main()
 
 }
 
-void Test()
-{
-
-    cout << "Reading square.cgns ..."<<endl;
-	Fv_CC_Grid malla("square.cgns");
-	//malla.ReadCGNS();
-
-	malla.Log("Log.txt");
-
-	_CC_Fv_Field <Scalar> T(malla);
-
-	_CC_Fv_Field <Vec3D> U(malla);
-	_CC_Fv_Field <Scalar> phi(malla);
-	U=Vec3D(1.,0,0);
-
-
-	//Boundary conditions
-	Scalar wallvalue=0.;
-	Scalar topvalue=1.;
-	for (int p=0;p<3;p++)
-	T.Boundaryfield().PatchField(p).AssignValue(wallvalue);
-	T.Boundaryfield().PatchField(3).AssignValue(topvalue);
-
-	// Materiales
-	vector<Materials> material=SetMaterials();
-
-	EqnSystem <Scalar> TEqn;
-	//Construir aca con la malla
-	//Scalar k(1.);	//Difusion, puede ser un escalar
-	Scalar kdiff=material[2].k;
-
-	cout<<"Generating system"<<endl;
-	TEqn=(FvImp::Laplacian(kdiff,T)==0.);
-
-	EqnSystem <Scalar> CDEqn;
-	CDEqn=(FvImp::Laplacian(kdiff,T)==FvImp::Div(phi,U));
-	cout<<"Solving system"<<endl;
-	Solve(TEqn);
-	TEqn.Log("EqLog.txt");
-
-	cout<<"Generating field"<<endl;
-//	CenterToVertexInterpolation interp(malla);
-
-	Vertex_Fv_Field<Scalar> vT;
-
-
-	T=TEqn.Field();
-
-	cout<<"Interpolating to vertices"<<endl;
-//	vT=interp.Interpolate(T);
-
-	cout<<"Writing files"<<endl;
-	OutputFile("CellField.vtu",T);
-//	OutputFile("VertexField.vtu",vT);
-
-	cout << "End. Now Reading input.in"<<endl;
-
-	return 0;
-
-}
+//void Test()
+//{
+//
+//    cout << "Reading square.cgns ..."<<endl;
+//	Fv_CC_Grid malla("square.cgns");
+//	//malla.ReadCGNS();
+//
+//	malla.Log("Log.txt");
+//
+//	_CC_Fv_Field <Scalar> T(malla);
+//
+//	_CC_Fv_Field <Vec3D> U(malla);
+//	_CC_Fv_Field <Scalar> phi(malla);
+//	U=Vec3D(1.,0,0);
+//
+//
+//	//Boundary conditions
+//	Scalar wallvalue=0.;
+//	Scalar topvalue=1.;
+//	for (int p=0;p<3;p++)
+//	T.Boundaryfield().PatchField(p).AssignValue(wallvalue);
+//	T.Boundaryfield().PatchField(3).AssignValue(topvalue);
+//
+//	// Materiales
+//	vector<Materials> material=SetMaterials();
+//
+//	EqnSystem <Scalar> TEqn;
+//	//Construir aca con la malla
+//	//Scalar k(1.);	//Difusion, puede ser un escalar
+//	Scalar kdiff=material[2].k;
+//
+//	cout<<"Generating system"<<endl;
+//	TEqn=(FvImp::Laplacian(kdiff,T)==0.);
+//
+//	EqnSystem <Scalar> CDEqn;
+//	CDEqn=(FvImp::Laplacian(kdiff,T)==FvImp::Div(phi,U));
+//	cout<<"Solving system"<<endl;
+//	Solve(TEqn);
+//	TEqn.Log("EqLog.txt");
+//
+//	cout<<"Generating field"<<endl;
+////	CenterToVertexInterpolation interp(malla);
+//
+//	Vertex_Fv_Field<Scalar> vT;
+//
+//
+//	T=TEqn.Field();
+//
+//	cout<<"Interpolating to vertices"<<endl;
+////	vT=interp.Interpolate(T);
+//
+//	cout<<"Writing files"<<endl;
+//	OutputFile("CellField.vtu",T);
+////	OutputFile("VertexField.vtu",vT);
+//
+//	cout << "End. Now Reading input.in"<<endl;
+//
+//	return 0;
+//
+//}

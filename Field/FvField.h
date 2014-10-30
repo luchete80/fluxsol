@@ -100,6 +100,11 @@ namespace FluxSol
 			}
 		}
 
+		_Surf_Fv_Field <T> & operator=(const SurfaceField<T>&)
+		{
+
+		}
+
 	};
 
 	//boundary type

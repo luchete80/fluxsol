@@ -48,11 +48,11 @@ namespace FvImp {
 //RECORDAR QUE EL GRADINTE, COMO EN OPENFOAM, NO ES IMPLICITO, SOLO ES EXPLICITO
 // Ejemplo de divergencia es Div (rho * U), el termino convectivo
 template <typename T>
-EqnSystem < typename innerProduct<Vec3D, T>::type > //typename is written because it can not be compiled in gcc
+EqnSystem < T > //typename is written because it can not be compiled in gcc
 Div(_Surf_Fv_Field<Scalar> fi,_CC_Fv_Field <T> VolField);
 
 template <typename T>
-EqnSystem < typename innerProduct<Vec3D, T>::type > //typename is written because it can not be compiled in gcc
+EqnSystem < T > //typename is written because it can not be compiled in gcc
 Div(_CC_Fv_Field<Scalar> fi,_CC_Fv_Field <T> VolField);
 
 //Operadores laplacianos
@@ -68,7 +68,7 @@ template<typename T>
 EqnSystem <T> Div(Scalar fi, _CC_Fv_Field <T> &VolField);
 
 template<typename T>
-EqnSystem < typename innerProduct < Vec3D, T> ::type >
+EqnSystem < T >
 Div(const _CC_Fv_Field <T> &VolField);
 
 };//Fin de FvImp

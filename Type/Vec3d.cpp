@@ -104,6 +104,13 @@ Vec3D& Vec3D::operator= (const Vec3D &right) {
 	return *this;
 }
 
+Vec3D& Vec3D::operator= (const Scalar &right) {
+	comp[0]=right.Val();
+	comp[1]=right.Val();
+	comp[2]=right.Val();
+	return *this;
+}
+
 Vec3D& Vec3D::operator= (const double &right) {
 	comp[0]=right;
 	comp[1]=right;

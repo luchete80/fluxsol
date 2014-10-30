@@ -63,6 +63,7 @@ public:
 	double dot(const Vec3D &right);
 	Vec3D cross(const Vec3D &right);
 	Vec3D & operator= (const Vec3D &);
+	Vec3D & operator= (const Scalar &);
 	Vec3D & operator= (const double &);
 	Vec3D & operator= (const std::vector<double> &);
 	Vec3D & operator*= (const double &);

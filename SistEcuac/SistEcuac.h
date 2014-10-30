@@ -80,6 +80,7 @@ public:
 	int MinNeigbourId();
 	const std::vector <int> & NeighboursIds()const{return neighbour_id;}
 
+    Eqn<T> & operator-(const Eqn<T> &right);
     std::vector <T>& An(){return an;};
 
 
@@ -180,6 +181,7 @@ class EqnSystem{   //Es un vector de ecuaciones
 
 	//Binary operators, U
 	EqnSystem <T> & operator==(const EqnSystem <T> &right);
+	EqnSystem <T> & operator- (const EqnSystem <T> &right);
 
 	EqnSystem <T> & operator==(const _CC_Fv_Field<T> &field);
 
