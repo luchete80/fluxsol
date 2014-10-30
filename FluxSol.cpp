@@ -131,7 +131,7 @@ void CDTest()
 
 	cout<<"Generating Eqn system"<<endl;
 
-	CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(U));
+	//CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(U));
 
 	cout<<"Solving system"<<endl;
 	//Solve(CDEqn);
@@ -210,7 +210,7 @@ void CDTest2()
 
     //Divergence is Div(U.A * phi)
     //Classical OpenFOAM Notation is Div (flux, type) = Eqn (type) = flux * sum type_f
-	CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(U*mesh.Sf(),phi));
+	//CDEqn = (FvImp::Laplacian(k, phi) == FvImp::Div(U&mesh.Sf(),phi));
 
 	cout << "Writing log.."<<endl;
 	CDEqn.Log("CDEqLog.txt");
