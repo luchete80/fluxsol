@@ -86,7 +86,7 @@ int main()
 
 	_CC_Fv_Field<Vec3D> U(mesh);
 
-    U=Vec3D(2.5,0.,0.);
+    U=Vec3D(0.1,0.,0.);
 
 	//Scalar k(0.1);	//Diffusion
 	Scalar kdiff=material[2].k;
@@ -98,7 +98,8 @@ int main()
 
     //LONG WAY
     CenterToFaceInterpolation <Vec3D> interp(U);
-    _Surf_Fv_Field <Scalar> FluxField(mesh);
+    //_Surf_Fv_Field <Scalar> FluxField(mesh);
+    SurfaceField <Scalar> FluxField(mesh.Num_Faces());
     //This equals different fields
     FluxField= mesh.Sf() & interp.Interpolate();
 

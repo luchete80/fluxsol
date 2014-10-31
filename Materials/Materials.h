@@ -77,4 +77,19 @@ public:
 
 vector<Materials> SetMaterials();
 
+class MaterialsDB
+{
+
+protected:
+    vector <Materials> material;
+
+public:
+    MaterialsDB(){}
+    MaterialsDB(const string &file);
+    const Materials & Material(const string &name)const;
+    ~MaterialsDB(){}
+
+
+};
+
 #endif
