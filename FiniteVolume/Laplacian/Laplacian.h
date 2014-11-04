@@ -68,7 +68,8 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
     //look through faces
     //Aca tengo que ensamblar para los dos lados esto segun cada cell con el signo de la face que corresponda
     //eqn=FaceGrad (VolField, f);
-	T ap,an,source;
+	T source;
+	Scalar ap, an;  //IF FI IS A SCALAR THESE CAN BE SCALARS
 	vector <int> nbr_eqn;
 
 	//Internal field

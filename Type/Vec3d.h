@@ -88,6 +88,11 @@ public:
 
 	//Unary
 	//DOES NOT MODIFY THE OBJECT
+    const Vec3D & operator+=(const Scalar &s)
+	{
+        for (int i=0;i<3;i++)   this->comp[i]+=s.Val();
+        return *this;
+	}
 	const Vec3D operator-()
 	{
 	    Vec3D ret;

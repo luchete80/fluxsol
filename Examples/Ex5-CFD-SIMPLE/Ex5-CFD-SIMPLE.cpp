@@ -117,5 +117,51 @@ int main()
 	}
 	//	---- The End -------
 	return 0;
-
 }
+
+
+        //OpenFoam Style
+
+		//1.Restore Iteration
+		//p.RestorePrevIter();
+
+		//2. U Calculation
+		//UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
+
+		//3. Under Relax UEqn
+		//UEqn.Relax();
+
+		//4. Solve Momentum predictor (UEqn)
+		//Solve(UEqn==-FvExp::Grad(p));
+
+		//5. Update p Boundary conditions
+		//p.BoundaryField().UpdateCoeffs();
+
+		//6. Calculate ap (Central coeffs) and U
+		// ------ OpenFoam Style ------
+		//_CC_Fv_Field <Scalar> AU=UEqn.A();
+		//U = UEqn.H()/AU;
+
+		//Standard Style
+
+		//7. Calculate the Flux, inner product with mash faces
+		//Interpolate is like CenterToFaceInterpolation
+		//FvExp::Interpolate(U) & mesh.Sf();
+		//phi= FvExp::Interpolate(U) & mesh.Sf();
+		//AdjustPhi(phi,U,p);		//CHECK THIS
+
+		//8. Define and Solve Pressure Correction And Repeat
+		//for the prescribed for the non orth steps
+		//pEqn=FvImp::Laplacian(1.0/AU,p)==FvExp::Div(phi);	//New, explicit Div
+		//pEqn.SetReference(pRefCell,pRefVal); If the problem is Not prescribed in pressure
+		//pEqn.Solve();
+
+		//9. Correct the flux
+		//phi-=pEqn.Flux();
+
+		//10. Calculate Continuity errors
+
+		//11. Under Relax pressure for the momentum corrector and apply the correction
+		//p.Relax();
+		//U-=FvExp::Grad(p)/AU;
+		//U.CorrectBoundaryConditions();
