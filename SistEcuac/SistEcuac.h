@@ -202,6 +202,15 @@ class EqnSystem{   //Es un vector de ecuaciones
 
 	const Fv_CC_Grid  & Grid()const{ return *GridPtr; }
 
+	const _CC_Fv_Field<T> & A()const
+	{
+        _CC_Fv_Field<T> field(this->Grid());
+        for (int e=0;e<this->Num_Eqn();e++)
+        {
+            field.Val(e,this->Eqn(e).Ap());
+        }
+        return field;
+	};
 };
 
 

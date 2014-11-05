@@ -123,6 +123,18 @@ namespace FluxSol
 
 
     }//Fin de FvExp
+
+    //Face gradient
+    //Explicit form of FaceGrad
+    template<class T>
+    _Surf_Fv_Field
+    < typename outerProduct<Vec3D, T>::type >
+	Gradf (const _CC_Fv_Field <T>& field)
+	{
+	    _Surf_Fv_Field <typename outerProduct<Vec3D, T>::type> r;
+
+	    return r;
+	}
 }//Fin de namespace FluxSol
 
 #endif

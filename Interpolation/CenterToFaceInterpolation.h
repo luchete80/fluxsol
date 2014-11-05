@@ -45,13 +45,14 @@ class CenterToFaceInterpolation
 	:public Interpolation<T>
 {
 	protected:
+	    Fv_CC_Grid *GridPtr;
 		SurfaceField <T> intfield;	//Not constant because can be reinterpolated
 
 	public:
 		CenterToFaceInterpolation():Interpolation<T>(){};
 		CenterToFaceInterpolation(const _CC_Fv_Field <T> &fi) :Interpolation<T>(fi)
 		{
-
+            this->GridPtr=fi.GridPtr;
 			//Pending to Generate constructor
 //			cout << "Grid Faces " <<this->field.GridPtr->Num_Faces()<<endl;
 			SurfaceField <T> r(this->field.GridPtr->Num_Faces());
@@ -78,6 +79,15 @@ class CenterToFaceInterpolation
 
 		const SurfaceField <T> & Interpolate();
 		SurfaceField <T> & Interpolate(const _CC_Fv_Field<T> &fi);
+
+		const _Surf_Fv_Field <T>& Sf()const
+		{
+            _Surf_Fv_Field <T> field;
+
+            field=intfield;
+
+            return field;
+		}
 
 		//Base classes
 		SurfaceField <T> operator &(const SurfaceField <T> &right) const{};

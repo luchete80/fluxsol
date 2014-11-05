@@ -100,8 +100,32 @@ namespace FluxSol
 			}
 		}
 
+        //TO MODIFY
 		_Surf_Fv_Field <T> & operator=(const SurfaceField<T>&)
 		{
+
+
+		}
+
+		_Surf_Fv_Field<T> operator-(const _Surf_Fv_Field<T> &right)
+		{
+		    _Surf_Fv_Field<T> ret(*this);
+			for (int v = 0; v<this->value.size(); v++)
+			{
+				ret.value[v] = this->value[v]-right.value[v];
+			}
+			ret;
+
+		}
+
+		_Surf_Fv_Field<T> operator||(const _Surf_Fv_Field<T> &right)
+		{
+		    _Surf_Fv_Field<T> ret(*this);
+			for (int v = 0; v<this->value.size(); v++)
+			{
+				ret.value[v] = this->value[v]||right.value[v];
+			}
+			ret;
 
 		}
 

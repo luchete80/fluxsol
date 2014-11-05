@@ -66,7 +66,8 @@ int main()
 	//Construir aca con la malla
 	Scalar k(1.);	//Difusion, puede ser un escalar
 
-
+    U=Vec3D(0.01,0.,0.);
+    p=0.1;
 	bool conv=false;
 	//ITERATION BEGINS
 	while (!conv)
@@ -77,27 +78,23 @@ int main()
 		//2. U Calculation
 		UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
 
-		//3. Under Relax UEqn
-		//UEqn.Relax();
-
 		//4. Solve Momentum predictor (UEqn)
 		Solve(UEqn==-FvExp::Grad(p));
 
-		//5. Update p Boundary conditions
-		//p.BoundaryField().UpdateCoeffs();
+        //Assign to U Eqn Solved values
+        _Surf_Fv_Field <Vec3D> Uf_=CenterToFaceInterpolation <Vec3D> (U).Sf();  //Uf Overbar
+        _CC_Fv_Field <Vec3D> AU=UEqn.A();       // In OpenFoam these are scalar
+        _Surf_Fv_Field <Vec3D> AUf_=CenterToFaceInterpolation <Vec3D> (AU).Sf();
 
-		//6. Calculate ap (Central coeffs) and U
-		// ------ OpenFoam Style ------
-		//_CC_Fv_Field <Scalar> AU=UEqn.A();
-		//U = UEqn.H()/AU;
+        _Surf_Fv_Field <Vec3D> Gradpf_=CenterToFaceInterpolation <Vec3D> (FvExp::Grad(p)).Sf();
 
-		//Standard Style
+        //Rhie-Chow Correction
+        //vf=vf_ - Df (Grad(p)-Grad_(p))
+        _Surf_Fv_Field <Vec3D> f=FvExp::Gradf(p);
+        _Surf_Fv_Field <Vec3D> Uf=Uf_-AUf_||(f-Gradpf_);
 
-		//7. Calculate the Flux, inner product with mash faces
-		//Interpolate is like CenterToFaceInterpolation
-		FvExp::Interpolate(U) & mesh.Sf();
-		//phi= FvExp::Interpolate(U) & mesh.Sf();
-		//AdjustPhi(phi,U,p);		//CHECK THIS
+        //Calculate Face Flux
+        phi=Uf & mesh.Sf();
 
 		//8. Define and Solve Pressure Correction And Repeat
 		//for the prescribed for the non orth steps

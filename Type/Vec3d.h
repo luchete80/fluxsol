@@ -100,6 +100,13 @@ public:
         return ret;
 	}
 
+	const Vec3D operator||(const Vec3D &right)const
+	{
+	    Vec3D ret;
+        for (int i=0;i<3;i++)   ret[i]=this->comp[i]*right.comp[i];
+        return ret;
+	}
+
 	const Scalar operator&(const Vec3D &right) const;
 	const string outstr()const
 	{

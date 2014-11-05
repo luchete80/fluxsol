@@ -40,6 +40,12 @@ _CC_Fv_Field
 < typename outerProduct<Vec3D, T>::type >
 Grad (const _CC_Fv_Field <T>&);
 
+
+template<class T>
+_Surf_Fv_Field
+< typename outerProduct<Vec3D, T>::type >
+Gradf (const _CC_Fv_Field <T>&);
+
 //Like CenterToFaceInterpolation
 template<typename T>
 SurfaceField <T> Interpolate(const _CC_Fv_Field <T> &field)
