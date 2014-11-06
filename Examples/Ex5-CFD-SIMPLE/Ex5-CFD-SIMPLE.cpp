@@ -91,7 +91,7 @@ int main()
         //Rhie-Chow Correction
         //vf=vf_ - Df (Grad(p)-Grad_(p))
         _Surf_Fv_Field <Vec3D> f=FvExp::Gradf(p);
-        _Surf_Fv_Field <Vec3D> Uf=Uf_-AUf_||(f-Gradpf_);
+        _Surf_Fv_Field <Vec3D> Uf=Uf_-AUf_*(f-Gradpf_);
 
         //Calculate Face Flux
         phi=Uf & mesh.Sf();
