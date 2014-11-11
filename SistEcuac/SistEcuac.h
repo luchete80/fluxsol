@@ -39,8 +39,10 @@ template <typename T>
 class Eqn{
 
     int id;										//eqn Id
-	T ap;                                       //Central coefficient
-	std::vector <T> an;                         //Neighbours
+//	T ap;                                       //Central coefficient
+    Scalar ap;
+//	std::vector <T> an;                         //Neighbours
+    std::vector <Scalar> an;
 
 	//Neighbours
 	//Tis information is duplicated, is in mesh and in system eqn
@@ -55,25 +57,30 @@ class Eqn{
 public:
 
 	Eqn(){ap=0.;num_neighbours=0;x=0.;source=0.;};
-    Eqn(const T &p, const std::vector <T>& n){ap=p;an=n;x=0.;source=0.;};    //Constructor definiendo ap y an
+//    Eqn(const T &p, const std::vector <T>& n){ap=p;an=n;x=0.;source=0.;};    //Constructor definiendo ap y an
+    Eqn(const T &p, const std::vector <Scalar>& n){ap=p;an=n;x=0.;source=0.;};    //Constructor definiendo ap y an
 
-	Eqn(const T &p, const std::vector <T>& n, const T &s)
+//	Eqn(const T &p, const std::vector <T>& n, const T &s)
+	Eqn(const Scalar &p, const std::vector <Scalar>& n, const T &s)
+
 	{ap=p;an=n;x=0.;source=s;}    //Constructor definiendo ap y an
 
-	Eqn(const T &p, const std::vector <T>& n, const T &s, std::vector<int> nbrid)
+//	Eqn(const T &p, const std::vector <T>& n, const T &s, std::vector<int> nbrid)
+	Eqn(const Scalar &p, const std::vector <Scalar>& n, const T &s, std::vector<int> nbrid)
 	{ap=p;an=n;x=0.;source=s;neighbour_id=nbrid;num_neighbours=neighbour_id.size();}    //Constructor definiendo ap y an
 
-	Eqn(const int &ids,const T &p, const std::vector <T>& n, const T &s, std::vector<int> nbrid)
+//	Eqn(const int &ids,const T &p, const std::vector <T>& n, const T &s, std::vector<int> nbrid)
+	Eqn(const int &ids,const Scalar &p, const std::vector <Scalar>& n, const T &s, std::vector<int> nbrid)
 	{id=ids;ap=p;an=n;x=0.;source=s;neighbour_id=nbrid;num_neighbours=neighbour_id.size();}    //Constructor definiendo ap y an
     void Coeffs(const T &iap, const std::vector<T> &ian){ap=iap;an=ian;}
 
-    T& Ap(){return ap;};  //Coeficiente central
-	T& An(const int &i){return an[i];}
+    Scalar& Ap(){return ap;};  //Coeficiente central
+	Scalar& An(const int &i){return an[i];}
 	T& Source(){return source;}
 	const T& X()const{return x;}
 	//void Ap(const double &);
-	void Ap(const T &iap){ap=iap;}
-	void An(const int &i, const T &val){an[i]=val;}
+	void Ap(const Scalar &iap){ap=iap;}
+	void An(const int &i, const Scalar &val){an[i]=val;}
 	void Source(const T &v){source=v;}
 	void X(const T &v){x=v;}
 	int & Neighbour(const int &i){return this->neighbour_id[i];}
@@ -202,9 +209,9 @@ class EqnSystem{   //Es un vector de ecuaciones
 
 	const Fv_CC_Grid  & Grid()const{ return *GridPtr; }
 
-	const _CC_Fv_Field<T> & A()const
+	const _CC_Fv_Field<Scalar> & A()const
 	{
-        _CC_Fv_Field<T> field(this->Grid());
+        _CC_Fv_Field<Scalar> field(this->Grid());
         for (int e=0;e<this->Num_Eqn();e++)
         {
             field.Val(e,this->Eqn(e).Ap());

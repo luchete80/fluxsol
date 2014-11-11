@@ -53,7 +53,6 @@ int main()
 	_CC_Fv_Field <Vec3D>  U(mesh);
 	_Surf_Fv_Field <Scalar>  phi; //Mass Flux
 
-
 	//Boundary conditions
 	Scalar wallvalue=0.;
 	Scalar topvalue=1.;
@@ -65,6 +64,7 @@ int main()
 
 	//Construir aca con la malla
 	Scalar k(1.);	//Difusion, puede ser un escalar
+	Scalar rho(1.0);
 
     U=Vec3D(0.01,0.,0.);
     p=0.1;
@@ -83,24 +83,28 @@ int main()
 
         //Assign to U Eqn Solved values
         _Surf_Fv_Field <Vec3D> Uf_=CenterToFaceInterpolation <Vec3D> (U).Sf();  //Uf Overbar
-        _CC_Fv_Field <Vec3D> AU=UEqn.A();       // In OpenFoam these are scalar
-        _Surf_Fv_Field <Vec3D> AUf_=CenterToFaceInterpolation <Vec3D> (AU).Sf();
+        _CC_Fv_Field <Scalar> AU=UEqn.A();       // In OpenFoam these are scalar
+        _Surf_Fv_Field <Scalar> AUf_=CenterToFaceInterpolation <Scalar> (AU).Sf();
 
         _Surf_Fv_Field <Vec3D> Gradpf_=CenterToFaceInterpolation <Vec3D> (FvExp::Grad(p)).Sf();
 
         //Rhie-Chow Correction
         //vf=vf_ - Df (Grad(p)-Grad_(p))
-        _Surf_Fv_Field <Vec3D> f=FvExp::Gradf(p);
-        _Surf_Fv_Field <Vec3D> Uf=Uf_-AUf_*(f-Gradpf_);
+        _Surf_Fv_Field <Vec3D> Uf=Uf_-AUf_*(FvExp::Gradf(p)-Gradpf_);
 
         //Calculate Face Flux
         phi=Uf & mesh.Sf();
 
 		//8. Define and Solve Pressure Correction And Repeat
+		//Div(mf)=Div(m큗+m*f)=0 ==> Div(m*f)+Div(-rho(DfGrad(p큗)Af)=0
+        //We solve pressure correction in cell centers but eqn is indeed for cell faces
+		//THIS IS INSIDE DIV ALGORITHM Sum(-rhof (Df) Grad(p큗)Af + Sum (m*f) = 0
 		//for the prescribed for the non orth steps
-		//pEqn=FvImp::Laplacian(1.0/AU,p)==FvExp::Div(phi);	//New, explicit Div
-		//pEqn.SetReference(pRefCell,pRefVal); If the problem is Not prescribed in pressure
-		//pEqn.Solve();
+        pEqn=FvImp::Laplacian(rho,p);   //Solve Laplacian for p
+        Solve(pEqn==FvExp::Div(phi)); //Or Uf, the same
+
+        //p+=alpha_p*pEqn.Field();
+        //U+=;                  //up=up*-Dp*Grad(p�_p)
 
 		//9. Correct the flux
 		//phi-=pEqn.Flux();
