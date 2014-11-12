@@ -77,7 +77,8 @@ Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right)
 	Eqn<T> ret=*this;    //To equal neighbour id
 
 	vector <int> tempright;
-	vector <T> temprval;
+	//vector <T> temprval;
+    vector <Scalar> temprval;
 
 	tempright = right.neighbour_id;
     temprval = right.an;
@@ -237,11 +238,13 @@ EqnSystem<T>::EqnSystem(const Fv_CC_Grid &FvG)//:grid(Fv_CC_Grid(FvG))
 
 	for (int c=0;c<FvG.Num_Cells();c++)
     {
-		vector <T> an;
-		T init_an;
+		//vector <T> an;
+		vector <Scalar> an;
+		Scalar init_an;
         //cout << "Cell "<<endl;
 		//Insert empty Values
-		T ap,source;
+		T source;
+		Scalar ap;
 		vector <int> nbr_id;
 		//cout << "Neighbours number" <<endl;
 		//_Cell cc(FvGrid.Cell(c));

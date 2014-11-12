@@ -75,6 +75,25 @@ SurfaceField <T> Interpolate(const _CC_Fv_Field <T> &field)
         return r;
     };
 
+
+template<class T>
+_CC_Fv_Field
+< T >
+Div (const _CC_Fv_Field <T>& field)
+{
+
+}
+
+//ATENTION!!!
+//THIS FUNCTION IS NOT LIKE OPENFOAM SINTAX, IS SIMPLY DIVErGENCe
+template<class T>
+_CC_Fv_Field
+< T >
+Div (const _Surf_Fv_Field <T>& phi)
+{
+
+}
+
 };//FvExp
 };//FluxSol
 

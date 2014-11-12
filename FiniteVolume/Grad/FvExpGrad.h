@@ -121,11 +121,9 @@ namespace FluxSol
 
 	}
 
-
-    }//Fin de FvExp
-
     //Face gradient
     //Explicit form of FaceGrad
+    //Like Laplacian, (N-P)dist + Non-Orthogonal
     template<class T>
     _Surf_Fv_Field
     < typename outerProduct<Vec3D, T>::type >
@@ -135,6 +133,8 @@ namespace FluxSol
 
 	    return r;
 	}
+
+    }//Fin de FvExp
 }//Fin de namespace FluxSol
 
 #endif

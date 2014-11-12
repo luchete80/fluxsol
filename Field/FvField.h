@@ -69,7 +69,7 @@ namespace FluxSol
 	protected:
 
 	public:
-		_Surf_Fv_Field(const int &numval, const double &value = 0.) :_Field<T>(numval, value){}
+		_Surf_Fv_Field(const int &numval, const double &value = 0.) /*:SurfaceField<T>(numval, value)*/{}
 		_Surf_Fv_Field(){};         //Constructor
 		Fv_CC_Grid  & Grid(){ return *GridPtr; }
 		//Adding boundary face
@@ -128,6 +128,7 @@ namespace FluxSol
 			ret;
 
 		}
+
 
 	};
 
@@ -344,6 +345,48 @@ namespace FluxSol
 	return ret;
 }
 
+	template<typename T>
+	_CC_Fv_Field<T> operator* (const _CC_Fv_Field<Scalar> &left,const _CC_Fv_Field<T> &right)
+	{
+	_CC_Fv_Field<T> ret(left.Numberofvals());
+	T val;
+	//Sizes must be equal and rank must be large than zero?
+	for (int c = 0; c < left.Numberofvals(); c++)
+	{
+		val = left.Val(c) * right.Val(c);
+		ret.Val(c,val);
+	}
+	return ret;
+	}
+
+	template<typename T>
+	_CC_Fv_Field<T> operator* (const Scalar &left,const _CC_Fv_Field<T> &right)
+	{
+	_CC_Fv_Field<T> ret(right.Numberofvals());
+	T val;
+	//Sizes must be equal and rank must be large than zero?
+	for (int c = 0; c < right.Numberofvals(); c++)
+	{
+		val = left.Val() * right.Val(c);
+		ret.Val(c,val);
+	}
+	return ret;
+    }
+
+	template<typename T>
+	_Surf_Fv_Field<T> operator* (const _Surf_Fv_Field<Scalar> &left,const _Surf_Fv_Field<T> &right)
+	{
+	_Surf_Fv_Field<T> ret(left.Numberofvals());
+	T val;
+	//Sizes must be equal and rank must be large than zero?
+	for (int c = 0; c < left.Numberofvals(); c++)
+	{
+		val = left.Val(c) * right.Val(c);
+		ret.Val(c,val);
+	}
+
+	return ret;
+    }
 
 }//FluxSol
 
