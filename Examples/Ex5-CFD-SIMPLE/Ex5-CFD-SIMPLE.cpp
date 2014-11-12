@@ -65,6 +65,7 @@ int main()
 	//Construir aca con la malla
 	Scalar k(1.);	//Difusion, puede ser un escalar
 	Scalar rho(1.0);
+	Scalar alpha_p=0.6;
 
     U=Vec3D(0.01,0.,0.);
     p=0.1;
@@ -90,6 +91,7 @@ int main()
 
         //Rhie-Chow Correction
         //vf=vf_ - Df (Grad(p)-Grad_(p))
+        //Where Grad(p)=(pn-pp)/.. + Orth Correction
         _Surf_Fv_Field <Vec3D> Uf=Uf_-AUf_*(FvExp::Gradf(p)-Gradpf_);
 
         //Calculate Face Flux
