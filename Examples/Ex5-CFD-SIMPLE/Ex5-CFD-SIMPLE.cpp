@@ -81,6 +81,8 @@ int main()
 		//4. Solve Momentum predictor (UEqn)
 		Solve(UEqn==-FvExp::Grad(p));
 
+
+		U=UEqn.Field();
         //Assign to U Eqn Solved values
         _Surf_Fv_Field <Vec3D> Uf_=CenterToFaceInterpolation <Vec3D> (U).Sf();  //Uf Overbar
         _CC_Fv_Field <Vec3D> AU=UEqn.A();       // In OpenFoam these are scalar
