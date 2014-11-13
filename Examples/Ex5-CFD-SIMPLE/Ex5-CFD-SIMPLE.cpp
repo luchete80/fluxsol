@@ -94,21 +94,24 @@ int main()
         //Rhie-Chow Correction
         //vf=vf_ - Df (Grad(p)-Grad_(p))
         //Where Grad(p)=(pn-pp)/.. + Orth Correction
-        _Surf_Fv_Field <Vec3D> Uf=Uf_-AUf_*(FvExp::Gradf(p)-Gradpf_);
+        //Is more simple to directly calculate fluxes
+        //_Surf_Fv_Field <Vec3D> Uf=Uf_-AUf_*(FvExp::Gradf(p)-Gradpf_);
 
         //Calculate Face Flux
-        phi=Uf & mesh.Sf();
+        //rho equals 1
+        phi=Uf_ & mesh.Sf(); //WARNING!!!! TO BWE WRITTEN THIS
+        phi=phi - AUf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
 
 		//8. Define and Solve Pressure Correction And Repeat
 		//Div(mf)=Div(m´f+m*f)=0 ==> Div(m*f)+Div(-rho(DfGrad(p´f)Af)=0
         //We solve pressure correction in cell centers but eqn is indeed for cell faces
 		//THIS IS INSIDE DIV ALGORITHM Sum(-rhof (Df) Grad(p´f)Af + Sum (m*f) = 0
 		//for the prescribed for the non orth steps
-        pEqn=FvImp::Laplacian(rho,p);   //Solve Laplacian for p
-        Solve(pEqn==FvExp::Div(phi)); //Or Uf, the same
+        pEqn=FvImp::Laplacian(rho,p);   //Solve Laplacian for p (by the way, is p´)
+        Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
 
-        //p+=alpha_p*pEqn.Field();
-        //U+=;                  //up=up*-Dp*Grad(p´_p)
+ //       U=U-AU*FvExp::Grad(p);                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
+ //       p=p+alpha_p*pEqn.Field();
 
 		//9. Correct the flux
 		//phi-=pEqn.Flux();

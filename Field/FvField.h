@@ -343,7 +343,23 @@ namespace FluxSol
 	}
 
 	return ret;
-}
+    }
+
+    //TO MODIFY, SINTESIS
+    template<typename T>
+	_Surf_Fv_Field<typename innerProduct < T, T> ::type> operator &(const _Surf_Fv_Field<T> &left,const SurfaceField<T> &right)
+	{
+	_Surf_Fv_Field<typename innerProduct < T, T> ::type> ret(left.Numberofvals());
+	typename innerProduct < T, T> ::type val;
+	//Sizes must be equal and rank must be large than zero?
+	for (int c = 0; c < left.Numberofvals(); c++)
+	{
+		val = left.Val(c) & right.Val(c);
+		ret.Val(c,val);
+	}
+
+	return ret;
+    }
 
 	template<typename T>
 	_CC_Fv_Field<T> operator* (const _CC_Fv_Field<Scalar> &left,const _CC_Fv_Field<T> &right)

@@ -124,15 +124,78 @@ namespace FluxSol
     //Face gradient
     //Explicit form of FaceGrad
     //Like Laplacian, (N-P)dist + Non-Orthogonal
+    //TO MODIFY!!!!
+    //CHANGE BY SnGradf
     template<class T>
     _Surf_Fv_Field
-    < typename outerProduct<Vec3D, T>::type >
-	Gradf (const _CC_Fv_Field <T>& field)
+    //< typename outerProduct<Vec3D, T>::type >
+    < T >
+	SnGrad (const _CC_Fv_Field <T>& VolField)
 	{
-	    _Surf_Fv_Field <typename outerProduct<Vec3D, T>::type> r;
+	    _Surf_Fv_Field <T> r;
 
-	    return r;
-	}
+
+        T source;
+        Scalar ap, an;  //IF FI IS A SCALAR THESE CAN BE SCALARS
+        vector <int> nbr_eqn;
+
+        //Internal field
+        //cout << "Face Number"<<VolField.Grid().Num_Faces()<<endl;
+        //cout << "Cell Number"<<VolField.Grid().Num_Cells()<<endl;
+        for (int f=0;f<VolField.Grid().Num_Faces();f++)
+        {
+            //cout << "Face "<<f<<endl;
+            _FvFace face=VolField.Grid().Face(f);
+            if (!face.Is_Null_Flux_Face())
+            {
+                if (!VolField.Grid().Face(f).Boundaryface())
+                {
+                    //cout << "Not boundary face"<<endl;
+                    //nbr_eqn.push_back(VolField.Grid().Cell(c));
+                    //eqnsys.Eqn(face.Cell(0)).Coeffs(ap,an);
+                    int pid=face.Cell(0);
+                    int nid=face.Cell(1);
+                    T grad=(VolField.Val(nid).Val()-VolField.Val(pid).Val())*face.Norm_ad()/face.Dist_pn();
+                    r.Val(f, grad);
+                }
+
+            }//End if !NullFluxFace
+
+        }//End look trough faces
+
+        //BOUNDARY
+        //cout << "Laplacian, look through boundary.."<<endl;
+        for (int p=0;p<VolField.Grid().vBoundary().Num_Patches();p++)
+        {
+            for (int f=0;f<VolField.Grid().vBoundary().vPatch(p).Num_Faces();f++)
+            {
+                int idface=VolField.Grid().vBoundary().vPatch(p).Id_Face(f);
+                _FvFace face=VolField.Grid().Face(idface);  //TO MODIFY idface or face pos??
+                //Boundary type
+                //Instead of if sentence it is convenient to use inheritance
+                T pval= VolField.Val(face.Cell(0)).Val();
+
+                if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
+                {
+                    //cout <<"source"<<endl;
+                    ap=-face.Norm_ad()/fabs(face.Dist_pf_LR(0));
+                    T fval =VolField.Boundaryfield().PatchField(p).Val(f);
+
+                    T grad=(fval-pval)*face.Norm_ad()/fabs(face.Dist_pf_LR(0));
+                    //cout <<"created" <<endl;
+                    //eqnsys.Eqn(face.Cell(0)).Ap()+=ap;
+                    //eqnsys.Eqn(face.Cell(0)).Source()+=source;
+                }
+                else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
+                {
+                    source=VolField.Boundaryfield().PatchField(p).Val(f);
+                    //eqnsys.Eqn(face.Cell(0)).Source()+=source;
+                }
+            }
+
+        }
+        return r;
+	}//Enf of Gradf
 
     }//Fin de FvExp
 }//Fin de namespace FluxSol
