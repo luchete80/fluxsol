@@ -40,7 +40,7 @@ namespace FluxSol
 
     //
     //Para que sigue OpenFoam con los tipos en la template??
-    //(const GeometricField <Type, fvsPatchField, surfaceMesh>&)
+    //(const GeometricField <Type, fvs_PatchField, surfaceMesh>&)
     template<class T>
     _CC_Fv_Field
     < typename outerProduct<Vec3D, T>::type >

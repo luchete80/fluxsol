@@ -45,7 +45,7 @@ void ReadFieldFromInput(InputFile &input, _CC_Fv_Field<T> &field, Fv_CC_Grid &gr
 
 	vector<int> bc_counter (count,0);
 
-	_Fv_Boundary_Field <T> boundfield;
+	_BoundaryField <T> boundfield;
 
 	Boundary boundary = grid.vBoundary();
 
@@ -67,15 +67,15 @@ void ReadFieldFromInput(InputFile &input, _CC_Fv_Field<T> &field, Fv_CC_Grid &gr
 
 		if (type=="fixedvalue")
 		{
-			_Fv_FixedValue_Patch_Field <T> patchfield(boundary.vPatch(b));
-			patchfield.AssignValue(data.value);
-			boundfield.AddPatchField(patchfield);
+			_Fv_FixedValue_Patch_Field <T> _PatchField(boundary.vPatch(b));
+			_PatchField.AssignValue(data.value);
+			boundfield.Add_PatchField(_PatchField);
 		}
 		else if (type=="fixedgradient")
 		{
-			_Fv_FixedGradient_Patch_Field <T> patchfield(boundary.vPatch(b));
-			patchfield.AssignValue(data.value);
-			boundfield.AddPatchField(patchfield);
+			_Fv_FixedGradient_Patch_Field <T> _PatchField(boundary.vPatch(b));
+			_PatchField.AssignValue(data.value);
+			boundfield.Add_PatchField(_PatchField);
 		}
 
 	} // bc loop

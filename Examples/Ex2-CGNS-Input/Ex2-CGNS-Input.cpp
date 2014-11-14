@@ -45,8 +45,11 @@ int main(int argc, char *argv[])
 	Scalar wallvalue=0.;
 	Scalar topvalue=1.;
 	for (int p=0;p<3;p++)
+
 	T.Boundaryfield().PatchField(p).AssignValue(wallvalue);
 	T.Boundaryfield().PatchField(3).AssignValue(topvalue);
+	T.Boundaryfield()._PatchField(p).AssignValue(wallvalue);
+	T.Boundaryfield()._PatchField(3).AssignValue(topvalue);
 
 	// Materiales
 	vector<Materials> material=SetMaterials();

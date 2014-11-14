@@ -33,41 +33,41 @@ template <typename T>
 _CC_Fv_Field<T>::_CC_Fv_Field(const Fv_CC_Grid &grid)
 {
 	{
-		GridPtr=&grid;
+		this->GridPtr=&grid;
 
 		//Inicio variables PARA TODOS LOS CELLS (ver luego el borde
         //cout << "Cell Number" << GridPtr->Num_Cells()<<endl;
-		for (int c=0;c<GridPtr->Num_Cells();c++)
+		for (int c=0;c<this->GridPtr->Num_Cells();c++)
 		{
 			T val;
 			this->value.push_back(val);
 		}
 
-	_Fv_Boundary_Field <T> bf(grid.vBoundary());
+	_BoundaryField <T> bf(grid.vBoundary());
 	//Para igualar los boundaryfield debo ver el Scalar =
-	BoundaryField=bf;
-    this->numberofvals=GridPtr->Num_Cells();
+	this->BoundaryField=bf;
+    this->numberofvals=this->GridPtr->Num_Cells();
 	}
 }
 
 //Must be verified the patch fields against mesh patches
 template <typename T>
-_CC_Fv_Field<T>::_CC_Fv_Field(const Fv_CC_Grid &grid, const _Fv_Boundary_Field <T> &bfield)
+_CC_Fv_Field<T>::_CC_Fv_Field(const Fv_CC_Grid &grid, const _BoundaryField <T> &bfield)
 {
-	_Fv_Boundary_Field <T> bf = bfield;
+	_BoundaryField <T> bf = bfield;
 
 	{
-		GridPtr=&grid;
+		this->GridPtr=&grid;
 
 		//Inicio variables PARA TODOS LOS CELLS (ver luego el borde
-		for (int c=0;c<GridPtr->Num_Cells();c++)
+		for (int c=0;c<this->GridPtr->Num_Cells();c++)
 		{
 			T val;
 			this->value.push_back(val);
 		}
 
 	//Para igualar los boundaryfield debo ver el Scalar =
-	BoundaryField=bf;
+	this->BoundaryField=bf;
 
 	}
 }
