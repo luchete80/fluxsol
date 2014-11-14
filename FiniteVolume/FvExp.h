@@ -180,18 +180,18 @@ Div (const _Surf_Fv_Field <T>& phi)
 //            _FvFace bface=phi.Grid().Face(idface);  //TO MODIFY idface or face pos??
 //            //Boundary type
 //            //Instead of if sentence it is convenient to use inheritance
-//            if (phi.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
+//            if (phi.Boundaryfield()._PatchField(p).Type()==FIXEDVALUE)
 //            {
 //
 //                if(FluxField.Val(idface)<0.)
 //                    //If flux is inwards, source is positive (is RHS)
-//                    //cout << "Boundary Field Value"<<phi.Boundaryfield().PatchField(p).Val(f).Val()<<endl;
-//                    eqnsys.Eqn(bface.Cell(0)).Source()-=phi.Boundaryfield().PatchField(p).Val(f)*FluxField.Val(idface);
+//                    //cout << "Boundary Field Value"<<phi.Boundaryfield()._PatchField(p).Val(f).Val()<<endl;
+//                    eqnsys.Eqn(bface.Cell(0)).Source()-=phi.Boundaryfield()._PatchField(p).Val(f)*FluxField.Val(idface);
 //            }
-//            else if (phi.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
+//            else if (phi.Boundaryfield()._PatchField(p).Type()==FIXEDGRADIENT)
 //            {
 //                //TO MODIFY
-//                //source=VolField.Boundaryfield().PatchField(p).Val(f)*fi;
+//                //source=VolField.Boundaryfield()._PatchField(p).Val(f)*fi;
 //                //eqnsys.Eqn(face.Cell(0)).Source()+=source;
 //            }
 //        }

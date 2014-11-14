@@ -20,8 +20,8 @@
     see <http://www.gnu.org/licenses/>.
 
 *************************************************************************/
-#ifndef _PATCHFIELD_H_
-#define _PATCHFIELD_H_
+#ifndef __PatchField_H_
+#define __PatchField_H_
 
 #include "FvField.h"
 
@@ -29,7 +29,7 @@ namespace FluxSol
 {
 
 template <typename T>
-_Fv_Patch_Field<T>::_Fv_Patch_Field(const Patch &p)
+_PatchField<T>::_PatchField(const Patch &p)
 {
 	Patch patch=p;
 
@@ -45,7 +45,7 @@ _Fv_Patch_Field<T>::_Fv_Patch_Field(const Patch &p)
 
 
 template <typename T>
-void _Fv_Patch_Field<T>::AssignValue(const T &val)
+void _PatchField<T>::AssignValue(const T &val)
 {
 	for (int n=0;n<this->numberofvals;n++)
 		this->value[n]=val;

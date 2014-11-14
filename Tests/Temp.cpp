@@ -36,18 +36,18 @@ void main()
 	//Boundary conditions
 	Scalar wallvalue=0.;
 	Scalar topvalue=1.;
-	T.Boundaryfield().PatchField(0).AssignValue(wallvalue);
-	T.Boundaryfield().PatchField(1).AssignValue(topvalue);
+	T.Boundaryfield()._PatchField(0).AssignValue(wallvalue);
+	T.Boundaryfield()._PatchField(1).AssignValue(topvalue);
 
 	EqnSystem <Scalar> TEqn;
 	//Construir aca con la malla
 	Scalar k(1.);	//Difusion, puede ser un escalar
 
-	
+
 	//Different ways
 	//1) EqnSystem <Scalar> TEqn(FvImp::Laplacian(k,T))
 	//TEqn=FvImp::Laplacian(k,T);
-	
+
 	TEqn=(FvImp::Laplacian(k,T)==0.);
 	Solve(TEqn);
 	TEqn.Log("EqLog.txt");
@@ -57,7 +57,7 @@ void main()
 
 	/////////
 	//Div test
-	
+
 	EqnSystem <Scalar> PruEqn;
 	_Surf_Fv_Field<Scalar> fip;
 	_CC_Fv_Field <Vec3D> Tpru(malla);
@@ -66,6 +66,6 @@ void main()
 	//Prueba de lectura de malla
 	//Mesh readers test
 	Fv_CC_Grid malla2;
-	
+
 	malla2.ReadCGNS();
 }

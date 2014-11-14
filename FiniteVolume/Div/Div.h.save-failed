@@ -155,14 +155,14 @@ FvImp::Div(_CC_Fv_Field<Scalar> phi,_CC_Fv_Field <T> VolField)
             _FvFace bface=VolField.Grid().Face(idface);  //TO MODIFY idface or face pos??
             //Boundary type
             //Instead of if sentence it is convenient to use inheritance
-            if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
+            if (VolField.Boundaryfield()._PatchField(p).Type()==FIXEDVALUE)
             {
-                eqnsys.Eqn(bface.Cell(0)).Source()+=phi.Boundaryfield().PatchField(p).Val(f);
+                eqnsys.Eqn(bface.Cell(0)).Source()+=phi.Boundaryfield()._PatchField(p).Val(f);
             }
-            else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
+            else if (VolField.Boundaryfield()._PatchField(p).Type()==FIXEDGRADIENT)
             {
                 //TO MODIFY
-                //source=VolField.Boundaryfield().PatchField(p).Val(f)*fi;
+                //source=VolField.Boundaryfield()._PatchField(p).Val(f)*fi;
                 //eqnsys.Eqn(face.Cell(0)).Source()+=source;
             }
         }
@@ -408,14 +408,14 @@ FvImp::Div(_Surf_Fv_Field<Scalar> fi,_CC_Fv_Field <T> VolField)
             _FvFace bface=VolField.Grid().Face(idface);  //TO MODIFY idface or face pos??
             //Boundary type
             //Instead of if sentence it is convenient to use inheritance
-            if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
+            if (VolField.Boundaryfield()._PatchField(p).Type()==FIXEDVALUE)
             {
-                eqnsys.Eqn(bface.Cell(0)).Source()+=VolField.Boundaryfield().PatchField(p).Val(f);
+                eqnsys.Eqn(bface.Cell(0)).Source()+=VolField.Boundaryfield()._PatchField(p).Val(f);
             }
-            else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
+            else if (VolField.Boundaryfield()._PatchField(p).Type()==FIXEDGRADIENT)
             {
                 //TO MODIFY
-                //source=VolField.Boundaryfield().PatchField(p).Val(f)*fi;
+                //source=VolField.Boundaryfield()._PatchField(p).Val(f)*fi;
                 //eqnsys.Eqn(face.Cell(0)).Source()+=source;
             }
         }

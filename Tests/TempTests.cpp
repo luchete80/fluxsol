@@ -17,8 +17,8 @@ int TempTest2()
 	Scalar wallvalue=0.;
 	Scalar topvalue=1.;
 	for (int p=0;p<3;p++)
-	T.Boundaryfield().PatchField(p).AssignValue(wallvalue);
-	T.Boundaryfield().PatchField(3).AssignValue(topvalue);
+	T.Boundaryfield()._PatchField(p).AssignValue(wallvalue);
+	T.Boundaryfield()._PatchField(3).AssignValue(topvalue);
 
 	EqnSystem <Scalar> TEqn;
 	//Construir aca con la malla
@@ -52,11 +52,11 @@ void DefTempTest()
 {
 	string inputFileName="Input.in";
 	InputFile input(inputFileName);
-	
+
 	vector<int> equations;
 
 	Fv_CC_Grid mesh(input.section("grid",0).get_string("file"));
-	
+
 	_CC_Fv_Field<Scalar> T;
 
 	ReadFieldFromInput(input, T,mesh);
@@ -68,14 +68,14 @@ void DefTempTest()
 	Scalar k(1.);	//Diffusion
 
 	cout<<"Generating system"<<endl;
-	
-	TEqn=(FvImp::Laplacian(k,T)==0.); 
+
+	TEqn=(FvImp::Laplacian(k,T)==0.);
 
 
 	cout<<"Solving system"<<endl;
 	Solve(TEqn);
 
-	
+
 	TEqn.Log("EqLog.txt");
 
 	cout<<"Generating field"<<endl;

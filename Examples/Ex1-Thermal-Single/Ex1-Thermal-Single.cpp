@@ -65,8 +65,8 @@ int main()
 	//Boundary conditions
 	Scalar wallvalue=0.;
 	Scalar topvalue=1.;
-	T.Boundaryfield().PatchField(0).AssignValue(wallvalue);
-	T.Boundaryfield().PatchField(1).AssignValue(topvalue);
+	T.Boundaryfield()._PatchField(0).AssignValue(wallvalue);
+	T.Boundaryfield()._PatchField(1).AssignValue(topvalue);
 
 	// Materiales
 	vector<Materials> material=SetMaterials();

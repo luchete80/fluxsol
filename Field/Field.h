@@ -49,7 +49,7 @@ class _Field{
     std::vector <T> value;
 	int order;
 	int numberofvals;
-	//This must not be able for patchfields since is confusing
+	//This must not be able for _PatchFields since is confusing
 	std::vector <int> idgrid_domain;	//Ya sea vertex, surface o volume
 										//Son los id de los vertices que forman parte del dominio
 

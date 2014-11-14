@@ -59,11 +59,8 @@ namespace FluxSol
 	template<typename T>
 	class _Surf_Fv_Field :
 	    //public _Field<T>
-	    public SurfaceField<T>
+	    public GeomSurfaceField<T>
 	{
-
-		Fv_CC_Grid *GridPtr;       //Se podria probar con un puntero general
-		// en la clase base
 
 
 	protected:
@@ -71,15 +68,15 @@ namespace FluxSol
 	public:
 		_Surf_Fv_Field(const int &numval, const double &value = 0.) /*:SurfaceField<T>(numval, value)*/{}
 		_Surf_Fv_Field(){};         //Constructor
-		Fv_CC_Grid  & Grid(){ return *GridPtr; }
+		Fv_CC_Grid  & Grid(){ return this->GridPtr; }
 		//Adding boundary face
 		_Surf_Fv_Field(const Fv_CC_Grid &grid)
 		{
-			GridPtr = &grid;
+			this->GridPtr = &grid;
 			//LO HAGO PARA TODOS LOS FACES
-			for (int f = 0; f<GridPtr->Num_Faces(); f++)
+			for (int f = 0; f<this->GridPtr->Num_Faces(); f++)
 			{
-				if (GridPtr->Face(f).Boundaryface() && !GridPtr->Face(f).Is_Null_Flux_Face())
+				if (this->GridPtr->Face(f).Boundaryface() && !this->GridPtr->Face(f).Is_Null_Flux_Face())
 				{
 					T val;
 					this->value.push_back(val);
@@ -132,87 +129,37 @@ namespace FluxSol
 
 	};
 
-	//boundary type
 
-	enum PatchFieldType { FIXEDVALUE, FIXEDGRADIENT };
-
-	//
-	template<typename T>
-	class _Fv_Patch_Field :
-		public _Surf_Fv_Field<T>
-	{
-	protected:
-		int patchid;
-		PatchFieldType type;
-
-
-	public:
-		_Fv_Patch_Field(){};
-		explicit _Fv_Patch_Field(const Patch &);
-		int & PatchId(){ return patchid; };
-		//This must be in parent class
-		void AssignValue(const T &val);
-
-		PatchFieldType& Type(){ return type; }
-
-
-	};
 
 	//Diriclet Field
 	template <typename T>
-	class _Fv_FixedValue_Patch_Field :public _Fv_Patch_Field<T>
+	class _Fv_FixedValue_Patch_Field :public _PatchField<T>
 	{
 
 
 	public:
-		explicit _Fv_FixedValue_Patch_Field(const Patch &p) :_Fv_Patch_Field<T>(p){ this->type = FIXEDVALUE; };
+		explicit _Fv_FixedValue_Patch_Field(const Patch &p) :_PatchField<T>(p){ this->type = FIXEDVALUE; };
 	};
 
 	//Newmann Field
 	template <typename T>
-	class _Fv_FixedGradient_Patch_Field :public _Fv_Patch_Field<T>
+	class _Fv_FixedGradient_Patch_Field :public _PatchField<T>
 	{
 
 
 	public:
-		explicit _Fv_FixedGradient_Patch_Field(const Patch &p) :_Fv_Patch_Field<T>(p){ this->type = FIXEDGRADIENT; };
+		explicit _Fv_FixedGradient_Patch_Field(const Patch &p) :_PatchField<T>(p){ this->type = FIXEDGRADIENT; };
 	};
 
-
-	//Instead a FieldField as in OpenFoam has a vector in Fields
-	//This will be soon a field
-	template<typename T>
-	class _Fv_Boundary_Field
-	{
-	protected:
-		//Can be Fixed Value and Fixed Gradient
-		std::vector < _Fv_Patch_Field < T > > patchfield;
-
-	public:
-		//_Fv_Boundary_Field(const _CC_Fv_Field < T > &);
-		_Fv_Boundary_Field(){}
-		_Fv_Boundary_Field(const Boundary &bound)
-		{
-			Boundary b = bound;
-			//Generate a patchfield for every patch in boundary
-			for (int np = 0; np<b.Num_Patches(); np++)
-			{
-				_Fv_Patch_Field < T > pf(b.vPatch(np));
-				patchfield.push_back(pf);
-			}
-
-		}
-
-		_Fv_Patch_Field < T > & PatchField(const int &i){ return this->patchfield[i]; }
-		void AddPatchField(_Fv_Patch_Field<T> &field)  { patchfield.push_back(field); }
-
-	};
 
 	//CAMPO VOLUMETRICO DE VOLUMENES FINITOS
 	//CONVIENE QUE DERIVE
 	// La T es Scalar, vector o tensor
 	template<typename T>
-	class _CC_Fv_Field :public _Field<T>{
+	class _CC_Fv_Field :
+	    //public _Field<T>
+	    public GeomVolField<T>
+	    {
 
 		//Busco en los nodos de GridPtr
 		//El vector value refiere a cada uno de los node
@@ -222,21 +169,18 @@ namespace FluxSol
 		//SET DE DIMENSIONES
 
 	protected:
-		//Conviene colocar referencia o puntero??
-		_Fv_Boundary_Field <T> BoundaryField;	//En las caras
 
 
 	public:
 
 		//EVALUATE IF IT IS CONST
-		Fv_CC_Grid  *GridPtr;       //Se podria probar con un puntero general
+		//Fv_CC_Grid  *GridPtr;       //Se podria probar con un puntero general
 
 		_CC_Fv_Field(const Fv_CC_Grid &grid);
-		_CC_Fv_Field(const Fv_CC_Grid &grid, const _Fv_Boundary_Field <T> &bfield);
+		_CC_Fv_Field(const Fv_CC_Grid &grid, const _BoundaryField <T> &bfield);
 
-		Fv_CC_Grid  & Grid(){ return *GridPtr; }
-
-		const Fv_CC_Grid  & ConstGrid()const { return *GridPtr; }
+        //IS NECCESARY TO OVERRIDE THIS FUNCTION!?!!?!?
+		Fv_CC_Grid  & Grid(){ Fv_CC_Grid *gptr=this->GridPtr; return *gptr; }
 
 		//_CC_Fv_Field (InputFile &inputfile);
 
@@ -246,8 +190,6 @@ namespace FluxSol
 		//THIS IS OLD. FIELD DOES NOT RETURN AN EQ SYSTEM BECAUSE REFER TO EQSYS AND THIS TO FVGRID
 		//AT THE SAME TIME FVGRID REFERS TO GEOMFIELD AND THIS TO FIELD, AND FIELD TO EQSYS
 		//const Eqn <T> ToFaces(const int &icell, const std::vector <Scalar> flux) const;
-
-		_Fv_Boundary_Field <T> &  Boundaryfield(){ return BoundaryField; }
 
 		//void ToCellCenters(EqnSystem <T> &eqnsys);
 
