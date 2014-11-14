@@ -26,12 +26,14 @@
 //Former temp test
 // TEMPERATURE EXAMPLE 2
 // READS FROM A FILE
-void DefTempTest();
+void DefTempTest(int argc, char *argv[]);
 
-int main()
+int main(int argc, char *argv[])
 {
 
-    cout << "Reading square.cgns ..."<<endl;
+    cout << "Input file: "<< argv[1]<<endl;
+
+    /*cout << "Reading square.cgns ..."<<endl;
 	Fv_CC_Grid malla("square.cgns");
 	//malla.ReadCGNS();
 
@@ -45,7 +47,7 @@ int main()
 	for (int p=0;p<3;p++)
 	T.Boundaryfield().PatchField(p).AssignValue(wallvalue);
 	T.Boundaryfield().PatchField(3).AssignValue(topvalue);
-	
+
 	// Materiales
 	vector<Materials> material=SetMaterials();
 
@@ -76,38 +78,40 @@ int main()
 	OutputFile("CellField.vtu",T);
 //	OutputFile("VertexField.vtu",vT);
 
-	cout << "End. Now Reading input.in"<<endl;
-	DefTempTest();
+	cout << "End. Now Reading input.in"<<endl;*/
+	DefTempTest(argc,argv);
 	return 0;
 }
 
 
 //Last Test
-void DefTempTest()
+void DefTempTest(int argc, char *argv[])
 {
-	string inputFileName="Input.in";
+	string inputFileName=argv[1];
+	//string inputFileName="InputEx.in";
 	InputFile input(inputFileName);
 
-	vector<int> equations;
+	//vector<int> equations;
 
 	Fv_CC_Grid mesh(input.section("grid",0).get_string("file"));
 
 	_CC_Fv_Field<Scalar> T;
 
-	ReadFieldFromInput(input, T,mesh);
+	ReadFieldFromInput(input,T,mesh);
 	mesh.Log("Log.txt");
-	
+
 	// Materiales
 	vector<Materials> material=SetMaterials();
 
 	EqnSystem <Scalar> TEqn;
 
 	//Scalar k(1.);	//Diffusion
-	Scalar kdiff=material[0].k;
+	//Scalar kdiff=material[0].k;
 
 	cout<<"Generating system"<<endl;
 
-	TEqn=(FvImp::Laplacian(kdiff,T)==0.);
+	//TEqn=(FvImp::Laplacian(kdiff,T)==0.);
+	TEqn=input.ReadEqnSys(mesh);
 
 
 	cout<<"Solving system"<<endl;

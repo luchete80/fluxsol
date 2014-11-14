@@ -1,0 +1,11 @@
+grid_1 {
+	file = square.cgns;
+	dimension = 2;
+		
+	solution_scheme = diffusion;
+	
+	BC_1 (type=fixedvalue;T=0.0;); 
+	BC_2 (type=fixedvalue;T=0.0;);
+	BC_3 (type=fixedvalue;T=0.0;); 
+	BC_4 (type=fixedvalue;T=1.0;);
+}

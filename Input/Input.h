@@ -35,8 +35,16 @@
 #include <fstream>
 
 
-#include "../Utils/Utils.h"
-#include "../Type/Vec3d.h"
+#include "Utils.h"
+#include "Vec3d.h"
+#include "Field.h"
+#include "Scalar.h"
+#include "SistEcuac.h"
+#include "FvImp.h"
+#include "FvField.h"
+#include "Laplacian.h"
+#include "Laplacian.h"
+#include "_CC_Fv_field_Def.h"
 //#include <mpi.h>
 
 //Based on Free-CFD Input source Code
@@ -176,6 +184,8 @@ public:
 	void read(string sectionName, int number=-1); // Reads all components of section if numbered
 	void readSection(string sectionName, int number=-1); // Reads a single section
 	void readSubsection(Subsection &sub);
+	string ReadEqnType();
+	EqnSystem <Scalar> ReadEqnSys(const Fv_CC_Grid &mesh);
 
 	void registerSection(string sectionName, bool is_numbered=false, bool is_required=true) {
 		if (is_numbered) {
@@ -205,7 +215,6 @@ public:
 bool extract_in_between(string &data, string begin, string end, string &result,bool check_char_before=false, string acceptList="");
 int number_of_occurances(string haystack, string needle);
 void StringExplode(string str, string separator, vector<string>* results);
-
 
 }//End of FluxSol
 #endif

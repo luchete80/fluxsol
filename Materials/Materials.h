@@ -86,9 +86,8 @@ protected:
 public:
     MaterialsDB(){}
     MaterialsDB(const string &file);
-    const Materials & Material(const string &name)const;
+    const Materials& Material(const string &name)const;
     ~MaterialsDB(){}
-
 
 };
 

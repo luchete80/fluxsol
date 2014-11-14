@@ -11,7 +11,7 @@ grid_1 {
         file=square.cgns;
         dimension=2;
         equations=navier stokes;
-
+		
         turbulence (
 		relative tolerance=1.e-7;
 		absolute tolerance=1.e-12; 

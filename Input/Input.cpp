@@ -95,6 +95,7 @@ void InputFile::readSection(string sectionName, int number) {
 	if (section(sectionName,number).is_required && !section(sectionName,number).is_found) {
 		if (Rank==0) cerr << "[E] Required input section " << fullName << " could not be found!!" << endl;
 		exit(1);
+		cout << "Warning! section " << fullName << " could not be found!!" << endl;
 	}
 
 	// Read subsections
@@ -142,6 +143,7 @@ void InputFile::readSubsection(Subsection &sub) {
 		if (sub.parentIndex!=-1) path+="_"+int2str(sub.parentIndex);
 		if (Rank==0) cerr << "[E] Required input subsection " << path << " -> " << sub.name << " could not be found!!" << endl;
 		exit(1);
+		cout << "Warning! subsection " << path << " -> " << sub.name << " could not be found!!" << endl;
 	}
 	sub.readEntries();
 	return;
@@ -368,51 +370,52 @@ void InputFile::read_inputs(void) {
 	bool required=true; bool optional=false;
 	bool numbered=true; bool single=false;
 
-	registerSection("reference",single,optional);
-	section("reference").register_double("p",optional,0.);
-	section("reference").register_double("T",optional,0.);
-	section("reference").register_double("Mach",optional,1.);
-	read("reference");
+//	registerSection("reference",single,optional);
+//	section("reference").register_double("p",optional,0.);
+//	section("reference").register_double("T",optional,0.);
+//	section("reference").register_double("Mach",optional,1.);
+//	read("reference");
 
 	registerSection("grid",numbered,required);
 	section("grid",0).register_string("file",required);
 	section("grid",0).register_int("dimension",optional,3);
+	section("grid",0).register_string("solution_scheme",required);
 
-	section("grid",0).register_string("equations",required);
+	//section("grid",0).register_string("equations",required);
 
-	section("grid",0).registerSubsection("writeoutput",single,required);
-	section("grid",0).subsection("writeoutput").register_string("format",optional,"vtk");
-	section("grid",0).subsection("writeoutput").register_int("plotfrequency",optional,1e10);
-	section("grid",0).subsection("writeoutput").register_int("restartfrequency",optional,1e10);
-	section("grid",0).subsection("writeoutput").register_int("loadfrequency",optional,1e10);
-	section("grid",0).subsection("writeoutput").register_Vec3D("momentcenter",optional,0.);
-	section("grid",0).subsection("writeoutput").register_stringList("includebcs",optional);
-	section("grid",0).subsection("writeoutput").register_stringList("variables",required);
+//	section("grid",0).registerSubsection("writeoutput",single,required);
+//	section("grid",0).subsection("writeoutput").register_string("format",optional,"vtk");
+//	section("grid",0).subsection("writeoutput").register_int("plotfrequency",optional,1e10);
+//	section("grid",0).subsection("writeoutput").register_int("restartfrequency",optional,1e10);
+//	section("grid",0).subsection("writeoutput").register_int("loadfrequency",optional,1e10);
+//	section("grid",0).subsection("writeoutput").register_Vec3D("momentcenter",optional,0.);
+//	section("grid",0).subsection("writeoutput").register_stringList("includebcs",optional);
+//	section("grid",0).subsection("writeoutput").register_stringList("variables",required);
 
-	section("grid",0).register_string("material",optional,"none");
-	section("grid",0).registerSubsection("material",single,optional);
-	// Default air values assigned
-	section("grid",0).subsection("material").register_double("gamma",optional,1.4);
-	section("grid",0).subsection("material").register_double("molarmass",optional,28.97);
-	section("grid",0).subsection("material").register_double("viscosity",optional,0.);
-	section("grid",0).subsection("material").register_double("thermalconductivity",optional,0.);
-	section("grid",0).subsection("material").register_double("Cp",optional,1000.);
-	section("grid",0).subsection("material").register_double("density",optional,0.);
-
-	section("grid",0).registerSubsection("IC",numbered,required);
-	section("grid",0).subsection("IC",0).register_string("region",optional,"box");
-	section("grid",0).subsection("IC",0).register_Vec3D("corner_1",optional,-1.e20);
-	section("grid",0).subsection("IC",0).register_Vec3D("corner_2",optional,1e20);
-	section("grid",0).subsection("IC",0).register_Vec3D("center",optional);
-	section("grid",0).subsection("IC",0).register_Vec3D("axisdirection",optional);
-	section("grid",0).subsection("IC",0).register_double("radius",optional);
-	section("grid",0).subsection("IC",0).register_double("height",optional);
-	section("grid",0).subsection("IC",0).register_double("p",optional);
-	section("grid",0).subsection("IC",0).register_Vec3D("V",optional);
-	section("grid",0).subsection("IC",0).register_double("T",optional);
-	section("grid",0).subsection("IC",0).register_double("rho",optional);
-	section("grid",0).subsection("IC",0).register_double("turbulenceintensity",optional,1.e-2);
-	section("grid",0).subsection("IC",0).register_double("eddyviscosityratio",optional,0.1);
+//	section("grid",0).register_string("material",optional,"none");
+//	section("grid",0).registerSubsection("material",single,optional);
+//	// Default air values assigned
+//	section("grid",0).subsection("material").register_double("gamma",optional,1.4);
+//	section("grid",0).subsection("material").register_double("molarmass",optional,28.97);
+//	section("grid",0).subsection("material").register_double("viscosity",optional,0.);
+//	section("grid",0).subsection("material").register_double("thermalconductivity",optional,0.);
+//	section("grid",0).subsection("material").register_double("Cp",optional,1000.);
+//	section("grid",0).subsection("material").register_double("density",optional,0.);
+//
+//	section("grid",0).registerSubsection("IC",numbered,required);
+//	section("grid",0).subsection("IC",0).register_string("region",optional,"box");
+//	section("grid",0).subsection("IC",0).register_Vec3D("corner_1",optional,-1.e20);
+//	section("grid",0).subsection("IC",0).register_Vec3D("corner_2",optional,1e20);
+//	section("grid",0).subsection("IC",0).register_Vec3D("center",optional);
+//	section("grid",0).subsection("IC",0).register_Vec3D("axisdirection",optional);
+//	section("grid",0).subsection("IC",0).register_double("radius",optional);
+//	section("grid",0).subsection("IC",0).register_double("height",optional);
+//	section("grid",0).subsection("IC",0).register_double("p",optional);
+//	section("grid",0).subsection("IC",0).register_Vec3D("V",optional);
+//	section("grid",0).subsection("IC",0).register_double("T",optional);
+//	section("grid",0).subsection("IC",0).register_double("rho",optional);
+//	section("grid",0).subsection("IC",0).register_double("turbulenceintensity",optional,1.e-2);
+//	section("grid",0).subsection("IC",0).register_double("eddyviscosityratio",optional,0.1);
 
 	section("grid",0).registerSubsection("BC",numbered,required);
 	section("grid",0).subsection("BC",0).register_string("type",required);
@@ -433,48 +436,48 @@ void InputFile::read_inputs(void) {
 	section("grid",0).subsection("BC",0).register_double("turbulenceintensity",optional,1.e-2);
 	section("grid",0).subsection("BC",0).register_double("eddyviscosityratio",optional,0.1);
 
-	section("grid",0).registerSubsection("turbulence",single,optional);
-	section("grid",0).subsection("turbulence").register_double("relativetolerance",optional,1.e-6);
-	section("grid",0).subsection("turbulence").register_double("absolutetolerance",optional,1.e-12);
-	section("grid",0).subsection("turbulence").register_int("maximumiterations",optional,10);
-	section("grid",0).subsection("turbulence").register_string("model",optional,"sst");
-	section("grid",0).subsection("turbulence").register_string("order",optional,"second");
-	section("grid",0).subsection("turbulence").register_double("klowlimit",optional,1.e-8);
-	section("grid",0).subsection("turbulence").register_double("khighlimit",optional,1.e4);
-	section("grid",0).subsection("turbulence").register_double("omegalowlimit",optional,1.);
-	section("grid",0).subsection("turbulence").register_double("viscosityratiolimit",optional,5.e4);
-	section("grid",0).subsection("turbulence").register_double("turbulentPr",optional,0.9);
-
-	section("grid",0).registerSubsection("navierstokes",single,optional);
-	section("grid",0).subsection("navierstokes").register_double("relativetolerance",optional,1.e-6);
-	section("grid",0).subsection("navierstokes").register_double("absolutetolerance",optional,1.e-12);
-	section("grid",0).subsection("navierstokes").register_int("maximumiterations",optional,10);
-	section("grid",0).subsection("navierstokes").register_string("limiter",optional,"vk");
-	section("grid",0).subsection("navierstokes").register_double("limiterthreshold",optional,1.);
-	section("grid",0).subsection("navierstokes").register_string("order",optional,"second");
-	section("grid",0).subsection("navierstokes").register_string("jacobianorder",optional,"first");
-	section("grid",0).subsection("navierstokes").register_string("convectiveflux",optional,"AUSM+up");
-
-	section("grid",0).registerSubsection("transform",numbered,optional);
-	section("grid",0).subsection("transform",0).register_string("function",optional);
-	section("grid",0).subsection("transform",0).register_Vec3D("anchor",optional,0.);
-	section("grid",0).subsection("transform",0).register_Vec3D("end",optional,0.);
-	section("grid",0).subsection("transform",0).register_Vec3D("factor",optional,0.);
-	section("grid",0).subsection("transform",0).register_Vec3D("axis",optional,0.);
-	section("grid",0).subsection("transform",0).register_double("angle",optional,0.);
+//	section("grid",0).registerSubsection("turbulence",single,optional);
+//	section("grid",0).subsection("turbulence").register_double("relativetolerance",optional,1.e-6);
+//	section("grid",0).subsection("turbulence").register_double("absolutetolerance",optional,1.e-12);
+//	section("grid",0).subsection("turbulence").register_int("maximumiterations",optional,10);
+//	section("grid",0).subsection("turbulence").register_string("model",optional,"sst");
+//	section("grid",0).subsection("turbulence").register_string("order",optional,"second");
+//	section("grid",0).subsection("turbulence").register_double("klowlimit",optional,1.e-8);
+//	section("grid",0).subsection("turbulence").register_double("khighlimit",optional,1.e4);
+//	section("grid",0).subsection("turbulence").register_double("omegalowlimit",optional,1.);
+//	section("grid",0).subsection("turbulence").register_double("viscosityratiolimit",optional,5.e4);
+//	section("grid",0).subsection("turbulence").register_double("turbulentPr",optional,0.9);
+//
+//	section("grid",0).registerSubsection("navierstokes",single,optional);
+//	section("grid",0).subsection("navierstokes").register_double("relativetolerance",optional,1.e-6);
+//	section("grid",0).subsection("navierstokes").register_double("absolutetolerance",optional,1.e-12);
+//	section("grid",0).subsection("navierstokes").register_int("maximumiterations",optional,10);
+//	section("grid",0).subsection("navierstokes").register_string("limiter",optional,"vk");
+//	section("grid",0).subsection("navierstokes").register_double("limiterthreshold",optional,1.);
+//	section("grid",0).subsection("navierstokes").register_string("order",optional,"second");
+//	section("grid",0).subsection("navierstokes").register_string("jacobianorder",optional,"first");
+//	section("grid",0).subsection("navierstokes").register_string("convectiveflux",optional,"AUSM+up");
+//
+//	section("grid",0).registerSubsection("transform",numbered,optional);
+//	section("grid",0).subsection("transform",0).register_string("function",optional);
+//	section("grid",0).subsection("transform",0).register_Vec3D("anchor",optional,0.);
+//	section("grid",0).subsection("transform",0).register_Vec3D("end",optional,0.);
+//	section("grid",0).subsection("transform",0).register_Vec3D("factor",optional,0.);
+//	section("grid",0).subsection("transform",0).register_Vec3D("axis",optional,0.);
+//	section("grid",0).subsection("transform",0).register_double("angle",optional,0.);
 
 	read("grid",0);
 
-	registerSection("timemarching",single,required);
-	section("timemarching").register_string("integrator",optional,"backwardEuler");
-	section("timemarching").register_double("stepsize",optional,1.);
-	section("timemarching").register_double("CFLmax",optional,1000.);
-	section("timemarching").register_double("CFLlocal",optional,1000.);
-	section("timemarching").registerSubsection("ramp",single,optional);
-	section("timemarching").subsection("ramp").register_double("initial",optional,1.);
-	section("timemarching").subsection("ramp").register_double("growth",optional,1.2);
-	section("timemarching").register_int("numberofsteps",required);
-	read("timemarching");
+//	registerSection("timemarching",single,required);
+//	section("timemarching").register_string("integrator",optional,"backwardEuler");
+//	section("timemarching").register_double("stepsize",optional,1.);
+//	section("timemarching").register_double("CFLmax",optional,1000.);
+//	section("timemarching").register_double("CFLlocal",optional,1000.);
+//	section("timemarching").registerSubsection("ramp",single,optional);
+//	section("timemarching").subsection("ramp").register_double("initial",optional,1.);
+//	section("timemarching").subsection("ramp").register_double("growth",optional,1.2);
+//	section("timemarching").register_int("numberofsteps",required);
+	//read("timemarching");
 
 	readEntries();
 
@@ -516,6 +519,36 @@ void InputFile::read_inputs(void) {
 	//}
 
 	return;
+}
+
+string InputFile::ReadEqnType() {
+
+    string eqntype = section("grid",0).get_string("solution_scheme");
+
+    return eqntype;
+}
+
+EqnSystem <Scalar> InputFile::ReadEqnSys(const Fv_CC_Grid &mesh) {
+
+    string diffusion,convection_diffusion;
+    EqnSystem <Scalar> eqn;
+
+    if (ReadEqnType()=="diffusion") {
+
+        Scalar kdiff = 1.;                 // Ahora lo defino manualmente, el proximo paso es levantar el dato del material
+        _CC_Fv_Field <Scalar> phi(mesh);
+        eqn = (FvImp::Laplacian(kdiff,phi)==0.);
+    }
+    else if (ReadEqnType()=="convection_diffusion") {
+
+        cout << "Coming soon..." << endl;
+        Scalar kdiff = 1.;                 // Ahora lo defino manualmente, el proximo paso es levantar el dato del material
+        _CC_Fv_Field <Scalar> phi;
+        eqn = (FvImp::Laplacian(kdiff,phi)==0.);
+    }
+
+    return eqn;
+
 }
 
 }
