@@ -43,6 +43,7 @@ namespace FluxSol
 
 		//Later it will be inherited
 		const Fv_CC_Grid  & Grid()const{ return *GridPtr; }
+		Fv_CC_Grid & operator=(const GeomField<T> &field){}
 
 	};
 
@@ -98,7 +99,7 @@ namespace FluxSol
 		}
 
         //TO MODIFY
-		_Surf_Fv_Field <T> & operator=(const GeomField<T>&)
+		_Surf_Fv_Field <T> & operator=(const SurfaceField<T>&)
 		{
 
 
@@ -186,8 +187,7 @@ namespace FluxSol
 		//_CC_Fv_Field (InputFile &inputfile);
 
 		_CC_Fv_Field(){};
-		Fv_CC_Grid & operator=(const GeomField<T> &field){}
-		Fv_CC_Grid & operator=(const _Field<T> &field){}
+
 		//Conveccion, interpolacion o reconstruccion, de solo una celda
 		//THIS IS OLD. FIELD DOES NOT RETURN AN EQ SYSTEM BECAUSE REFER TO EQSYS AND THIS TO FVGRID
 		//AT THE SAME TIME FVGRID REFERS TO GEOMFIELD AND THIS TO FIELD, AND FIELD TO EQSYS
@@ -273,37 +273,37 @@ namespace FluxSol
 	//#include "Field_Def.h"
 
 	//Inner Product Field
-//	//INHERITS FROM FIELD
-//	template<typename T>
-//	SurfaceField<typename innerProduct < T, T> ::type> operator &(const SurfaceField<T> &left,const SurfaceField<T> &right)
-//	{
-//	SurfaceField<typename innerProduct < T, T> ::type> ret(left.Numberofvals());
-//	typename innerProduct < T, T> ::type val;
-//	//Sizes must be equal and rank must be large than zero?
-//	for (int c = 0; c < left.Numberofvals(); c++)
-//	{
-//		val = left.Val(c) & right.Val(c);
-//		ret.Val(c,val);
-//	}
-//
-//	return ret;
-//    }
-//
-//    //TO MODIFY, SINTESIS
-//    template<typename T>
-//	_Surf_Fv_Field<typename innerProduct < T, T> ::type> operator &(const _Surf_Fv_Field<T> &left,const SurfaceField<T> &right)
-//	{
-//	_Surf_Fv_Field<typename innerProduct < T, T> ::type> ret(left.Numberofvals());
-//	typename innerProduct < T, T> ::type val;
-//	//Sizes must be equal and rank must be large than zero?
-//	for (int c = 0; c < left.Numberofvals(); c++)
-//	{
-//		val = left.Val(c) & right.Val(c);
-//		ret.Val(c,val);
-//	}
-//
-//	return ret;
-//    }
+	//INHERITS FROM FIELD
+	template<typename T>
+	SurfaceField<typename innerProduct < T, T> ::type> operator &(const SurfaceField<T> &left,const SurfaceField<T> &right)
+	{
+	SurfaceField<typename innerProduct < T, T> ::type> ret(left.Numberofvals());
+	typename innerProduct < T, T> ::type val;
+	//Sizes must be equal and rank must be large than zero?
+	for (int c = 0; c < left.Numberofvals(); c++)
+	{
+		val = left.Val(c) & right.Val(c);
+		ret.Val(c,val);
+	}
+
+	return ret;
+    }
+
+    //TO MODIFY, SINTESIS
+    template<typename T>
+	_Surf_Fv_Field<typename innerProduct < T, T> ::type> operator &(const _Surf_Fv_Field<T> &left,const SurfaceField<T> &right)
+	{
+	_Surf_Fv_Field<typename innerProduct < T, T> ::type> ret(left.Numberofvals());
+	typename innerProduct < T, T> ::type val;
+	//Sizes must be equal and rank must be large than zero?
+	for (int c = 0; c < left.Numberofvals(); c++)
+	{
+		val = left.Val(c) & right.Val(c);
+		ret.Val(c,val);
+	}
+
+	return ret;
+    }
 
 	template<typename T>
 	_CC_Fv_Field<T> operator* (const _CC_Fv_Field<Scalar> &left,const _CC_Fv_Field<T> &right)

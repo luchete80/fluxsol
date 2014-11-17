@@ -42,7 +42,8 @@ namespace FluxSol
 // Same occursr If a class member is a vertex field
 template <typename T>
 class CenterToFaceInterpolation
-	:public Interpolation<T>
+	:
+	    public Interpolation<T>
 {
 	protected:
 	    Fv_CC_Grid *GridPtr;
@@ -52,21 +53,21 @@ class CenterToFaceInterpolation
 		CenterToFaceInterpolation():Interpolation<T>(){};
 		CenterToFaceInterpolation(const _CC_Fv_Field <T> &fi) :Interpolation<T>(fi)
 		{
-            this->GridPtr=fi.GridPtr;
+            this->GridPtr=&fi.ConstGrid();
 			//Pending to Generate constructor
 //			cout << "Grid Faces " <<this->field.GridPtr->Num_Faces()<<endl;
-			SurfaceField <T> r(this->field.GridPtr->Num_Faces());
+			SurfaceField <T> r(this->field.ConstGrid().Num_Faces());
 
 
 			//Loop throug faces
-			for (int f = 0; f<this->field.GridPtr->Num_Faces(); f++)
+			for (int f = 0; f<this->field.ConstGrid().Num_Faces(); f++)
 			{
-				_FvFace face = this->field.GridPtr->Face(f);
+				_FvFace face = this->field.ConstGrid().Face(f);
 				T prom;
 				//Scalar fp
 				//cout <<"Face "<< f<< " "<< this->field[face.Cell(0)].outstr() << " "<< this->field[face.Cell(1)].outstr() <<endl;
 				//cout << "Fp "<< face.Fp().outstr()<<endl;
-				if (!this->field.GridPtr->Face(f).Boundaryface())
+				if (!this->field.ConstGrid().Face(f).Boundaryface())
 					prom = this->field[face.Cell(0)] * (1.0 - face.Fp()) + this->field[face.Cell(1)] * face.Fp();
 				else
 					prom = this->field[face.Cell(0)];

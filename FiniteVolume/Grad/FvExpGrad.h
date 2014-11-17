@@ -175,20 +175,20 @@ namespace FluxSol
                 //Instead of if sentence it is convenient to use inheritance
                 T pval= VolField.Val(face.Cell(0)).Val();
 
-                if (VolField.Boundaryfield()._PatchField(p).Type()==FIXEDVALUE)
+                if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
                 {
                     //cout <<"source"<<endl;
                     ap=-face.Norm_ad()/fabs(face.Dist_pf_LR(0));
-                    T fval =VolField.Boundaryfield()._PatchField(p).Val(f);
+                    T fval =VolField.Boundaryfield().PatchField(p).Val(f);
 
                     T grad=(fval-pval)*face.Norm_ad()/fabs(face.Dist_pf_LR(0));
                     //cout <<"created" <<endl;
                     //eqnsys.Eqn(face.Cell(0)).Ap()+=ap;
                     //eqnsys.Eqn(face.Cell(0)).Source()+=source;
                 }
-                else if (VolField.Boundaryfield()._PatchField(p).Type()==FIXEDGRADIENT)
+                else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
                 {
-                    source=VolField.Boundaryfield()._PatchField(p).Val(f);
+                    source=VolField.Boundaryfield().PatchField(p).Val(f);
                     //eqnsys.Eqn(face.Cell(0)).Source()+=source;
                 }
             }

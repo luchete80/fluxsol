@@ -51,70 +51,6 @@ namespace FluxSol
 	SurfaceField<typename innerProduct < T, T> ::type>  operator&(const SurfaceField<T> &left, const SurfaceField<T> &right);
 
 
-    ///
-    template<typename T>
-    class GeomField:
-    public _Field<T>
-	{
-
-
-	protected:
-        //THIS IS A NEW FEATURE; A POINTER TO A BASE CLASS. THIS IS EXACTLY LIKE SURF_FV_FIELD WITHOUT OPERATORS
-		_Grid *GridPtr;       //Se podria probar con un puntero general
-		// en la clase base
-
-	public:
-		GeomField(const int &numval, const double &value = 0.) /*:SurfaceField<T>(numval, value)*/{}
-		GeomField(){};         //Constructor
-		//virtual GeomField  & Grid(){ return *GridPtr; }
-		virtual const _Grid  & ConstGrid()const{ return *GridPtr; }
-
-	};
-
-		template<typename T>
-	class GeomSurfaceField :
-	    //public _Field<T>
-	    public SurfaceField<T>
-	{
-
-    _Grid *GridPtr;
-
-	protected:
-
-	public:
-		GeomSurfaceField(const int &numval, const double &value = 0.) /*:SurfaceField<T>(numval, value)*/{}
-		GeomSurfaceField(){};         //Constructor
-		//Adding boundary face
-// TO CHECK; INHERIT OR NOT
-//		GeomSurfaceField(const Fv_CC_Grid &grid)
-//		{
-//			GridPtr = &grid;
-//			//LO HAGO PARA TODOS LOS FACES
-//			for (int f = 0; f<GridPtr->Num_Faces(); f++)
-//			{
-//				if (GridPtr->Face(f).Boundaryface() && !GridPtr->Face(f).Is_Null_Flux_Face())
-//				{
-//					T val;
-//					this->value.push_back(val);
-//					this->idgrid_domain.push_back(f);
-//				}
-//			}
-//
-//		}
-//
-//		//Devuelve el valor en una Surface
-//		T& GridIdSurFaceVal(const int &i)		//El valor de una
-//		{
-//			//Tengo que ver cual es la face i del field
-//			for (int fid = 0; fid<this->Numberofvals(); fid++)
-//			{
-//				if (i == this->Idgrid_domain(fid))
-//					return this->value[fid];
-//			}
-//		}
-
-	};
-
 
 	//boundary type
 	enum _PatchFieldType { FIXEDVALUE, FIXEDGRADIENT };
@@ -123,7 +59,7 @@ namespace FluxSol
 	class _PatchField :
 		//public _Surf_Fv_Field<T>
 		//IN FIRST FLUXSOL VERSIONS THIS CLASS INHERITED FROM SURF_FV_FIELD
-		public GeomSurfaceField<T>
+		public _Field<T>//Originally it was an GeomField
 	{
 	protected:
 		int patchid;
@@ -172,7 +108,86 @@ namespace FluxSol
 
 	};
 
-		//CAMPO VOLUMETRICO DE VOLUMENES FINITOS
+
+
+    /// HERE ALL THE OPERATORS
+    //THIS AS BOUNDARY AND ALL THAT
+    template<typename T>
+    class GeomField:
+    public _Field<T>
+	{
+
+
+	protected:
+        //THIS IS A NEW FEATURE; A POINTER TO A BASE CLASS. THIS IS EXACTLY LIKE SURF_FV_FIELD WITHOUT OPERATORS
+		_Grid *GridPtr;       //Se podria probar con un puntero general
+		// en la clase base
+		//Conviene colocar referencia o puntero??
+		_BoundaryField <T> BoundaryField;	//En las caras
+
+	public:
+		GeomField(const int &numval, const double &value = 0.) :_Field<T>(numval, value){}
+		GeomField(){};         //Constructor
+
+		//NON VIRTUAL!
+		virtual _Grid & Grid(){ return *GridPtr; }
+		virtual const _Grid  & ConstGrid()const{ return *GridPtr; }
+		//Conveccion, interpolacion o reconstruccion, de solo una celda
+		//THIS IS OLD. FIELD DOES NOT RETURN AN EQ SYSTEM BECAUSE REFER TO EQSYS AND THIS TO FVGRID
+		//AT THE SAME TIME FVGRID REFERS TO GEOMFIELD AND THIS TO FIELD, AND FIELD TO EQSYS
+		//const Eqn <T> ToFaces(const int &icell, const std::vector <Scalar> flux) const;
+
+		_BoundaryField <T> &  Boundaryfield(){ return BoundaryField; }
+
+
+        GeomField <T> & operator+ (const GeomField <T> &right);
+
+	};
+
+		template<typename T>
+	class GeomSurfaceField :
+	    //public _Field<T>
+	    public GeomField<T>
+	{
+
+	protected:
+
+	public:
+		GeomSurfaceField(const int &numval, const double &value = 0.) /*:SurfaceField<T>(numval, value)*/{}
+		GeomSurfaceField(){};         //Constructor
+		//Adding boundary face
+// TO CHECK; INHERIT OR NOT
+//		GeomSurfaceField(const Fv_CC_Grid &grid)
+//		{
+//			GridPtr = &grid;
+//			//LO HAGO PARA TODOS LOS FACES
+//			for (int f = 0; f<GridPtr->Num_Faces(); f++)
+//			{
+//				if (GridPtr->Face(f).Boundaryface() && !GridPtr->Face(f).Is_Null_Flux_Face())
+//				{
+//					T val;
+//					this->value.push_back(val);
+//					this->idgrid_domain.push_back(f);
+//				}
+//			}
+//
+//		}
+//
+//		//Devuelve el valor en una Surface
+//		T& GridIdSurFaceVal(const int &i)		//El valor de una
+//		{
+//			//Tengo que ver cual es la face i del field
+//			for (int fid = 0; fid<this->Numberofvals(); fid++)
+//			{
+//				if (i == this->Idgrid_domain(fid))
+//					return this->value[fid];
+//			}
+//		}
+
+	};
+
+
+    //CAMPO VOLUMETRICO DE VOLUMENES FINITOS
 	//CONVIENE QUE DERIVE
 	// La T es Scalar, vector o tensor
 	template<typename T>
@@ -187,8 +202,6 @@ namespace FluxSol
 		//SET DE DIMENSIONES
 
 	protected:
-		//Conviene colocar referencia o puntero??
-		_BoundaryField <T> BoundaryField;	//En las caras
 
 
 	public:
@@ -202,17 +215,58 @@ namespace FluxSol
 
 		GeomVolField(){};
 
-		//Conveccion, interpolacion o reconstruccion, de solo una celda
-		//THIS IS OLD. FIELD DOES NOT RETURN AN EQ SYSTEM BECAUSE REFER TO EQSYS AND THIS TO FVGRID
-		//AT THE SAME TIME FVGRID REFERS TO GEOMFIELD AND THIS TO FIELD, AND FIELD TO EQSYS
-		//const Eqn <T> ToFaces(const int &icell, const std::vector <Scalar> flux) const;
+	template<typename U>
+	GeomField <typename innerProduct < T, U> ::type> & operator &(const GeomField<U> &right)
+	{
+	    	GeomField<typename innerProduct < T, U> ::type> *ret=new GeomField<T>(this->Numberofvals());
+	typename innerProduct < T, U> ::type val;
+	//Sizes must be equal and rank must be large than zero?
+	for (int c = 0; c < this->Numberofvals(); c++)
+	{
+		val = this->Val(c) & right.Val(c);
+		ret->Val(c,val);
+	}
 
-		_BoundaryField <T> &  Boundaryfield(){ return BoundaryField; }
+	return *ret;
+	}
 
 		//void ToCellCenters(EqnSystem <T> &eqnsys);
 
 
 	};
+
+    //OPERATIONS WITH GEOMETRIC FIELD
+    //CAN HAVE A POINTER OR A TEMPLATE
+    //THIS USES INHERITANCE AND TEMPLATES
+	template<typename T>
+	GeomField <T> & GeomField <T>::operator+ (const GeomField <T> &right)
+	{
+        GeomField<T> *ret=new GeomField<T>(this->Numberofvals());
+        T val;
+        //Sizes must be equal and rank must be large than zero?
+        for (int c = 0; c < this->Numberofvals(); c++)
+        {
+            val = this->Val(c) + right.Val(c);
+            ret->Val(c,val);
+        }
+
+        return *ret;
+    }
+//
+//    template<typename T>
+//	GeomField<T> operator* (const GeomField<Scalar> &left,const GeomField<T> &right)
+//	{
+//	GeomField<T> ret(left.Numberofvals());
+//	T val;
+//	//Sizes must be equal and rank must be large than zero?
+//	for (int c = 0; c < left.Numberofvals(); c++)
+//	{
+//		val = left.Val(c) * right.Val(c);
+//		ret.Val(c,val);
+//	}
+//	return ret;
+//	}
+
 
 }//FluxSol
 

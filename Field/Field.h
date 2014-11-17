@@ -86,8 +86,6 @@ class _Field{
 	_Field<T> operator=(const double &val);
 
 
-
-
     //THIS MUST BE DONE ONCE
     //Inner product
 //    virtual const _Field<typename innerProduct < T, T> ::type>

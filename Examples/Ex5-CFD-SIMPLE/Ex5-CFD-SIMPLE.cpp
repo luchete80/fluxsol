@@ -70,6 +70,12 @@ int main()
     U=Vec3D(0.01,0.,0.);
     p=0.1;
 	bool conv=false;
+
+	_CC_Fv_Field <Scalar> p2(mesh);
+    _CC_Fv_Field <Scalar> p3(mesh);
+
+	p3=p+p2;
+
 	//ITERATION BEGINS
 	while (!conv)
 	{

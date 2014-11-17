@@ -52,19 +52,19 @@ SurfaceField <T> Interpolate(const _CC_Fv_Field <T> &field)
     {
 
         //Pending to Generate constructor
-        cout << "Grid Faces " <<field.GridPtr->Num_Faces()<<endl;
-        SurfaceField <T> r(field.GridPtr->Num_Faces());
+        cout << "Grid Faces " <<field.ConstGrid().Num_Faces()<<endl;
+        SurfaceField <T> r(field.ConstGrid().Num_Faces());
 
 
         //Loop throug faces
-        for (int f = 0; f<field.GridPtr->Num_Faces(); f++)
+        for (int f = 0; f<field.ConstGrid().Num_Faces(); f++)
         {
-            _FvFace face = field.GridPtr->Face(f);
+            _FvFace face = field.ConstGrid().Face(f);
             T prom;
             //Scalar fp
             cout <<"Face "<< f<< " "<< field[face.Cell(0)].outstr() << " "<< field[face.Cell(1)].outstr() <<endl;
             cout << "Fp "<< face.Fp().outstr()<<endl;
-            if (!field.GridPtr->Face(f).Boundaryface())
+            if (!field.ConstGrid().Face(f).Boundaryface())
                 prom = field[face.Cell(0)] * (1.0 - face.Fp()) + field[face.Cell(1)] * face.Fp();
             else
                 prom = field[face.Cell(0)];

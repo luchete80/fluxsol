@@ -348,7 +348,7 @@ FvImp::Div(_Surf_Fv_Field<Scalar> fi,_CC_Fv_Field <T> VolField)
     Eqn <T> eqn;            //Ecuacion para cada una de las cells
 
     EqnSystem < T > eqnsys(VolField.ConstGrid());
-    SurfaceField<Scalar> sfi(fi);
+    //SurfaceField<Scalar> sfi(fi);
 
     return eqnsys;
 }

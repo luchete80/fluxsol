@@ -486,9 +486,9 @@ void Fv_CC_Grid::CalcCellVolumes()
 }
 
 //TO MODIFY, MUST RETURN A REFERENCE
-const SurfaceField<Vec3D> Fv_CC_Grid::Sf() const
+const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 {
-	SurfaceField<Vec3D> ret(this->num_faces);
+	GeomSurfaceField<Vec3D> ret(this->num_faces);
 
 	for (int f = 0; f < this->num_faces; f++)
 	{

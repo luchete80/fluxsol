@@ -91,7 +91,7 @@ private:
 	void Fv_CC_Grid::CreateNodesFromCellVerts();
 
     //MODIFIED, THIS MUST A BE A SINGLE SURFACEFIELD
-    const SurfaceField<Vec3D> Sf()const;
+    const GeomSurfaceField<Vec3D> Sf()const;
 	//FUNCIONES DE LOG
     void Log(string );    //ES una funcion virtual en la clase base
 
