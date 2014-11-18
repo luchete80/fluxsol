@@ -120,17 +120,17 @@ void Solve (EqnSystem <T> &eq)
 
 		}//En of width
 
-		vector<double> val;
-		vector<int> pos;
-		for (int width_cells=0;width_cells<eq.Eqn(e).Width();width_cells++)
-		{
-			for (int dim=0;dim<numberofcomp;dim++)
-			{
-			val.push_back(K.El[row+dim+1][width_cells].Val);
-			pos.push_back(K.El[row+dim+1][width_cells].Pos);
-
-			}
-		}
+//		vector<double> val;
+//		vector<int> pos;
+//		for (int width_cells=0;width_cells<eq.Eqn(e).Width();width_cells++)
+//		{
+//			for (int dim=0;dim<numberofcomp;dim++)
+//			{
+//			val.push_back(K.El[row+dim+1][width_cells].Val);
+//			pos.push_back(K.El[row+dim+1][width_cells].Pos);
+//
+//			}
+//		}
 
 	}//End of cells
 
@@ -149,18 +149,14 @@ void Solve (EqnSystem <T> &eq)
 	SetRTCAccuracy(1e-5);
 
 
-//	for (int i=0;i<10;i++)
-//	{
-		V_SetAllCmp(&U,0.0);
-		BiCGSTABIter (&K,&U,&R,1000,SSORPrecond,1.2);
-		//cout<<"It "<<i<<endl;
-		for (int j=0;j<totrows;j++)
-		{
-			Ui[j]=U.Cmp[j+1];
-			Ri[j]=R.Cmp[j+1];
-		}
 
-//	}
+    BiCGSTABIter (&K,&U,&R,1000,SSORPrecond,1.2);
+    //cout<<"It "<<i<<endl;
+    for (int j=0;j<totrows;j++)
+    {
+        Ui[j]=U.Cmp[j+1];
+        Ri[j]=R.Cmp[j+1];
+    }
 
 	for (int e=0;e<eq.Num_Eqn();e++)
 	{

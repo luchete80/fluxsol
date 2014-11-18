@@ -49,6 +49,7 @@ namespace FluxSol
 
 		//Field to return
 		_CC_Fv_Field <T> fieldnc=field;
+		cout << field.Numberofvals()<<endl;
 		 _CC_Fv_Field < typename outerProduct<Vec3D, T>::type > r(fieldnc.Grid());
 		//Paso el flujo a las caras, a un campo de faces
 
@@ -56,14 +57,17 @@ namespace FluxSol
 
 		 //Like the open Foam functions
 		 //_Surf_Fv_Field < typename outerProduct<Vec3D, T>::type > facefield=field.FaceInterpolate();
-        SurfaceField <T> facefi=Interpolate(field);
+		 //Formerly was SurfaceField
+        GeomSurfaceField <T> facefi=Interpolate(field);
 
 		 bool end = false;
 		 //Begin Main Loop
 		 //facefi and r (which is the corrected gauss gradient of fieldnc) are changing
 		 _CC_Fv_Field < typename outerProduct<Vec3D, T>::type > rant;
-		 while (!end)
-		 {
+
+		 //FOR NON ORTHOGONAL ITERATIONS
+		 //while (!end)
+		 //{
 			 r=0.;
 			 //Loop through cells to calculate Gauss Gradient
 			 int c;
@@ -89,31 +93,33 @@ namespace FluxSol
 			 //With fo-f = Pf - Pfo = Pf - (Pf&ePN)ePN is the projection
 			 //Dist_pf_LR
 
-			 for (int f=0;f<r.Grid().Num_Faces();f++)
-			 {
-				 //f-fo is  unique for each face, but it can be calculated either with P or N cells
-				 _FvFace face = r.Grid().Face(f);
-				 Vec3D fof=face.Dist_pf_LR(0)-(face.Dist_pf_LR(0)&face.e_PN())*face.e_PN();
+//TO MODIFY: NON ORTHOGONAL CORRECTIONS
+//			 for (int f=0;f<r.Grid().Num_Faces();f++)
+//			 {
+//				 //f-fo is  unique for each face, but it can be calculated either with P or N cells
+//				 _FvFace face = r.Grid().Face(f);
+//				 Vec3D fof=face.Dist_pf_LR(0)-(face.Dist_pf_LR(0)&face.e_PN())*face.e_PN();
+//
+//				//Variable and gradient averages
+//				 T fifo = face.Fp()*fieldnc[face.Cell(0)]+(1.0-face.Fp())*fieldnc[face.Cell(1)];
+//				typename outerProduct<Vec3D, T>::type grad_fio=(r[face.Cell(0)]*(1-face.Fp())+r[face.Cell(1)]*face.Fp());
+//				//typename outerProduct<Vec3D, T>::type grad_fio=r[face.Cell(0)];
+//
+//				//facefi [f] = (fifo+(grad_fio&fof));
+//				facefi [f] = fifo;
+//				T s1,s2;
+//				s1=s2;
+//
+//			 }
+//
+//
+//			 //Compare r against rant
+//			 //With MaxDiff Field template function
+//			 Scalar maxdif=MaxDiff(r,rant);
+//			 rant = r;
 
-				//Variable and gradient averages
-				 T fifo = face.Fp()*fieldnc[face.Cell(0)]+(1.0-face.Fp())*fieldnc[face.Cell(1)];
-				typename outerProduct<Vec3D, T>::type grad_fio=(r[face.Cell(0)]*(1-face.Fp())+r[face.Cell(1)]*face.Fp());
-				//typename outerProduct<Vec3D, T>::type grad_fio=r[face.Cell(0)];
 
-				//facefi [f] = (fifo+(grad_fio&fof));
-				facefi [f] = fifo;
-				T s1,s2;
-				s1=s2;
-
-			 }
-
-
-			 //Compare r against rant
-			 //With MaxDiff Field template function
-			 Scalar maxdif=MaxDiff(r,rant);
-			 rant = r;
-
-		 }//While End
+		 //}//While End
 
 
 

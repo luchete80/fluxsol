@@ -38,7 +38,7 @@ see <http://www.gnu.org/licenses/>.
 
 //Return the initial interpolated field
 template<typename T>
-const SurfaceField <T> &
+const GeomSurfaceField <T> &
 CenterToFaceInterpolation<T>::Interpolate()
 {
 
@@ -47,7 +47,7 @@ CenterToFaceInterpolation<T>::Interpolate()
 
 
 template<typename T>
-SurfaceField <T> &
+GeomSurfaceField <T> &
 CenterToFaceInterpolation<T>::Interpolate(const _CC_Fv_Field <T> &fi)
 {
 	_CC_Fv_Field <T> field = fi;

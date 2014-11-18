@@ -314,7 +314,12 @@ EqnSystem <T> & EqnSystem <T>::operator-(const EqnSystem <T> &right)
 template <typename T>
 EqnSystem <T> & EqnSystem <T>::operator==(const _CC_Fv_Field<T> &field)
 {
-
+    for (int c=0;c<this->EqnV().size();c++)
+    {
+        T val=field.Val(c).Val();
+        this->Eqn(c).Source(val);
+    }
+	return *this;
 }
 //
 //template <typename T>

@@ -104,16 +104,6 @@ namespace FluxSol
 
 		}
 
-		_Surf_Fv_Field<T> operator-(const _Surf_Fv_Field<T> &right)
-		{
-		    _Surf_Fv_Field<T> ret(*this);
-			for (int v = 0; v<this->value.size(); v++)
-			{
-				ret.value[v] = this->value[v]-right.value[v];
-			}
-			ret;
-
-		}
 
 		_Surf_Fv_Field<T> operator||(const _Surf_Fv_Field<T> &right)
 		{
@@ -305,19 +295,6 @@ namespace FluxSol
 //	return ret;
 //    }
 
-	template<typename T>
-	_CC_Fv_Field<T> operator* (const _CC_Fv_Field<Scalar> &left,const _CC_Fv_Field<T> &right)
-	{
-	_CC_Fv_Field<T> ret(left.Numberofvals());
-	T val;
-	//Sizes must be equal and rank must be large than zero?
-	for (int c = 0; c < left.Numberofvals(); c++)
-	{
-		val = left.Val(c) * right.Val(c);
-		ret.Val(c,val);
-	}
-	return ret;
-	}
 
 	template<typename T>
 	_CC_Fv_Field<T> operator* (const Scalar &left,const _CC_Fv_Field<T> &right)

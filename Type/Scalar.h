@@ -180,6 +180,15 @@ public:
 typedef Scalar type;	//Aca es lque devuelve el tipo Scalar si el ragon es 0
 };
 
+//TO MODIFY
+//ONLY ACCOUNTING FOR INNER PROD BETWEEN SCALARS
+template<>
+class typeOfRank<-2>
+{
+public:
+
+typedef Scalar type;	//Aca es lque devuelve el tipo Scalar si el ragon es 0
+};
 
 }//Fin de namespace FluxSol
 #endif

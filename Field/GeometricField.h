@@ -46,10 +46,6 @@ namespace FluxSol
 	};
 
 
-	//IF OPERATOR IN THOSE FIELDS ARE DECLARED AS MEMBER FUNCTIONS, IS AN ERROR WITH INNERPROD<TYPE>
-	template <typename T>
-	SurfaceField<typename innerProduct < T, T> ::type>  operator&(const SurfaceField<T> &left, const SurfaceField<T> &right);
-
 
 
 	//boundary type
@@ -128,7 +124,7 @@ namespace FluxSol
 	public:
 		GeomField(const int &numval, const double &value = 0.) :_Field<T>(numval, value){}
 		GeomField(){};         //Constructor
-
+        GeomField(const GeomField<T> &field):_Field<T>(field.Numberofvals()){this->GridPtr=&field.Grid();}
 		//NON VIRTUAL!
 		virtual _Grid & Grid(){ return *GridPtr; }
 		virtual const _Grid  & ConstGrid()const{ return *GridPtr; }
@@ -140,7 +136,52 @@ namespace FluxSol
 		_BoundaryField <T> &  Boundaryfield(){ return BoundaryField; }
 
 
-        GeomField <T> & operator+ (const GeomField <T> &right);
+        GeomField <T>  operator+ (const GeomField <T> &right)
+        {
+            //GeomField<T> *ret=new GeomField<T>(this->Numberofvals());
+            GeomField<T> ret(this->Numberofvals());
+            T val;
+            //Sizes must be equal and rank must be large than zero?
+            for (int c = 0; c < this->Numberofvals(); c++)
+            {
+                val = this->Val(c) + right.Val(c);
+                ret.Val(c,val);
+            }
+
+            return ret;
+        }
+
+        GeomField <T>  operator- (const GeomField <T> &right)
+        {
+            //GeomField<T> *ret=new GeomField<T>(this->Numberofvals());
+            GeomField<T> ret(this->Numberofvals());
+            T val;
+            //Sizes must be equal and rank must be large than zero?
+            for (int c = 0; c < this->Numberofvals(); c++)
+            {
+                val = this->Val(c) - right.Val(c);
+                ret.Val(c,val);
+            }
+
+            return ret;
+        }
+
+        GeomField<typename innerProduct < T, T> ::type> operator&(const GeomField<T> &right)
+        {
+                //GeomField<typename innerProduct < T, T> ::type> *ret=new GeomField<typename innerProduct < T, T> ::type>(this->Numberofvals());
+                GeomField<typename innerProduct < T, T> ::type> ret(this->Numberofvals());
+                typename innerProduct < T, T> ::type val;
+                //Sizes must be equal and rank must be large than zero?
+                for (int c = 0; c < this->Numberofvals(); c++)
+                {
+                    val = this->Val(c) & right.Val(c);
+                    ret.Val(c,val);
+                }
+
+                return ret;
+        }
+
+
 
 	};
 
@@ -153,7 +194,8 @@ namespace FluxSol
 	protected:
 
 	public:
-		GeomSurfaceField(const int &numval, const double &value = 0.) /*:SurfaceField<T>(numval, value)*/{}
+		GeomSurfaceField(const int &numval, const double &value = 0.) :GeomField<T>(numval, value){}
+		GeomSurfaceField(const GeomField<T> &field):GeomField<T>(field){}
 		GeomSurfaceField(){};         //Constructor
 		//Adding boundary face
 // TO CHECK; INHERIT OR NOT
@@ -215,43 +257,12 @@ namespace FluxSol
 
 		GeomVolField(){};
 
-	template<typename U>
-	GeomField <typename innerProduct < T, U> ::type> & operator &(const GeomField<U> &right)
-	{
-	    	GeomField<typename innerProduct < T, U> ::type> *ret=new GeomField<T>(this->Numberofvals());
-	typename innerProduct < T, U> ::type val;
-	//Sizes must be equal and rank must be large than zero?
-	for (int c = 0; c < this->Numberofvals(); c++)
-	{
-		val = this->Val(c) & right.Val(c);
-		ret->Val(c,val);
-	}
-
-	return *ret;
-	}
-
 		//void ToCellCenters(EqnSystem <T> &eqnsys);
 
 
 	};
 
-    //OPERATIONS WITH GEOMETRIC FIELD
-    //CAN HAVE A POINTER OR A TEMPLATE
-    //THIS USES INHERITANCE AND TEMPLATES
-	template<typename T>
-	GeomField <T> & GeomField <T>::operator+ (const GeomField <T> &right)
-	{
-        GeomField<T> *ret=new GeomField<T>(this->Numberofvals());
-        T val;
-        //Sizes must be equal and rank must be large than zero?
-        for (int c = 0; c < this->Numberofvals(); c++)
-        {
-            val = this->Val(c) + right.Val(c);
-            ret->Val(c,val);
-        }
 
-        return *ret;
-    }
 //
 //    template<typename T>
 //	GeomField<T> operator* (const GeomField<Scalar> &left,const GeomField<T> &right)
@@ -266,6 +277,20 @@ namespace FluxSol
 //	}
 //	return ret;
 //	}
+
+    template <typename T>
+	GeomField<T> operator* (const GeomField<Scalar> &left,const GeomField<T> &right)
+	{
+	GeomField<T> ret(left.Numberofvals());
+	T val;
+	//Sizes must be equal and rank must be large than zero?
+	for (int c = 0; c < left.Numberofvals(); c++)
+	{
+		val = left.Val(c) * right.Val(c);
+		ret.Val(c,val);
+	}
+	return ret;
+	}
 
 
 }//FluxSol

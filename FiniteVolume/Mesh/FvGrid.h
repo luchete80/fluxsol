@@ -88,7 +88,7 @@ private:
 
 	Node & Node_(const int &i){return this->node[i];}
     Node & CreateNodeFromCellVerts(const int &cellid);
-	void Fv_CC_Grid::CreateNodesFromCellVerts();
+	void CreateNodesFromCellVerts();
 
     //MODIFIED, THIS MUST A BE A SINGLE SURFACEFIELD
     const GeomSurfaceField<Vec3D> Sf()const;

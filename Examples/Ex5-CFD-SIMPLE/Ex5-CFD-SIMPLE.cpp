@@ -28,10 +28,14 @@
 using namespace std;
 using namespace FluxSol;
 
+	template<typename U, typename T>
+	GeomField <typename innerProduct < T, U> ::type> & operator &(const GeomField<U> &right);
+
 int main()
 {
 	//Mesh Generation
 	Fv_CC_Grid mesh(2,2,1.0,1.0);
+	mesh.Log("Log.txt");
 //	MyList<int>wallfaces = { 1, 2};
 //	MyVector<int> hola={1,2};
 	int wallfaces[]={2,5,8,10,13,18};
@@ -80,13 +84,16 @@ int main()
 	while (!conv)
 	{
 		//1.Restore Iteration
-		//p.RestorePrevIter();
-
+//
+//
 		//2. U Calculation
 		UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
 
 		//4. Solve Momentum predictor (UEqn)
-		Solve(UEqn==-FvExp::Grad(p));
+		//Solve(UEqn==-FvExp::Grad(p));
+		_CC_Fv_Field <Vec3D> pru=-FvExp::Grad(p);
+		UEqn==pru;
+		Solve(UEqn);
 
 
 		U=UEqn.Field();
@@ -101,7 +108,7 @@ int main()
         //vf=vf_ - Df (Grad(p)-Grad_(p))
         //Where Grad(p)=(pn-pp)/.. + Orth Correction
         //Is more simple to directly calculate fluxes
-        //_Surf_Fv_Field <Vec3D> Uf=Uf_-AUf_*(FvExp::Gradf(p)-Gradpf_);
+
 
         //Calculate Face Flux
         //rho equals 1
@@ -116,18 +123,11 @@ int main()
         pEqn=FvImp::Laplacian(rho,p);   //Solve Laplacian for p (by the way, is p´)
         Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
 
+//BEING BUILT
  //       U=U-AU*FvExp::Grad(p);                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
  //       p=p+alpha_p*pEqn.Field();
 
-		//9. Correct the flux
-		//phi-=pEqn.Flux();
 
-		//10. Calculate Continuity errors
-
-		//11. Under Relax pressure for the momentum corrector and apply the correction
-		//p.Relax();
-		//U-=FvExp::Grad(p)/AU;
-		//U.CorrectBoundaryConditions();
 	}
 	//	---- The End -------
 	return 0;

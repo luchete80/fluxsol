@@ -48,12 +48,12 @@ Gradf (const _CC_Fv_Field <T>&);
 
 //Like CenterToFaceInterpolation
 template<typename T>
-SurfaceField <T> Interpolate(const _CC_Fv_Field <T> &field)
+GeomSurfaceField <T> Interpolate(const _CC_Fv_Field <T> &field)
     {
 
         //Pending to Generate constructor
         cout << "Grid Faces " <<field.ConstGrid().Num_Faces()<<endl;
-        SurfaceField <T> r(field.ConstGrid().Num_Faces());
+        GeomSurfaceField <T> r(field.ConstGrid().Num_Faces());
 
 
         //Loop throug faces
@@ -62,8 +62,10 @@ SurfaceField <T> Interpolate(const _CC_Fv_Field <T> &field)
             _FvFace face = field.ConstGrid().Face(f);
             T prom;
             //Scalar fp
-            cout <<"Face "<< f<< " "<< field[face.Cell(0)].outstr() << " "<< field[face.Cell(1)].outstr() <<endl;
-            cout << "Fp "<< face.Fp().outstr()<<endl;
+
+            //cout <<"Face "<< f<< " "<< field[face.Cell(0)].outstr() << endl;
+            //if (face.Cell(0)>=0)cout <<" "<< field[face.Cell(1)].outstr() <<endl;
+            //cout << "Fp "<< face.Fp().outstr()<<endl;
             if (!field.ConstGrid().Face(f).Boundaryface())
                 prom = field[face.Cell(0)] * (1.0 - face.Fp()) + field[face.Cell(1)] * face.Fp();
             else
