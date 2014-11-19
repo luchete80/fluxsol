@@ -163,6 +163,7 @@ class EqnSystem{   //Es un vector de ecuaciones
     EqnSystem(std::vector<Eqn<T> > ec);
 	//EqnSystem(const int);
 	EqnSystem(const Fv_CC_Grid &);
+
 	//EqnSystem(_CC_Fv_Field <T> &fvfield);
 
     //Ensamble
@@ -188,7 +189,7 @@ class EqnSystem{   //Es un vector de ecuaciones
 
 	//Binary operators, U
 	EqnSystem <T> & operator==(const EqnSystem <T> &right);
-	EqnSystem <T> & operator- (const EqnSystem <T> &right);
+	EqnSystem <T> operator- (const EqnSystem <T> &right);
 
 	EqnSystem <T> & operator==(const _CC_Fv_Field<T> &field);
 

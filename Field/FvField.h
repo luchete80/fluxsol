@@ -98,9 +98,17 @@ namespace FluxSol
 		}
 
         //TO MODIFY
-		_Surf_Fv_Field <T> & operator=(const GeomField<T>&)
+		_Surf_Fv_Field <T> & operator=(const GeomField<T> &field)
 		{
-
+            this->value.clear();
+            T v;
+            this->value.assign(field.Numberofvals(),v);
+            this->GridPtr=&field.Grid();
+            for (int c=0;c<field.Numberofvals();c++)
+                this->value[c]=field.Val(c);
+            //TO MODIFY
+            //this->Boundaryfield()=field->BoundaryField
+            return *this;
 
 		}
 
@@ -176,8 +184,26 @@ namespace FluxSol
 		//_CC_Fv_Field (InputFile &inputfile);
 
 		_CC_Fv_Field(){};
-		Fv_CC_Grid & operator=(const GeomField<T> &field){}
-		Fv_CC_Grid & operator=(const _Field<T> &field){}
+
+		//_CC_Fv_Field & operator=(const GeomField<T> &field){}
+		_CC_Fv_Field <T> & operator=(const GeomField<T> &field)
+		{
+            this->value.clear();
+            T v;
+            this->value.assign(field.Numberofvals(),v);
+            this->GridPtr=&field.Grid();
+            for (int c=0;c<field.Numberofvals();c++)
+                this->value[c]=field.Val(c);
+            //TO MODIFY
+            //this->Boundaryfield()=field->BoundaryField
+            return *this;
+		}
+//		_CC_Fv_Field <T> & operator=(const GeomField<T> field)
+//		{
+//		    this=&field;
+//
+//		    return *this;
+//		}
 		//Conveccion, interpolacion o reconstruccion, de solo una celda
 		//THIS IS OLD. FIELD DOES NOT RETURN AN EQ SYSTEM BECAUSE REFER TO EQSYS AND THIS TO FVGRID
 		//AT THE SAME TIME FVGRID REFERS TO GEOMFIELD AND THIS TO FIELD, AND FIELD TO EQSYS
@@ -204,17 +230,6 @@ namespace FluxSol
 			return *this;
 		}
 
-        //UNARY
-		_CC_Fv_Field<T> operator-()
-		{
-		    _CC_Fv_Field<T> ret(*this);
-			for (int v = 0; v<this->value.size(); v++)
-			{
-				ret.value[v] = -this->value[v];
-			}
-			ret;
-
-		}
 
 	};
 

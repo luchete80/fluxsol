@@ -48,9 +48,7 @@ namespace FluxSol
 	{
 
 		//Field to return
-		_CC_Fv_Field <T> fieldnc=field;
-		cout << field.Numberofvals()<<endl;
-		 _CC_Fv_Field < typename outerProduct<Vec3D, T>::type > r(fieldnc.Grid());
+		 _CC_Fv_Field < typename outerProduct<Vec3D, T>::type > r(field.Grid());
 		//Paso el flujo a las caras, a un campo de faces
 
 		//Tengo que hacer el prod "externo" entre un T a izquierda y un vector (rank=1) a derecha

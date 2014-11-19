@@ -28,8 +28,7 @@
 using namespace std;
 using namespace FluxSol;
 
-	template<typename U, typename T>
-	GeomField <typename innerProduct < T, U> ::type> & operator &(const GeomField<U> &right);
+
 
 int main()
 {
@@ -73,61 +72,71 @@ int main()
 
     U=Vec3D(0.01,0.,0.);
     p=0.1;
-	bool conv=false;
+	bool conv=true;
 
 	_CC_Fv_Field <Scalar> p2(mesh);
     _CC_Fv_Field <Scalar> p3(mesh);
 
-	p3=p+p2;
+	//p3=p+p2;
+
+
+    //EXAMPLE PENDING TASKS
+    //TO ADD BOUNDARY FIELD IN OPERATORS= FROM SURF AND VOLFIELDS
 
 	//ITERATION BEGINS
-	while (!conv)
+	int it=0;
+	while (it <=10)
 	{
 		//1.Restore Iteration
 //
 //
 		//2. U Calculation
 		UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
-
-		//4. Solve Momentum predictor (UEqn)
+//
+//		//4. Solve Momentum predictor (UEqn)
 		//Solve(UEqn==-FvExp::Grad(p));
-		_CC_Fv_Field <Vec3D> pru=-FvExp::Grad(p);
-		UEqn==pru;
-		Solve(UEqn);
+		//_CC_Fv_Field<Vec3D> pru2(-FvExp::Grad(p));
+        //TO MODIFY: IF MESH IS NOT ASSIGNED PREVIOUSLY TO EQUAL, ERROR
+		_CC_Fv_Field <Vec3D> gradp(mesh);
+		//-FvExp::Grad(p);
+		gradp=-FvExp::Grad(p);
+		UEqn==gradp;
+		//Solve(UEqn);
 
-
+//
+//
 		U=UEqn.Field();
-        //Assign to U Eqn Solved values
-        _Surf_Fv_Field <Vec3D> Uf_=CenterToFaceInterpolation <Vec3D> (U).Sf();  //Uf Overbar
+//        //Assign to U Eqn Solved values
+        //_Surf_Fv_Field <Vec3D> Uf_=CenterToFaceInterpolation <Vec3D> (U).Sf();  //Uf Overbar
         _CC_Fv_Field <Scalar> AU=UEqn.A();       // In OpenFoam these are scalar
         _Surf_Fv_Field <Scalar> AUf_=CenterToFaceInterpolation <Scalar> (AU).Sf();
-
-        _Surf_Fv_Field <Vec3D> Gradpf_=CenterToFaceInterpolation <Vec3D> (FvExp::Grad(p)).Sf();
-
-        //Rhie-Chow Correction
-        //vf=vf_ - Df (Grad(p)-Grad_(p))
-        //Where Grad(p)=(pn-pp)/.. + Orth Correction
-        //Is more simple to directly calculate fluxes
-
-
-        //Calculate Face Flux
-        //rho equals 1
-        phi=Uf_ & mesh.Sf(); //WARNING!!!! TO BWE WRITTEN THIS
-        phi=phi - AUf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
-
-		//8. Define and Solve Pressure Correction And Repeat
-		//Div(mf)=Div(m´f+m*f)=0 ==> Div(m*f)+Div(-rho(DfGrad(p´f)Af)=0
-        //We solve pressure correction in cell centers but eqn is indeed for cell faces
-		//THIS IS INSIDE DIV ALGORITHM Sum(-rhof (Df) Grad(p´f)Af + Sum (m*f) = 0
-		//for the prescribed for the non orth steps
-        pEqn=FvImp::Laplacian(rho,p);   //Solve Laplacian for p (by the way, is p´)
-        Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
-
-//BEING BUILT
- //       U=U-AU*FvExp::Grad(p);                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
- //       p=p+alpha_p*pEqn.Field();
-
-
+//
+//        _Surf_Fv_Field <Vec3D> Gradpf_=CenterToFaceInterpolation <Vec3D> (FvExp::Grad(p)).Sf();
+//
+//        //Rhie-Chow Correction
+//        //vf=vf_ - Df (Grad(p)-Grad_(p))
+//        //Where Grad(p)=(pn-pp)/.. + Orth Correction
+//        //Is more simple to directly calculate fluxes
+//
+//
+//        //Calculate Face Flux
+//        //rho equals 1
+//        phi=Uf_ & mesh.Sf(); //WARNING!!!! TO BWE WRITTEN THIS
+//        phi=phi - AUf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
+//
+//		//8. Define and Solve Pressure Correction And Repeat
+//		//Div(mf)=Div(m´f+m*f)=0 ==> Div(m*f)+Div(-rho(DfGrad(p´f)Af)=0
+//        //We solve pressure correction in cell centers but eqn is indeed for cell faces
+//		//THIS IS INSIDE DIV ALGORITHM Sum(-rhof (Df) Grad(p´f)Af + Sum (m*f) = 0
+//		//for the prescribed for the non orth steps
+//        pEqn=FvImp::Laplacian(rho,p);   //Solve Laplacian for p (by the way, is p´)
+//        Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
+//
+////BEING BUILT
+// //       U=U-AU*FvExp::Grad(p);                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
+// //       p=p+alpha_p*pEqn.Field();
+//
+        it++;
 	}
 	//	---- The End -------
 	return 0;

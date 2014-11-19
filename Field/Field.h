@@ -85,7 +85,7 @@ class _Field{
 
 	_Field<T> operator=(const double &val);
 
-    ~_Field(){}
+    //~_Field(){}
 
     //THIS MUST BE DONE ONCE
     //Inner product

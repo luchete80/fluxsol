@@ -59,11 +59,11 @@ template
 EqnSystem <Scalar> & EqnSystem<Scalar>::operator==(const _CC_Fv_Field<Scalar> &field);
 
 template
-EqnSystem <Scalar> & EqnSystem<Scalar>::operator-(const EqnSystem<Scalar> &);
+EqnSystem <Scalar> EqnSystem<Scalar>::operator-(const EqnSystem<Scalar> &);
 
 template
 EqnSystem <Vec3D> & EqnSystem<Vec3D>::operator==(const _CC_Fv_Field<Vec3D> &field);
 
 template
-EqnSystem <Vec3D> & EqnSystem<Vec3D>::operator- (const EqnSystem<Vec3D> &);
+EqnSystem <Vec3D> EqnSystem<Vec3D>::operator- (const EqnSystem<Vec3D> &);
 }

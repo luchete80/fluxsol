@@ -101,7 +101,7 @@ namespace FluxSol
 
 		_PatchField < T > & PatchField(const int &i){ return this->patchfield[i]; }
 		void Add_PatchField(_PatchField<T> &field)  { patchfield.push_back(field); }
-
+        ~_BoundaryField(){}
 	};
 
 
@@ -124,7 +124,7 @@ namespace FluxSol
 	public:
 		GeomField(const int &numval, const double &value = 0.) :_Field<T>(numval, value){}
 		GeomField(){};         //Constructor
-        GeomField(const GeomField<T> &field):_Field<T>(field.Numberofvals()){this->GridPtr=&field.Grid();}
+        //GeomField(const GeomField<T> &field):_Field<T>(field.Numberofvals()){this->GridPtr=&field.Grid();}
 		//NON VIRTUAL!
 		virtual _Grid & Grid(){ return *GridPtr; }
 		virtual const _Grid  & ConstGrid()const{ return *GridPtr; }
@@ -166,6 +166,20 @@ namespace FluxSol
             return ret;
         }
 
+                //UNARY
+		GeomField<T> operator-()
+		{
+		    //GeomField<T> ret(*this);
+            GeomField<T> ret(this->Numberofvals());
+            ret.GridPtr=this->GridPtr;
+
+			for (int v = 0; v<this->value.size(); v++)
+			{
+				ret.value[v] = -this->value[v];
+			}
+			return ret;
+		}
+
         GeomField<typename innerProduct < T, T> ::type> operator&(const GeomField<T> &right)
         {
                 //GeomField<typename innerProduct < T, T> ::type> *ret=new GeomField<typename innerProduct < T, T> ::type>(this->Numberofvals());
@@ -181,7 +195,7 @@ namespace FluxSol
                 return ret;
         }
 
-
+        ~GeomField(){};
 
 	};
 
