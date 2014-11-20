@@ -210,7 +210,7 @@ class EqnSystem{   //Es un vector de ecuaciones
 
 	const Fv_CC_Grid  & Grid()const{ return *GridPtr; }
 
-	const _CC_Fv_Field<Scalar> & A()const
+	const _CC_Fv_Field<Scalar> A()const
 	{
         _CC_Fv_Field<Scalar> field(this->Grid());
         for (int e=0;e<this->Num_Eqn();e++)

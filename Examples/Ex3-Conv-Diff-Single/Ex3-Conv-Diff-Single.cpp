@@ -99,7 +99,7 @@ int main()
     //LONG WAY
     CenterToFaceInterpolation <Vec3D> interp(U);
     //_Surf_Fv_Field <Scalar> FluxField(mesh);
-    SurfaceField <Scalar> FluxField(mesh.Num_Faces());
+    _Surf_Fv_Field <Scalar> FluxField(mesh.Num_Faces());
     //This equals different fields
     FluxField= mesh.Sf() & interp.Interpolate();
 

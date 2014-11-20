@@ -136,7 +136,7 @@ namespace FluxSol
     < T >
 	SnGrad (const _CC_Fv_Field <T>& VolField)
 	{
-	    _Surf_Fv_Field <T> r;
+	    _Surf_Fv_Field <T> r(VolField.ConstGrid());
 
 
         T source;

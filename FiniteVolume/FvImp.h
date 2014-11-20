@@ -45,15 +45,9 @@ namespace FvImp {
 // Ejemplo de divergencia es Div (rho * U), el termino convectivo
 //Toma un campo centrado en el cuerpo
 
-//RECORDAR QUE EL GRADINTE, COMO EN OPENFOAM, NO ES IMPLICITO, SOLO ES EXPLICITO
-// Ejemplo de divergencia es Div (rho * U), el termino convectivo
 template <typename T>
 EqnSystem < T > //typename is written because it can not be compiled in gcc
-Div(SurfaceField<Scalar> fi,_CC_Fv_Field <T> VolField);
-
-template <typename T>
-EqnSystem < T > //typename is written because it can not be compiled in gcc
-Div(_Surf_Fv_Field<Scalar> fi,_CC_Fv_Field <T> VolField);
+Div(GeomSurfaceField<Scalar> fi,_CC_Fv_Field <T> VolField);
 
 template <typename T>
 EqnSystem < T > //typename is written because it can not be compiled in gcc

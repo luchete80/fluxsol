@@ -78,19 +78,46 @@ class CenterToFaceInterpolation
 			}
 
 			intfield = r;
-		};
+		}
+
+		//Ccopy constructor
+		CenterToFaceInterpolation(const CenterToFaceInterpolation <T> &other)
+        {
+            operator=(other);
+        }
+
+		CenterToFaceInterpolation<T>& operator=(const CenterToFaceInterpolation <T> &other)
+        {
+			GeomSurfaceField <T> r(other.Field().ConstGrid().Num_Faces());
+
+			//Loop throug faces
+			for (int f = 0; f<other.Field().ConstGrid().Num_Faces(); f++)
+			{
+				_FvFace face = other.Field().ConstGrid().Face(f);
+				T prom;
+				//Scalar fp
+				//cout <<"Face "<< f<< " "<< this->field[face.Cell(0)].outstr() << " "<< this->field[face.Cell(1)].outstr() <<endl;
+				//cout << "Fp "<< face.Fp().outstr()<<endl;
+				if (!this->field.ConstGrid().Face(f).Boundaryface())
+					prom = this->field[face.Cell(0)] * (1.0 - face.Fp()) + this->field[face.Cell(1)] * face.Fp();
+				else
+					prom = this->field[face.Cell(0)];
+
+				r[f] = prom;
+			}
+
+			this->intfield = r;
+            return this;
+        }
+
 
         //Formerly was SurfaceField
 		const GeomSurfaceField <T> & Interpolate();
 		GeomSurfaceField <T> & Interpolate(const _CC_Fv_Field<T> &fi);
 
-		const _Surf_Fv_Field <T>& Sf()const
+		const GeomSurfaceField <T> & Sf()const
 		{
-            _Surf_Fv_Field <T> field;
-
-            field=intfield;
-
-            return field;
+            return intfield;
 		}
 
 		//Base classes

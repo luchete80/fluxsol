@@ -54,7 +54,7 @@ int main()
 	//Fields
 	_CC_Fv_Field <Scalar> p(mesh);
 	_CC_Fv_Field <Vec3D>  U(mesh);
-	_Surf_Fv_Field <Scalar>  phi; //Mass Flux
+	_Surf_Fv_Field <Scalar>  phi(mesh); //Mass Flux
 
 	//Boundary conditions
 	Scalar wallvalue=0.;
@@ -109,9 +109,17 @@ int main()
 //        //Assign to U Eqn Solved values
         //_Surf_Fv_Field <Vec3D> Uf_=CenterToFaceInterpolation <Vec3D> (U).Sf();  //Uf Overbar
         _CC_Fv_Field <Scalar> AU=UEqn.A();       // In OpenFoam these are scalar
-        _Surf_Fv_Field <Scalar> AUf_=CenterToFaceInterpolation <Scalar> (AU).Sf();
+
+        //TO FIX: MAKE THIS WORK
+        //_Surf_Fv_Field <Scalar> AUf_=CenterToFaceInterpolation <Scalar> (AU).Sf();
+        //INSTEAD OF
+        _Surf_Fv_Field <Scalar> AUf_(mesh);
+        CenterToFaceInterpolation <Scalar> temp(AU);
+        AUf_=temp.Sf();
+
+
 //
-//        _Surf_Fv_Field <Vec3D> Gradpf_=CenterToFaceInterpolation <Vec3D> (FvExp::Grad(p)).Sf();
+        _Surf_Fv_Field <Vec3D> Gradpf_=&CenterToFaceInterpolation <Vec3D> (FvExp::Grad(p)).Sf();
 //
 //        //Rhie-Chow Correction
 //        //vf=vf_ - Df (Grad(p)-Grad_(p))
@@ -121,20 +129,26 @@ int main()
 //
 //        //Calculate Face Flux
 //        //rho equals 1
-//        phi=Uf_ & mesh.Sf(); //WARNING!!!! TO BWE WRITTEN THIS
-//        phi=phi - AUf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
+          //phi=Uf_ & mesh.Sf(); //WARNING!!!! TO BWE WRITTEN THIS
+          _Surf_Fv_Field <Scalar>  test=FvExp::SnGrad(p);
+
+          phi=phi - AUf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
 //
 //		//8. Define and Solve Pressure Correction And Repeat
 //		//Div(mf)=Div(m´f+m*f)=0 ==> Div(m*f)+Div(-rho(DfGrad(p´f)Af)=0
 //        //We solve pressure correction in cell centers but eqn is indeed for cell faces
 //		//THIS IS INSIDE DIV ALGORITHM Sum(-rhof (Df) Grad(p´f)Af + Sum (m*f) = 0
 //		//for the prescribed for the non orth steps
-//        pEqn=FvImp::Laplacian(rho,p);   //Solve Laplacian for p (by the way, is p´)
-//        Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
+        pEqn=FvImp::Laplacian(rho,p);   //Solve Laplacian for p (by the way, is p´)
+        Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
+        //Important:
+        //Since Correction is in flux we have yet the faces areas includes, then
+        //we must not to compute inner product another time
+
 //
 ////BEING BUILT
-// //       U=U-AU*FvExp::Grad(p);                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
-// //       p=p+alpha_p*pEqn.Field();
+        U=U-AU*FvExp::Grad(p);                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
+        p=p+alpha_p*pEqn.Field();
 //
         it++;
 	}

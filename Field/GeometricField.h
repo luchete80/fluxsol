@@ -211,6 +211,22 @@ namespace FluxSol
 		GeomSurfaceField(const int &numval, const double &value = 0.) :GeomField<T>(numval, value){}
 		GeomSurfaceField(const GeomField<T> &field):GeomField<T>(field){}
 		GeomSurfaceField(){};         //Constructor
+
+        //CenterToInterpolation crashes if it is not specified
+        GeomSurfaceField <T> & operator=(const GeomField<T> &field)
+		{
+            this->value.clear();
+            T v;
+            this->value.assign(field.Numberofvals(),v);
+            this->GridPtr=&field.Grid();
+            for (int c=0;c<field.Numberofvals();c++)
+                this->value[c]=field.Val(c);
+            //TO MODIFY
+            //this->Boundaryfield()=field->BoundaryField
+            return *this;
+
+		}
+
 		//Adding boundary face
 // TO CHECK; INHERIT OR NOT
 //		GeomSurfaceField(const Fv_CC_Grid &grid)

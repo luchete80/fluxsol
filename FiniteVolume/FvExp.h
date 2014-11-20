@@ -99,7 +99,7 @@ _CC_Fv_Field
 < T >
 Div (const _Surf_Fv_Field <T>& phi)
 {
-    _CC_Fv_Field < T > ret;
+    _CC_Fv_Field < T > ret (phi.Grid());
 
 //    const int numcells = phi.GridPtr->Num_Cells();
 //

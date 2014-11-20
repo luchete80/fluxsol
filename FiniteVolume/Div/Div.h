@@ -59,7 +59,7 @@ template <class T>
 //EqnSystem < typename innerProduct < Vec3D, T> ::type >
 //First arg is flux
 EqnSystem < T >
-FvImp::Div(SurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
+FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
 {
 
 //OpenFoam Style
@@ -102,7 +102,7 @@ FvImp::Div(SurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
     //Esta forma de calculo es para cuando las partes de la cara no son iguales
     //--------------
     //RECORRO CELLS
-    const int numcells = phi.GridPtr->Num_Cells();
+    const int numcells = phi.Grid().Num_Cells();
 
     for (int f=0;f<phi.ConstGrid().Num_Faces();f++)
     {
@@ -183,15 +183,15 @@ FvImp::Div(SurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
             _FvFace bface=phi.Grid().Face(idface);  //TO MODIFY idface or face pos??
             //Boundary type
             //Instead of if sentence it is convenient to use inheritance
-            if (phi.Boundaryfield()._PatchField(p).Type()==FIXEDVALUE)
+            if (phi.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
             {
 
                 if(FluxField.Val(idface)<0.)
                     //If flux is inwards, source is positive (is RHS)
                     //cout << "Boundary Field Value"<<phi.Boundaryfield()._PatchField(p).Val(f).Val()<<endl;
-                    eqnsys.Eqn(bface.Cell(0)).Source()-=phi.Boundaryfield()._PatchField(p).Val(f)*FluxField.Val(idface);
+                    eqnsys.Eqn(bface.Cell(0)).Source()-=phi.Boundaryfield().PatchField(p).Val(f)*FluxField.Val(idface);
             }
-            else if (phi.Boundaryfield()._PatchField(p).Type()==FIXEDGRADIENT)
+            else if (phi.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
             {
                 //TO MODIFY
                 //source=VolField.Boundaryfield()._PatchField(p).Val(f)*fi;
@@ -341,18 +341,6 @@ FvImp::Div(const _CC_Fv_Field <T> &VolField)
 
 //Flux Field may have been not related to volume field (such convection-diffusion test)
 //
-template <class T>
-EqnSystem < T >
-FvImp::Div(_Surf_Fv_Field<Scalar> fi,_CC_Fv_Field <T> VolField)
-{
-    Eqn <T> eqn;            //Ecuacion para cada una de las cells
-
-    EqnSystem < T > eqnsys(VolField.ConstGrid());
-    //SurfaceField<Scalar> sfi(fi);
-
-    return eqnsys;
-}
-
 
 }//Fin FluxSol
 
