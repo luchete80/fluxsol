@@ -121,8 +121,6 @@ namespace FluxSol
 		//Conviene colocar referencia o puntero??
 		_BoundaryField <T> BoundaryField;	//En las caras
 
-		GeomField<T> *temp;
-
 	public:
 		GeomField(const int &numval, const double &value = 0.) :_Field<T>(numval, value){}
 		GeomField(){};         //Constructor
@@ -157,12 +155,8 @@ namespace FluxSol
         {
             //GeomField<T> *ret=new GeomField<T>(this->Numberofvals());
             //TO MODIFY: USE COPY CONSTRUCTOR OR OPERATOR=
-            //POINTER MUST NOT BE PASSED HERE
             GeomField<T> ret(this->Numberofvals());
-            //THIS IS WRONG
-           // ret.GridPtr=this->GridPtr;
-
-            //GeomField<T> ret(this->Grid());
+            ret.GridPtr=this->GridPtr;
             T val;
             //Sizes must be equal and rank must be large than zero?
             for (int c = 0; c < this->Numberofvals(); c++)
@@ -188,9 +182,9 @@ namespace FluxSol
 			return ret;
 		}
 
-        GeomField<typename innerProduct < T, T> ::type> operator&(const GeomField<T> &right)
+        GeomField<typename innerProduct < T, T> ::type> & operator&(const GeomField<T> &right)
         {
-                //temp=new GeomField<typename innerProduct < T, T> ::type>(this->Numberofvals());
+                //GeomField<typename innerProduct < T, T> ::type> *ret=new GeomField<typename innerProduct < T, T> ::type>(this->Numberofvals());
                 GeomField<typename innerProduct < T, T> ::type> ret(this->Numberofvals());
                 typename innerProduct < T, T> ::type val;
                 //Sizes must be equal and rank must be large than zero?
@@ -201,7 +195,6 @@ namespace FluxSol
                 }
 
                 return ret;
-
         }
 
         ~GeomField(){};

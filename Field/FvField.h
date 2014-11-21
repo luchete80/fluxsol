@@ -317,7 +317,7 @@ namespace FluxSol
 	template<typename T>
 	_CC_Fv_Field<T> operator* (const Scalar &left,const _CC_Fv_Field<T> &right)
 	{
-	_CC_Fv_Field<T> ret(right.Numberofvals());
+	_CC_Fv_Field<T> ret(right.Grid());
 	T val;
 	//Sizes must be equal and rank must be large than zero?
 	for (int c = 0; c < right.Numberofvals(); c++)
