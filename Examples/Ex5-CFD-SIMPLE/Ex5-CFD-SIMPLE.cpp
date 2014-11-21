@@ -91,34 +91,35 @@ int main()
 //
 //
 		//2. U Calculation
-		UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
+		//UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
+
 //
 //		//4. Solve Momentum predictor (UEqn)
 		//Solve(UEqn==-FvExp::Grad(p));
 		//_CC_Fv_Field<Vec3D> pru2(-FvExp::Grad(p));
         //TO MODIFY: IF MESH IS NOT ASSIGNED PREVIOUSLY TO EQUAL, ERROR
-		_CC_Fv_Field <Vec3D> gradp(mesh);
-		//-FvExp::Grad(p);
-		gradp=-FvExp::Grad(p);
-		UEqn==gradp;
+//		_CC_Fv_Field <Vec3D> gradp(mesh);
+//		//-FvExp::Grad(p);
+//		gradp=-FvExp::Grad(p);
+//		UEqn==gradp;
 		//Solve(UEqn);
 
 //
 //
-		U=UEqn.Field();
+//		U=UEqn.Field();
 //        //Assign to U Eqn Solved values
         //_Surf_Fv_Field <Vec3D> Uf_=CenterToFaceInterpolation <Vec3D> (U).Sf();  //Uf Overbar
-        _CC_Fv_Field <Scalar> AU=UEqn.A();       // In OpenFoam these are scalar
+//        _CC_Fv_Field <Scalar> AU=UEqn.A();       // In OpenFoam these are scalar
 
         //TO FIX: MAKE THIS WORK
         //_Surf_Fv_Field <Scalar> AUf_=CenterToFaceInterpolation <Scalar> (AU).Sf();
         //INSTEAD OF
-        _Surf_Fv_Field <Scalar> AUf_(mesh);
-        CenterToFaceInterpolation <Scalar> temp(AU);
-        AUf_=temp.Sf();
+//        _Surf_Fv_Field <Scalar> AUf_(mesh);
+//        CenterToFaceInterpolation <Scalar> temp(AU);
+//        AUf_=temp.Sf();
 
 
-        _Surf_Fv_Field <Vec3D> Gradpf_=&CenterToFaceInterpolation <Vec3D> (FvExp::Grad(p)).Sf();
+//        _Surf_Fv_Field <Vec3D> Gradpf_=&CenterToFaceInterpolation <Vec3D> (FvExp::Grad(p)).Sf();
 //
 //        //Rhie-Chow Correction
 //        //vf=vf_ - Df (Grad(p)-Grad_(p))
