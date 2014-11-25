@@ -65,7 +65,7 @@ private:
     //generada la malla y cargo la malla rectangular
     //Por que la paso como argumento??
     Fv_CC_Grid(const int &nex,const int &ney,const double &lx,const double &ly);
-   	Fv_CC_Grid(const char *name){fileName=name;this->Read_CGNS();};
+  	Fv_CC_Grid(const char *name){fileName=name;this->Read_CGNS();};
 	Fv_CC_Grid(string name){fileName=name;this->Read_CGNS();};
 	//Constructor para leer desde NASTRAN
 	//El boundary deberia salir solo, pero es bueno para colocarle indices

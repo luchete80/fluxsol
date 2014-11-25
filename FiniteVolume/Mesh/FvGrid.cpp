@@ -489,6 +489,7 @@ void Fv_CC_Grid::CalcCellVolumes()
 const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 {
 	GeomSurfaceField<Vec3D> ret(this->num_faces);
+    ret.AssignGrid(this);
 
 	for (int f = 0; f < this->num_faces; f++)
 	{

@@ -73,10 +73,9 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
     //No hace falta construirla porque la devuelve el VolField
     //EqnSystem <T> eqnsys(VolField.GridPtr->Num_Cells());   //Como no le doy parametros inicia todo en cero, salvo las dimensiones
     //EqnSystem <T> < typename innerProduct < Vec3D, T> ::type > eqnsys(VolField.Grid());
-    EqnSystem < T > eqnsys(phi.ConstGrid());
+    EqnSystem < T > eqnsys(phi.Grid());
 
-
-
+    //cout << "calculating div"<<endl;
     //Interpolate face fluxes and then upwind
 
     //Flux, inner producto
@@ -106,10 +105,11 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
 
     for (int f=0;f<phi.ConstGrid().Num_Faces();f++)
     {
+        //cout << "Face: "<<f <<endl;
         _FvFace face=phi.ConstGrid().Face(f);
  		if (!face.Is_Null_Flux_Face())
 		{
-
+            //cout << "No null flux"<<endl;
             //Eqn eq[2];
             int cell[2];
 
@@ -130,7 +130,9 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
             //TO MODIFY: CHANGE FOR (Min[-mf,0])
             //THESE COEFFS REFERS TO CELL 0
             //IF FACE IS NOT BOUNDARY, THEN COEFFS IN CELL 1 ARE INVERTED
-            double d=FluxField.Val(f).Val();
+            //cout << "Obtaining Flux Value"<<endl;
+//            double d=FluxField.Val(f).Val();
+            //cout << "Value "<< endl;
             //cout << "f"<< f << " " <<"FluxField Val " <<FluxField.Val(f).Val() <<endl;
             if(FluxField.Val(f)>0.)
             {
@@ -142,6 +144,7 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
                 coeff_ap= 0.;
                 coeff_an= FluxField.Val(f);
             }
+           // cout << "Creating Eqn"<<endl;
             //If face is internal, assign to cell 0 neighbour an coefficient
             eqnsys.Eqn(cell[0]).Ap()+=coeff_ap;
 
@@ -175,6 +178,7 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
 //    Loop through faces
 //    ------------------
 //    TO MODIFY, CHAMGE ORDER BETWEEN IF AND FOR
+    //cout <<"boundary"<<endl;
     for (int p=0;p<phi.Grid().vBoundary().Num_Patches();p++)
     {
         for (int f=0;f<phi.Grid().vBoundary().vPatch(p).Num_Faces();f++)
@@ -200,7 +204,7 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
         }
 
     }
-
+    //cout << "returning div"<<endl;
     return eqnsys;
 }
 

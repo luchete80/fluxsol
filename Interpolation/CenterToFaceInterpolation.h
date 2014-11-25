@@ -59,8 +59,8 @@ class CenterToFaceInterpolation
 //			cout << "Grid Faces " <<this->field.GridPtr->Num_Faces()<<endl;
 			//Formerly was a GeomSurfaceField
 			GeomSurfaceField <T> r(this->field.ConstGrid().Num_Faces());
-
-
+            intfield = r;
+            this->intfield.AssignGrid(&this->field.ConstGrid());
 			//Loop throug faces
 			for (int f = 0; f<this->field.ConstGrid().Num_Faces(); f++)
 			{
@@ -74,10 +74,9 @@ class CenterToFaceInterpolation
 				else
 					prom = this->field[face.Cell(0)];
 
-				r[f] = prom;
+				this->intfield[f] = prom;
 			}
 
-			intfield = r;
 		}
 
 		//Ccopy constructor

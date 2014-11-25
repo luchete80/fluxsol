@@ -81,7 +81,7 @@ class _FvFace:public _Face{
 
 		//Gradientes
 		void GradCoeffs_Central();              //Calculo los coeficientes que necesito para los gradientes de cara
-		~_FvFace(){};
+		//~_FvFace(){};
 
 
 

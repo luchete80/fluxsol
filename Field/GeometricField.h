@@ -126,10 +126,13 @@ namespace FluxSol
 	public:
 		GeomField(const int &numval, const double &value = 0.) :_Field<T>(numval, value){}
 		GeomField(){};         //Constructor
+		virtual void SizeFromGrid(const _Grid *gPtr){};
+		void AssignGrid(const _Grid *gPtr){this->GridPtr=gPtr;}
+
         //GeomField(const GeomField<T> &field):_Field<T>(field.Numberofvals()){this->GridPtr=&field.Grid();}
 		//NON VIRTUAL!
 		virtual _Grid & Grid(){ return *GridPtr; }
-		virtual const _Grid  & ConstGrid()const{ return *GridPtr; }
+		const _Grid  & ConstGrid()const{ return this->GridPtr; }
 		//Conveccion, interpolacion o reconstruccion, de solo una celda
 		//THIS IS OLD. FIELD DOES NOT RETURN AN EQ SYSTEM BECAUSE REFER TO EQSYS AND THIS TO FVGRID
 		//AT THE SAME TIME FVGRID REFERS TO GEOMFIELD AND THIS TO FIELD, AND FIELD TO EQSYS
@@ -142,6 +145,7 @@ namespace FluxSol
         {
             //GeomField<T> *ret=new GeomField<T>(this->Numberofvals());
             GeomField<T> ret(this->Numberofvals());
+            ret.GridPtr=&this->Grid();
             T val;
             //Sizes must be equal and rank must be large than zero?
             for (int c = 0; c < this->Numberofvals(); c++)
@@ -160,7 +164,7 @@ namespace FluxSol
             //POINTER MUST NOT BE PASSED HERE
             GeomField<T> ret(this->Numberofvals());
             //THIS IS WRONG
-           // ret.GridPtr=this->GridPtr;
+            ret.GridPtr=this->GridPtr;
 
             //GeomField<T> ret(this->Grid());
             T val;
@@ -192,8 +196,10 @@ namespace FluxSol
         {
                 //temp=new GeomField<typename innerProduct < T, T> ::type>(this->Numberofvals());
                 GeomField<typename innerProduct < T, T> ::type> ret(this->Numberofvals());
+                ret.AssignGrid(&right.Grid());
                 typename innerProduct < T, T> ::type val;
                 //Sizes must be equal and rank must be large than zero?
+                cout << "Number of vals" <<this->Numberofvals()<<endl;
                 for (int c = 0; c < this->Numberofvals(); c++)
                 {
                     val = this->Val(c) & right.Val(c);
@@ -204,7 +210,7 @@ namespace FluxSol
 
         }
 
-        ~GeomField(){};
+        //~GeomField(){};
 
 	};
 
@@ -236,6 +242,7 @@ namespace FluxSol
 
 		}
 
+		virtual ~GeomSurfaceField(){};
 		//Adding boundary face
 // TO CHECK; INHERIT OR NOT
 //		GeomSurfaceField(const Fv_CC_Grid &grid)
@@ -291,6 +298,14 @@ namespace FluxSol
 		//Fv_CC_Grid  *GridPtr;       //Se podria probar con un puntero general
 
 		GeomVolField(const _Grid &grid);
+
+        virtual void SizeFromGrid(const _Grid *gPtr)
+        {
+            this->GridPtr=gPtr;
+            this->value.clear();
+            //this->value.assign(field.Numberofvals(),v);
+
+        }
 
 		//_CC_Fv_Field (InputFile &inputfile);
 

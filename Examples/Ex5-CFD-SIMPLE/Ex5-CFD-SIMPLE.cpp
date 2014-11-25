@@ -85,41 +85,48 @@ int main()
 
 	//ITERATION BEGINS
 	int it=0;
-	while (it <=10)
+	while (it <=100)
 	{
+	    cout << "Iteration: "<<it<< endl;
 		//1.Restore Iteration
 //
 //
 		//2. U Calculation
-		//UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
-
+		UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
 //
 //		//4. Solve Momentum predictor (UEqn)
 		//Solve(UEqn==-FvExp::Grad(p));
 		//_CC_Fv_Field<Vec3D> pru2(-FvExp::Grad(p));
         //TO MODIFY: IF MESH IS NOT ASSIGNED PREVIOUSLY TO EQUAL, ERROR
-//		_CC_Fv_Field <Vec3D> gradp(mesh);
-//		//-FvExp::Grad(p);
-//		gradp=-FvExp::Grad(p);
-//		UEqn==gradp;
+		_CC_Fv_Field <Vec3D> gradp(mesh);
+//		-FvExp::Grad(p);
+		gradp=-FvExp::Grad(p);
+		UEqn==gradp;
 		//Solve(UEqn);
 
 //
 //
-//		U=UEqn.Field();
+		U=UEqn.Field();
 //        //Assign to U Eqn Solved values
-        //_Surf_Fv_Field <Vec3D> Uf_=CenterToFaceInterpolation <Vec3D> (U).Sf();  //Uf Overbar
-//        _CC_Fv_Field <Scalar> AU=UEqn.A();       // In OpenFoam these are scalar
+        _Surf_Fv_Field <Vec3D> Uf_=&CenterToFaceInterpolation <Vec3D> (U).Sf();  //Uf Overbar
+        _CC_Fv_Field <Scalar> AU=UEqn.A();       // In OpenFoam these are scalar
 
         //TO FIX: MAKE THIS WORK
-        //_Surf_Fv_Field <Scalar> AUf_=CenterToFaceInterpolation <Scalar> (AU).Sf();
+        CenterToFaceInterpolation <Scalar> temp(AU);
+        _Surf_Fv_Field <Scalar> AUf_=&CenterToFaceInterpolation <Scalar> (AU).Sf();
         //INSTEAD OF
 //        _Surf_Fv_Field <Scalar> AUf_(mesh);
 //        CenterToFaceInterpolation <Scalar> temp(AU);
 //        AUf_=temp.Sf();
 
 
-//        _Surf_Fv_Field <Vec3D> Gradpf_=&CenterToFaceInterpolation <Vec3D> (FvExp::Grad(p)).Sf();
+        _Surf_Fv_Field <Vec3D> Gradpf_=&CenterToFaceInterpolation <Vec3D> (FvExp::Grad(p)).Sf();
+
+        cout << "gradpf number ofvals" << Gradpf_.Numberofvals()<<endl;
+        cout << "AUf_ number ofvals" << AUf_.Numberofvals()<<endl;
+        cout << "Uf_ number ofvals" << Uf_.Numberofvals()<<endl;
+        cout << "AU number ofvals" << AU.Numberofvals()<<endl;
+        cout << "temp number ofvals" << temp.Sf().Numberofvals()<<endl;
 //
 //        //Rhie-Chow Correction
 //        //vf=vf_ - Df (Grad(p)-Grad_(p))
@@ -129,30 +136,27 @@ int main()
 //
 //        //Calculate Face Flux
 //        //rho equals 1
-
-        //THIS LINE HAS AN ERROR
-         //phi=phi - AUf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
+        //TO CORRECT
+        //Gradpf_ & Gradpf_;
+        Gradpf_ & mesh.Sf();
+        // phi=phi - AUf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
 //
 //		//8. Define and Solve Pressure Correction And Repeat
 //		//Div(mf)=Div(m´f+m*f)=0 ==> Div(m*f)+Div(-rho(DfGrad(p´f)Af)=0
 //        //We solve pressure correction in cell centers but eqn is indeed for cell faces
 //		//THIS IS INSIDE DIV ALGORITHM Sum(-rhof (Df) Grad(p´f)Af + Sum (m*f) = 0
 //		//for the prescribed for the non orth steps
-//        pEqn=FvImp::Laplacian(rho,p);   //Solve Laplacian for p (by the way, is p´)
-//        Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
+        pEqn=FvImp::Laplacian(rho,p);   //Solve Laplacian for p (by the way, is p´)
+        Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
         //Important:
         //Since Correction is in flux we have yet the faces areas includes, then
         //we must not to compute inner product another time
 
 //
 ////BEING BUILT
-//        U=U-AU*FvExp::Grad(p);                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
-//        p=p+alpha_p*pEqn.Field();
-//
-//
-//        pEqn.Field();
-//        UEqn.Field();
-//
+        U=U-AU*FvExp::Grad(p);                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
+        p=p+alpha_p*pEqn.Field();
+
         it++;
 	}
 	//	---- The End -------

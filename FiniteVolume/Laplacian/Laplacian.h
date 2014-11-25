@@ -46,7 +46,9 @@ EqnSystem <T> Laplacian(_CC_Fv_Field <T> )
 template<typename T>
 EqnSystem <T> FvImp::Laplacian(_Surf_Fv_Field<Scalar> fi,_CC_Fv_Field <T> &VolField)
 {
+    EqnSystem <T> eqnsys(VolField.Grid());
 
+    return eqnsys;
 }
 //Otra opcion puede ser tambien colocarle un simple escalar que implique un cmpo constante
 //Esta funcion calcula un gradiente en las caras y lo multiplica por el campo escalar

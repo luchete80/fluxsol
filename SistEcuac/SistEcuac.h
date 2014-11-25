@@ -28,7 +28,7 @@
 #include <string>
 #include <fstream>
 //Is important to note that must not be recursively
-#include "./FiniteVolume/Mesh/FvGrid.h"
+#include "FvGrid.h"
 #include "FvField.h"
 
 using namespace std;
@@ -120,20 +120,6 @@ public:
 	void Log(ofstream &f);
 };
 
-template <typename T>
-void Eqn <T>::Log(ofstream &f)
-{
-	f<<"ap : ";
-	ap.Log(f);
-	f<<endl;
-	f<<"an : ";
-	for (int n=0;n<an.size();n++)	{an[n].Log(f);f<<" ";}
-	f<<endl;
-	f<<"source: ";
-	this->source.Log(f);
-	f<<endl;
-}
-
 //Can derive a Class With Finite Volume information
 //FvEqnSystem
 template <typename T>
@@ -153,15 +139,27 @@ class EqnSystem{   //Es un vector de ecuaciones
 
     public:
 
+	EqnSystem(const int &n, Eqn<T> &eqq)
+	{
+
+        this->eqn.clear();
+
+        for (int e_=0;e_<n;e_++)
+        {
+
+            //this->eqn.push_back(eqq);
+        }
+    }
     //Constructores
     EqnSystem():dimension(int(pTraits<T>::rank)){
         //cout << "Eqn Sys created w/o dim"<<endl;
         }
-    ~EqnSystem(){
+    //~EqnSystem(){
 //    	    delete GridPtr;
-    	    }
+//    	    }
     EqnSystem(std::vector<Eqn<T> > ec);
-	//EqnSystem(const int);
+
+
 	EqnSystem(const Fv_CC_Grid &);
 
 	//EqnSystem(_CC_Fv_Field <T> &fvfield);
@@ -177,8 +175,10 @@ class EqnSystem{   //Es un vector de ecuaciones
 	Eqn<T> & Eqn(const int &i){return eqn[i];}
 
 	//Operators
-	const int & Dim(){return dimension;}
-	const int Num_Eqn(){return eqn.size();}
+	const int & Dim() const {return dimension;}
+	const int Num_Eqn()const {
+	    return eqn.size();
+    }
 //	void operator=(const EqnSystem <T> &right)
 //	{
 //
@@ -189,7 +189,56 @@ class EqnSystem{   //Es un vector de ecuaciones
 
 	//Binary operators, U
 	EqnSystem <T> & operator==(const EqnSystem <T> &right);
-	EqnSystem <T> operator- (const EqnSystem <T> &right);
+
+//MUST TO EQUAL ALL
+	EqnSystem <T> & operator=(const EqnSystem <T> &right)
+	{
+	    this->eqn.clear();
+	    this->GridPtr=right.GridPtr;
+        for (int e=0;e<right.EqnV().size();e++)
+        {
+            this->eqn.push_back(right.Eqn(e));
+        }
+
+        for (int f=0;f<right.first_nonzero_column.size();f++)
+            this->first_nonzero_column.push_back(right.first_nonzero_column[f]);
+
+        for (int f=0;f<right.nbr_eqn.size();f++)
+            this->nbr_eqn.push_back(right.nbr_eqn[f]);
+
+        this->dimension=right.dimension;
+
+        return *this;
+	}
+
+
+	EqnSystem <T> operator- (const EqnSystem <T> &right)
+	{
+
+
+    //cout << "Eqn sizes"<< this->Num_Eqn()<< " "<<right.EqnV().size()<<endl;
+    int num_eqn=this->eqn.size();
+        //EqnSystem<T> ret(num_eqn);
+        EqnSystem<T> ret=*this;
+        if (EqnV().size() == right.EqnV().size())
+        {
+            //Check if both eqns have same size
+            for (int e = 0; e<EqnV().size(); e++)
+            {
+    //			cout << "operator =="<< this-> eqn[e].NeighboursIds().size()<<endl;
+                ret.eqn[e] = (this->eqn[e] - right.Eqn(e));
+    //			cout << "operator =="<< this-> eqn[e].NeighboursIds().size()<<endl;
+            }
+        }
+        else
+        {
+            cout << "Eqn Systems have different size. Operator == fails"<<endl;
+        }
+
+        //cout << "Returning..."<<endl;
+        return ret;
+
+	}
 
 	EqnSystem <T> & operator==(const _CC_Fv_Field<T> &field);
 
@@ -205,6 +254,8 @@ class EqnSystem{   //Es un vector de ecuaciones
         }
         return field;
     }
+
+
 	//template <typename T>
 	//operator=(const EqnSystem <T> &r){}
 
@@ -232,6 +283,24 @@ class EqnSystem{   //Es un vector de ecuaciones
 // CONSTRUCTORES
 //
 //
+
+
+template <typename T>
+void Eqn <T>::Log(ofstream &f)
+{
+	f<<"ap : ";
+	ap.Log(f);
+	f<<endl;
+	f<<"an : ";
+	for (int n=0;n<an.size();n++)	{an[n].Log(f);f<<" ";}
+	f<<endl;
+	f<<"source: ";
+	this->source.Log(f);
+	f<<endl;
+}
+
+
+
 }
 
 //This is needed
