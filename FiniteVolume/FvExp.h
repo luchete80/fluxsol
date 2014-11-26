@@ -54,7 +54,7 @@ GeomSurfaceField <T> Interpolate(const _CC_Fv_Field <T> &field)
         //Pending to Generate constructor
         //cout << "Grid Faces " <<field.ConstGrid().Num_Faces()<<endl;
         GeomSurfaceField <T> r(field.ConstGrid().Num_Faces());
-
+        r.AssignGrid(&field.ConstGrid());
 
         //Loop throug faces
         for (int f = 0; f<field.ConstGrid().Num_Faces(); f++)
@@ -75,7 +75,7 @@ GeomSurfaceField <T> Interpolate(const _CC_Fv_Field <T> &field)
         }
 
         return r;
-    };
+};
 
 
 template<class T>

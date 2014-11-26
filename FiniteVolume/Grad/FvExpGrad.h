@@ -144,60 +144,68 @@ namespace FluxSol
         vector <int> nbr_eqn;
 
         //Internal field
-        //cout << "Face Number"<<VolField.Grid().Num_Faces()<<endl;
-        //cout << "Cell Number"<<VolField.Grid().Num_Cells()<<endl;
+        cout << "Face Number"<<VolField.Grid().Num_Faces()<<endl;
+        cout << "Cell Number"<<VolField.Grid().Num_Cells()<<endl;
+
+        cout << "field values "<<r.Numberofvals()<<endl;
+
+        T grad=0.;
         for (int f=0;f<VolField.Grid().Num_Faces();f++)
         {
-            //cout << "Face "<<f<<endl;
+//            //cout << "Face "<<f<<endl;
             _FvFace face=VolField.Grid().Face(f);
             if (!face.Is_Null_Flux_Face())
             {
                 if (!VolField.Grid().Face(f).Boundaryface())
                 {
-                    //cout << "Not boundary face"<<endl;
-                    //nbr_eqn.push_back(VolField.Grid().Cell(c));
-                    //eqnsys.Eqn(face.Cell(0)).Coeffs(ap,an);
+//                    //cout << "Not boundary face"<<endl;
+//                    //nbr_eqn.push_back(VolField.Grid().Cell(c));
+//                    //eqnsys.Eqn(face.Cell(0)).Coeffs(ap,an);
                     int pid=face.Cell(0);
                     int nid=face.Cell(1);
-                    T grad=(VolField.Val(nid).Val()-VolField.Val(pid).Val())*face.Norm_ad()/face.Dist_pn();
-                    r.Val(f, grad);
-                }
 
+                    cout << "pid nid" << pid << " " <<nid<<endl;
+
+
+//                    //T grad=(VolField.Val(nid).Val()-VolField.Val(pid).Val())*face.Norm_ad()/face.Dist_pn();
+                   // r.Val(f, grad);
+                    r[f]=grad;
+                }
             }//End if !NullFluxFace
 
         }//End look trough faces
-
-        //BOUNDARY
-        //cout << "Laplacian, look through boundary.."<<endl;
-        for (int p=0;p<VolField.Grid().vBoundary().Num_Patches();p++)
-        {
-            for (int f=0;f<VolField.Grid().vBoundary().vPatch(p).Num_Faces();f++)
-            {
-                int idface=VolField.Grid().vBoundary().vPatch(p).Id_Face(f);
-                _FvFace face=VolField.Grid().Face(idface);  //TO MODIFY idface or face pos??
-                //Boundary type
-                //Instead of if sentence it is convenient to use inheritance
-                T pval= VolField.Val(face.Cell(0)).Val();
-
-                if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
-                {
-                    //cout <<"source"<<endl;
-                    ap=-face.Norm_ad()/fabs(face.Dist_pf_LR(0));
-                    T fval =VolField.Boundaryfield().PatchField(p).Val(f);
-
-                    T grad=(fval-pval)*face.Norm_ad()/fabs(face.Dist_pf_LR(0));
-                    //cout <<"created" <<endl;
-                    //eqnsys.Eqn(face.Cell(0)).Ap()+=ap;
-                    //eqnsys.Eqn(face.Cell(0)).Source()+=source;
-                }
-                else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
-                {
-                    source=VolField.Boundaryfield().PatchField(p).Val(f);
-                    //eqnsys.Eqn(face.Cell(0)).Source()+=source;
-                }
-            }
-
-        }
+//
+//        //BOUNDARY
+//        //cout << "Laplacian, look through boundary.."<<endl;
+//        for (int p=0;p<VolField.Grid().vBoundary().Num_Patches();p++)
+//        {
+//            for (int f=0;f<VolField.Grid().vBoundary().vPatch(p).Num_Faces();f++)
+//            {
+//                int idface=VolField.Grid().vBoundary().vPatch(p).Id_Face(f);
+//                _FvFace face=VolField.Grid().Face(idface);  //TO MODIFY idface or face pos??
+//                //Boundary type
+//                //Instead of if sentence it is convenient to use inheritance
+//                T pval= VolField.Val(face.Cell(0)).Val();
+//
+//                if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
+//                {
+//                    //cout <<"source"<<endl;
+//                    ap=-face.Norm_ad()/fabs(face.Dist_pf_LR(0));
+//                    T fval =VolField.Boundaryfield().PatchField(p).Val(f);
+//
+//                    T grad=(fval-pval)*face.Norm_ad()/fabs(face.Dist_pf_LR(0));
+//                    //cout <<"created" <<endl;
+//                    //eqnsys.Eqn(face.Cell(0)).Ap()+=ap;
+//                    //eqnsys.Eqn(face.Cell(0)).Source()+=source;
+//                }
+//                else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
+//                {
+//                    source=VolField.Boundaryfield().PatchField(p).Val(f);
+//                    //eqnsys.Eqn(face.Cell(0)).Source()+=source;
+//                }
+//            }
+//
+//        }
         return r;
 	}//Enf of Gradf
 

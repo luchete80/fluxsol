@@ -66,7 +66,7 @@ class _Field{
         this->numberofvals=val.size();
 	}
 	const T & Val(const int &i)const{return value[i];};
-	void Val (const int &i,const T &v){value[i]=v;}
+	inline void Val (const int &i,const T &v){this->value[i]=v;}
 	const int & Numberofvals()const{return numberofvals;}
 	void  Insert_Idgrid_domain(const int &i){idgrid_domain.push_back(i);}
 	int & Idgrid_domain(const int &i){return idgrid_domain[i];}

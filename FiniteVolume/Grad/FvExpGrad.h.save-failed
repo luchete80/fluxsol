@@ -48,22 +48,24 @@ namespace FluxSol
 	{
 
 		//Field to return
-		_CC_Fv_Field <T> fieldnc=field;
-		 _CC_Fv_Field < typename outerProduct<Vec3D, T>::type > r(fieldnc.Grid());
+		 _CC_Fv_Field < typename outerProduct<Vec3D, T>::type > r(field.Grid());
 		//Paso el flujo a las caras, a un campo de faces
 
 		//Tengo que hacer el prod "externo" entre un T a izquierda y un vector (rank=1) a derecha
 
 		 //Like the open Foam functions
 		 //_Surf_Fv_Field < typename outerProduct<Vec3D, T>::type > facefield=field.FaceInterpolate();
-        SurfaceField <T> facefi=Interpolate(field);
+		 //Formerly was SurfaceField
+        GeomSurfaceField <T> facefi=Interpolate(field);
 
 		 bool end = false;
 		 //Begin Main Loop
 		 //facefi and r (which is the corrected gauss gradient of fieldnc) are changing
 		 _CC_Fv_Field < typename outerProduct<Vec3D, T>::type > rant;
-		 while (!end)
-		 {
+
+		 //FOR NON ORTHOGONAL ITERATIONS
+		 //while (!end)
+		 //{
 			 r=0.;
 			 //Loop through cells to calculate Gauss Gradient
 			 int c;
@@ -89,31 +91,33 @@ namespace FluxSol
 			 //With fo-f = Pf - Pfo = Pf - (Pf&ePN)ePN is the projection
 			 //Dist_pf_LR
 
-			 for (int f=0;f<r.Grid().Num_Faces();f++)
-			 {
-				 //f-fo is  unique for each face, but it can be calculated either with P or N cells
-				 _FvFace face = r.Grid().Face(f);
-				 Vec3D fof=face.Dist_pf_LR(0)-(face.Dist_pf_LR(0)&face.e_PN())*face.e_PN();
+//TO MODIFY: NON ORTHOGONAL CORRECTIONS
+//			 for (int f=0;f<r.Grid().Num_Faces();f++)
+//			 {
+//				 //f-fo is  unique for each face, but it can be calculated either with P or N cells
+//				 _FvFace face = r.Grid().Face(f);
+//				 Vec3D fof=face.Dist_pf_LR(0)-(face.Dist_pf_LR(0)&face.e_PN())*face.e_PN();
+//
+//				//Variable and gradient averages
+//				 T fifo = face.Fp()*fieldnc[face.Cell(0)]+(1.0-face.Fp())*fieldnc[face.Cell(1)];
+//				typename outerProduct<Vec3D, T>::type grad_fio=(r[face.Cell(0)]*(1-face.Fp())+r[face.Cell(1)]*face.Fp());
+//				//typename outerProduct<Vec3D, T>::type grad_fio=r[face.Cell(0)];
+//
+//				//facefi [f] = (fifo+(grad_fio&fof));
+//				facefi [f] = fifo;
+//				T s1,s2;
+//				s1=s2;
+//
+//			 }
+//
+//
+//			 //Compare r against rant
+//			 //With MaxDiff Field template function
+//			 Scalar maxdif=MaxDiff(r,rant);
+//			 rant = r;
 
-				//Variable and gradient averages
-				 T fifo = face.Fp()*fieldnc[face.Cell(0)]+(1.0-face.Fp())*fieldnc[face.Cell(1)];
-				typename outerProduct<Vec3D, T>::type grad_fio=(r[face.Cell(0)]*(1-face.Fp())+r[face.Cell(1)]*face.Fp());
-				//typename outerProduct<Vec3D, T>::type grad_fio=r[face.Cell(0)];
 
-				//facefi [f] = (fifo+(grad_fio&fof));
-				facefi [f] = fifo;
-				T s1,s2;
-				s1=s2;
-
-			 }
-
-
-			 //Compare r against rant
-			 //With MaxDiff Field template function
-			 Scalar maxdif=MaxDiff(r,rant);
-			 rant = r;
-
-		 }//While End
+		 //}//While End
 
 
 
@@ -121,6 +125,82 @@ namespace FluxSol
 
 	}
 
+    //Face gradient
+    //Explicit form of FaceGrad
+    //Like Laplacian, (N-P)dist + Non-Orthogonal
+    //TO MODIFY!!!!
+    //CHANGE BY SnGradf
+    template<class T>
+    _Surf_Fv_Field
+    //< typename outerProduct<Vec3D, T>::type >
+    < T >
+	SnGrad (const _CC_Fv_Field <T>& VolField)
+	{
+	    _Surf_Fv_Field <T> r(VolField.ConstGrid());
+
+
+        T source;
+        Scalar ap, an;  //IF FI IS A SCALAR THESE CAN BE SCALARS
+        vector <int> nbr_eqn;
+
+        //Internal field
+        cout << "Face Number"<<VolField.Grid().Num_Faces()<<endl;
+        cout << "Cell Number"<<VolField.Grid().Num_Cells()<<endl;
+        for (int f=0;f<VolField.Grid().Num_Faces();f++)
+        {
+//            //cout << "Face "<<f<<endl;
+            _FvFace face=VolField.Grid().Face(f);
+            if (!face.Is_Null_Flux_Face())
+            {
+                if (!VolField.Grid().Face(f).Boundaryface())
+                {
+//                    //cout << "Not boundary face"<<endl;
+//                    //nbr_eqn.push_back(VolField.Grid().Cell(c));
+//                    //eqnsys.Eqn(face.Cell(0)).Coeffs(ap,an);
+                    int pid=face.Cell(0);
+                    int nid=face.Cell(1);
+                    T grad=0.;
+//                    //T grad=(VolField.Val(nid).Val()-VolField.Val(pid).Val())*face.Norm_ad()/face.Dist_pn();
+                    //r.Val(f, grad);
+                    r.value[f]=grad;
+                }
+            }//End if !NullFluxFace
+
+        }//End look trough faces
+//
+//        //BOUNDARY
+//        //cout << "Laplacian, look through boundary.."<<endl;
+//        for (int p=0;p<VolField.Grid().vBoundary().Num_Patches();p++)
+//        {
+//            for (int f=0;f<VolField.Grid().vBoundary().vPatch(p).Num_Faces();f++)
+//            {
+//                int idface=VolField.Grid().vBoundary().vPatch(p).Id_Face(f);
+//                _FvFace face=VolField.Grid().Face(idface);  //TO MODIFY idface or face pos??
+//                //Boundary type
+//                //Instead of if sentence it is convenient to use inheritance
+//                T pval= VolField.Val(face.Cell(0)).Val();
+//
+//                if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
+//                {
+//                    //cout <<"source"<<endl;
+//                    ap=-face.Norm_ad()/fabs(face.Dist_pf_LR(0));
+//                    T fval =VolField.Boundaryfield().PatchField(p).Val(f);
+//
+//                    T grad=(fval-pval)*face.Norm_ad()/fabs(face.Dist_pf_LR(0));
+//                    //cout <<"created" <<endl;
+//                    //eqnsys.Eqn(face.Cell(0)).Ap()+=ap;
+//                    //eqnsys.Eqn(face.Cell(0)).Source()+=source;
+//                }
+//                else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
+//                {
+//                    source=VolField.Boundaryfield().PatchField(p).Val(f);
+//                    //eqnsys.Eqn(face.Cell(0)).Source()+=source;
+//                }
+//            }
+//
+//        }
+        return r;
+	}//Enf of Gradf
 
     }//Fin de FvExp
 }//Fin de namespace FluxSol

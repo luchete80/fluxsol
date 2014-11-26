@@ -74,6 +74,7 @@ namespace FluxSol
 		{
 			this->GridPtr = &grid;
 			//LO HAGO PARA TODOS LOS FACES
+			this->numberofvals=grid.Num_Faces();
 			for (int f = 0; f<this->GridPtr->Num_Faces(); f++)
 			{
 				if (grid.Face(f).Boundaryface() && !grid.Face(f).Is_Null_Flux_Face())
@@ -102,6 +103,7 @@ namespace FluxSol
 		{
             this->value.clear();
             T v;
+            this->numberofvals=field.Numberofvals();
             this->value.assign(field.Numberofvals(),v);
             this->GridPtr=&field.Grid();
             for (int c=0;c<field.Numberofvals();c++)
@@ -109,8 +111,9 @@ namespace FluxSol
             //TO MODIFY
             //this->Boundaryfield()=field->BoundaryField
             return *this;
-
 		}
+
+
 //        _Surf_Fv_Field <T> & operator=(const GeomField<T> field)
 //        {
 //

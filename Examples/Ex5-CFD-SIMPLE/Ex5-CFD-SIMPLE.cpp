@@ -108,19 +108,25 @@ int main()
 //
 		U=UEqn.Field();
 //        //Assign to U Eqn Solved values
-        _Surf_Fv_Field <Vec3D> Uf_=&CenterToFaceInterpolation <Vec3D> (U).Sf();  //Uf Overbar
+        _Surf_Fv_Field <Vec3D> Uf_;
+
+        Uf_=FvExp::Interpolate(U);  //Uf Overbar
         _CC_Fv_Field <Scalar> AU=UEqn.A();       // In OpenFoam these are scalar
 
         //TO FIX: MAKE THIS WORK
         CenterToFaceInterpolation <Scalar> temp(AU);
-        _Surf_Fv_Field <Scalar> AUf_=&CenterToFaceInterpolation <Scalar> (AU).Sf();
+        _Surf_Fv_Field <Scalar> AUf_;
+
+        AUf_=FvExp::Interpolate(AU);
         //INSTEAD OF
 //        _Surf_Fv_Field <Scalar> AUf_(mesh);
 //        CenterToFaceInterpolation <Scalar> temp(AU);
 //        AUf_=temp.Sf();
 
 
-        _Surf_Fv_Field <Vec3D> Gradpf_=&CenterToFaceInterpolation <Vec3D> (FvExp::Grad(p)).Sf();
+        _Surf_Fv_Field <Vec3D> Gradpf_;
+
+        Gradpf_=FvExp::Interpolate(FvExp::Grad(p));
 
         cout << "gradpf number ofvals" << Gradpf_.Numberofvals()<<endl;
         cout << "AUf_ number ofvals" << AUf_.Numberofvals()<<endl;
@@ -138,8 +144,9 @@ int main()
 //        //rho equals 1
         //TO CORRECT
         //Gradpf_ & Gradpf_;
-        Gradpf_ & mesh.Sf();
-        // phi=phi - AUf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
+        FvExp::SnGrad(p);
+
+        //phi=phi - AUf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
 //
 //		//8. Define and Solve Pressure Correction And Repeat
 //		//Div(mf)=Div(m´f+m*f)=0 ==> Div(m*f)+Div(-rho(DfGrad(p´f)Af)=0
