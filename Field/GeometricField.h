@@ -199,7 +199,7 @@ namespace FluxSol
                 ret.AssignGrid(&right.Grid());
                 typename innerProduct < T, T> ::type val;
                 //Sizes must be equal and rank must be large than zero?
-                cout << "Number of vals" <<this->Numberofvals()<<endl;
+//                cout << "Number of vals" <<this->Numberofvals()<<endl;
                 for (int c = 0; c < this->Numberofvals(); c++)
                 {
                     val = this->Val(c) & right.Val(c);

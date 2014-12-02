@@ -63,6 +63,7 @@ public:
 	double dot(const Vec3D &right);
 	Vec3D cross(const Vec3D &right);
 	Vec3D & operator= (const Vec3D &);
+	Vec3D(const Vec3D &v){*this=v;}
 	Vec3D & operator= (const Scalar &);
 	Vec3D & operator= (const double &);
 	Vec3D & operator= (const std::vector<double> &);
@@ -142,7 +143,7 @@ public:
 	std::string Imprimir_Coord();
 
 
-    virtual ~Vec3D(){}; //Destructor virtual
+    virtual ~Vec3D(){/*cout << "destructing" <<endl;*/}; //Destructor virtual
 	void Log(ofstream &f){f<<comp[0]<<";"<<comp[1]<<";"<<comp[2]<<";";}
 
 };

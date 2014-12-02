@@ -74,10 +74,8 @@ int main()
     p=0.1;
 	bool conv=true;
 
-	_CC_Fv_Field <Scalar> p2(mesh);
-    _CC_Fv_Field <Scalar> p3(mesh);
 
-	//p3=p+p2;
+    _Surf_Fv_Field <Vec3D> Gradpf_;
 
 
     //EXAMPLE PENDING TASKS
@@ -85,7 +83,7 @@ int main()
 
 	//ITERATION BEGINS
 	int it=0;
-	while (it <=100)
+	while (it <10)
 	{
 	    cout << "Iteration: "<<it<< endl;
 		//1.Restore Iteration
@@ -102,7 +100,9 @@ int main()
 //		-FvExp::Grad(p);
 		gradp=-FvExp::Grad(p);
 		UEqn==gradp;
-		//Solve(UEqn);
+		Solve(UEqn);
+
+		cout << "U(0) Val: "<<U.Val(0).outstr()<<endl;
 
 //
 //
@@ -119,34 +119,19 @@ int main()
 
         AUf_=FvExp::Interpolate(AU);
         //INSTEAD OF
-//        _Surf_Fv_Field <Scalar> AUf_(mesh);
-//        CenterToFaceInterpolation <Scalar> temp(AU);
-//        AUf_=temp.Sf();
-
-
-        _Surf_Fv_Field <Vec3D> Gradpf_;
 
         Gradpf_=FvExp::Interpolate(FvExp::Grad(p));
 
-        cout << "gradpf number ofvals" << Gradpf_.Numberofvals()<<endl;
-        cout << "AUf_ number ofvals" << AUf_.Numberofvals()<<endl;
-        cout << "Uf_ number ofvals" << Uf_.Numberofvals()<<endl;
-        cout << "AU number ofvals" << AU.Numberofvals()<<endl;
-        cout << "temp number ofvals" << temp.Sf().Numberofvals()<<endl;
+        cout << "p val: "<< p.Val(0).outstr()<<endl;
+        cout << Gradpf_.Val(0).Val().outstr()<<endl;
+
 //
 //        //Rhie-Chow Correction
 //        //vf=vf_ - Df (Grad(p)-Grad_(p))
 //        //Where Grad(p)=(pn-pp)/.. + Orth Correction
 //        //Is more simple to directly calculate fluxes
-//
-//
-//        //Calculate Face Flux
-//        //rho equals 1
-        //TO CORRECT
-        //Gradpf_ & Gradpf_;
-        FvExp::SnGrad(p);
 
-        //phi=phi - AUf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
+        phi=phi - AUf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
 //
 //		//8. Define and Solve Pressure Correction And Repeat
 //		//Div(mf)=Div(m´f+m*f)=0 ==> Div(m*f)+Div(-rho(DfGrad(p´f)Af)=0
@@ -155,12 +140,12 @@ int main()
 //		//for the prescribed for the non orth steps
         pEqn=FvImp::Laplacian(rho,p);   //Solve Laplacian for p (by the way, is p´)
         Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
+
         //Important:
         //Since Correction is in flux we have yet the faces areas includes, then
         //we must not to compute inner product another time
 
-//
-////BEING BUILT
+        //BEING BUILT
         U=U-AU*FvExp::Grad(p);                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
         p=p+alpha_p*pEqn.Field();
 

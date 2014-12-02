@@ -144,10 +144,10 @@ namespace FluxSol
         vector <int> nbr_eqn;
 
         //Internal field
-        cout << "Face Number"<<VolField.Grid().Num_Faces()<<endl;
-        cout << "Cell Number"<<VolField.Grid().Num_Cells()<<endl;
+//        cout << "Face Number"<<VolField.Grid().Num_Faces()<<endl;
+//        cout << "Cell Number"<<VolField.Grid().Num_Cells()<<endl;
 
-        cout << "field values "<<r.Numberofvals()<<endl;
+//        cout << "field values "<<r.Numberofvals()<<endl;
 
         T grad=0.;
         for (int f=0;f<VolField.Grid().Num_Faces();f++)
@@ -164,12 +164,14 @@ namespace FluxSol
                     int pid=face.Cell(0);
                     int nid=face.Cell(1);
 
-                    cout << "pid nid" << pid << " " <<nid<<endl;
+//                    cout << "pid nid" << pid << " " <<nid<<endl;
 
 
-//                    //T grad=(VolField.Val(nid).Val()-VolField.Val(pid).Val())*face.Norm_ad()/face.Dist_pn();
+                    T grad=(VolField.Val(nid).Val()-VolField.Val(pid).Val())*face.Norm_ad()/face.Dist_pn();
                    // r.Val(f, grad);
-                    r[f]=grad;
+                   //cout << "Face "<<f<<endl;
+                   cout << "grad val " << grad.Val()<<endl;
+                   r[f]=grad;
                 }
             }//End if !NullFluxFace
 

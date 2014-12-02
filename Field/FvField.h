@@ -77,12 +77,13 @@ namespace FluxSol
 			this->numberofvals=grid.Num_Faces();
 			for (int f = 0; f<this->GridPtr->Num_Faces(); f++)
 			{
-				if (grid.Face(f).Boundaryface() && !grid.Face(f).Is_Null_Flux_Face())
-				{
+			    //This is to consider, by now are created all
+				//if (grid.Face(f).Boundaryface() && !grid.Face(f).Is_Null_Flux_Face())
+				//{
 					T val;
 					this->value.push_back(val);
 					this->idgrid_domain.push_back(f);
-				}
+				//}
 			}
 
 		}

@@ -101,8 +101,24 @@ Div (const _Surf_Fv_Field <T>& phi)
 {
     _CC_Fv_Field < T > ret (phi.Grid());
 
-//    const int numcells = phi.GridPtr->Num_Cells();
+
+    int numcells = phi.Grid().Num_Cells();
 //
+
+    for (int c=0;c<numcells;c++)
+    {
+        //cout << "Cell "<<c<<endl;
+        for (int fi=0;fi<phi.Grid().Cell(c).Num_Faces();fi++)
+        {
+            //cout << "fi "<<fi<<endl;
+            int f=phi.Grid().Cell(c).Id_Face(fi);
+            ret[c]+=phi.Val(f);
+        }
+    }
+
+
+
+
 //    for (int f=0;f<phi.ConstGrid().Num_Faces();f++)
 //    {
 //        _FvFace face=phi.ConstGrid().Face(f);

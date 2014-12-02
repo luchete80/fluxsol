@@ -65,13 +65,21 @@ void Solve (EqnSystem <T> &eq)
 	//Look trhoug equations (rows)
 	for (int e=0;e<eq.Num_Eqn();e++)	//Aca voy con las filas de a 2
 	{
+        //cout << "eqn "<<e<<endl;
 		vector <double> ap=eq.Eqn(e).Ap().Comp();
-		int width=(eq.Eqn(e).Width()-1)*numberofcomp+1;
+		//int width=(eq.Eqn(e).Width()-1)*numberofcomp+1;
+		int width=eq.Eqn(e).Width()*numberofcomp;
 
 		int sparsecol=0;
 		int row=e*numberofcomp;
 
-		for (int dim=0;dim<numberofcomp;dim++)	Q_SetLen(&K,row+dim+1,width);
+        //cout << "Eqn " <<e << "Width: "<<eq.Eqn(e).Width()<<endl;
+
+		for (int dim=0;dim<numberofcomp;dim++)
+        {
+            //cout <<"Row "<< row+dim+1<<" length: "<<width<<endl;
+            Q_SetLen(&K,row+dim+1,width);
+        }
 
 		vector <double> nullval;
 		nullval.assign(numberofcomp,0.);
@@ -79,6 +87,8 @@ void Solve (EqnSystem <T> &eq)
 		//This id is relative to the cell, not the column
 		int fisrt_nonzero_col=eq.Eqn(e).MinNeigbourId();
 		int realcellid;
+
+
 
 		//Look trough entire width for neighbours id
 		for (int width_cells=0;width_cells<eq.Eqn(e).Width();width_cells++)
@@ -106,6 +116,19 @@ void Solve (EqnSystem <T> &eq)
 				{
 					//Rows and columns start at 1 but sparse index start at 1
 					//Look throug neighbours
+					//cout << "row + dim" << row+dim<<endl;
+					//cout << "col [dim]" <<col[dim]<<endl;
+					//cout << "number of comp"<<numberofcomp<<endl;
+                    //cout << "width_cells: "<< width_cells <<endl;
+                    //cout << "column id: "<<columnid<<endl;
+
+                    //cout << "Sparse index" <<numberofcomp*width_cells+dim<<endl;
+
+                    //Q_SetEntry(Matrix,RoC,Entry,Pos,Val)
+                    //First argument is matrix , second is row (begining from 1),
+                    //third is sparse column begining from zero
+                    //fourth is real column id (begining from 1)
+                    //Last is value
 					Q_SetEntry(&K,row+dim+1,numberofcomp*width_cells+dim,columnid+dim+1,col[dim]);
 				}
 
@@ -142,6 +165,7 @@ void Solve (EqnSystem <T> &eq)
 			V_SetCmp(&R,e*numberofcomp+dim+1,source[dim]);
 
 	}
+	//cout << "tot rows" << totrows<<endl;
 	std::vector <double> Ui,Ri;
 	Ui.assign(totrows,0.);
 	Ri.assign(totrows,0.);
@@ -151,9 +175,10 @@ void Solve (EqnSystem <T> &eq)
 
 
     BiCGSTABIter (&K,&U,&R,1000,SSORPrecond,1.2);
-    //cout<<"It "<<i<<endl;
+
     for (int j=0;j<totrows;j++)
     {
+        //cout << "row "<< j<<endl;
         Ui[j]=U.Cmp[j+1];
         Ri[j]=R.Cmp[j+1];
     }
@@ -165,6 +190,10 @@ void Solve (EqnSystem <T> &eq)
 			r.push_back(U.Cmp[numberofcomp*e+dim+1]);
 		eq.Eqn(e).X()=r;
 	}
+
+	Q_Destr(&K);
+	V_Destr(&U);
+	V_Destr(&R);
 }
 
 }
