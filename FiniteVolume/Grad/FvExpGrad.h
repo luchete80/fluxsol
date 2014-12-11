@@ -58,6 +58,8 @@ namespace FluxSol
 		 //Formerly was SurfaceField
         GeomSurfaceField <T> facefi=Interpolate(field);
 
+        //cout << "interpolated to grad:" << facefi.outstr()<<endl;
+
 		 bool end = false;
 		 //Begin Main Loop
 		 //facefi and r (which is the corrected gauss gradient of fieldnc) are changing
@@ -78,10 +80,16 @@ namespace FluxSol
 				{
 					int f = r.Grid().cellit->Id_Face(cellface);
 					//This is fi_f Outer Af
-					r[c]+=(facefi[f]*r.Grid().Face(f).Af());
+					//r[c]+=(facefi[f]*r.Grid().Face(f).Af());
+					r[c]+=facefi[f]*r.Grid().CellFaceAf_Slow(c,cellface);
+
+					//cout << "Cell Face" <<r.Grid().CellFaceAf_Slow(c,cellface).Val().outstr()<<endl;
+
 				}
 				//Divide by cell volume
+				//cout << "Cell vol "<<(r.Grid().Cell(c).Vp()).outstr();
 				r[c]=r[c]/r.Grid().cellit->Vp();
+				//cout << "Field Val" << r[c].outstr()<< endl;
 
 			 }
 
@@ -133,8 +141,9 @@ namespace FluxSol
     template<class T>
     _Surf_Fv_Field
     //< typename outerProduct<Vec3D, T>::type >
+    //TILL NOW IS NOT PASSED BY REF
     < T >
-	SnGrad (const _CC_Fv_Field <T>& VolField)
+	SnGrad (_CC_Fv_Field <T> VolField)
 	{
 	    _Surf_Fv_Field <T> r(VolField.ConstGrid());
 

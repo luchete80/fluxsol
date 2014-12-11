@@ -93,7 +93,9 @@ public:
 
 	//OPERATORS
 	//Is more general in case of vectors
-	Eqn<T>  operator +=(const double &d){source+=d; return *this;};
+	Eqn<T> & operator +=(const double &d){this->source+=d; return *this;};
+
+	Eqn<T> & operator +=(const T &d){this->source+=d; return *this;};
 
 	Eqn<T> operator-()
 	{

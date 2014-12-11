@@ -107,8 +107,8 @@ namespace FluxSol
 	const Scalar Scalar::operator/ (const Scalar &right) const
 	{
 		Scalar temp;
-		temp = val / right.val;
-		return *this;
+		temp = this->val / right.val;
+		return temp;
 	}
 
 	const Scalar Scalar::operator/ (const double &right) const

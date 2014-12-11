@@ -131,7 +131,7 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
             //THESE COEFFS REFERS TO CELL 0
             //IF FACE IS NOT BOUNDARY, THEN COEFFS IN CELL 1 ARE INVERTED
             //cout << "Obtaining Flux Value"<<endl;
-//            double d=FluxField.Val(f).Val();
+            double d=FluxField.Val(f).Val();
             //cout << "Value "<< endl;
             //cout << "f"<< f << " " <<"FluxField Val " <<FluxField.Val(f).Val() <<endl;
             if(FluxField.Val(f)>0.)
@@ -144,6 +144,8 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
                 coeff_ap= 0.;
                 coeff_an= FluxField.Val(f);
             }
+            //cout << "coeff ap" << coeff_ap.Val()<<endl;
+            //cout << "coeff an" << coeff_an.Val()<<endl;
            // cout << "Creating Eqn"<<endl;
             //If face is internal, assign to cell 0 neighbour an coefficient
             eqnsys.Eqn(cell[0]).Ap()+=coeff_ap;
@@ -154,14 +156,15 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
                 //eqnsys.Eqn(cell[0]).Ap()+=coeff_ap;
 
                 cell[1]=face.Cell(1);
-//                cout << "Global Cell 1: "<< cell[1]<<endl;
+                //cout << "Global Cell 1: "<< cell[1]<<endl;
                 //Search global neighbour cell
                 int neigh=phi.ConstGrid().Cell(cell[0]).SearchNeighbour(cell[1]);
                 int neigh2=phi.ConstGrid().Cell(cell[1]).SearchNeighbour(cell[0]);
-//                cout << "Cell "<<cell[0]<< "neighbour: "<<neigh<<endl;
+                //cout << "Cell "<<cell[0]<< "neighbour: "<<neigh<<endl;
  // TO MODIFY!!!!
  //This Way is too expensive, only for evaluation
                 if (neigh>=0 /*&& neigh <VolField.ConstGrid().Cell(cell[0]).Num_Neighbours()*/)
+                    //cout << "Cell 0 Neigh (Nrigh 1)" <<neigh<<endl;
                     //eqnsys.Eqn(cell[0]).An(neigh,coeff_an);
                     eqnsys.Eqn(cell[0]).An(neigh)+=coeff_an;
 
@@ -170,6 +173,7 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
 
                 if (neigh2>=0 /*&& neigh <VolField.ConstGrid().Cell(cell[1]).Num_Neighbours()*/)
                     //eqnsys.Eqn(cell[1]).An(neigh2,coeff_ap);
+                    //cout << "Cell 1 Neigh (Nrigh 2)" <<neigh2<<endl;
                     eqnsys.Eqn(cell[1]).An(neigh2)-=coeff_ap;
             }
 		}//End if !NullFluxFace
@@ -190,10 +194,13 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
             if (phi.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
             {
 
-                if(FluxField.Val(idface)<0.)
+                //if(FluxField.Val(idface)<0.)
                     //If flux is inwards, source is positive (is RHS)
                     //cout << "Boundary Field Value"<<phi.Boundaryfield()._PatchField(p).Val(f).Val()<<endl;
-                    eqnsys.Eqn(bface.Cell(0)).Source()-=phi.Boundaryfield().PatchField(p).Val(f)*FluxField.Val(idface);
+                    //cout << "id_face" << idface<<endl;
+                    //cout << "Value "<< phi.Boundaryfield().PatchField(p).Val(f).outstr()<<endl;
+
+                eqnsys.Eqn(bface.Cell(0)).Source()-=phi.Boundaryfield().PatchField(p).Val(f)*FluxField.Val(idface);
             }
             else if (phi.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
             {

@@ -28,6 +28,8 @@
 #include "../Type/Scalar.h"
 #include "../Type/Vec3d.h"
 
+#include <string>
+#include <fstream>
 
 //#include "../Input/Input.h"
 
@@ -84,6 +86,20 @@ class _Field{
 	//void operator=(const double &val);
 
 	_Field<T> operator=(const double &val);
+
+	const std::string outstr() const
+	{
+        std::string cad;
+        std::ostringstream strs;
+        //meshlog.open(nombre.c_str());
+        for (int v=0;v<this->numberofvals;v++)
+        {
+            cad+=this->value[v].outstr();
+            //cad+="\n";
+        }
+
+        return cad;
+	}
 
     //~_Field(){}
 

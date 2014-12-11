@@ -68,6 +68,7 @@ namespace FluxSol
 		int & PatchId(){ return patchid; };
 		//This must be in parent class
 		void AssignValue(const T &val);
+		void AssignType(const _PatchFieldType &t) {this->type=t;}
 
 		_PatchFieldType& Type(){ return type; }
 
@@ -100,6 +101,11 @@ namespace FluxSol
 		}
 
 		_PatchField < T > & PatchField(const int &i){ return this->patchfield[i]; }
+        void AssignPatchFieldTypes(const _PatchFieldType &t)
+		{
+		    for (int pf=0;pf<this->patchfield.size();pf++)
+                this->PatchField(pf).AssignType(t);
+		}
 		void Add_PatchField(_PatchField<T> &field)  { patchfield.push_back(field); }
         ~_BoundaryField(){}
 	};
@@ -128,6 +134,10 @@ namespace FluxSol
 		GeomField(){};         //Constructor
 		virtual void SizeFromGrid(const _Grid *gPtr){};
 		void AssignGrid(const _Grid *gPtr){this->GridPtr=gPtr;}
+		void AssignPatchFieldTypes(const _PatchFieldType &t)
+		{
+		    this->BoundaryField.AssignPatchFieldTypes(t);
+		}
 
         //GeomField(const GeomField<T> &field):_Field<T>(field.Numberofvals()){this->GridPtr=&field.Grid();}
 		//NON VIRTUAL!
@@ -210,9 +220,55 @@ namespace FluxSol
 
         }
 
+        friend const GeomField <T>  operator/ (const T &left, const GeomField <T> &right)
+        {
+                    //GeomField<T> *ret=new GeomField<T>(this->Numberofvals());
+            //TO MODIFY: USE COPY CONSTRUCTOR OR OPERATOR=
+            //POINTER MUST NOT BE PASSED HERE
+            GeomField<T> ret(right.Numberofvals());
+            //THIS IS WRONG
+            ret.AssignGrid(&right.Grid());
+
+            //GeomField<T> ret(this->Grid());
+            T val;
+            //Sizes must be equal and rank must be large than zero?
+            for (int c = 0; c < right.Numberofvals(); c++)
+            {
+                val = left / right.Val(c);
+                cout << "val" << val.outstr()<<endl;
+                ret.Val(c,val);
+            }
+
+            return ret;
+        }
+
         //~GeomField(){};
 
 	};
+
+	//Binary
+//    template <typename T>
+//    const GeomField <T>  operator/ (const T &left, const GeomField <T> &right)
+//        {
+//            //GeomField<T> *ret=new GeomField<T>(this->Numberofvals());
+//            //TO MODIFY: USE COPY CONSTRUCTOR OR OPERATOR=
+//            //POINTER MUST NOT BE PASSED HERE
+//            GeomField<T> ret(right.Numberofvals());
+//            //THIS IS WRONG
+//            ret.GridPtr=right.GridPtr();
+//
+//            //GeomField<T> ret(this->Grid());
+//            T val;
+//            //Sizes must be equal and rank must be large than zero?
+//            for (int c = 0; c < right.Numberofvals(); c++)
+//            {
+//                val = left / right.Val(c);
+//                ret.Val(c,val);
+//            }
+//
+//            return ret;
+//        }
+
 
 		template<typename T>
 	class GeomSurfaceField :
@@ -242,6 +298,39 @@ namespace FluxSol
 
 		}
 
+        GeomSurfaceField <T> & operator=(const T &val)
+		{
+
+            for (int c=0;c<this->Numberofvals();c++)
+                this->value[c]=val;
+            //TO MODIFY
+            //this->Boundaryfield()=field->BoundaryField
+            return *this;
+
+		}
+
+        //TO MODIFY, WITH LIST OF INTERNAL
+//        GeomSurfaceField <T> & AssignBoundaryVal(const T &val)
+//		{
+//            for (int c=0;c<this->Numberofvals();c++)
+//            if(this->)
+//                this->value[c]=val;
+//            //TO MODIFY
+//            //this->Boundaryfield()=field->BoundaryField
+//            return *this;
+//
+//		}
+
+        GeomSurfaceField <T> & operator=(const double &val)
+		{
+
+            for (int c=0;c<this->Numberofvals();c++)
+                this->value[c]=val;
+            //TO MODIFY
+            //this->Boundaryfield()=field->BoundaryField
+            return *this;
+
+		}
 		virtual ~GeomSurfaceField(){};
 		//Adding boundary face
 // TO CHECK; INHERIT OR NOT
@@ -307,6 +396,22 @@ namespace FluxSol
 
         }
 
+            //COMPONENT TO COMPONENT PRODUCT
+        //template <typename T>
+        friend GeomField<T> operator* (const GeomField<Scalar> &left,const GeomField<T> &right)
+        {
+            GeomField<T> ret(left.Numberofvals());
+           // ret.GridPtr=&left.Grid();
+            T val;
+            //Sizes must be equal and rank must be large than zero?
+            for (int c = 0; c < left.Numberofvals(); c++)
+            {
+                val = left.Val(c) * right.Val(c);
+                ret.Val(c,val);
+            }
+            return ret;
+        }
+
 		//_CC_Fv_Field (InputFile &inputfile);
 
 		GeomVolField(){};
@@ -332,19 +437,7 @@ namespace FluxSol
 //	return ret;
 //	}
 
-    template <typename T>
-	GeomField<T> operator* (const GeomField<Scalar> &left,const GeomField<T> &right)
-	{
-	GeomField<T> ret(left.Numberofvals());
-	T val;
-	//Sizes must be equal and rank must be large than zero?
-	for (int c = 0; c < left.Numberofvals(); c++)
-	{
-		val = left.Val(c) * right.Val(c);
-		ret.Val(c,val);
-	}
-	return ret;
-	}
+
 
 
 }//FluxSol

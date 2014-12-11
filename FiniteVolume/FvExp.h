@@ -72,6 +72,7 @@ GeomSurfaceField <T> Interpolate(const _CC_Fv_Field <T> &field)
                 prom = field[face.Cell(0)];
 
             r[f] = prom;
+            //cout << "prom" << prom.outstr()<<endl;
         }
 
         return r;
@@ -112,7 +113,7 @@ Div (const _Surf_Fv_Field <T>& phi)
         {
             //cout << "fi "<<fi<<endl;
             int f=phi.Grid().Cell(c).Id_Face(fi);
-            ret[c]+=phi.Val(f);
+            ret[c]+=phi.Val(f)*phi.Grid().CellFaceSign(c,fi);
         }
     }
 

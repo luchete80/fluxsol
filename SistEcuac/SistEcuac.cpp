@@ -172,20 +172,31 @@ Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right)
 
 		ret.source = this->source - right.source;
 
+        //cout << "Left Source"<<endl;
+		//cout << this->source.outstr()<<endl;
+
+        //cout << "Right Source"<<endl;
+		//cout << right.source.outstr()<<endl;
+
+        //cout << "Return Source"<<endl;
+		//cout << ret.source.outstr()<<endl;
+
 
 		*this=ret;
 		//return ret;
 	}
 
-    return *this;
+    //return *this;
+    return ret;
 
 }
 
 //Assuming same meshes
 template <typename T>
-Eqn<T> & Eqn<T>::operator-(const Eqn<T> &right)
+Eqn<T> &Eqn<T>::operator-(const Eqn<T> &right)
 {
 
+    *this==right;
     return *this;
 }
 
@@ -298,7 +309,8 @@ EqnSystem <T> & EqnSystem <T>::operator==(const _CC_Fv_Field<T> &field)
     for (int c=0;c<this->EqnV().size();c++)
     {
         T val=field.Val(c).Val();
-        this->Eqn(c).Source(val);
+        //this->Eqn(c).Source(val);
+        this->eqn[c]+=val;
     }
 	return *this;
 }

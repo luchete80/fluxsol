@@ -48,6 +48,7 @@ _Grid(nex,ney)
 	Iniciar_Caras();
 	cout << "Assigning Neighbours..."<<endl;
 	AssignNeigboursCells();
+	CalcCellVolumes();
 }
 
 //Inserto una celda
@@ -462,6 +463,8 @@ void Fv_CC_Grid::Iniciar_Caras()
 	num_faces=numfaces;
 	num_boundary_faces=nfb;
 
+	//Init Face orientation
+
 	cout << "[I] Faces: " <<numfaces<<endl;
 	cout << "[I] Boundary Faces: " <<num_boundary_faces<<endl;
 
@@ -478,7 +481,7 @@ void Fv_CC_Grid::CalcCellVolumes()
 		{
 			_FvFace face = this->Face(Cell(c).Id_Face(cellface));
 			vol+=face.Af()&face.Center();
-			this->Cell(c).Vp()=vol;
+			this->Cell(c).Vp(vol);
 		}
 
 	}
@@ -493,7 +496,9 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 
 	for (int f = 0; f < this->num_faces; f++)
 	{
-		ret.Val(f, this->face[f].Af().VecNorm());
+	    //THIS MUST NOT RETURN THE NORMAIZED VALUE
+//		ret.Val(f, this->face[f].Af().VecNorm());
+		ret.Val(f, this->face[f].Af());
 	}
 
 	return ret;

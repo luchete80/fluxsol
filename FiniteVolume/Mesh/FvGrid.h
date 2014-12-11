@@ -105,6 +105,32 @@ private:
     std::vector<Cell_CC>::iterator BeginCell(){return cell.begin();}
     std::vector<Cell_CC>::iterator EndCell()  {return cell.end();}
 
+    const Vec3D CellFaceAf_Slow(const int &cell, const int &cellface) const
+    {
+        Vec3D af;
+        int faceid=this->Cell(cell).Id_Face(cellface);
+        af=this->Face(faceid).Af();
+        //cout << "face id:" <<faceid<<endl;
+        if (this->Face(faceid).Cell(0)!=cell)
+        {
+            af=-af;
+            //cout << "Inverted"<<endl;
+        }
+        return af;
+    }
+
+    const int CellFaceSign(const int &cell, const int &cellface) const
+    {
+        int sign=1.;
+        int faceid=this->Cell(cell).Id_Face(cellface);
+        //cout << "face id:" <<faceid<<endl;
+        if (this->Face(faceid).Cell(0)!=cell)
+        {
+            sign=-1.;
+            //cout << "Inverted"<<endl;
+        }
+        return sign;
+    }
 	const Boundary& vBoundary()const {return boundary;}
 
     //////////////////////

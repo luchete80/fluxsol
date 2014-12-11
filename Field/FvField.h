@@ -114,7 +114,12 @@ namespace FluxSol
             return *this;
 		}
 
-
+        //TO MODIFY, GeomField has this
+		_Surf_Fv_Field <T> & operator=(const double &val)
+		{
+            for (int c=0;c<this->Numberofvals();c++)
+                this->value[c]=val;
+		}
 //        _Surf_Fv_Field <T> & operator=(const GeomField<T> field)
 //        {
 //
@@ -191,6 +196,11 @@ namespace FluxSol
 		//_CC_Fv_Field (InputFile &inputfile);
 
 		_CC_Fv_Field(){};
+
+		_CC_Fv_Field(const GeomField<T> &field)
+		{
+            operator=(field);
+		}
 
 		//_CC_Fv_Field & operator=(const GeomField<T> &field){}
 		_CC_Fv_Field <T> & operator=(const GeomField<T> &field)

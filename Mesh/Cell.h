@@ -41,6 +41,7 @@ class _Cell
 	string type;							//Hexa, Tetra,Prism,
 	std::vector <int> id_neigbourcell;			// Celdas vecinas
 	std::vector <int> id_face;						// Cara
+	std::vector <short int> face_sign;
 	std::vector <int> id_vert;                       //Vertices NO SON NODOS
     //El indice del nodo podria ser el mismo que el de cell no/
     std::vector <int> id_node;                       //Ojo aca cambia
@@ -84,7 +85,7 @@ class _Cell
 		virtual std::string Imprimir_Conect();//Devuelve un str de vertices
 
 		Scalar& Vp(){return vp;}
-
+        void Vp(const Scalar &v){this->vp=v;}
         //Para ver las variables de cell
         int Id_Node(int i){return id_node[i];}
         std::vector <int> Id_Node(){return id_node;}

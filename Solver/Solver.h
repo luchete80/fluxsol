@@ -67,8 +67,10 @@ void Solve (EqnSystem <T> &eq)
 	{
         //cout << "eqn "<<e<<endl;
 		vector <double> ap=eq.Eqn(e).Ap().Comp();
-		//int width=(eq.Eqn(e).Width()-1)*numberofcomp+1;
-		int width=eq.Eqn(e).Width()*numberofcomp;
+		Scalar ap_sc=eq.Eqn(e).Ap();
+		Scalar value;
+		int width=(eq.Eqn(e).Width()-1)*numberofcomp+1;
+		//int width=eq.Eqn(e).Width()*numberofcomp;
 
 		int sparsecol=0;
 		int row=e*numberofcomp;
@@ -112,6 +114,7 @@ void Solve (EqnSystem <T> &eq)
 			//Write Matrix
 			if (foundcell)
 			{
+                //cout << "Found Cell " <<endl;
 				for (int dim=0;dim<numberofcomp;dim++)
 				{
 					//Rows and columns start at 1 but sparse index start at 1
@@ -129,14 +132,27 @@ void Solve (EqnSystem <T> &eq)
                     //third is sparse column begining from zero
                     //fourth is real column id (begining from 1)
                     //Last is value
-					Q_SetEntry(&K,row+dim+1,numberofcomp*width_cells+dim,columnid+dim+1,col[dim]);
+                    //cout << "(Indexes From 1) K(" <<  row+dim+1<<","<<columnid+dim+1<<")"<<"=" << col[0]<<endl;
+                    //cout << "(From zero) Sparse col: " << numberofcomp*width_cells<<endl;
+					//Q_SetEntry(&K,row+dim+1,numberofcomp*width_cells+dim,columnid+dim+1,col[0]);
+					//Modified, block rows are moved to right in block when increment the matrix row
+					//So the sparse index is equal to all dim components
+					Q_SetEntry(&K,row+dim+1,numberofcomp*width_cells,columnid+dim+1,col[0]);
 				}
 
 			}
 			else
 			{
+                //cout << "Cell Not Found" <<endl;
 				for (int dim=0;dim<numberofcomp;dim++)
-					Q_SetEntry(&K,row+dim+1,numberofcomp*width_cells+dim,columnid+dim+1,0.0);
+                {
+					//Q_SetEntry(&K,row+dim+1,numberofcomp*width_cells+dim,columnid+dim+1,0.0);
+					Q_SetEntry(&K,row+dim+1,numberofcomp*width_cells,columnid+dim+1,0.0);
+                    //INFO
+                    //cout << "(Indexes From 1)  K(" <<  row+dim+1<<","<<columnid+dim+1<<")"<<"=" << 0.0<<endl;
+                    //cout << "(From zero) Sparse col: " << numberofcomp*width_cells <<endl;
+
+                }
 
 			}
 
@@ -175,6 +191,8 @@ void Solve (EqnSystem <T> &eq)
 
 
     BiCGSTABIter (&K,&U,&R,1000,SSORPrecond,1.2);
+
+
 
     for (int j=0;j<totrows;j++)
     {
