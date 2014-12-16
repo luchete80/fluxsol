@@ -139,17 +139,22 @@ EqnSystem <T> FvImp::Laplacian(_CC_Fv_Field<Scalar> fi,_CC_Fv_Field <T> &VolFiel
 			_FvFace face=VolField.Grid().Face(idface);  //TO MODIFY idface or face pos??
 			//Boundary type
 			//Instead of if sentence it is convenient to use inheritance
+            //cout <<"source"<<endl;
+            ap=-face.Norm_ad()/fabs(face.Dist_pf_LR(0))*fisurf.Val(idface);
+
 			if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
 			{
-			    //cout <<"source"<<endl;
-				ap=-face.Norm_ad()/fabs(face.Dist_pf_LR(0))*fisurf.Val(idface);
-				source=VolField.Boundaryfield().PatchField(p).Val(f)*ap;
+                source=VolField.Boundaryfield().PatchField(p).Val(f)*ap;    //THIS IS RHS, WITH SAME SIGN
 				//cout <<"created" <<endl;
 				eqnsys.Eqn(face.Cell(0)).Ap()+=ap;
 				eqnsys.Eqn(face.Cell(0)).Source()+=source;
 			}
+			//Formerly according to SEZAI
 			else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
 			{
+                //eqnsys.Eqn(face.Cell(0)).Ap()+=ap;
+
+			    //Formerly the BC was THIS
 				source=VolField.Boundaryfield().PatchField(p).Val(f)*fisurf.Val(idface);
 				eqnsys.Eqn(face.Cell(0)).Source()+=source;
 			}

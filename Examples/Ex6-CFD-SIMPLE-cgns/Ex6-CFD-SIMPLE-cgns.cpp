@@ -28,32 +28,29 @@
 using namespace std;
 using namespace FluxSol;
 
-
+///////////////////////////
+//// FLUXSOL EXAMPLE 6 ////
+///////////////////////////
 
 int main()
 {
-	//Mesh Generation
-	Fv_CC_Grid mesh(2,2,1.0,1.0);
-	mesh.Log("Log.txt");
-//	MyList<int>wallfaces = { 1, 2};
-//	MyVector<int> hola={1,2};
-	int wallfaces[]={2,5,8,10,13,18};
-	int movwallfaces[]={15,19};
-	list <int> lmovwallfaces;	for (int i=0;i<2;i++)	lmovwallfaces.push_back(movwallfaces[i]);
-	list <int> lwallfaces;	for (int i=0;i<6;i++)	    lwallfaces.push_back(wallfaces[i]);
-	Patch fwall(lwallfaces);
-	Patch mwall(lmovwallfaces);
-	vector<Patch> vpatch;
-	//Must be a verification - Debe haber una verificacion
-	vpatch.push_back(lwallfaces); 	vpatch.push_back(lmovwallfaces);
-	//(fwall,mwall);
 
-	Boundary bound(vpatch);
-	mesh.AddBoundary(bound);
+
+    //string inputFileName=argv[1];
+	string inputFileName="InputEx.in";
+	InputFile input(inputFileName);
+
+    string meshfname=input.section("grid",0).get_string("file");
+	Fv_CC_Grid mesh(meshfname);
+	mesh.Log("Log.txt");
 
 	//Fields
 	_CC_Fv_Field <Scalar> p(mesh);
 	_CC_Fv_Field <Vec3D>  U(mesh);
+
+
+	ReadVelocityFieldFromInput(input,U,mesh);
+
 	_Surf_Fv_Field <Scalar>  phi(mesh); //Mass Flux
 
 	//_CC_Fv_Field <Vec3D> UDiff,pDiff;
@@ -68,7 +65,7 @@ int main()
 
 
 	//Construir aca con la malla
-	Scalar k(0.01);	//Difusion, puede ser un escalar
+	Scalar k(1.);	//Difusion, puede ser un escalar
 	Scalar rho(1.0);
 	Scalar alpha_p=0.6;
 
@@ -102,8 +99,8 @@ int main()
 //
 //      //Boundary Conditions
         //Pressure gradient is null at all walls
-        p.Boundaryfield().PatchField(0).AssignValue(0.0);
-        p.Boundaryfield().PatchField(1).AssignValue(0.0);
+        p.Boundaryfield().PatchField(0).AssignValue(1.0);
+        for (int pf=1;pf<=4;pf++) p.Boundaryfield().PatchField(pf).AssignValue(0.0);
         p.Val(0,0.);    //Reference Pressure
 
         //To modify, correct in all faces
@@ -111,13 +108,13 @@ int main()
         //It is crucial to correct phi values to zero. If these are corrected and the
         //Pressure correction p´ has Newmann conditions, then corrected flux will be against
         //null at walls
-        for (int wf=0;wf<6;wf++)    phi.Val(wallfaces[wf],0.0);
-        phi.Val(15,0.0);phi.Val(19,0.0);
+        //for (int wf=0;wf<6;wf++)    phi.Val(wallfaces[wf],0.0);
+        //phi.Val(15,0.0);phi.Val(19,0.0);
 
         //TO Modify (Simply correct an internal field constant value)
         //Like Update field Boundary Values
-        U.Boundaryfield().PatchField(0).AssignValue(Vec3D(0.,0.,0.));
-        U.Boundaryfield().PatchField(1).AssignValue(Vec3D(1.,0.,0.));
+        U.Boundaryfield().PatchField(0).AssignValue(Vec3D(1.,0.,0.));
+        for (int pf=1;pf<4;pf++) U.Boundaryfield().PatchField(pf).AssignValue(Vec3D(0.,0.,0.));
 
         cout <<"Original Flux field" << phi.outstr()<<endl;
 

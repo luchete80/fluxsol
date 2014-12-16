@@ -197,7 +197,7 @@ namespace FluxSol
 
 		_CC_Fv_Field(){};
 
-		_CC_Fv_Field(const GeomField<T> &field)
+		_CC_Fv_Field(GeomField<T> field)
 		{
             operator=(field);
 		}
@@ -215,6 +215,7 @@ namespace FluxSol
             //this->Boundaryfield()=field->BoundaryField
             return *this;
 		}
+
 //		_CC_Fv_Field <T> & operator=(const GeomField<T> field)
 //		{
 //		    this=&field;

@@ -429,7 +429,7 @@ void InputFile::read_inputs(void) {
 	section("grid",0).subsection("BC",0).register_double("p_total",optional);
 	section("grid",0).subsection("BC",0).register_double("mdot",optional);
 	section("grid",0).subsection("BC",0).register_double("qdot",optional);
-	section("grid",0).subsection("BC",0).register_Vec3D("V",optional);
+	section("grid",0).subsection("BC",0).register_Vec3D("U",optional);
 	section("grid",0).subsection("BC",0).register_double("T",optional);
 	section("grid",0).subsection("BC",0).register_double("T_total",optional);
 	section("grid",0).subsection("BC",0).register_double("rho",optional);

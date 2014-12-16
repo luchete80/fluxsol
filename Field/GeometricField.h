@@ -397,20 +397,6 @@ namespace FluxSol
         }
 
             //COMPONENT TO COMPONENT PRODUCT
-        //template <typename T>
-        friend GeomField<T> operator* (const GeomField<Scalar> &left,const GeomField<T> &right)
-        {
-            GeomField<T> ret(left.Numberofvals());
-           // ret.GridPtr=&left.Grid();
-            T val;
-            //Sizes must be equal and rank must be large than zero?
-            for (int c = 0; c < left.Numberofvals(); c++)
-            {
-                val = left.Val(c) * right.Val(c);
-                ret.Val(c,val);
-            }
-            return ret;
-        }
 
 		//_CC_Fv_Field (InputFile &inputfile);
 
@@ -421,22 +407,41 @@ namespace FluxSol
 
 	};
 
+        template <typename T>
+        GeomField<T> operator* (const GeomField<Scalar> &left,const GeomField<T> &right)
+        {
+            //(GeomField<T> *ret=new GeomField<T>(left.Numberofvals());
+            GeomField<T> ret(left.Numberofvals());
+           ret.AssignGrid(&right.Grid());
+            T val;
+            //Sizes must be equal and rank must be large than zero?
+            for (int c = 0; c < left.Numberofvals(); c++)
+            {
+                val = left.Val(c) * right.Val(c);
+                ret.Val(c,val);
+                //ret->Val(c,val);
+            }
+            return ret;
+            //return *ret;
+        }
 
-//
-//    template<typename T>
-//	GeomField<T> operator* (const GeomField<Scalar> &left,const GeomField<T> &right)
-//	{
-//	GeomField<T> ret(left.Numberofvals());
-//	T val;
-//	//Sizes must be equal and rank must be large than zero?
-//	for (int c = 0; c < left.Numberofvals(); c++)
-//	{
-//		val = left.Val(c) * right.Val(c);
-//		ret.Val(c,val);
-//	}
-//	return ret;
-//	}
-
+//        template <typename T>
+//        GeomField<T> & operator* (const GeomField<Scalar> &left,const GeomField<T> &right)
+//        {
+//            GeomField<T> *ret=new GeomField<T>(left.Numberofvals());
+//            //GeomField<T> ret(left.Numberofvals());
+//           // ret.GridPtr=&left.Grid();
+//            T val;
+//            //Sizes must be equal and rank must be large than zero?
+//            for (int c = 0; c < left.Numberofvals(); c++)
+//            {
+//                val = left.Val(c) * right.Val(c);
+//                //ret.Val(c,val);
+//                ret->Val(c,val);
+//            }
+//            //return ret;
+//            return *ret;
+//        }
 
 
 
