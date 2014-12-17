@@ -97,6 +97,13 @@ public:
 
 	Eqn<T> & operator +=(const T &d){this->source+=d; return *this;};
 
+    void SetValueCondition(const T &val)
+    {
+        *this=Eqn<T>();
+        this->ap=1.;
+        this->source=val;
+    }
+
 	Eqn<T> operator-()
 	{
 	    Eqn<T> eq;

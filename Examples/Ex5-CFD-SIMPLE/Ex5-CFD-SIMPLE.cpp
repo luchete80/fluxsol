@@ -88,10 +88,11 @@ int main()
 
     //EXAMPLE PENDING TASKS
     //TO ADD BOUNDARY FIELD IN OPERATORS= FROM SURF AND VOLFIELDS
+    p.Val(0,0.);    //Reference Pressure
 
 	//ITERATION BEGINS
 	int it=0;
-	while (it <2)
+	while (it <10)
 	{
         EqnSystem <Scalar> pEqn;
         EqnSystem <Vec3D> UEqn;
@@ -104,7 +105,6 @@ int main()
         //Pressure gradient is null at all walls
         p.Boundaryfield().PatchField(0).AssignValue(0.0);
         p.Boundaryfield().PatchField(1).AssignValue(0.0);
-        p.Val(0,0.);    //Reference Pressure
 
         //To modify, correct in all faces
         //Surface fields have until now redundant information
@@ -187,7 +187,9 @@ int main()
 //		//for the prescribed for the non orth steps
         cout << "AUr " << AUr.outstr()<<endl;
         pEqn=FvImp::Laplacian(rho*AUr,p);   //Solve Laplacian for p (by the way, is p´)
-        Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
+        pEqn==FvExp::Div(phi);
+        pEqn.Eqn(0).SetValueCondition(0.);
+        Solve(pEqn); //Simply sum fluxes through faces
 
         cout << "Flux Divergence"<<FvExp::Div(phi).outstr()<<endl;
         pEqn.Log("PEqn.txt");

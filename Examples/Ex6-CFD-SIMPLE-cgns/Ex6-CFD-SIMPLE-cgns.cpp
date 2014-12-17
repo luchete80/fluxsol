@@ -55,6 +55,8 @@ int main()
 
 	//_CC_Fv_Field <Vec3D> UDiff,pDiff;
 
+	//To be Passed to input reader
+
 	p.AssignPatchFieldTypes(FIXEDGRADIENT);
 	U.AssignPatchFieldTypes(FIXEDVALUE);
 
@@ -69,7 +71,7 @@ int main()
 	Scalar rho(1.0);
 	Scalar alpha_p=0.6;
 
-    U=Vec3D(0.01,0.01,0.);
+    U=Vec3D(0.01,0.,0.01);
 
     phi=mesh.Sf() & FvExp::Interpolate(U);
 
@@ -88,7 +90,7 @@ int main()
 
 	//ITERATION BEGINS
 	int it=0;
-	while (it <2)
+	while (it <30)
 	{
         EqnSystem <Scalar> pEqn;
         EqnSystem <Vec3D> UEqn;
@@ -99,15 +101,23 @@ int main()
 //
 //      //Boundary Conditions
         //Pressure gradient is null at all walls
-        p.Boundaryfield().PatchField(0).AssignValue(1.0);
-        for (int pf=1;pf<=4;pf++) p.Boundaryfield().PatchField(pf).AssignValue(0.0);
+        for (int pf=0;pf<4;pf++) p.Boundaryfield().PatchField(pf).AssignValue(0.0);
         p.Val(0,0.);    //Reference Pressure
+
+        for (int f=0;f<mesh.Num_Faces();f++)
+        {
+            if (mesh.Face(f).Boundaryface())
+                //cout << "Face "<<f << "is boundary"<<endl;
+                phi.Val(f,0.);
+        }
 
         //To modify, correct in all faces
         //Surface fields have until now redundant information
         //It is crucial to correct phi values to zero. If these are corrected and the
         //Pressure correction p´ has Newmann conditions, then corrected flux will be against
         //null at walls
+        //TEMPORARYLLY SURFACE FIELDS HAVE NOT ACTIVE PATCHES
+        //TO MODIFY
         //for (int wf=0;wf<6;wf++)    phi.Val(wallfaces[wf],0.0);
         //phi.Val(15,0.0);phi.Val(19,0.0);
 
@@ -184,8 +194,10 @@ int main()
 //		//for the prescribed for the non orth steps
         cout << "AUr " << AUr.outstr()<<endl;
         pEqn=FvImp::Laplacian(rho*AUr,p);   //Solve Laplacian for p (by the way, is p´)
-        Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
-
+        pEqn==FvExp::Div(phi);
+        pEqn.Eqn(0).SetValueCondition(0.);
+        //Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
+        Solve(pEqn);
         cout << "Flux Divergence"<<FvExp::Div(phi).outstr()<<endl;
         pEqn.Log("PEqn.txt");
         //Important:
@@ -214,6 +226,9 @@ int main()
 
         it++;
 	}
+
+	OutputFile("CellField-U.vtu",U);
+	OutputFile("CellField-p.vtu",p);
 	//	---- The End -------
 	return 0;
 }

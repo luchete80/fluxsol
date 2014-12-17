@@ -179,7 +179,7 @@ namespace FluxSol
                     T grad=(VolField.Val(nid).Val()-VolField.Val(pid).Val())*face.Norm_ad()/face.Dist_pn();
                    // r.Val(f, grad);
                    //cout << "Face "<<f<<endl;
-                   cout << "grad val " << grad.Val()<<endl;
+                   //cout << "grad val " << grad.Val()<<endl;
                    r[f]=grad;
                 }
             }//End if !NullFluxFace

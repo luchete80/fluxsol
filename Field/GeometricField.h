@@ -235,7 +235,7 @@ namespace FluxSol
             for (int c = 0; c < right.Numberofvals(); c++)
             {
                 val = left / right.Val(c);
-                cout << "val" << val.outstr()<<endl;
+                //cout << "val" << val.outstr()<<endl;
                 ret.Val(c,val);
             }
 

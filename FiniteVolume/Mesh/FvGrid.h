@@ -214,6 +214,9 @@ private:
         this->inicie_cells=true;
         Iniciar_Caras();
         AssignNeigboursCells();
+        CalcCellVolumes();
+
+
         vector <Patch> vpatch;
 
         std::vector<std::list <int> >bpfaces;
