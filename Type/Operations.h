@@ -37,7 +37,15 @@ namespace FluxSol{
 //Outer Prod between Scalar and Vector
 //both operands MUST NOT BE CONST to avoid following: scalar * const = vector
 
-Vec3D& operator/(const Vec3D &left, const Scalar &right);
+//TO MODIFY, TO DELETE NO CONST
+Vec3D operator/(const Vec3D &left, const Scalar &right)
+{
+    Vec3D v;
+	for (int c=0;c<3;c++)
+		v[c]=left[c]/right.Val();
+
+	return v;
+}
 
 
 template <typename T>

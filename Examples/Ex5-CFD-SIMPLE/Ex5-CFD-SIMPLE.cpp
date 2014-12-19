@@ -72,8 +72,8 @@ int main()
 	Scalar rho(1.0);
 	Scalar alpha_p=0.6;
 
-    U=Vec3D(0.01,0.01,0.);
-
+    //U=Vec3D(0.01,0.01,0.);
+    U=Vec3D(0.,0.,0.);
     phi=mesh.Sf() & FvExp::Interpolate(U);
 
     cout << "Initial Flux Info"<<endl;
@@ -199,7 +199,7 @@ int main()
         cout << "Solved p coorection" <<pEqn.Field().outstr()<<endl;
         //BEING BUILT
         //Nodal are corrected with Gauss grad and central coeffs
-        U=U-(AUr*FvExp::Grad(p));                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
+        U=U-0.7*(AUr*FvExp::Grad(p));                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
         p=p+alpha_p*pEqn.Field();
 
         //Correct Flux: m = m* + m´

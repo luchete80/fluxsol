@@ -63,6 +63,7 @@ void Solve (EqnSystem <T> &eq)
 	V_Constr(&R,"R", totrows, Normal,True);
 
 	//Look trhoug equations (rows)
+	cout << "numberofcomps" << numberofcomp<<endl;
 	for (int e=0;e<eq.Num_Eqn();e++)	//Aca voy con las filas de a 2
 	{
         //cout << "eqn "<<e<<endl;
@@ -176,9 +177,13 @@ void Solve (EqnSystem <T> &eq)
 	V_SetAllCmp(&R,0.0);
 	for (int e=0;e<eq.Num_Eqn();e++)
 	{
+	    //cout << "Eqn " << e<<endl;
 		vector <double> source=eq.Eqn(e).Source().Comp();
 		for (int dim=0;dim<numberofcomp;dim++)
+        {
 			V_SetCmp(&R,e*numberofcomp+dim+1,source[dim]);
+            //cout << "Source Col "<<numberofcomp+dim+1<<"Val: "<<source[dim]<<endl;
+        }
 
 	}
 	//cout << "tot rows" << totrows<<endl;

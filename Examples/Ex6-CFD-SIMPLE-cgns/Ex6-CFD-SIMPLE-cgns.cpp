@@ -69,9 +69,12 @@ int main()
 	//Construir aca con la malla
 	Scalar k(1.);	//Difusion, puede ser un escalar
 	Scalar rho(1.0);
-	Scalar alpha_p=0.6;
+	Scalar alpha_p=0.3;
+	Scalar alpha_u=0.7;
 
-    U=Vec3D(0.01,0.,0.01);
+    //U=Vec3D(1.0,0.,1.0);
+    //U=Vec3D(0.01,0.,0.01);
+    U=Vec3D(0.0,0.,0.0);
 
     phi=mesh.Sf() & FvExp::Interpolate(U);
 
@@ -87,10 +90,22 @@ int main()
 
     //EXAMPLE PENDING TASKS
     //TO ADD BOUNDARY FIELD IN OPERATORS= FROM SURF AND VOLFIELDS
+    vector<Vec3D> uant;
+    uant.assign(mesh.Num_Cells(),Vec3D(0.,0.,0.));
+
+    cout << "Face Patches" <<endl;
+    for (int p=0;p<mesh.vBoundary().Num_Patches();p++)
+    {
+        cout << "Patch " <<p<<endl;
+        for (int f=0;f<mesh.vBoundary().vPatch(p).Num_Faces();f++)
+        {
+            cout <<mesh.vBoundary().vPatch(p).Id_Face(f)<<endl;
+        }
+    }
 
 	//ITERATION BEGINS
 	int it=0;
-	while (it <30)
+	while (it <200)
 	{
         EqnSystem <Scalar> pEqn;
         EqnSystem <Vec3D> UEqn;
@@ -123,8 +138,9 @@ int main()
 
         //TO Modify (Simply correct an internal field constant value)
         //Like Update field Boundary Values
-        U.Boundaryfield().PatchField(0).AssignValue(Vec3D(1.,0.,0.));
-        for (int pf=1;pf<4;pf++) U.Boundaryfield().PatchField(pf).AssignValue(Vec3D(0.,0.,0.));
+        for (int pf=0;pf<4;pf++) U.Boundaryfield().PatchField(pf).AssignValue(Vec3D(0.,0.,0.));
+        U.Boundaryfield().PatchField(1).AssignValue(Vec3D(1.,0.,0.));
+
 
         cout <<"Original Flux field" << phi.outstr()<<endl;
 
@@ -206,7 +222,7 @@ int main()
         cout << "Solved p coorection" <<pEqn.Field().outstr()<<endl;
         //BEING BUILT
         //Nodal are corrected with Gauss grad and central coeffs
-        U=U-(AUr*FvExp::Grad(p));                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
+        U=U-alpha_u*(AUr*FvExp::Grad(p));                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
         p=p+alpha_p*pEqn.Field();
 
         //Correct Flux: m = m* + m´
@@ -222,7 +238,21 @@ int main()
         //cout << "AU*FvExp::Grad(p)"<<(AU*FvExp::Grad(p)).Val(0).outstr()<<endl;
         //cout << "U(0) Val: "<<U.Val(0).outstr()<<endl;
 
+        Vec3D maxudiff=0.;
 
+        for (int nu=0;nu<mesh.Num_Cells();nu++)
+        {
+            Vec3D diff=(U.Val(nu)-uant[nu])/U.Val(nu).Norm();
+            for (int dim=0;dim<3;dim++)
+                if (diff[dim]>maxudiff[dim])maxudiff[dim]=diff[dim];
+        }
+
+        cout << "Max U Values"<<endl;
+        cout << maxudiff.outstr()<<endl;
+
+
+        for (int nu=0;nu<mesh.Num_Cells();nu++)
+            uant[nu]=U.Val(nu);
 
         it++;
 	}

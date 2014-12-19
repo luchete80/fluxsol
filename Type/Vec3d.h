@@ -202,6 +202,7 @@ const Vec3D operator* (const Scalar &sc, const Vec3D &vector);
 const Vec3D operator* (const Vec3D &vector, const Scalar &sc);
 
 Vec3D operator/ (Vec3D &vector, Scalar &sc);
+
 double fabs(const Vec3D& vec);
 
 }//Fin de namespace FluxSol
