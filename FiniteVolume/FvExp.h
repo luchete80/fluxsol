@@ -63,8 +63,9 @@ GeomSurfaceField <T> Interpolate(const _CC_Fv_Field <T> &field)
             T prom;
             //Scalar fp
 
-            //cout <<"Face "<< f<< " "<< field[face.Cell(0)].outstr() << endl;
-            //if (face.Cell(0)>=0)cout <<" "<< field[face.Cell(1)].outstr() <<endl;
+            //cout <<"Face "<< f<< " cell 0 Field Value: "<< field[face.Cell(0)].outstr() << endl;
+            //if (!field.ConstGrid().Face(f).Boundaryface())
+            //    cout <<" "<< field[face.Cell(1)].outstr() <<endl;
             //cout << "Fp "<< face.Fp().outstr()<<endl;
             if (!field.ConstGrid().Face(f).Boundaryface())
                 prom = field[face.Cell(0)] * (1.0 - face.Fp()) + field[face.Cell(1)] * face.Fp();

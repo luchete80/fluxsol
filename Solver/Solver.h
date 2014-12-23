@@ -139,6 +139,7 @@ void Solve (EqnSystem <T> &eq)
 					//Modified, block rows are moved to right in block when increment the matrix row
 					//So the sparse index is equal to all dim components
 					Q_SetEntry(&K,row+dim+1,numberofcomp*width_cells,columnid+dim+1,col[0]);
+                    cout << "K["<<row+dim+1<<"]["<<columnid+dim+1<<"]: "<<col[0]<<endl;
 				}
 
 			}
@@ -174,6 +175,7 @@ void Solve (EqnSystem <T> &eq)
 
 	}//End of cells
 
+    cout << "R vector"<<endl;
 	V_SetAllCmp(&R,0.0);
 	for (int e=0;e<eq.Num_Eqn();e++)
 	{
@@ -182,8 +184,9 @@ void Solve (EqnSystem <T> &eq)
 		for (int dim=0;dim<numberofcomp;dim++)
         {
 			V_SetCmp(&R,e*numberofcomp+dim+1,source[dim]);
-            //cout << "Source Col "<<numberofcomp+dim+1<<"Val: "<<source[dim]<<endl;
+            cout << R.Cmp[e*numberofcomp+dim+1]<< " ";
         }
+        cout << endl;
 
 	}
 	//cout << "tot rows" << totrows<<endl;
@@ -206,11 +209,16 @@ void Solve (EqnSystem <T> &eq)
         Ri[j]=R.Cmp[j+1];
     }
 
+    cout <<"Solver Results "<<endl;
 	for (int e=0;e<eq.Num_Eqn();e++)
 	{
 		vector <double> r;
 		for (int dim=0;dim<numberofcomp;dim++)
-			r.push_back(U.Cmp[numberofcomp*e+dim+1]);
+        {
+ 			r.push_back(U.Cmp[numberofcomp*e+dim+1]);
+            cout <<U.Cmp[numberofcomp*e+dim+1]<<" ";
+        }
+        cout <<endl;
 		eq.Eqn(e).X()=r;
 	}
 

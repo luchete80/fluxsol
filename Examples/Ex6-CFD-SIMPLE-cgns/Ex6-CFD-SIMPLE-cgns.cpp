@@ -90,8 +90,14 @@ int main()
 
     //EXAMPLE PENDING TASKS
     //TO ADD BOUNDARY FIELD IN OPERATORS= FROM SURF AND VOLFIELDS
+    //TO MODIFY: ASSIGN A FIELD
     vector<Vec3D> uant;
     uant.assign(mesh.Num_Cells(),Vec3D(0.,0.,0.));
+
+    vector<Scalar> pant;
+    pant.assign(mesh.Num_Cells(),Scalar(0.));
+
+//    _CC_Fv_Field <Scalar> pant(mesh);
 
     cout << "Face Patches" <<endl;
     for (int p=0;p<mesh.vBoundary().Num_Patches();p++)
@@ -199,7 +205,9 @@ int main()
 //        //Where Grad(p)=(pn-pp)/.. + Orth Correction
 //        //Is more simple to directly calculate fluxes
         //Obtaining m*, RhieChow Interpolated Flux
-        phi=phi - AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
+        //phi=phi - AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
+        phi=Uf_ & mesh.Sf();
+        phi= phi - AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
 
 //        cout << "Corrected phi"<<phi.outstr()<< endl;
 //
@@ -239,25 +247,35 @@ int main()
         //cout << "U(0) Val: "<<U.Val(0).outstr()<<endl;
 
         Vec3D maxudiff=0.;
+        Scalar maxpdiff=0.;
 
         for (int nu=0;nu<mesh.Num_Cells();nu++)
         {
             Vec3D diff=(U.Val(nu)-uant[nu])/U.Val(nu).Norm();
             for (int dim=0;dim<3;dim++)
                 if (diff[dim]>maxudiff[dim])maxudiff[dim]=diff[dim];
+            Scalar pdiff=(p.Val(nu)-pant[nu])/p.Val(nu).Norm();
+            if (pdiff.Val()>maxpdiff.Val())maxpdiff=pdiff;
         }
 
-        cout << "Max U Values"<<endl;
+        cout << "Max U Residuals"<<endl;
         cout << maxudiff.outstr()<<endl;
 
+        cout << "Max P Residuals"<<endl;
+        cout << maxpdiff.outstr()<<endl;
 
         for (int nu=0;nu<mesh.Num_Cells();nu++)
+        {
             uant[nu]=U.Val(nu);
+            pant[nu]=p.Val(nu);
+        }
 
         it++;
 	}
 
 	OutputFile("CellField-U.vtu",U);
+	OutputFile("CellField-Uy.vtu",U,1);
+    OutputFile("CellField-Uz.vtu",U,2);
 	OutputFile("CellField-p.vtu",p);
 	//	---- The End -------
 	return 0;

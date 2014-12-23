@@ -41,6 +41,11 @@ class OutputFile
 	template <typename T>
 	OutputFile(string name, _CC_Fv_Field<T> &field);
 
+    //TO MODIFY
+	template <typename T>
+    OutputFile(string name, _CC_Fv_Field<T> &field, const int &comp);
+
+
 	template <typename T>
 	OutputFile(string name, Vertex_Fv_Field<T> &field);
 
