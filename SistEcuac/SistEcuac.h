@@ -62,7 +62,6 @@ public:
 
 //	Eqn(const T &p, const std::vector <T>& n, const T &s)
 	Eqn(const Scalar &p, const std::vector <Scalar>& n, const T &s)
-
 	{ap=p;an=n;x=0.;source=s;}    //Constructor definiendo ap y an
 
 //	Eqn(const T &p, const std::vector <T>& n, const T &s, std::vector<int> nbrid)
@@ -85,6 +84,7 @@ public:
 	void X(const T &v){x=v;}
 	int & Neighbour(const int &i){return this->neighbour_id[i];}
 	int MinNeigbourId();
+	void Relax();
 	const std::vector <int> & NeighboursIds()const{return neighbour_id;}
 
     Eqn<T> & operator-(const Eqn<T> &right);
@@ -140,11 +140,14 @@ class EqnSystem{   //Es un vector de ecuaciones
 	//const int dimension;
 	int dimension;
     std::vector <Eqn <T> > eqn;
+    //std::vector <T> prevsol;            //Previous solutions
     std::vector <unsigned int> first_nonzero_column;    //Primer columna con valor distinto de cero
 	std::vector <int> nbr_eqn;							//To which neighbour eqn belongs each coefficient an
 	//Fv_CC_Grid &grid;                                      //Esto sirve para sistemas esparsos
     Fv_CC_Grid *GridPtr;    //OpenFOAM Style, TO MODIFY;
 	//_CC_Fv_Field <T> &field;										//Can be any tipe of field
+
+	Scalar alpha;                                       //Under Relaxation term
 
     public:
 
@@ -182,6 +185,18 @@ class EqnSystem{   //Es un vector de ecuaciones
 	void Log(std::string str);
 	vector< Eqn<T> > & EqnV(){ return eqn; }
 	Eqn<T> & Eqn(const int &i){return eqn[i];}
+
+    void SetRelaxCoeff(const Scalar &a){this->alpha=a;}
+	void Relax()
+	{
+	    for (int e=0;e<this->EqnV().size();e++)
+        {
+            this->eqn[e].Ap(this->eqn[e].Ap()/this->alpha);
+            //T xcorr;
+            //xcorr=this->eqn[e].X()+(1.-this->alpha)*this->prevsol[e]/this->alpha;
+            //this->eqn[e].X(xcorr);
+        }
+    }
 
 	//Operators
 	const int & Dim() const {return dimension;}

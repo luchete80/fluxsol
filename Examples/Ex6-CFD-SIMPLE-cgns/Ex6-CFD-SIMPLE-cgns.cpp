@@ -112,12 +112,18 @@ int main()
         }
     }
 
+
+    EqnSystem <Scalar> pEqn;
+    EqnSystem <Vec3D> UEqn;     //To modify: associate Eqn System with field
+
+    UEqn.SetRelaxCoeff(alpha_u);
+    pEqn.SetRelaxCoeff(alpha_p);
+
+
 	//ITERATION BEGINS
 	int it=0;
-	while (it <50 )
+	while (it <20)
 	{
-        EqnSystem <Scalar> pEqn;
-        EqnSystem <Vec3D> UEqn;
 
 	    cout << "-----------------------------------------------------------------------------------------------"<<endl;
 	    cout << "Iteration: "<<it+1<< endl;
@@ -176,7 +182,13 @@ int main()
 		cout <<"GradP x Vol Info: "<<endl;
 		cout << gradpV.outstr()<<endl;
 
-		UEqn==gradpV;
+
+
+                        //TO MODIFY
+		UEqn.Relax();   //This MUST INCLUDE R VECTOR
+
+		//UEqn==gradpV;
+		UEqn==(1.-alpha_u)/alpha_u*(UEqn.A()*U)+gradpV;
 		UEqn.Log("UEqn.txt");
 		Solve(UEqn);
 //
@@ -184,16 +196,17 @@ int main()
 		U=UEqn.Field();
         cout << "Solved U Momentum Eq" <<UEqn.Field().outstr()<<endl;
 
-//        //Assign to U Eqn Solved values
-        _Surf_Fv_Field <Vec3D> Uf_;
 
-        //What happens in Uf_ boundary?
-        Uf_=FvExp::Interpolate(U);  //Uf Overbar
         _CC_Fv_Field <Scalar> AUr(mesh);
 
         //TO MODIFY
         AUr=0.001/UEqn.A();       // In OpenFoam these are scalar
 
+//        //Assign to U Eqn Solved values
+        _Surf_Fv_Field <Vec3D> Uf_;
+
+        //What happens in Uf_ boundary?
+        Uf_=FvExp::Interpolate(U);  //Uf Overbar
         cout << "Uf_ "<< Uf_.outstr()<<endl;
         //cout << "UEqn Ap"<< UEqn.A.outstr()<<endl;
 
@@ -214,7 +227,7 @@ int main()
         //phi=phi - AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
         phi=Uf_ & mesh.Sf();
         cout << "phi Before Correction" << phi.outstr()<<endl;
-        phi= phi - AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
+        phi= phi - alpha_u*AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
 
         //To modify FvExp::Interpolate
         for (int f=0;f<mesh.Num_Faces();f++)
@@ -247,12 +260,13 @@ int main()
         OutputFile("CellField-p-Orig.vtu",p);
         //BEING BUILT
         //Nodal are corrected with Gauss grad and central coeffs
-        U=U-alpha_u*(AUr*FvExp::Grad(p));                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
+        U=U-alpha_u*(AUr*FvExp::Grad(pEqn.Field()));                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
         p=p+alpha_p*pEqn.Field();
 
         //Correct Flux: m = m* + m´
         //phi=phi-FvExp::SnGrad(AUr*p);   //Add deferred correction to this gradient
-        _CC_Fv_Field<Scalar> prod=AUr*p;
+        //Correct WITH P CORRECTION
+        _CC_Fv_Field<Scalar> prod=alpha_u*AUr*pEqn.Field();
         phi=phi-FvExp::SnGrad(prod);
         cout << "Corrected U"   << U.outstr()<<endl;
         cout << "Corrected p"   << p.outstr()<<endl;
