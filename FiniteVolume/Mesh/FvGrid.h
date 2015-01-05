@@ -88,7 +88,32 @@ private:
 
 	Node & Node_(const int &i){return this->node[i];}
     Node & CreateNodeFromCellVerts(const int &cellid);
-	void CreateNodesFromCellVerts();
+	void CreateNodesFromCellVerts()
+	{
+
+        vector <Vec3D> verts;
+
+        //El nodo tiene el mismo indice que el cell
+        for (int cellid=0;cellid<this->Num_Cells();cellid++)
+        {
+            Cell_CC cell=this->Cell(cellid);
+            int globvert;
+            Node nod(0.);
+            //Recorro los vertices del cell
+            for (int n=0;n<cell.Num_Vertex();n++)
+            {
+                nod+=this->Vertex(cell.Id_Vert(n));
+            }
+            //cout <<cellid<<endl;
+            //Ahora divido por la cantidad de vertices
+            nod/=(double)cell.Num_Vertex();
+            nod.Id(cellid);
+            node.push_back(nod);
+        }
+
+        inicie_nodes=true;
+
+    }
 
     //MODIFIED, THIS MUST A BE A SINGLE SURFACEFIELD
     const GeomSurfaceField<Vec3D> Sf()const;
@@ -215,7 +240,7 @@ private:
         Iniciar_Caras();
         AssignNeigboursCells();
         CalcCellVolumes();
-
+        CreateNodesFromCellVerts();
 
         vector <Patch> vpatch;
 

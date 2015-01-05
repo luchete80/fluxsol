@@ -72,7 +72,16 @@ void FluxSol::Fv_CC_Grid::Log(string s)
 	meshlog << endl;
 	meshlog<<"Mesh Cells"<<endl;
 	meshlog << endl;
-	int i=0;
+
+    int i=0;
+    meshlog << "Cell Centers (Nodes)"<<endl;
+    for (ccellit=cell.begin();ccellit!=cell.end();ccellit++)
+	{
+		meshlog<< "["<<i<<"]"<<this->Node_(i).outstr()<<endl;
+		i++;
+	}
+
+	i=0;
     for (ccellit=cell.begin();ccellit!=cell.end();ccellit++)
 	{
 		meshlog << "Cell " << i << endl;
@@ -164,32 +173,6 @@ Node & FluxSol::Fv_CC_Grid::CreateNodeFromCellVerts(const int &cellid)
 	return nod;
 }
 
-//Esto no llama mil veces la funcion
-void FluxSol::Fv_CC_Grid::CreateNodesFromCellVerts()
-{
-	vector <Vec3D> verts;
-
-	//El nodo tiene el mismo indice que el cell
-	for (int cellid=0;cellid<this->Num_Cells();cellid++)
-	{
-		Cell_CC cell=this->Cell(cellid);
-		int globvert;
-		Node nod(0.);
-		//Recorro los vertices del cell
-		for (int n=0;n<cell.Num_Vertex();n++)
-		{
-			nod+=this->Vertex(cell.Id_Vert(n));
-		}
-		//cout <<cellid<<endl;
-		//Ahora divido por la cantidad de vertices
-		nod/=(double)cell.Num_Vertex();
-		nod.Id(cellid);
-		node.push_back(nod);
-	}
-
-	inicie_nodes=true;
-
-}
 
 // Constructor que sirva para construir por ejemplo desde un archivo
 Fv_CC_Grid::Fv_CC_Grid(vector <_Vertex> &vvert,vector <Cell_CC> &vcell, Boundary &bound)
@@ -480,9 +463,13 @@ void Fv_CC_Grid::CalcCellVolumes()
 		for (int cellface=0;cellface<this->cell[c].Num_Faces();cellface++)
 		{
 			_FvFace face = this->Face(Cell(c).Id_Face(cellface));
-			vol+=face.Af()&face.Center();
-			this->Cell(c).Vp(vol);
-		}
+			//vol+=face.Af()&face.Center();
+			//TO MODIFY
+			vol+=CellFaceAf_Slow(c,cellface)&face.Center();
+        }
+
+		vol=vol/3.;
+		this->Cell(c).Vp(vol);
 
 	}
 

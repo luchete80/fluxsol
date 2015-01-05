@@ -121,7 +121,7 @@ Vec3D& Vec3D::operator= (const double &right) {
 Vec3D& Vec3D::operator= (const std::vector<double> &right) {
 	comp[0]=right[0];
 	comp[1]=right[1];
-	comp[3]=right[2];
+	comp[2]=right[2];
 	return *this;
 }
 
@@ -347,7 +347,7 @@ const Vec3D operator* (const Vec3D &vector, const Scalar &sc)
 	return v;
 }
 
-Vec3D operator/ (Vec3D &vector, Scalar &sc)
+Vec3D operator/ (const Vec3D &vector, const Scalar &sc)
 {
 	Vec3D v;
 	for (int c=0;c<3;c++)

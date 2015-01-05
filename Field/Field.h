@@ -90,10 +90,12 @@ class _Field{
 	const std::string outstr() const
 	{
         std::string cad;
-        std::ostringstream strs;
         //meshlog.open(nombre.c_str());
         for (int v=0;v<this->numberofvals;v++)
         {
+            std::ostringstream strs;
+            strs << "[" <<v << "]: ";
+            cad+=strs.str();
             cad+=this->value[v].outstr();
             //cad+="\n";
         }

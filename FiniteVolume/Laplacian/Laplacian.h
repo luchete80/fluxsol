@@ -61,6 +61,21 @@ EqnSystem <T> FvImp::Laplacian(_CC_Fv_Field<Scalar> fi,_CC_Fv_Field <T> &VolFiel
 
     fisurf=FvExp::Interpolate(fi);
 
+    //TO MODIFY, AT FIRST; VALUES AT BOUNDARY MUST BE EXTRAPOLATED
+//    for (int f=0;f<VolField.Grid().Num_Faces();f++)
+//    {
+//		_FvFace face=VolField.Grid().Face(f);
+//		if (!face.Is_Null_Flux_Face())
+//		{
+//		    if (VolField.Grid().Face(f).Boundaryface())
+//            {
+//                int pcellid=face.Cell(0);
+//                fisurf.Val(f,VolField.Val(pcellid));
+//            }
+//		}
+//    }
+
+
 	//cout << "Eqn created."<<endl;
 	//EqnSystem <T> eqnsys(VolField);
 	//EqnSystem <T> eqnsys(VolField.Grid().Num_Cells());   //Como no le doy parametros inicia todo en cero, salvo las dimensiones
@@ -140,7 +155,12 @@ EqnSystem <T> FvImp::Laplacian(_CC_Fv_Field<Scalar> fi,_CC_Fv_Field <T> &VolFiel
 			//Boundary type
 			//Instead of if sentence it is convenient to use inheritance
             //cout <<"source"<<endl;
+
             ap=-face.Norm_ad()/fabs(face.Dist_pf_LR(0))*fisurf.Val(idface);
+
+//            cout << "Boundary Face "<<idface<<endl;
+//            cout << "k Surface Value"<<fisurf.Val(idface).Val()<<endl;
+//            cout << "Cell "<< face.Cell(0) << " ap: "<<ap.Val()<<endl;
 
 			if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
 			{

@@ -38,14 +38,15 @@ namespace FluxSol{
 //both operands MUST NOT BE CONST to avoid following: scalar * const = vector
 
 //TO MODIFY, TO DELETE NO CONST
-Vec3D operator/(const Vec3D &left, const Scalar &right)
-{
-    Vec3D v;
-	for (int c=0;c<3;c++)
-		v[c]=left[c]/right.Val();
-
-	return v;
-}
+//Defined in Vec3D
+//Vec3D operator/(const Vec3D &left, const Scalar &right)
+//{
+//    Vec3D v;
+//	for (int c=0;c<3;c++)
+//		v[c]=left[c]/right.Val();
+//
+//	return v;
+//}
 
 
 template <typename T>

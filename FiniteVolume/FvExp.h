@@ -114,6 +114,8 @@ Div (const _Surf_Fv_Field <T>& phi)
         {
             //cout << "fi "<<fi<<endl;
             int f=phi.Grid().Cell(c).Id_Face(fi);
+            T res=phi.Val(f)*phi.Grid().CellFaceSign(c,fi);
+            //cout << "Face "<<f<<" Flux: "<<res.outstr()<<endl;
             ret[c]+=phi.Val(f)*phi.Grid().CellFaceSign(c,fi);
         }
     }

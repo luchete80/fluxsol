@@ -201,7 +201,7 @@ const Vec3D operator* (const double &left, const Vec3D &right);
 const Vec3D operator* (const Scalar &sc, const Vec3D &vector);
 const Vec3D operator* (const Vec3D &vector, const Scalar &sc);
 
-Vec3D operator/ (Vec3D &vector, Scalar &sc);
+Vec3D operator/ (const Vec3D &vector, const Scalar &sc);
 
 double fabs(const Vec3D& vec);
 

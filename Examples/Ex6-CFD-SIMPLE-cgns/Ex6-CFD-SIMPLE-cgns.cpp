@@ -44,6 +44,9 @@ int main()
 	Fv_CC_Grid mesh(meshfname);
 	mesh.Log("Log.txt");
 
+    for (int c=0;c<mesh.Num_Cells();c++)
+        cout << mesh.Cell(c).Vp().outstr()<<endl;
+
 	//Fields
 	_CC_Fv_Field <Scalar> p(mesh);
 	_CC_Fv_Field <Vec3D>  U(mesh);
@@ -111,7 +114,7 @@ int main()
 
 	//ITERATION BEGINS
 	int it=0;
-	while (it <200)
+	while (it <50 )
 	{
         EqnSystem <Scalar> pEqn;
         EqnSystem <Vec3D> UEqn;
@@ -123,7 +126,7 @@ int main()
 //      //Boundary Conditions
         //Pressure gradient is null at all walls
         for (int pf=0;pf<4;pf++) p.Boundaryfield().PatchField(pf).AssignValue(0.0);
-        p.Val(0,0.);    //Reference Pressure
+        //p.Val(36,0.);    //Reference Pressure
 
         for (int f=0;f<mesh.Num_Faces();f++)
         {
@@ -162,18 +165,18 @@ int main()
 		//Solve(UEqn==-FvExp::Grad(p));
 		//_CC_Fv_Field<Vec3D> pru2(-FvExp::Grad(p));
         //TO MODIFY: IF MESH IS NOT ASSIGNED PREVIOUSLY TO EQUAL, ERROR
-		_CC_Fv_Field <Vec3D> gradp(mesh);
+		_CC_Fv_Field <Vec3D> gradpV(mesh);
 //		-FvExp::Grad(p);
-		gradp=-FvExp::Grad(p);
+		gradpV=-FvExp::GradV(p);
 		//Correct boundary conditions, by imposing zero pressure gradient at wall
 
 		cout <<"P Field Info: "<<endl;
 		cout << p.outstr()<<endl;
 
-		cout <<"GradP Info: "<<endl;
-		cout << gradp.outstr()<<endl;
+		cout <<"GradP x Vol Info: "<<endl;
+		cout << gradpV.outstr()<<endl;
 
-		UEqn==gradp;
+		UEqn==gradpV;
 		UEqn.Log("UEqn.txt");
 		Solve(UEqn);
 //
@@ -184,17 +187,20 @@ int main()
 //        //Assign to U Eqn Solved values
         _Surf_Fv_Field <Vec3D> Uf_;
 
+        //What happens in Uf_ boundary?
         Uf_=FvExp::Interpolate(U);  //Uf Overbar
         _CC_Fv_Field <Scalar> AUr(mesh);
 
-        AUr=1./UEqn.A();       // In OpenFoam these are scalar
+        //TO MODIFY
+        AUr=0.001/UEqn.A();       // In OpenFoam these are scalar
 
         cout << "Uf_ "<< Uf_.outstr()<<endl;
-        cout << "UEqn Ap"<< AUr.outstr()<<endl;
+        //cout << "UEqn Ap"<< UEqn.A.outstr()<<endl;
 
         //TO FIX: MAKE THIS WORK
         _Surf_Fv_Field <Scalar> AUrf_;
         AUrf_=FvExp::Interpolate(AUr);
+
 
         //INSTEAD OF
         Gradpf_=FvExp::Interpolate(FvExp::Grad(p));
@@ -207,7 +213,16 @@ int main()
         //Obtaining m*, RhieChow Interpolated Flux
         //phi=phi - AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
         phi=Uf_ & mesh.Sf();
+        cout << "phi Before Correction" << phi.outstr()<<endl;
         phi= phi - AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
+
+        //To modify FvExp::Interpolate
+        for (int f=0;f<mesh.Num_Faces();f++)
+        {
+            if (mesh.Face(f).Boundaryface())
+                //cout << "Face "<<f << "is boundary"<<endl;
+                phi.Val(f,0.);
+        }
 
 //        cout << "Corrected phi"<<phi.outstr()<< endl;
 //
@@ -217,9 +232,10 @@ int main()
 //		//THIS IS INSIDE DIV ALGORITHM Sum(-rhof (Df) Grad(p´f)Af + Sum (m*f) = 0
 //		//for the prescribed for the non orth steps
         cout << "AUr " << AUr.outstr()<<endl;
+        cout << "AUrf_ " << AUrf_.outstr()<<endl;
         pEqn=FvImp::Laplacian(rho*AUr,p);   //Solve Laplacian for p (by the way, is p´)
         pEqn==FvExp::Div(phi);
-        pEqn.Eqn(0).SetValueCondition(0.);
+        //pEqn.Eqn(36).SetValueCondition(0.);
         //Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
         Solve(pEqn);
         cout << "Flux Divergence"<<FvExp::Div(phi).outstr()<<endl;
@@ -228,6 +244,7 @@ int main()
         //Since Correction is in flux we have yet the faces areas includes, then
         //we must not to compute inner product another time
         cout << "Solved p coorection" <<pEqn.Field().outstr()<<endl;
+        OutputFile("CellField-p-Orig.vtu",p);
         //BEING BUILT
         //Nodal are corrected with Gauss grad and central coeffs
         U=U-alpha_u*(AUr*FvExp::Grad(p));                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
@@ -271,12 +288,18 @@ int main()
         }
 
         it++;
+        _CC_Fv_Field <Vec3D> test(mesh);
+        test=FvExp::Grad(p);
+        OutputFile("CellField-gradpx.vtu",test,0);
+        OutputFile("CellField-gradpy.vtu",test,2);
 	}
 
 	OutputFile("CellField-U.vtu",U);
 	OutputFile("CellField-Uy.vtu",U,1);
     OutputFile("CellField-Uz.vtu",U,2);
 	OutputFile("CellField-p.vtu",p);
+
+
 	//	---- The End -------
 	return 0;
 }
