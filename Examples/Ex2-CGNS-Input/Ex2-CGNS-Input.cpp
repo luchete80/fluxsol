@@ -26,14 +26,15 @@
 //Former temp test
 // TEMPERATURE EXAMPLE 2
 // READS FROM A FILE
-void DefTempTest(int argc, char *argv[]);
 
-int main(int argc, char *argv[])
+//int main(int argc, char *argv[])
+
+int main()
 {
 
-    cout << "Input file: "<< argv[1]<<endl;
+    //cout << "Input file: "<< argv[1]<<endl;
 
-    /*cout << "Reading square.cgns ..."<<endl;
+    cout << "Reading square.cgns ..."<<endl;
 	Fv_CC_Grid malla("square.cgns");
 	//malla.ReadCGNS();
 
@@ -45,11 +46,10 @@ int main(int argc, char *argv[])
 	Scalar wallvalue=0.;
 	Scalar topvalue=1.;
 	for (int p=0;p<3;p++)
+        T.Boundaryfield().PatchField(p).AssignValue(wallvalue);
 
-	T.Boundaryfield().PatchField(p).AssignValue(wallvalue);
 	T.Boundaryfield().PatchField(3).AssignValue(topvalue);
-	T.Boundaryfield()._PatchField(p).AssignValue(wallvalue);
-	T.Boundaryfield()._PatchField(3).AssignValue(topvalue);
+
 
 	// Materiales
 	vector<Materials> material=SetMaterials();
@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
 	TEqn.Log("EqLog.txt");
 
 	cout<<"Generating field"<<endl;
-//	CenterToVertexInterpolation interp(malla);
+	CenterToVertexInterpolation <Scalar> interp(malla);
 
 	Vertex_Fv_Field<Scalar> vT;
 
@@ -75,71 +75,70 @@ int main(int argc, char *argv[])
 	T=TEqn.Field();
 
 	cout<<"Interpolating to vertices"<<endl;
-//	vT=interp.Interpolate(T);
+	vT=interp.Interpolate(T);
 
 	cout<<"Writing files"<<endl;
 	OutputFile("CellField.vtu",T);
+	OutputFile("VertexField.vtu",vT);
+
+	cout << "End. Now Reading input.in"<<endl;
+
+    ////////////////////////////////////////////////////////////////////////////
+//
+//    string inputFileName="InputEx.in";
+//	//InputFile input(inputFileName);
+//	InputFile input(inputFileName);
+//
+//	//vector<int> equations;
+//
+//	Fv_CC_Grid mesh(input.section("grid",0).get_string("file"));
+//
+//	_CC_Fv_Field<Scalar> T;
+//
+//	ReadFieldFromInput(input,T,mesh);
+//	mesh.Log("Log.txt");
+//
+//	// Materiales
+//	vector<Materials> material=SetMaterials();
+//
+//	EqnSystem <Scalar> TEqn;
+//
+//	//Scalar k(1.);	//Diffusion
+//	//Scalar kdiff=material[0].k;
+//
+//	cout<<"Generating system"<<endl;
+//
+//	//TEqn=(FvImp::Laplacian(kdiff,T)==0.);
+//	//TO MODIFY
+//	T.Boundaryfield().PatchField(0).AssignValue(Scalar(1.));
+//	TEqn=input.ReadEqnSys(mesh);
+//
+//
+//	cout<<"Solving system"<<endl;
+//	Solve(TEqn);
+//
+//
+//	TEqn.Log("EqLog.txt");
+//
+//	cout<<"Generating field"<<endl;
+//	CenterToVertexInterpolation <Scalar>interp(mesh);
+//
+//	Vertex_Fv_Field<Scalar> vT;
+//
+//
+//	T=TEqn.Field();
+//	//_CC_Fv_Field<Vec3D> gradT = FvExp::Grad(T);
+//
+//	//_CC_Fv_Field <Vec3D> gradT=FvExp::Grad(T);
+//
+//	cout<<"Interpolating to vertices"<<endl;
+//	vT=interp.Interpolate(T);
+//
+//	cout<<"Writing files"<<endl;
+//	OutputFile("CellField-2.vtu",T);
 //	OutputFile("VertexField.vtu",vT);
 
-	cout << "End. Now Reading input.in"<<endl;*/
-	DefTempTest(argc,argv);
+
 	return 0;
 }
 
-
-//Last Test
-void DefTempTest(int argc, char *argv[])
-{
-	string inputFileName=argv[1];
-	//string inputFileName="InputEx.in";
-	InputFile input(inputFileName);
-
-	//vector<int> equations;
-
-	Fv_CC_Grid mesh(input.section("grid",0).get_string("file"));
-
-	_CC_Fv_Field<Scalar> T;
-
-	ReadFieldFromInput(input,T,mesh);
-	mesh.Log("Log.txt");
-
-	// Materiales
-	vector<Materials> material=SetMaterials();
-
-	EqnSystem <Scalar> TEqn;
-
-	//Scalar k(1.);	//Diffusion
-	//Scalar kdiff=material[0].k;
-
-	cout<<"Generating system"<<endl;
-
-	//TEqn=(FvImp::Laplacian(kdiff,T)==0.);
-	TEqn=input.ReadEqnSys(mesh);
-
-
-	cout<<"Solving system"<<endl;
-	Solve(TEqn);
-
-
-	TEqn.Log("EqLog.txt");
-
-	cout<<"Generating field"<<endl;
-//	CenterToVertexInterpolation interp(mesh);
-
-	Vertex_Fv_Field<Scalar> vT;
-
-
-	T=TEqn.Field();
-	//_CC_Fv_Field<Vec3D> gradT = FvExp::Grad(T);
-
-	//_CC_Fv_Field <Vec3D> gradT=FvExp::Grad(T);
-
-	cout<<"Interpolating to vertices"<<endl;
-	//vT=interp.Interpolate(T);
-
-	cout<<"Writing files"<<endl;
-	OutputFile("CellField-2.vtu",T);
-	//OutputFile("VertexField.vtu",vT);
-
-	//	---- The End -------
-}
