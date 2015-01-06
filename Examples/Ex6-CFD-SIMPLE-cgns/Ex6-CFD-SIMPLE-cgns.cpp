@@ -122,7 +122,7 @@ int main()
 
 	//ITERATION BEGINS
 	int it=0;
-	while (it <20)
+	while (it <100)
 	{
 
 	    cout << "-----------------------------------------------------------------------------------------------"<<endl;
@@ -160,6 +160,7 @@ int main()
         cout <<"Original Flux field" << phi.outstr()<<endl;
 
 		//2. U Calculation
+		//UEqn=FvImp::Div_CDS(phi, U)-FvImp::Laplacian(k,U);//TO MODIFY WITH CONVECTION SCHEME
 		UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
 
 		FvImp::Laplacian(k,U).Log("Diffusion.txt");
@@ -183,13 +184,14 @@ int main()
 		cout << gradpV.outstr()<<endl;
 
 
+		//UEqn==gradpV;
+		UEqn==(1.-alpha_u)/alpha_u*(UEqn.A()*U)+gradpV;
+		UEqn.Log("UEqn-BeforeRelax.txt");
+
 
                         //TO MODIFY
 		UEqn.Relax();   //This MUST INCLUDE R VECTOR
 
-		//UEqn==gradpV;
-		UEqn==(1.-alpha_u)/alpha_u*(UEqn.A()*U)+gradpV;
-		UEqn.Log("UEqn.txt");
 		Solve(UEqn);
 //
 //
@@ -263,13 +265,22 @@ int main()
         U=U-alpha_u*(AUr*FvExp::Grad(pEqn.Field()));                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
         p=p+alpha_p*pEqn.Field();
 
+
+        cout << "p Corrected " <<pEqn.Field().outstr()<<endl;
+
         //Correct Flux: m = m* + m´
         //phi=phi-FvExp::SnGrad(AUr*p);   //Add deferred correction to this gradient
         //Correct WITH P CORRECTION
-        _CC_Fv_Field<Scalar> prod=alpha_u*AUr*pEqn.Field();
-        phi=phi-FvExp::SnGrad(prod);
+        _CC_Fv_Field<Scalar> pcorr(mesh);   //TO MODIFY; ASSIGN MESH AUTOMATICALLY
+        pcorr=pEqn.Field();
+        //phi= phi - alpha_u*FvExp::SnGrad(pcorr);
+        phi= phi - alpha_u*AUrf_*FvExp::SnGrad(pcorr);
+
+        //TO MODIFY, CORRECT THIS
+        //phi=phi-alpha_u*(AUrf_*FvExp::SnGrad(prod));
         cout << "Corrected U"   << U.outstr()<<endl;
         cout << "Corrected p"   << p.outstr()<<endl;
+        cout << "Phi Correction (-alpha AUr Sngrad (pCorr) )" << pcorr.outstr()<<endl;
         cout << "Corrected phi" << phi.outstr()<<endl;
 
         //cout << "grad p" <<FvExp::Grad(p).Val(0).outstr()<<endl;

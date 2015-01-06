@@ -49,6 +49,13 @@ template <typename T>
 EqnSystem < T > //typename is written because it can not be compiled in gcc
 Div(GeomSurfaceField<Scalar> fi,_CC_Fv_Field <T> VolField);
 
+template <class T>
+//EqnSystem < typename innerProduct < Vec3D, T> ::type >
+//First arg is flux
+//TO MODIFY, CALL Convection Scheme
+EqnSystem < T >
+Div_CDS(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi);
+
 template <typename T>
 EqnSystem < T > //typename is written because it can not be compiled in gcc
 Div(_CC_Fv_Field<Scalar> fi,_CC_Fv_Field <T> VolField);

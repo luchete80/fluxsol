@@ -66,7 +66,7 @@ void Solve (EqnSystem <T> &eq)
 	cout << "[Matrix] [Row] [Col]" << numberofcomp<<endl;
 	for (int e=0;e<eq.Num_Eqn();e++)	//Aca voy con las filas de a 2
 	{
-        //cout << "eqn "<<e<<endl;
+        cout << "eqn "<<e<<endl;
 		vector <double> ap=eq.Eqn(e).Ap().Comp();
 		Scalar ap_sc=eq.Eqn(e).Ap();
 		Scalar value;

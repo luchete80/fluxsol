@@ -346,7 +346,8 @@ namespace FluxSol
 	template<typename T>
 	_Surf_Fv_Field<T> operator* (const _Surf_Fv_Field<Scalar> &left,const _Surf_Fv_Field<T> &right)
 	{
-	_Surf_Fv_Field<T> ret(left.Numberofvals());
+	//_Surf_Fv_Field<T> ret(left.Numberofvals()); THIS NOT WORKS, CREATE WITH GRID
+	_Surf_Fv_Field<T> ret(right.Grid());
 	T val;
 	//Sizes must be equal and rank must be large than zero?
 	for (int c = 0; c < left.Numberofvals(); c++)
