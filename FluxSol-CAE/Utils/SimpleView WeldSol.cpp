@@ -23,18 +23,20 @@
 
 #include <vtkRenderWindowInteractor.h>
 
-#include <vtkTextActor.h>
-#include <vtkTextProperty.h>
-
 //GRID
 #include <vtkGeometryFilter.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkUnstructuredGridReader.h>
 #include <vtkUnstructuredGridGeometryFilter.h>
+#include <vtkDataSetSurfaceFilter.h>
 
 #include <vtkShrinkFilter.h>
 #include <vtkProperty.h>
 #include <vtkOrientationMarkerWidget.h>
+
+#include <vtkCellData.h>
+#include <vtkPointData.h>
+#include <vtkLookupTable.h>
 
 //NEW!! Extracted from Shadows test project
 #if VTK_MAJOR_VERSION <= 5
@@ -51,6 +53,10 @@
 #define VTK_CREATE(type, name) \
   vtkSmartPointer<type> name = vtkSmartPointer<type>::New()
 
+#include <vector>
+#include <sstream>
+
+using namespace std;
 // Constructor
 SimpleView::SimpleView()
 {
@@ -110,20 +116,24 @@ SimpleView::SimpleView()
 
     //**********************************************************************************
     //Read values At First
-//    vector<double> results;
-//    fstream in_stream("results.txt");
-//    while (!in_stream.eof())
-//   {
-//       string line;
-//        getline(in_stream, line);
-//        stringstream ss;
-//        ss << line;
-//        double d;
-//        ssd >> d;
-//        results.push_back(d);
-//   }
+    vector<double> results;
+    fstream in_stream("results.txt");
+    double minv,maxv;
+    minv=1.0e6;maxv=0.;
+    while (!in_stream.eof())
+   {
+       string line;
+        getline(in_stream, line);
+        stringstream ss;
+        ss << line;
+        double d;
+        if (d<minv)minv=d;
+        if (d>maxv)maxv=d;
+        ss >> d;
+        results.push_back(d);
+   }
 
-
+    cout << "Results size: " << results.size()<<endl;
 
     // Data taken from vtk examples ColoredElevationMap and Filled Contours
     //This is interesting too
@@ -132,47 +142,112 @@ SimpleView::SimpleView()
     //
 //
 //   //converter para polydata
-//   vtkUnstructuredGrid * unstructured= vtkUnstructuredGrid::New();
-//   unstructured = reader ->GetOutput();
-//   //unstructured ->Update();
+    //There are two choices to convert mesh to polydata
+    //But geometryfilter
+   vtkUnstructuredGrid * unstructured= vtkUnstructuredGrid::New();
+   unstructured = reader ->GetOutput();
+   //unstructured ->Update();
 //
-//   vtkGeometryFilter *geometryFilter2  = vtkGeometryFilter::New();
-//    #if VTK_MAJOR_VERSION <= 5
-//      geometryFilter2->SetInput(unstructured);
-//    #else
-//      geometryFilter->SetInputData(unstructured);
-//    #endif
-//      geometryFilter2->Update();
+
+  vtkSmartPointer<vtkDataSetSurfaceFilter> surfaceFilter =
+    vtkSmartPointer<vtkDataSetSurfaceFilter>::New();
+
+  vtkSmartPointer<vtkGeometryFilter> geometryFilter2 =
+    vtkSmartPointer<vtkGeometryFilter>::New();
 //
-//    vtkPolyData * polydata= vtkPolyData::New();
-//    polydata = geometryFilter2 ->GetOutput ();
+//      vtkSmartPointer<vtkUnstructuredGridGeometryFilter> geometryFilter2 =
+//    vtkSmartPointer<vtkUnstructuredGridGeometryFilter>::New();
+    #if VTK_MAJOR_VERSION <= 5
+      geometryFilter2->SetInput(unstructured);
+      surfaceFilter->SetInput(unstructured);
+    #else
+      geometryFilter2->SetInputData(unstructured);
+      surfaceFilter->SetInputData(unstructured);
+    #endif
+      geometryFilter2->Update();
+      surfaceFilter->Update();
+//
+    vtkPolyData * polydata= geometryFilter2 ->GetOutput ();
+   // vtkPolyData* polydata = surfaceFilter->GetOutput();
+
+    //vtkPolyData * polydata= geometryFilter2 ->GetOutput ();
 //
 //    //polydata -> SetPoints(teste->GetOutput()->GetPoints());
 //
+//**************************** RANGE AND COLORS ******************************
+  // Generate the colors for each point based on the color map
+  vtkSmartPointer<vtkUnsignedCharArray> colors =
+    vtkSmartPointer<vtkUnsignedCharArray>::New();
+  colors->SetNumberOfComponents(3);
+  colors->SetName("Colors");
+
+    //Lookuptable
+  // Create the color map
+  vtkSmartPointer<vtkLookupTable> colorLookupTable =
+    vtkSmartPointer<vtkLookupTable>::New();
+  colorLookupTable->SetTableRange(minv, maxv);
+  colorLookupTable->Build();
+
+    for(int i = 0; i < polydata->GetNumberOfPoints(); i++)
+    {
+        unsigned char color[3];
+        double p[3];
+        polydata->GetPoint(i,p);
+//        cout << p[0] << " " << p[1] << p[2]<<endl;
+        double dcolor[3];
+        colorLookupTable->GetColor(results[i], dcolor);
+ //       std::cout << "dcolor: "
+//                  << dcolor[0] << " "
+//                  << dcolor[1] << " "
+//                  << dcolor[2] << std::endl;
+
+        for(unsigned int j = 0; j < 3; j++)
+          {
+          color[j] = static_cast<unsigned char>(255.0 * dcolor[j]);
+          }
+//        std::cout << "color: "
+//                  << (int)color[0] << " "
+//                  << (int)color[1] << " "
+//                  << (int)color[2] << std::endl;
+
+        colors->InsertNextTupleValue(color);
+    }
+
+    cout << "Maxs " << minv << " " <<maxv <<endl;
+
+    polydata->GetPointData()->SetScalars(colors);
+
 //       //TO OBTAIN RANGE
-//     double scalarRange[2];
-////     polydata->GetPointData()->GetScalars()->GetRange(scalarRange);
+     double scalarRange[2];
+//     polydata->GetPointData()->GetScalars()->GetRange(scalarRange);
+
+    //cout << "Scalar Range: "<<scalarRange.size()<<endl;
+//    cout << scalarRange[0]<<" "<<scalarRange[1]<<endl;
+
 //
 //    //************************************* MAPPER
 //
-//     vtkSmartPointer<vtkPolyDataMapper> pdmapper =
-//    vtkSmartPointer<vtkPolyDataMapper>::New();
+     vtkSmartPointer<vtkPolyDataMapper> pdmapper =
+    vtkSmartPointer<vtkPolyDataMapper>::New();
 //
 //    //pdmapper->ScalarVisibilityOff();
 //
-//    #if VTK_MAJOR_VERSION <= 5
-//      pdmapper->SetInputConnection(polydata->GetProducerPort());
-//    #else
-//      mapper->SetInputData(polydata);
-//    #endif
+    #if VTK_MAJOR_VERSION <= 5
+      pdmapper->SetInputConnection(polydata->GetProducerPort());
+    #else
+     pdmapper->SetInputData(polydata);
+    #endif
     //************************************** RENDER PHASE
 
   // Actor in scene
   VTK_CREATE(vtkActor, actor);
   //Options are mapper
-  actor->SetMapper(mapper);
+  //MESH
+  //actor->SetMapper(mapper);
 
-  actor->GetProperty()->SetEdgeColor(0, 0, 0);
+  actor->SetMapper(pdmapper);
+
+  //actor->GetProperty()->SetEdgeColor(0, 0, 0);
   actor->GetProperty()->EdgeVisibilityOn();
 
   /////
@@ -214,32 +289,6 @@ SimpleView::SimpleView()
 
 
   ren->SetBackground(.2, .3, .4);
-
-  ren->GradientBackgroundOn();
-  ren->SetBackground(1,1,1);
-  ren->SetBackground2(0,0,1);
-
-  //TO FIX AXES POSITION
-       // vtkSmartPointer<vtkAxesActor> axes =
-         // vtkSmartPointer<vtkAxesActor>::New();
-
-      // vtkSmartPointer<vtkOrientationMarkerWidget> widget =
-          // vtkSmartPointer<vtkOrientationMarkerWidget>::New();
-      // widget->SetOutlineColor( 0.9300, 0.5700, 0.1300 );
-      // widget->SetOrientationMarker( axes );
-      // widget->SetInteractor( renderWindowInteractor );
-      // widget->SetViewport( 0.0, 0.0, 0.4, 0.4 );
-      // widget->SetEnabled( 1 );
-      // widget->InteractiveOn();
-
-	vtkSmartPointer<vtkTextActor> textActor = 
-    vtkSmartPointer<vtkTextActor>::New();
-  textActor->GetTextProperty()->SetFontSize ( 24 );
-  textActor->SetPosition2 ( 10, 40 );
-  ren->AddActor2D ( textActor );
-  textActor->SetInput ( "FluxSol" );
-  textActor->GetTextProperty()->SetColor ( 1.0,0.0,0.0 );
-
   // Add Actor to renderer
   ren->AddActor(actor);
   ren->AddActor(axes);

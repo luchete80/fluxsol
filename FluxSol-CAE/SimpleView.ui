@@ -7,15 +7,15 @@
     <x>0</x>
     <y>0</y>
     <width>1002</width>
-    <height>666</height>
+    <height>665</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>FluxSolCAE</string>
+   <string>FluxSolCAE 0.0.1 64-bit</string>
   </property>
   <property name="windowIcon">
    <iconset resource="Icons/icons.qrc">
-    <normaloff>:/Icons/help.png</normaloff>:/Icons/help.png</iconset>
+    <normaloff>:/Icons/cae.png</normaloff>:/Icons/cae.png</iconset>
   </property>
   <property name="iconSize">
    <size>
@@ -24,82 +24,78 @@
    </size>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QGroupBox" name="groupBoxGraph">
-    <property name="geometry">
-     <rect>
-      <x>9</x>
-      <y>9</y>
-      <width>984</width>
-      <height>569</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-      <horstretch>1</horstretch>
-      <verstretch>1</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="title">
-     <string>Views</string>
-    </property>
-    <layout class="QVBoxLayout">
-     <property name="spacing">
-      <number>0</number>
-     </property>
-     <property name="leftMargin">
-      <number>0</number>
-     </property>
-     <property name="topMargin">
-      <number>0</number>
-     </property>
-     <property name="rightMargin">
-      <number>0</number>
-     </property>
-     <property name="bottomMargin">
-      <number>0</number>
-     </property>
-     <item>
-      <widget class="QSplitter" name="splitter">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QGroupBox" name="groupBoxGraph">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>1</horstretch>
+        <verstretch>1</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="title">
+       <string>Views</string>
+      </property>
+      <layout class="QVBoxLayout">
+       <property name="spacing">
+        <number>0</number>
        </property>
-       <widget class="QFrame" name="tableFrame">
-        <layout class="QVBoxLayout">
-         <property name="spacing">
-          <number>0</number>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QSplitter" name="splitter">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
          </property>
-         <property name="leftMargin">
-          <number>0</number>
-         </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <property name="rightMargin">
-          <number>0</number>
-         </property>
-         <property name="bottomMargin">
-          <number>0</number>
-         </property>
-        </layout>
-       </widget>
-       <widget class="QVTKWidget" name="qvtkWidget" native="true">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-          <horstretch>1</horstretch>
-          <verstretch>1</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>300</width>
-          <height>300</height>
-         </size>
-        </property>
-       </widget>
-      </widget>
-     </item>
-    </layout>
-   </widget>
+         <widget class="QFrame" name="tableFrame">
+          <layout class="QVBoxLayout">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+          </layout>
+         </widget>
+         <widget class="QVTKWidget" name="qvtkWidget" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>1</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>300</width>
+            <height>300</height>
+           </size>
+          </property>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -117,7 +113,6 @@
     <addaction name="actionOpenFile"/>
     <addaction name="actionSave"/>
     <addaction name="separator"/>
-    <addaction name="actionHelp"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -149,20 +144,20 @@
    <addaction name="actionOpenFile"/>
    <addaction name="actionSave"/>
    <addaction name="separator"/>
-   <addaction name="actionHelp"/>
   </widget>
-  <action name="actionOpenFile">
-   <property name="enabled">
-    <bool>true</bool>
+  <widget class="QToolBar" name="toolBar_View">
+   <property name="windowTitle">
+    <string>toolBar_2</string>
    </property>
-   <property name="icon">
-    <iconset resource="Icons/icons.qrc">
-     <normaloff>:/Icons/fileopen.png</normaloff>:/Icons/fileopen.png</iconset>
-   </property>
-   <property name="text">
-    <string>Open File...</string>
-   </property>
-  </action>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionZoomExt"/>
+   <addaction name="actionView_Z"/>
+  </widget>
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
@@ -177,19 +172,10 @@
     <string>Print</string>
    </property>
   </action>
-  <action name="actionHelp">
-   <property name="icon">
-    <iconset resource="Icons/icons.qrc">
-     <normaloff>:/Icons/help.png</normaloff>:/Icons/help.png</iconset>
-   </property>
-   <property name="text">
-    <string>Help</string>
-   </property>
-  </action>
   <action name="actionSave">
    <property name="icon">
     <iconset resource="Icons/icons.qrc">
-     <normaloff>:/Icons/filesave.png</normaloff>:/Icons/filesave.png</iconset>
+     <normaloff>:/Icons/save.png</normaloff>:/Icons/save.png</iconset>
    </property>
    <property name="text">
     <string>Save</string>
@@ -198,6 +184,36 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionZoomExt">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/zoomext.png</normaloff>:/Icons/zoomext.png</iconset>
+   </property>
+   <property name="text">
+    <string>ZoomExt</string>
+   </property>
+  </action>
+  <action name="actionOpenFile">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/fileopen.png</normaloff>:/Icons/fileopen.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open File...</string>
+   </property>
+  </action>
+  <action name="actionView_Z">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/view+Z-2.png</normaloff>:/Icons/view+Z-2.png</iconset>
+   </property>
+   <property name="text">
+    <string>View+Z</string>
    </property>
   </action>
  </widget>

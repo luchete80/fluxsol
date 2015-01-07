@@ -123,6 +123,7 @@ int main()
 
 	//ITERATION BEGINS
 	clock_t starttime,endtime;
+	time_t starttimec,endtimec;
 	int it=0;
 	while (it <100)
 	{
@@ -180,11 +181,14 @@ int main()
 		UEqn.Relax();   //This MUST INCLUDE R VECTOR
 
         starttime=clock();
+        starttimec= time(0);
 		Solve(UEqn);
         endtime=clock();
-		double time=(double) (endtime-starttime) / CLOCKS_PER_SEC * 1000.0;;
+        endtimec= time(0);
+		double timec=(double) (endtime-starttime) / CLOCKS_PER_SEC * 1000.0;
+		double time=(double) difftime(endtimec, starttimec);
 		cout    << "Solving U time: "<<
-                time << "seconds " <<endl;
+                timec << "seconds (clock) ; " << std::setprecision(3)<<time <<"mseconds (time)"<<endl;
 //
 //
 		U=UEqn.Field();
@@ -310,8 +314,10 @@ int main()
 	vF=interp.Interpolate(p);
     OutputFile("VertexField-p.vtu",vF);
 
+    U.Boundaryfield().PatchField(1).AssignValue(Vec3D(1.,0.,0.));
     vv=interv.Interpolate(U);
     OutputFile("VertexField-U.vtu",vv);
+    OutputFile("VertexField-Uz.vtu",vv,2);
 
 	//	---- The End -------
 	return 0;

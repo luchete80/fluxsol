@@ -4,8 +4,12 @@
     <!-- Typical file operations. -->
     <file>fileopen.png</file>
     <file>filesave.png</file>
+	<file>save.png</file>
     <file>print.png</file>
-
+	<file>zoomext.png</file>
+	<file>cae.png</file>
+	<file>view+Z.png</file>
+	<file>view+Z-2.png</file>
     <!-- Help -->
     <file>help.png</file>
   </qresource>

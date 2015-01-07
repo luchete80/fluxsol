@@ -18,9 +18,9 @@ include_directories(.)
 #include_directories("${FLUXSOL_INCLUDE_DIR}/../..")
 #set(FLUXSOL_DIR c:/Users/samsung/Dropbox/Numerico/MecSol/FluxSol)
 set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
-include_directories(${FLUXSOL_DIR}/Src)
+include_directories(${FLUXSOL_DIR}/Src/FluxSol-Solver)
 
-set (FLUXSOL_INCLUDE_DIR ${FLUXSOL_DIR}/Src)
+set (FLUXSOL_INCLUDE_DIR ${FLUXSOL_DIR}/Src/FluxSol-Solver)
 set (FLUXSOL_LIB_DIR ${FLUXSOL_DIR}/Bin_CodeBlocks/FluxSol)
 
 set (LASPACK_INCLUDE ${FLUXSOL_DIR}/Libs/laspack/src/)

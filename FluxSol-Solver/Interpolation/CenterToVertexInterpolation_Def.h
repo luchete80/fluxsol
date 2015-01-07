@@ -137,6 +137,7 @@ CenterToVertexInterpolation<T>::Interpolate(_CC_Fv_Field<T> &field)
                 {
                     int idvert=face.Vert(v);
                     T val=field.Boundaryfield().PatchField(p).Val(f);
+                    cout << "Patch: "<<p<<", Face: "<<idface<<"idvert: "<<idvert << ", Value" << val.outstr()<<endl;
                     vfield.Val(idvert,val);
                 }
             }

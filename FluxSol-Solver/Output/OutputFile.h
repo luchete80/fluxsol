@@ -50,6 +50,10 @@ class OutputFile
 	OutputFile(string name, Vertex_Fv_Field<T> &field);
 
 	template <typename T>
+    OutputFile(string name, Vertex_Fv_Field<T> &field,const int &comp);
+
+
+	template <typename T>
 	void AddFieldValues(_CC_Fv_Field<T>);
 
 };
