@@ -21,15 +21,17 @@ if(DEBUG_MODE)
 # Default is debug build
 #if (NOT CMAKE_BUILD_TYPE)
 	set (CMAKE_BUILD_TYPE Debug)
+	set (CMAKE_CXX_FLAGS "-fpermissive -g")
 else()
 	set (CMAKE_BUILD_TYPE Release)
+	set (CMAKE_CXX_FLAGS "-fpermissive")
 endif ()
+
+set(CMAKE_CXX_FLAGS_RELEASE "-fpermissive")
 
 set (NAME fluxsol)
 
 project(${NAME})
-
-set (CMAKE_CXX_FLAGS "-fpermissive -g")
 
 set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
 #set (FLUXSOL_DIR ${PROJECT_SOURCE_DIR}/../)

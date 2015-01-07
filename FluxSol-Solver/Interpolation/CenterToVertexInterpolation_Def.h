@@ -123,6 +123,26 @@ CenterToVertexInterpolation<T>::Interpolate(_CC_Fv_Field<T> &field)
 
 	}//for grid vertex v
 
+	//Boundary
+    for (int p=0;p<field.Grid().vBoundary().Num_Patches();p++)
+    {
+        Patch patch=field.Grid().vBoundary().vPatch(p);
+        if (field.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
+        {
+            for (int f=0;f<patch.Num_Faces();f++)
+            {
+                int idface=patch.Id_Face(f);
+                _FvFace face=field.Grid().Face(idface);
+                for (int v=0;v<face.NumVerts();v++)
+                {
+                    int idvert=face.Vert(v);
+                    T val=field.Boundaryfield().PatchField(p).Val(f);
+                    vfield.Val(idvert,val);
+                }
+            }
+        }
+    }
+
 	return vfield;
 }
 

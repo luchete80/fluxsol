@@ -24,6 +24,7 @@
 
 #include <iostream>
 #include "FluxSol.h"
+#include <time.h>
 
 using namespace std;
 using namespace FluxSol;
@@ -121,6 +122,7 @@ int main()
 
 
 	//ITERATION BEGINS
+	clock_t starttime,endtime;
 	int it=0;
 	while (it <100)
 	{
@@ -156,17 +158,9 @@ int main()
         for (int pf=0;pf<4;pf++) U.Boundaryfield().PatchField(pf).AssignValue(Vec3D(0.,0.,0.));
         U.Boundaryfield().PatchField(1).AssignValue(Vec3D(1.,0.,0.));
 
-
-        cout <<"Original Flux field" << phi.outstr()<<endl;
-
 		//2. U Calculation
 		//UEqn=FvImp::Div_CDS(phi, U)-FvImp::Laplacian(k,U);//TO MODIFY WITH CONVECTION SCHEME
 		UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
-
-		FvImp::Laplacian(k,U).Log("Diffusion.txt");
-		FvImp::Div(phi,U).Log("Conv.txt");
-
-		(FvImp::Div(phi, U)-FvImp::Laplacian(k,U)).Log("UEqn.txt");
 //
 //		//4. Solve Momentum predictor (UEqn)
 		//Solve(UEqn==-FvExp::Grad(p));
@@ -177,27 +171,23 @@ int main()
 		gradpV=-FvExp::GradV(p);
 		//Correct boundary conditions, by imposing zero pressure gradient at wall
 
-		cout <<"P Field Info: "<<endl;
-		cout << p.outstr()<<endl;
-
-		cout <<"GradP x Vol Info: "<<endl;
-		cout << gradpV.outstr()<<endl;
-
 
 		//UEqn==gradpV;
 		UEqn==(1.-alpha_u)/alpha_u*(UEqn.A()*U)+gradpV;
-		UEqn.Log("UEqn-BeforeRelax.txt");
 
 
                         //TO MODIFY
 		UEqn.Relax();   //This MUST INCLUDE R VECTOR
 
+        starttime=clock();
 		Solve(UEqn);
+        endtime=clock();
+		double time=(double) (endtime-starttime) / CLOCKS_PER_SEC * 1000.0;;
+		cout    << "Solving U time: "<<
+                time << "seconds " <<endl;
 //
 //
 		U=UEqn.Field();
-        cout << "Solved U Momentum Eq" <<UEqn.Field().outstr()<<endl;
-
 
         _CC_Fv_Field <Scalar> AUr(mesh);
 
@@ -209,7 +199,7 @@ int main()
 
         //What happens in Uf_ boundary?
         Uf_=FvExp::Interpolate(U);  //Uf Overbar
-        cout << "Uf_ "<< Uf_.outstr()<<endl;
+        //cout << "Uf_ "<< Uf_.outstr()<<endl;
         //cout << "UEqn Ap"<< UEqn.A.outstr()<<endl;
 
         //TO FIX: MAKE THIS WORK
@@ -228,7 +218,6 @@ int main()
         //Obtaining m*, RhieChow Interpolated Flux
         //phi=phi - AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
         phi=Uf_ & mesh.Sf();
-        cout << "phi Before Correction" << phi.outstr()<<endl;
         phi= phi - alpha_u*AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
 
         //To modify FvExp::Interpolate
@@ -246,27 +235,19 @@ int main()
 //        //We solve pressure correction in cell centers but eqn is indeed for cell faces
 //		//THIS IS INSIDE DIV ALGORITHM Sum(-rhof (Df) Grad(p´f)Af + Sum (m*f) = 0
 //		//for the prescribed for the non orth steps
-        cout << "AUr " << AUr.outstr()<<endl;
-        cout << "AUrf_ " << AUrf_.outstr()<<endl;
         pEqn=FvImp::Laplacian(rho*AUr,p);   //Solve Laplacian for p (by the way, is p´)
         pEqn==FvExp::Div(phi);
         //pEqn.Eqn(36).SetValueCondition(0.);
         //Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
         Solve(pEqn);
-        cout << "Flux Divergence"<<FvExp::Div(phi).outstr()<<endl;
-        pEqn.Log("PEqn.txt");
         //Important:
         //Since Correction is in flux we have yet the faces areas includes, then
         //we must not to compute inner product another time
-        cout << "Solved p coorection" <<pEqn.Field().outstr()<<endl;
-        OutputFile("CellField-p-Orig.vtu",p);
         //BEING BUILT
         //Nodal are corrected with Gauss grad and central coeffs
         U=U-alpha_u*(AUr*FvExp::Grad(pEqn.Field()));                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
         p=p+alpha_p*pEqn.Field();
 
-
-        cout << "p Corrected " <<pEqn.Field().outstr()<<endl;
 
         //Correct Flux: m = m* + m´
         //phi=phi-FvExp::SnGrad(AUr*p);   //Add deferred correction to this gradient
@@ -278,10 +259,6 @@ int main()
 
         //TO MODIFY, CORRECT THIS
         //phi=phi-alpha_u*(AUrf_*FvExp::SnGrad(prod));
-        cout << "Corrected U"   << U.outstr()<<endl;
-        cout << "Corrected p"   << p.outstr()<<endl;
-        cout << "Phi Correction (-alpha AUr Sngrad (pCorr) )" << pcorr.outstr()<<endl;
-        cout << "Corrected phi" << phi.outstr()<<endl;
 
         //cout << "grad p" <<FvExp::Grad(p).Val(0).outstr()<<endl;
         //cout << "AU Val(0)" <<AU.Val(0).outstr()<<endl;
@@ -324,6 +301,17 @@ int main()
     OutputFile("CellField-Uz.vtu",U,2);
 	OutputFile("CellField-p.vtu",p);
 
+    CenterToVertexInterpolation <Scalar> interp(mesh);
+    CenterToVertexInterpolation <Vec3D> interv(mesh);
+    Vertex_Fv_Field<Scalar> vF;
+    Vertex_Fv_Field<Vec3D> vv;
+
+
+	vF=interp.Interpolate(p);
+    OutputFile("VertexField-p.vtu",vF);
+
+    vv=interv.Interpolate(U);
+    OutputFile("VertexField-U.vtu",vv);
 
 	//	---- The End -------
 	return 0;
