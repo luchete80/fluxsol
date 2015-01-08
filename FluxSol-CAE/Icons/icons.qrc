@@ -10,6 +10,11 @@
 	<file>cae.png</file>
 	<file>view+Z.png</file>
 	<file>view+Z-2.png</file>
+	<file>view-Z.png</file>
+	<file>view+Y.png</file>
+	<file>view-Y.png</file>
+	<file>view+X.png</file>
+	<file>view-X.png</file>
     <!-- Help -->
     <file>help.png</file>
   </qresource>

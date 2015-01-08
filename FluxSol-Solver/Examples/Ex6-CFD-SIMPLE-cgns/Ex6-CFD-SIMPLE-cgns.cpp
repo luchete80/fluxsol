@@ -180,15 +180,13 @@ int main()
                         //TO MODIFY
 		UEqn.Relax();   //This MUST INCLUDE R VECTOR
 
-        starttime=clock();
         starttimec= time(0);
 		Solve(UEqn);
-        endtime=clock();
         endtimec= time(0);
-		double timec=(double) (endtime-starttime) / CLOCKS_PER_SEC * 1000.0;
+		//double timec=(double) (endtime-starttime) / CLOCKS_PER_SEC * 1000.0;
 		double time=(double) difftime(endtimec, starttimec);
 		cout    << "Solving U time: "<<
-                timec << "seconds (clock) ; " << std::setprecision(3)<<time <<"mseconds (time)"<<endl;
+                std::setprecision(3)<<time <<"mseconds (time)"<<endl;
 //
 //
 		U=UEqn.Field();

@@ -14,7 +14,7 @@ if (${CMAKE_VERSION} VERSION_GREATER "2.8.7") # Compability with older version o
     option (USE_SHARED_LIB "Build shared library" ON)
     option (USE_STATIC_LIB "Build static library" OFF)
 endif ()
-option (DEBUG_MODE "Enable FLUXSOL DEBUG" ON)
+option (DEBUG_MODE "Enable FLUXSOL DEBUG" OFF)
 
 
 if(DEBUG_MODE)
@@ -27,7 +27,7 @@ else()
 	set (CMAKE_CXX_FLAGS "-fpermissive")
 endif ()
 
-set(CMAKE_CXX_FLAGS_RELEASE "-fpermissive")
+set(CMAKE_CXX_FLAGS "-fpermissive")
 
 set (NAME fluxsol)
 

@@ -157,6 +157,11 @@
    </attribute>
    <addaction name="actionZoomExt"/>
    <addaction name="actionView_Z"/>
+   <addaction name="actionView_Z_2"/>
+   <addaction name="actionView_Y"/>
+   <addaction name="actionView_Y_2"/>
+   <addaction name="actionView_X"/>
+   <addaction name="actionView_X_2"/>
   </widget>
   <action name="actionExit">
    <property name="text">
@@ -214,6 +219,51 @@
    </property>
    <property name="text">
     <string>View+Z</string>
+   </property>
+  </action>
+  <action name="actionView_Z_2">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/view-Z.png</normaloff>:/Icons/view-Z.png</iconset>
+   </property>
+   <property name="text">
+    <string>View-Z</string>
+   </property>
+  </action>
+  <action name="actionView_Y">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/view+Y.png</normaloff>:/Icons/view+Y.png</iconset>
+   </property>
+   <property name="text">
+    <string>View+Y</string>
+   </property>
+  </action>
+  <action name="actionView_Y_2">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/view-Y.png</normaloff>:/Icons/view-Y.png</iconset>
+   </property>
+   <property name="text">
+    <string>View-Y</string>
+   </property>
+  </action>
+  <action name="actionView_X_2">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/view-X.png</normaloff>:/Icons/view-X.png</iconset>
+   </property>
+   <property name="text">
+    <string>view-X</string>
+   </property>
+  </action>
+  <action name="actionView_X">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/view+X.png</normaloff>:/Icons/view+X.png</iconset>
+   </property>
+   <property name="text">
+    <string>View+X</string>
    </property>
   </action>
  </widget>
