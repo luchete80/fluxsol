@@ -1,65 +1,32 @@
-/************************************************************************
+#include "Laplacian.h"
 
-	Copyright 2012-2013 Luciano Buglioni
+namespace FluxSol {
 
-	Contact: luciano.buglioni@gmail.com
 
-	This file is a part of FluxSol
-
-	FluxSol is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    any later version.
-
-    FluxSol is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    For a copy of the GNU General Public License,
-    see <http://www.gnu.org/licenses/>.
-
-*************************************************************************/
-#ifndef LAPLACIAN_H
-#define LAPLACIAN_H
-
-#include "./FiniteVolume/FvImp.h"
-#include "./Type/Scalar.h"
-#include "FvExp.h"
-
-using namespace std;
-
-namespace FluxSol{
-
-//Esta funcion es para un simpe valor de campo
 template<typename T>
-EqnSystem <T> Laplacian(_CC_Fv_Field <T> )
-{
-
-    //A continuacion se muestra una forma de calculo de divergencia
-    //Sum_f (Sf * (ro * U)f * fi(f) )
-    //En OpenFoam ro*U es fi
-
-
-}
-
-//Esta es una constante
-template<typename T>
-EqnSystem <T> FvImp::Laplacian(_Surf_Fv_Field<Scalar> fi,_CC_Fv_Field <T> &VolField)
+EqnSystem <T> FvImp::Laplacian(_CC_Fv_Field<Scalar> fi,_CC_Fv_Field <T> &VolField)
 {
     EqnSystem <T> eqnsys(VolField.Grid());
 
-    return eqnsys;
-}
+    _Surf_Fv_Field<Scalar> fisurf(VolField.Grid());
 
-//Otra opcion puede ser tambien colocarle un simple escalar que implique un cmpo constante
-//Esta funcion calcula un gradiente en las caras y lo multiplica por el campo escalar
-template<typename T>
-EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
-{
+    fisurf=FvExp::Interpolate(fi);
 
-    //cout << "Defining eqn..."<<endl;
-	EqnSystem <T> eqnsys(VolField.Grid());
+    //TO MODIFY, AT FIRST; VALUES AT BOUNDARY MUST BE EXTRAPOLATED
+//    for (int f=0;f<VolField.Grid().Num_Faces();f++)
+//    {
+//		_FvFace face=VolField.Grid().Face(f);
+//		if (!face.Is_Null_Flux_Face())
+//		{
+//		    if (VolField.Grid().Face(f).Boundaryface())
+//            {
+//                int pcellid=face.Cell(0);
+//                fisurf.Val(f,VolField.Val(pcellid));
+//            }
+//		}
+//    }
+
+
 	//cout << "Eqn created."<<endl;
 	//EqnSystem <T> eqnsys(VolField);
 	//EqnSystem <T> eqnsys(VolField.Grid().Num_Cells());   //Como no le doy parametros inicia todo en cero, salvo las dimensiones
@@ -90,7 +57,7 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 			if (!VolField.Grid().Face(f).Boundaryface())
 			{
 			    //cout << "Not boundary face"<<endl;
-				ap=-face.Norm_ad()/face.Dist_pn()*fi;
+				ap=-face.Norm_ad()/face.Dist_pn()*fisurf.Val(f);
 				an=-ap;
 				//nbr_eqn.push_back(VolField.Grid().Cell(c));
 				//eqnsys.Eqn(face.Cell(0)).Coeffs(ap,an);
@@ -138,18 +105,28 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 			_FvFace face=VolField.Grid().Face(idface);  //TO MODIFY idface or face pos??
 			//Boundary type
 			//Instead of if sentence it is convenient to use inheritance
+            //cout <<"source"<<endl;
+
+            ap=-face.Norm_ad()/fabs(face.Dist_pf_LR(0))*fisurf.Val(idface);
+
+//            cout << "Boundary Face "<<idface<<endl;
+//            cout << "k Surface Value"<<fisurf.Val(idface).Val()<<endl;
+//            cout << "Cell "<< face.Cell(0) << " ap: "<<ap.Val()<<endl;
+
 			if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
 			{
-			    //cout <<"source"<<endl;
-				ap=-face.Norm_ad()/fabs(face.Dist_pf_LR(0))*fi;
-				source=VolField.Boundaryfield().PatchField(p).Val(f)*ap;
+                source=VolField.Boundaryfield().PatchField(p).Val(f)*ap;    //THIS IS RHS, WITH SAME SIGN
 				//cout <<"created" <<endl;
 				eqnsys.Eqn(face.Cell(0)).Ap()+=ap;
 				eqnsys.Eqn(face.Cell(0)).Source()+=source;
 			}
+			//Formerly according to SEZAI
 			else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
 			{
-				source=VolField.Boundaryfield().PatchField(p).Val(f)*fi;
+                //eqnsys.Eqn(face.Cell(0)).Ap()+=ap;
+
+			    //Formerly the BC was THIS
+				source=VolField.Boundaryfield().PatchField(p).Val(f)*fisurf.Val(idface);
 				eqnsys.Eqn(face.Cell(0)).Source()+=source;
 			}
 		}
@@ -159,6 +136,6 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
     return eqnsys;
 }
 
-};	//Fin namespace FluxSol
+} //FluxSol
 
-#endif
+#include "Laplacian.inst"

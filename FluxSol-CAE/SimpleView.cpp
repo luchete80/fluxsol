@@ -59,6 +59,9 @@ SimpleView::SimpleView()
 
   // Qt Table View
   this->TableView = vtkSmartPointer<vtkQtTableView>::New();
+  
+  this->ui->treeWidget=new QTreeWidget;
+  this->ui->treeWidget->expandAll();
 
   // Place the table view in the designer form
   this->ui->tableFrame->layout()->addWidget(this->TableView->GetWidget());
@@ -240,6 +243,53 @@ SimpleView::SimpleView()
   textActor->SetInput ( "FluxSol" );
   textActor->GetTextProperty()->SetColor ( 1.0,0.0,0.0 );
 
+  
+//**************************** RANGE AND COLORS ******************************
+  // Generate the colors for each point based on the color map
+  vtkSmartPointer<vtkUnsignedCharArray> colors =
+    vtkSmartPointer<vtkUnsignedCharArray>::New();
+  colors->SetNumberOfComponents(3);
+  colors->SetName("Colors");
+
+    //Lookuptable
+  // Create the color map
+  vtkSmartPointer<vtkLookupTable> colorLookupTable =
+    vtkSmartPointer<vtkLookupTable>::New();
+  colorLookupTable->SetTableRange(minv, maxv);
+  colorLookupTable->Build();
+
+
+    for(int i = 0; i < polydata->GetNumberOfPoints(); i++)
+    {
+        unsigned char color[3];
+        double p[3];
+        polydata->GetPoint(i,p);
+        double dcolor[3];
+        colorLookupTable->GetColor(results[i], dcolor);
+        for(unsigned int j = 0; j < 3; j++)
+          color[j] = static_cast<unsigned char>(255.0 * dcolor[j]);
+        colors->InsertNextTupleValue(color);
+    }  
+	
+	polydata->GetPointData()->SetScalars(colors);
+ 
+//    //************************************* MAPPER
+//
+     vtkSmartPointer<vtkPolyDataMapper> pdmapper =
+    vtkSmartPointer<vtkPolyDataMapper>::New();
+//
+//    //pdmapper->ScalarVisibilityOff();
+//
+    #if VTK_MAJOR_VERSION <= 5
+      pdmapper->SetInputConnection(polydata->GetProducerPort());
+    #else
+     pdmapper->SetInputData(polydata);
+    #endif
+
+	/////// END OF CONTOUR
+  
+  ///////////////////////// RENDERING ////
+  
   // Add Actor to renderer
   ren->AddActor(actor);
   ren->AddActor(axes);

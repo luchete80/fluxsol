@@ -15,6 +15,7 @@
 	<file>view-Y.png</file>
 	<file>view+X.png</file>
 	<file>view-X.png</file>
+	<file>parts.png</file>
     <!-- Help -->
     <file>help.png</file>
   </qresource>

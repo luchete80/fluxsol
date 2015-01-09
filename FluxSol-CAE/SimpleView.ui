@@ -25,7 +25,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="1" column="0">
      <widget class="QGroupBox" name="groupBoxGraph">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -54,6 +54,9 @@
        </property>
        <item>
         <widget class="QSplitter" name="splitter">
+         <property name="layoutDirection">
+          <enum>Qt::LeftToRight</enum>
+         </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
          </property>
@@ -109,6 +112,13 @@
             <property name="text">
              <string>Parts</string>
             </property>
+            <property name="icon">
+             <iconset resource="Icons/icons.qrc">
+              <normaloff>:/Icons/parts.png</normaloff>:/Icons/parts.png</iconset>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
             <item>
              <property name="text">
               <string>Mesh</string>
@@ -154,6 +164,18 @@
             </property>
            </item>
           </item>
+         </widget>
+         <widget class="QTabWidget" name="tabWidget">
+          <widget class="QWidget" name="tab">
+           <attribute name="title">
+            <string>Tab 1</string>
+           </attribute>
+          </widget>
+          <widget class="QWidget" name="tab_2">
+           <attribute name="title">
+            <string>Tab 2</string>
+           </attribute>
+          </widget>
          </widget>
         </widget>
        </item>
@@ -381,6 +403,10 @@
    <header>QVTKWidget.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>treeWidget</tabstop>
+  <tabstop>tabWidget</tabstop>
+ </tabstops>
  <resources>
   <include location="Icons/icons.qrc"/>
  </resources>

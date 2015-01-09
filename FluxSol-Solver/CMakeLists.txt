@@ -133,6 +133,7 @@ add_library(${NAME}lib SHARED FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 												$<TARGET_OBJECTS:Boundary>
 												$<TARGET_OBJECTS:Field>
 												$<TARGET_OBJECTS:Input>
+												$<TARGET_OBJECTS:Laplacian>
 												$<TARGET_OBJECTS:Materials>
 												$<TARGET_OBJECTS:Mesh>
 												$<TARGET_OBJECTS:FvMesh>												
@@ -154,6 +155,7 @@ add_library(${NAME}lib_static STATIC FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 														$<TARGET_OBJECTS:Boundary>
 														$<TARGET_OBJECTS:Field>
 														$<TARGET_OBJECTS:Input>
+														$<TARGET_OBJECTS:Laplacian>
 														$<TARGET_OBJECTS:Materials>														
 														$<TARGET_OBJECTS:Mesh>	
 														$<TARGET_OBJECTS:FvMesh>
