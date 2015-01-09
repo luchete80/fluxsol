@@ -90,6 +90,71 @@
            </size>
           </property>
          </widget>
+         <widget class="QTreeWidget" name="treeWidget">
+          <column>
+           <property name="text">
+            <string>Object</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Description</string>
+           </property>
+          </column>
+          <item>
+           <property name="text">
+            <string>Model</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>Parts</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>Mesh</string>
+             </property>
+            </item>
+           </item>
+           <item>
+            <property name="text">
+             <string>Materials</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>Steps</string>
+            </property>
+            <item>
+             <property name="text">
+              <string>Initial</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>BCs</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+             </item>
+            </item>
+           </item>
+           <item>
+            <property name="text">
+             <string>BCs</string>
+            </property>
+           </item>
+          </item>
+          <item>
+           <property name="text">
+            <string>Analysis</string>
+           </property>
+           <item>
+            <property name="text">
+             <string>Job</string>
+            </property>
+           </item>
+          </item>
+         </widget>
         </widget>
        </item>
       </layout>
@@ -110,7 +175,22 @@
     <property name="title">
      <string>File</string>
     </property>
+    <widget class="QMenu" name="menuImport">
+     <property name="title">
+      <string>Import...</string>
+     </property>
+     <widget class="QMenu" name="menuMesh">
+      <property name="title">
+       <string>Mesh</string>
+      </property>
+      <addaction name="actionImportCGNSMesh"/>
+      <addaction name="actionImportFluentMesh"/>
+     </widget>
+     <addaction name="menuMesh"/>
+     <addaction name="actionImportModel"/>
+    </widget>
     <addaction name="actionOpenFile"/>
+    <addaction name="menuImport"/>
     <addaction name="actionSave"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
@@ -121,7 +201,14 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuDefine">
+    <property name="title">
+     <string>Define</string>
+    </property>
+    <addaction name="actionUser_Defined_Object"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuDefine"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -264,6 +351,26 @@
    </property>
    <property name="text">
     <string>View+X</string>
+   </property>
+  </action>
+  <action name="actionImportModel">
+   <property name="text">
+    <string>Model</string>
+   </property>
+  </action>
+  <action name="actionImportFluentMesh">
+   <property name="text">
+    <string>From Fluent</string>
+   </property>
+  </action>
+  <action name="actionImportCGNSMesh">
+   <property name="text">
+    <string>From CGNS</string>
+   </property>
+  </action>
+  <action name="actionUser_Defined_Object">
+   <property name="text">
+    <string>User Defined Object</string>
    </property>
   </action>
  </widget>
