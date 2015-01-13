@@ -245,7 +245,7 @@ SimpleView::SimpleView()
 
   
 //**************************** RANGE AND COLORS ******************************
-  // Generate the colors for each point based on the color map
+ /*  // Generate the colors for each point based on the color map
   vtkSmartPointer<vtkUnsignedCharArray> colors =
     vtkSmartPointer<vtkUnsignedCharArray>::New();
   colors->SetNumberOfComponents(3);
@@ -285,7 +285,7 @@ SimpleView::SimpleView()
     #else
      pdmapper->SetInputData(polydata);
     #endif
-
+ */
 	/////// END OF CONTOUR
   
   ///////////////////////// RENDERING ////
