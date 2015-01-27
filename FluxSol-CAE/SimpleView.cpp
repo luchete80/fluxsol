@@ -36,6 +36,8 @@
 #include <vtkProperty.h>
 #include <vtkOrientationMarkerWidget.h>
 
+#include <vtkLookupTable.h>
+
 //NEW!! Extracted from Shadows test project
 #if VTK_MAJOR_VERSION <= 5
 #include <vtkRenderer.h>
@@ -62,9 +64,12 @@ SimpleView::SimpleView()
   
   this->ui->treeWidget=new QTreeWidget;
   this->ui->treeWidget->expandAll();
+  this->ui->treeWidget->expandToDepth(1);
+  //How to show an item
+  //this->ui->treeWidget->show();
 
   // Place the table view in the designer form
-  this->ui->tableFrame->layout()->addWidget(this->TableView->GetWidget());
+  //this->ui->tableFrame->layout()->addWidget(this->TableView->GetWidget());
 
   // Geometry
   VTK_CREATE(vtkVectorText, text);
@@ -253,25 +258,28 @@ SimpleView::SimpleView()
 
     //Lookuptable
   // Create the color map
+    double minv,maxv;
+    minv=0.;maxv=0.;
+	
   vtkSmartPointer<vtkLookupTable> colorLookupTable =
     vtkSmartPointer<vtkLookupTable>::New();
   colorLookupTable->SetTableRange(minv, maxv);
   colorLookupTable->Build();
 
 
-    for(int i = 0; i < polydata->GetNumberOfPoints(); i++)
+    //for(int i = 0; i < polydata->GetNumberOfPoints(); i++)
     {
         unsigned char color[3];
         double p[3];
-        polydata->GetPoint(i,p);
+        //polydata->GetPoint(i,p);
         double dcolor[3];
-        colorLookupTable->GetColor(results[i], dcolor);
+        //colorLookupTable->GetColor(results[i], dcolor);
         for(unsigned int j = 0; j < 3; j++)
           color[j] = static_cast<unsigned char>(255.0 * dcolor[j]);
         colors->InsertNextTupleValue(color);
     }  
 	
-	polydata->GetPointData()->SetScalars(colors);
+	//polydata->GetPointData()->SetScalars(colors);
  
 //    //************************************* MAPPER
 //
@@ -280,11 +288,11 @@ SimpleView::SimpleView()
 //
 //    //pdmapper->ScalarVisibilityOff();
 //
-    #if VTK_MAJOR_VERSION <= 5
-      pdmapper->SetInputConnection(polydata->GetProducerPort());
-    #else
-     pdmapper->SetInputData(polydata);
-    #endif
+    // #if VTK_MAJOR_VERSION <= 5
+      // pdmapper->SetInputConnection(polydata->GetProducerPort());
+    // #else
+     // pdmapper->SetInputData(polydata);
+    // #endif
 
 	/////// END OF CONTOUR
   
@@ -319,6 +327,8 @@ SimpleView::SimpleView()
 
     // Begin mouse interaction
   //renderWindowInteractor->Start();
+  
+  this->ui->treeWidget->expandAll();
 
 
 
