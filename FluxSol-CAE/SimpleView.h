@@ -17,6 +17,19 @@
 #ifndef SimpleView_H
 #define SimpleView_H
 
+#include <vtkRenderWindow.h>
+#include <vtkVectorText.h>
+
+#include <vtkRenderWindowInteractor.h>
+//NEW!! Extracted from Shadows test project
+#if VTK_MAJOR_VERSION <= 5
+#include <vtkRenderer.h>
+#else
+#include <vtkOpenGLRenderer.h>
+#endif
+
+
+
 #include "vtkSmartPointer.h"    // Required for smart pointer internal ivars.
 #include <QMainWindow>
 
@@ -31,6 +44,9 @@ class SimpleView : public QMainWindow
 {
   Q_OBJECT
 
+  
+  vtkSmartPointer<vtkOpenGLRenderer> ren;
+  
 public:
 
   // Constructor/Destructor
@@ -40,6 +56,8 @@ public:
 public slots:
 
   virtual void slotOpenFile();
+  virtual void slotImportIn();
+  virtual void slotViewZpos();
   virtual void slotExit();
 
 protected:

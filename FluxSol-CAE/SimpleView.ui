@@ -233,6 +233,8 @@
    </attribute>
    <addaction name="actionOpenFile"/>
    <addaction name="actionSave"/>
+   <addaction name="actionImport_in"/>
+   <addaction name="actionExportIn"/>
    <addaction name="separator"/>
   </widget>
   <widget class="QToolBar" name="toolBar_View">
@@ -374,6 +376,24 @@
   <action name="actionUser_Defined_Object">
    <property name="text">
     <string>User Defined Object</string>
+   </property>
+  </action>
+  <action name="actionImport_in">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/import_in.png</normaloff>:/Icons/import_in.png</iconset>
+   </property>
+   <property name="text">
+    <string>actionImport_in</string>
+   </property>
+  </action>
+  <action name="actionExportIn">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/save_in.png</normaloff>:/Icons/save_in.png</iconset>
+   </property>
+   <property name="text">
+    <string>exportIn</string>
    </property>
   </action>
  </widget>

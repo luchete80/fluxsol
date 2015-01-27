@@ -18,10 +18,6 @@
 #include <vtkQtTreeView.h>
 #include <vtkAxesActor.h>
 
-#include <vtkRenderWindow.h>
-#include <vtkVectorText.h>
-
-#include <vtkRenderWindowInteractor.h>
 
 #include <vtkTextActor.h>
 #include <vtkTextProperty.h>
@@ -36,12 +32,10 @@
 #include <vtkProperty.h>
 #include <vtkOrientationMarkerWidget.h>
 
-//NEW!! Extracted from Shadows test project
-#if VTK_MAJOR_VERSION <= 5
-#include <vtkRenderer.h>
-#else
-#include <vtkOpenGLRenderer.h>
-#endif
+#include <QFileDialog>
+
+//Visualization
+#include <vtkCamera.h>
 
 #include <vtkDataSet.h>
 #include <vtkDataSetMapper.h>
@@ -64,7 +58,7 @@ SimpleView::SimpleView()
   this->ui->treeWidget->expandAll();
 
   // Place the table view in the designer form
-  this->ui->tableFrame->layout()->addWidget(this->TableView->GetWidget());
+  //this->ui->tableFrame->layout()->addWidget(this->TableView->GetWidget());
 
   // Geometry
   VTK_CREATE(vtkVectorText, text);
@@ -187,7 +181,7 @@ SimpleView::SimpleView()
 //  vtkSmartPointer<vtkRenderer> ren =
 //    vtkSmartPointer<vtkRenderer>::New();
 //#else
-  vtkSmartPointer<vtkOpenGLRenderer> ren =
+  this-> ren =
     vtkSmartPointer<vtkOpenGLRenderer>::New();
 //#endif
 
@@ -241,7 +235,7 @@ SimpleView::SimpleView()
   textActor->SetPosition2 ( 10, 40 );
   ren->AddActor2D ( textActor );
   textActor->SetInput ( "FluxSol" );
-  textActor->GetTextProperty()->SetColor ( 1.0,0.0,0.0 );
+  textActor->GetTextProperty()->SetColor ( 0.08,0.0,0.4 );
 
   
 //**************************** RANGE AND COLORS ******************************
@@ -312,7 +306,9 @@ SimpleView::SimpleView()
   // Set up action signals and slots
   connect(this->ui->actionOpenFile, SIGNAL(triggered()), this, SLOT(slotOpenFile()));
   connect(this->ui->actionExit, SIGNAL(triggered()), this, SLOT(slotExit()));
-
+  connect(this->ui->actionImport_in, SIGNAL(triggered()), this, SLOT(slotImportIn()));
+  connect(this->ui->actionView_Z, SIGNAL(triggered()), this, SLOT(slotViewZpos()));
+  
 
   //ren->ResetCamera();
   //renderWindow->Render();
@@ -333,7 +329,34 @@ SimpleView::~SimpleView()
 // Action to be taken upon file open
 void SimpleView::slotOpenFile()
 {
+	QString fileName = QFileDialog::getOpenFileName(this,
+	tr("Open FluxSol Database"), ".",
+	tr("FluxSol Database files (*.fdb)"));
+	//if (!fileName.isEmpty())
+		//loadFile(fileName);
+}
 
+void SimpleView::slotViewZpos()
+{
+	
+	vtkSmartPointer<vtkCamera> camera = 
+		vtkSmartPointer<vtkCamera>::New();	//Camera must be a Member??
+
+	camera->SetPosition(0, 0, 20);
+	camera->SetFocalPoint(0, 0, 0);
+	this->ren->SetActiveCamera(camera);
+
+	this->ui->qvtkWidget->GetRenderWindow()->Render();	//This updates de view
+		
+}
+
+void SimpleView::slotImportIn()
+{
+	QString fileName = QFileDialog::getOpenFileName(this,
+	tr("Open FluxSol Input File"), ".",
+	tr("FluxSol Input Files (*.in)"));
+	//if (!fileName.isEmpty())
+		//loadFile(fileName);
 }
 
 void SimpleView::slotExit() {
