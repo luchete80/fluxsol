@@ -1,0 +1,9 @@
+namespace FluxSol{
+
+template
+EqnSystem <Scalar> FvImp::Laplacian(_CC_Fv_Field<Scalar> fi,_CC_Fv_Field <Scalar> &VolField);
+
+template
+EqnSystem <Vec3D> FvImp::Laplacian(_CC_Fv_Field<Scalar> fi,_CC_Fv_Field <Vec3D> &VolField);
+
+}
