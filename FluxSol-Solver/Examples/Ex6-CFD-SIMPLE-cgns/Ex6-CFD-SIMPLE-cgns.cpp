@@ -161,6 +161,7 @@ int main()
 
 		//2. U Calculation
 		//UEqn=FvImp::Div_CDS(phi, U)-FvImp::Laplacian(k,U);//TO MODIFY WITH CONVECTION SCHEME
+
 		UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
 //
 //		//4. Solve Momentum predictor (UEqn)
@@ -237,6 +238,8 @@ int main()
 //        //We solve pressure correction in cell centers but eqn is indeed for cell faces
 //		//THIS IS INSIDE DIV ALGORITHM Sum(-rhof (Df) Grad(p´f)Af + Sum (m*f) = 0
 //		//for the prescribed for the non orth steps
+
+
         pEqn=FvImp::Laplacian(rho*AUr,p);   //Solve Laplacian for p (by the way, is p´)
         pEqn==FvExp::Div(phi);
         //pEqn.Eqn(36).SetValueCondition(0.);
