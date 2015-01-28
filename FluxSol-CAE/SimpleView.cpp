@@ -18,6 +18,7 @@
 #include <vtkQtTreeView.h>
 #include <vtkAxesActor.h>
 
+#include <vtkTransform.h>
 
 #include <vtkTextActor.h>
 #include <vtkTextProperty.h>
@@ -204,12 +205,24 @@ SimpleView::SimpleView()
   widget->SetOutlineColor( 0.9300, 0.5700, 0.1300 );
   widget->SetOrientationMarker( axes );
   widget->SetInteractor( renderWindowInteractor );
-  widget->SetViewport( 0.0, 0.0, 0.4, 0.4 );
+  widget->SetViewport( 1.0, 0.0, 0.4, 0.4 );
   widget->SetEnabled( 1 );
   widget->InteractiveOn();
 
 
+  //Moving axes to screen corner
 
+  //vtkSmartPointer<vtkTransform> transform =
+  //  vtkSmartPointer<vtkTransform>::New();
+  //transform->Translate(0.1, 0.0, 0.0);
+  
+  // The axes are positioned with a user transform
+  //axes->SetUserTransform(transform);
+
+  
+  
+  //////////////////////////// EX
+  
   ren->SetBackground(.2, .3, .4);
 
   ren->GradientBackgroundOn();

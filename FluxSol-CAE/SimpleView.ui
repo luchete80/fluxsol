@@ -348,6 +348,9 @@
    <property name="text">
     <string>view-X</string>
    </property>
+   <property name="toolTip">
+    <string>View-X</string>
+   </property>
   </action>
   <action name="actionView_X">
    <property name="icon">
@@ -367,10 +370,16 @@
    <property name="text">
     <string>From Fluent</string>
    </property>
+   <property name="toolTip">
+    <string>Import Mesh From Fluent</string>
+   </property>
   </action>
   <action name="actionImportCGNSMesh">
    <property name="text">
     <string>From CGNS</string>
+   </property>
+   <property name="toolTip">
+    <string>Import Mesh From CGNS</string>
    </property>
   </action>
   <action name="actionUser_Defined_Object">
@@ -385,6 +394,9 @@
    </property>
    <property name="text">
     <string>actionImport_in</string>
+   </property>
+   <property name="toolTip">
+    <string>Import Input File</string>
    </property>
   </action>
   <action name="actionExportIn">
