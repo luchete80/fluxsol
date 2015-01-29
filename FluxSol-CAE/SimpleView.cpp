@@ -46,6 +46,51 @@
 #define VTK_CREATE(type, name) \
   vtkSmartPointer<type> name = vtkSmartPointer<type>::New()
 
+//// TEST SLIDER; TO DELETE
+  
+#include <vtkSliderWidget.h>
+#include <vtkSliderRepresentation2D.h>
+
+#include <QvtkInteractor.h>
+
+
+// COMMAND AND INTERACTOR
+#include <vtkCommand.h>
+
+
+class vtkImageInteractionCallback1  : public vtkCommand
+{
+public:
+  static vtkImageInteractionCallback1 *New() 
+    {
+    return new vtkImageInteractionCallback1; 
+    }
+	void SetRenderer(vtkOpenGLRenderer* ren)
+	{
+		this->renderer=ren;
+	}
+  virtual void Execute(vtkObject *caller, unsigned long, void*)
+    {
+
+		vtkSmartPointer<vtkTextActor> textActor2 = 
+		vtkSmartPointer<vtkTextActor>::New();
+		textActor2->GetTextProperty()->SetFontSize ( 24 );
+		textActor2->SetPosition2 ( 50, 40 );
+		this->renderer->AddActor2D ( textActor2 );
+		textActor2->SetInput ( "Test" );
+		textActor2->GetTextProperty()->SetColor ( 0.08,0.0,0.4 );
+
+	}
+	
+	private:
+	
+	vtkOpenGLRenderer* renderer;
+	
+  };
+ 
+/////// 
+ 
+  
 // Constructor
 SimpleView::SimpleView()
 {
@@ -193,21 +238,22 @@ SimpleView::SimpleView()
     // WINDOW AND INTERACTOR
   vtkSmartPointer<vtkRenderWindow> renderWindow =
     vtkSmartPointer<vtkRenderWindow>::New();
+	
   renderWindow->AddRenderer(ren);
   vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor =
     vtkSmartPointer<vtkRenderWindowInteractor>::New();
-  renderWindowInteractor->SetRenderWindow(renderWindow);
+	renderWindowInteractor->SetRenderWindow(renderWindow);
   //
 
 
-  vtkSmartPointer<vtkOrientationMarkerWidget> widget =
-    vtkSmartPointer<vtkOrientationMarkerWidget>::New();
-  widget->SetOutlineColor( 0.9300, 0.5700, 0.1300 );
-  widget->SetOrientationMarker( axes );
-  widget->SetInteractor( renderWindowInteractor );
-  widget->SetViewport( 1.0, 0.0, 0.4, 0.4 );
-  widget->SetEnabled( 1 );
-  widget->InteractiveOn();
+  // vtkSmartPointer<vtkOrientationMarkerWidget> widget =
+  // vtkSmartPointer<vtkOrientationMarkerWidget>::New();
+  // widget->SetOutlineColor( 0.9300, 0.5700, 0.1300 );
+  // widget->SetOrientationMarker( axes );
+  // widget->SetInteractor( renderWindowInteractor );
+  // widget->SetViewport( 0.0, 0.0, 0.4, 0.4 );
+  // widget->SetEnabled( 1 );
+  // widget->InteractiveOn();
 
 
   //Moving axes to screen corner
@@ -229,18 +275,6 @@ SimpleView::SimpleView()
   ren->SetBackground(1,1,1);
   ren->SetBackground2(0,0,1);
 
-  //TO FIX AXES POSITION
-       // vtkSmartPointer<vtkAxesActor> axes =
-         // vtkSmartPointer<vtkAxesActor>::New();
-
-      // vtkSmartPointer<vtkOrientationMarkerWidget> widget =
-          // vtkSmartPointer<vtkOrientationMarkerWidget>::New();
-      // widget->SetOutlineColor( 0.9300, 0.5700, 0.1300 );
-      // widget->SetOrientationMarker( axes );
-      // widget->SetInteractor( renderWindowInteractor );
-      // widget->SetViewport( 0.0, 0.0, 0.4, 0.4 );
-      // widget->SetEnabled( 1 );
-      // widget->InteractiveOn();
 
 	vtkSmartPointer<vtkTextActor> textActor = 
     vtkSmartPointer<vtkTextActor>::New();
@@ -296,25 +330,78 @@ SimpleView::SimpleView()
 	/////// END OF CONTOUR
   
   ///////////////////////// RENDERING ////
-  
-  // Add Actor to renderer
+ 
+
+	
+	
+ 
+   // Add Actor to renderer
   ren->AddActor(actor);
   ren->AddActor(axes);
+  
+ renderWindow->Render();	//If i want to obtain coordinates must to activate renderwindows with Render() 
+ 
+  ///// NEED TO DETERMINE AXES WORLD POSITION GIVEN COORDINATES /////
+  double coordinates[3]; 
+  coordinates[0]=renderWindow->GetSize()[0]*0.9; 
+  coordinates[1]=renderWindow->GetSize()[1]*0.1; 
+  coordinates[2]=0.01; 
+  cout << "Screen Size" << renderWindow->GetSize()[0] << " " << renderWindow->GetSize()[1]<< " " << renderWindow->GetSize()[2]<<endl;
+	cout << "Display Point: "<<coordinates[0] << " "<<coordinates[1]<<" "<<coordinates[2]<<endl;
+  //vtkDebugMacro("GetWorldToDisplayCoordinates: RAS " << worldPoints[0] << ", " << worldPoints[1] << ", " << worldPoints[2]) 
+  
+  ren->SetDisplayPoint(coordinates); 
+  //ren->DisplayToView(); 
+  //ren->GetViewPoint(coordinates); 
+  //cout << "View Point: "<<coordinates[0] << " "<<coordinates[1]<<endl;
+  //ren->ViewToWorld(); 
+  //ren->GetWorldPoint();
+	ren->DisplayToWorld();  
+  double worldPt[3];
+  ren->GetWorldPoint(worldPt);
+  cout << "World Point: "<<worldPt[0] << " "<<worldPt[1]<<" "<<worldPt[2]<<endl;
+  
+  //double * worldcoor=new double [3];
+  //worldcoor=ren->GetWorldPoint();
+  //delete worldcoor;
+  
+  //double displayPt[3];
+  //ren->GetDisplayPoint(displayPt);
+  
+  //Moving axes
+    vtkSmartPointer<vtkTransform> transform =
+    vtkSmartPointer<vtkTransform>::New();
+  //transform->Translate(worldPt);
+  //axes->SetUserTransform(transform);
+  
+  
+	//////////////////// END AXES POSITIONING /////////
+
+
 
   // VTK/Qt wedded
-  this->ui->qvtkWidget->GetRenderWindow()->AddRenderer(ren);
+  this->ui->qvtkWidget->GetRenderWindow()->AddRenderer(ren);	//Add 
+  
+  
+  	//this->ui->qvtkWidget->SetRenderWindow(renderWindow);
+	//renderWindow->SetInteractor(this->ui->qvtkWidget->GetInteractor());
+  
+  
+  
+  //renderWindowInteractor->SetRenderWindow(this->ui->qvtkWidget->GetRenderWindow()); 
+  //this->ui->qvtkWidget->GetRenderWindow()->Render();
 
   // Just a bit of Qt interest: Culling off the
   // point data and handing it to a vtkQtTableView
-  VTK_CREATE(vtkDataObjectToTable, toTable);
-  toTable->SetInputConnection(elevation->GetOutputPort());
+  //VTK_CREATE(vtkDataObjectToTable, toTable);
+  //toTable->SetInputConnection(elevation->GetOutputPort());
 
-  toTable->SetInputConnection(geometryFilter->GetOutputPort());
+  //toTable->SetInputConnection(geometryFilter->GetOutputPort());
 
-  toTable->SetFieldType(vtkDataObjectToTable::POINT_DATA);
+  //toTable->SetFieldType(vtkDataObjectToTable::POINT_DATA);
 
   // Here we take the end of the VTK pipeline and give it to a Qt View
-  this->TableView->SetRepresentationFromInputConnection(toTable->GetOutputPort());
+  //this->TableView->SetRepresentationFromInputConnection(toTable->GetOutputPort());
 
   // Set up action signals and slots
   connect(this->ui->actionOpenFile, SIGNAL(triggered()), this, SLOT(slotOpenFile()));
@@ -329,8 +416,26 @@ SimpleView::SimpleView()
     // Begin mouse interaction
   //renderWindowInteractor->Start();
 
-
-
+  //renderWindowInteractor->Initialize();
+  //renderWindowInteractor->Start();
+  
+    //vtkSmartPointer<vtkImageInteractionCallback1> callback =
+    //vtkSmartPointer<vtkImageInteractionCallback1>::New();
+	
+	//callback->SetRenderer(ren);
+	
+	//renderWindowInteractor->AddObserver( vtkCommand::MouseMoveEvent, callback );
+	renderWindowInteractor->SetRenderWindow ( renderWindow );
+	renderWindowInteractor->Initialize();	
+	//renderWindowInteractor->Start();
+	
+	//QvtkInteractor *iter;
+	//vtkSmartPointer<QvtkInteractor> iter=
+	//vtkSmartPointer<QvtkInteractor>::New();
+	
+	
+	//this->ui->qvtkWidget->GetInteractor()->Start(); // ????
+  
 };
 
 SimpleView::~SimpleView()

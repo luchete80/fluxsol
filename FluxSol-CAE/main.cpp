@@ -44,6 +44,9 @@ int main(int argc, char *argv[])
 	//tetrahedron.show();
 	//QTextEdit textEdit;
 	//textEdit.show();
+	
+	//return EXIT_SUCCESS;
+	
 	return app.exec();
 
 
