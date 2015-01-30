@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 2.8.9)
 
+include (CheckSymbolExists)
+include (CheckCXXSymbolExists)
+include (CheckIncludeFiles)
+include (CheckIncludeFileCXX)
+include (CheckCXXSourceCompiles)
+
 set (CMAKE_BUILD_TYPE Debug)
 
 #set(CMAKE_PREFIX_PATH $ENV{QTDIR}) # Unnecessary on Windows apparently
@@ -10,6 +16,9 @@ set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "${CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS} 
 SET(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -static-libgcc")
 
 #link_directories("/cygdrive/c/cygwin64/lib/gcc/x86_64-w64-mingw32/4.8.2")
+set (FLUXSOL_SOLVER_DIR "D:/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-Solver")
+set (FLUXSOL_SOLVER_DIR "D:/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-Solver")
+
 set (NAME FluxSolCAE)
 
 project(${NAME})
@@ -21,6 +30,47 @@ find_package(OpenGL)
 include_directories(.)
 include_directories("${PROJECT_SOURCE_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/Qt")
+
+#including FluxSol Library
+include_directories(${FLUXSOL_SOLVER_DIR})
+
+include_directories("${FLUXSOL_SOLVER_DIR}/Analysis")
+include_directories("${FLUXSOL_SOLVER_DIR}/Boundary")
+include_directories("${FLUXSOL_SOLVER_DIR}/Field")
+include_directories("${FLUXSOL_SOLVER_DIR}/FiniteVolume")
+include_directories("${FLUXSOL_SOLVER_DIR}/FiniteVolume/Div")
+include_directories("${FLUXSOL_SOLVER_DIR}/FiniteVolume/Grad")
+include_directories("${FLUXSOL_SOLVER_DIR}/FiniteVolume/Laplacian")
+include_directories("${FLUXSOL_SOLVER_DIR}/FiniteVolume/Mesh")
+include_directories("${FLUXSOL_SOLVER_DIR}/Input")
+include_directories("${FLUXSOL_SOLVER_DIR}/Libs/Laspack")
+include_directories("${FLUXSOL_SOLVER_DIR}/Materials")
+include_directories("${FLUXSOL_SOLVER_DIR}/Mesh")
+include_directories("${FLUXSOL_SOLVER_DIR}/Model")
+include_directories("${FLUXSOL_SOLVER_DIR}/Output")
+include_directories("${FLUXSOL_SOLVER_DIR}/SistEcuac")
+include_directories("${FLUXSOL_SOLVER_DIR}/Solver")
+include_directories("${FLUXSOL_SOLVER_DIR}/Tests")
+include_directories("${FLUXSOL_SOLVER_DIR}/Type")
+include_directories("${FLUXSOL_SOLVER_DIR}/Utils")
+
+set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
+
+set (LASPACK_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/laspack/src)
+set (CGNS_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src)
+set (ALGLIB_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/src)
+
+set (LASPACK_LIBRARY_DIR ${FLUXSOL_DIR}/Libs/laspack/bin)
+set (ALGLIB_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/bin)
+
+
+set (FLUXSOL_LIB_DIR ${FLUXSOL_DIR}/Bin_CodeBlocks/FluxSol)
+
+
+include_directories(${LASPACK_INCLUDE_DIRS})
+include_directories(${CGNS_INCLUDE_DIRS})
+include_directories(${ALGLIB_INCLUDE_DIRS})
+
 
 include_directories("D:/Luciano/Numerico/Libs/QtSDK-5.2.1-x86_64-seh/include")
 
@@ -61,15 +111,30 @@ include_directories(
 
 # Set your files and resources here
 #set( Srcs main.cpp SimpleView.cpp )
-set( Srcs main.cpp MainWindow.cpp ParamDialog.cpp sortdialog.cpp SimpleView.cpp Tetrahedron.cpp)
+set( Srcs main.cpp 
+		  MainWindow.cpp 
+		  ParamDialog.cpp 
+		  sortdialog.cpp 
+		  SimpleView.cpp 
+		  Tetrahedron.cpp 
+		  GraphicModel.cpp)
 
-set( Hdrs SimpleView.h Param.h ParamDialog.h sortdialog.h Tetrahedron.h)
+set( Hdrs SimpleView.h Param.h ParamDialog.h sortdialog.h Tetrahedron.h GraphicModel.h)
 
 set( MOC_Hdrs SimpleView.h )
 
 set( UIs SimpleView.ui Param.ui) #THIS IS THE SAME TO uic -o Param.h Param.ui
 
 set( QRCs Icons/icons.qrc )
+
+
+link_directories (${FLUXSOL_LIB_DIR})
+link_directories (${LASPACK_LIBRARY_DIR})
+link_directories (${ALGLIB_LIBRARY_DIRS})
+
+set (FLUXSOL_LIB fluxsollib)
+set (EXTRA_LIBS opengl32 glu32 gdi32)
+
 
 
 # Instruct CMake to run moc automatically when needed.
@@ -103,7 +168,7 @@ if(VTK_QT_VERSION VERSION_GREATER "4")
 	${QRC_Srcs}
 	)
   qt5_use_modules(${NAME} Core Gui Widgets)
-  target_link_libraries(${NAME} ${VTK_LIBRARIES})
+  target_link_libraries(${NAME} ${VTK_LIBRARIES} ${FLUXSOL_LIB} laspack alglib ${EXTRA_LIBS})
 else()
   find_package(Qt4 REQUIRED)
   include(${QT_USE_FILE})
@@ -143,8 +208,6 @@ endif()
 
 
 
-set (EXTRA_LIBS opengl32 glu32 gdi32)
-#target_link_libraries (${NAME} ${EXTRA_LIBS} ${QT_LIBRARIES} ${OPENGL_LIBRARIES})
-
 
 qt5_use_modules(${NAME} Widgets OpenGL)
+

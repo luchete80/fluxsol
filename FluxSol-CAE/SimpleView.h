@@ -55,12 +55,13 @@ public:
 
 public slots:
 
-  virtual void slotOpenFile();
-  virtual void slotImportIn();
-  virtual void slotViewZpos();
-  virtual void slotExit();
+	virtual void slotOpenFile();
+	virtual void slotImportIn();
+	virtual void slotViewZpos();
+	virtual void slotExit();
+	virtual void slotImportMesh();
 
-protected:
+	protected:
 
 protected slots:
 

@@ -235,6 +235,7 @@
    <addaction name="actionSave"/>
    <addaction name="actionImport_in"/>
    <addaction name="actionExportIn"/>
+   <addaction name="actionImportMesh"/>
    <addaction name="separator"/>
   </widget>
   <widget class="QToolBar" name="toolBar_View">
@@ -406,6 +407,18 @@
    </property>
    <property name="text">
     <string>exportIn</string>
+   </property>
+  </action>
+  <action name="actionImportMesh">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/ImportMesh.png</normaloff>:/Icons/ImportMesh.png</iconset>
+   </property>
+   <property name="text">
+    <string>ImportMesh</string>
+   </property>
+   <property name="toolTip">
+    <string>Import Mesh</string>
    </property>
   </action>
  </widget>
