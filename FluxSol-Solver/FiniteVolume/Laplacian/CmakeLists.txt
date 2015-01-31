@@ -1,7 +1,0 @@
-set (NAME Laplacian)
-
-set (SOURCES 
-Laplacian.cpp
-)
-
-add_library(${NAME} OBJECT ${SOURCES} )
