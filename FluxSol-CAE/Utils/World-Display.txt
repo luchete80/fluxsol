@@ -1,0 +1,75 @@
+From http://vtk.1045678.n5.nabble.com/Coordinate-conversions-World-Display-td2808312.html
+
+Hi VTK experts, 
+
+I use the following functions to convert between World and Display coordinates and vice versa. I found the method on the mailing list or in some other code. 
+
+Isn't there an easier way to do that? Is it correct at all and is it robust? 
+
+this->GetRenderer is a vtkRenderer. 
+
+//--------------------------------------------------------------------------- 
+/// Convert display to world coordinates 
+double* vtkMRMLAnnotationThreeDViewDisplayableManager::GetDisplayToWorldCoordinates(double x, double y) 
+{ 
+  double coordinates[3]; 
+  coordinates[0]=(double)x; 
+  coordinates[1]=(double)y; 
+  coordinates[2]=0; 
+
+  this->GetRenderer()->SetDisplayPoint(coordinates); 
+  this->GetRenderer()->DisplayToView(); 
+  this->GetRenderer()->GetViewPoint(coordinates); 
+  this->GetRenderer()->ViewToWorld(); 
+  return this->GetRenderer()->GetWorldPoint(); 
+
+} 
+
+//--------------------------------------------------------------------------- 
+/// Convert world to display coordinates 
+double* vtkMRMLAnnotationThreeDViewDisplayableManager::GetWorldToDisplayCoordinates(double * worldPoints) 
+{ 
+
+  vtkDebugMacro("GetWorldToDisplayCoordinates: RAS " << worldPoints[0] << ", " << worldPoints[1] << ", " << worldPoints[2]) 
+
+  double * displayCoordinates; 
+
+  this->GetRenderer()->SetWorldPoint(worldPoints); 
+  this->GetRenderer()->WorldToView(); 
+  displayCoordinates = this->GetRenderer()->GetViewPoint(); 
+  this->GetRenderer()->ViewToDisplay(); 
+
+  double * output = this->GetRenderer()->GetDisplayPoint(); 
+
+  vtkDebugMacro("GetWorldToDisplayCoordinates: Display " << output[0] << ", " << output[1]) 
+
+  return output; 
+
+} 
+
+Thank you, 
+Daniel 
+
+
+--------------------------------------------------
+
+
+Sadly, yes, this is the way to do it.  If you want, there is a class that offers static convenience methods:
+
+static void vtkInteractorObserver::ComputeDisplayToWorld (vtkRenderer *ren, double x, double y, double z, double worldPt[4])
+static void vtkInteractorObserver::ComputeWorldToDisplay (vtkRenderer *ren, double x, double y, double z, double displayPt[3])
+
+But if you look at the implementation...
+
+void vtkInteractorObserver::ComputeWorldToDisplay(vtkRenderer *ren,
+                                                  double x, 
+                                                  double y,
+                                                  double z, 
+                                                  double displayPt[3])
+{
+  ren->SetWorldPoint(x, y, z, 1.0);
+  ren->WorldToDisplay();
+  ren->GetDisplayPoint(displayPt);
+}
+
+One comment about your code... I'd be careful returning a double* like that.  You don't own that memory, it could change at any time.
