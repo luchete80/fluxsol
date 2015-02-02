@@ -64,9 +64,61 @@
 
 #include "FluxSol.h"
 
+
+// OUTPUT RESULTS
+
+#include <vtkUnstructuredGrid.h>
+#include <vtkUnstructuredGridReader.h>
+#include <vtkXMLPolyDataReader.h>
+#include <vtkAppendPolyData.h>
+#include <vtkDataSetSurfaceFilter.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkXMLUnstructuredGridReader.h>
+
+#include <vtkPolyData.h>
+#include <vtkPointData.h>
+#include <vtkCellData.h>
+
+#include <vtkXMLReader.h>
+#include <vtkXMLUnstructuredGridReader.h>
+#include <vtkXMLPolyDataReader.h>
+#include <vtkXMLStructuredGridReader.h>
+#include <vtkXMLRectilinearGridReader.h>
+#include <vtkXMLHyperOctreeReader.h>
+#include <vtkXMLCompositeDataReader.h>
+#include <vtkXMLStructuredGridReader.h>
+#include <vtkXMLImageDataReader.h>
+#include <vtkDataSetReader.h>
+#include <vtkDataSet.h>
+#include <vtkUnstructuredGrid.h>
+#include <vtkRectilinearGrid.h>
+#include <vtkHyperOctree.h>
+#include <vtkImageData.h>
+#include <vtkPolyData.h>
+#include <vtkStructuredGrid.h>
+#include <vtkPointData.h>
+#include <vtkCellData.h>
+#include <vtkFieldData.h>
+#include <vtkCellTypes.h>
+#include <vtksys/SystemTools.hxx>
+
+
 using namespace FluxSol;
 using namespace std;
 
+#include <map>
+
+template<class TReader> vtkDataSet *ReadAnXMLFile(const char*fileName)
+{
+  vtkSmartPointer<TReader> reader =
+    vtkSmartPointer<TReader>::New();
+  reader->SetFileName(fileName);
+  reader->Update();
+  reader->GetOutput()->Register(reader);
+  return vtkDataSet::SafeDownCast(reader->GetOutput());
+}
+
+void FindAllData(vtkPolyData* polydata);
 
 class vtkImageInteractionCallback1  : public vtkCommand
 {
@@ -147,10 +199,12 @@ SimpleView::SimpleView()
   // Qt Table View
   this->TableView = vtkSmartPointer<vtkQtTableView>::New();
 
-  this->ui->treeWidget=new QTreeWidget;
-  this->ui->treeWidget->expandAll();
+//    this->ui->tabWidget->currentWidget()->ExpandAll();
+//	QTreeWidget *modtree=qobject_cast<this->ui->tabWidget->currentWidget()>;
+//	modtree->ExpandAll();
+	//Another way to access tree item is widget(int)
 
-  // Place the table view in the designer form
+	// Place the table view in the designer form
   //this->ui->tableFrame->layout()->addWidget(this->TableView->GetWidget());
 
   // Geometry
@@ -450,6 +504,7 @@ SimpleView::SimpleView()
   connect(this->ui->actionImport_in, SIGNAL(triggered()), this, SLOT(slotImportIn()));
   connect(this->ui->actionView_Z, SIGNAL(triggered()), this, SLOT(slotViewZpos()));
   connect(this->ui->actionImportMesh, SIGNAL(triggered()), this, SLOT(slotImportMesh()));
+  connect(this->ui->actionOpenResults, SIGNAL(triggered()), this, SLOT(slotOpenResults()));
 
   //ren->ResetCamera();
   //renderWindow->Render();
@@ -484,7 +539,7 @@ void SimpleView::slotImportMesh()
 {
 	QString fileName = QFileDialog::getOpenFileName(this,
 	tr("Import Mesh"), ".",
-	tr("Fluent Mesh files (*.msh);;CGNS Mesh files (*.cgns)"));
+	tr("Fluent Mesh files (*.msh);;CGNS Mesh files (*.cgns);;VTK Generic Mesh files (*.vtk)"));
 
 
 	//Another option is to separate with commas
@@ -492,7 +547,250 @@ void SimpleView::slotImportMesh()
 	{
 		Fv_CC_Grid mesh(fileName.toStdString());
 		mesh.Log("Log.txt");
+
+
+	    vtkUnstructuredGrid *ugrid;
+
+        // ------- SIMPLE READER
+
+          //read all the data from the file
+      vtkSmartPointer<vtkXMLUnstructuredGridReader> ugreader =
+        vtkSmartPointer<vtkXMLUnstructuredGridReader>::New();
+      ugreader->SetFileName(fileName.toStdString().c_str());
+      ugreader->Update();
+
+
+          vtkSmartPointer<vtkUnstructuredGridGeometryFilter> geometryFilter =
+            vtkSmartPointer<vtkUnstructuredGridGeometryFilter>::New();
+      geometryFilter->SetInputConnection(ugreader->GetOutputPort());
+      geometryFilter->Update();
+
+      // Visualize
+     // vtkSmartPointer<vtkPolyDataMapper> pdmapper =
+     //   vtkSmartPointer<vtkPolyDataMapper>::New();
+     // pdmapper->SetInputConnection(geometryFilter->GetOutputPort());
+
+
+
+          vtkSmartPointer<vtkDataSetMapper> datasetmapper =
+        vtkSmartPointer<vtkDataSetMapper>::New();
+      datasetmapper ->SetInputConnection(ugreader->GetOutputPort());
+
+      vtkSmartPointer<vtkActor> actor =
+        vtkSmartPointer<vtkActor>::New();
+      actor->SetMapper(datasetmapper);
+
+
+          actor->GetProperty()->SetEdgeColor(0, 0, 0);
+          actor->GetProperty()->EdgeVisibilityOn();
+
+      this->ren->AddActor( actor);
+
 	}
+
+}
+
+// Action to be taken upon Impor Mesh
+void SimpleView::slotOpenResults()
+{
+	QString fileName = QFileDialog::getOpenFileName(this,
+	tr("Open Results File"), ".",
+	tr("VTK Unstructured Grid Files (*.vtu)"));
+
+	//Another option is to separate with commas
+	if (!fileName.isEmpty())
+	{
+
+        vtkDataSet *dataSet;
+        std::string extension =
+          vtksys::SystemTools::GetFilenameLastExtension(fileName.toStdString().c_str());
+
+        // Dispatch based on the file extension
+        if (extension == ".vtu")
+          {
+          dataSet = ReadAnXMLFile<vtkXMLUnstructuredGridReader> (fileName.toStdString().c_str());
+          }
+        else if (extension == ".vtp")
+          {
+          dataSet = ReadAnXMLFile<vtkXMLPolyDataReader> (fileName.toStdString().c_str());
+          }
+        else if (extension == ".vts")
+          {
+          dataSet = ReadAnXMLFile<vtkXMLStructuredGridReader> (fileName.toStdString().c_str());
+          }
+        else if (extension == ".vtr")
+          {
+          dataSet = ReadAnXMLFile<vtkXMLRectilinearGridReader> (fileName.toStdString().c_str());
+          }
+        else if (extension == ".vti")
+          {
+          dataSet = ReadAnXMLFile<vtkXMLImageDataReader> (fileName.toStdString().c_str());
+          }
+        else if (extension == ".vto")
+          {
+          dataSet = ReadAnXMLFile<vtkXMLHyperOctreeReader> (fileName.toStdString().c_str());
+          }
+        else if (extension == ".vtk")
+          {
+          dataSet = ReadAnXMLFile<vtkDataSetReader> (fileName.toStdString().c_str());
+          }
+        else
+          {
+          std::cerr << fileName.toStdString().c_str() << " Unknown extenstion: " << extension << std::endl;
+          return EXIT_FAILURE;
+          }
+
+        int numberOfCells = dataSet->GetNumberOfCells();
+        int numberOfPoints = dataSet->GetNumberOfPoints();
+
+        // Generate a report
+        std::cout << "------------------------" << std::endl;
+        std::cout << fileName.toStdString().c_str() << std::endl
+             << " contains a " << std::endl
+             << dataSet->GetClassName()
+             <<  " that has " << numberOfCells << " cells"
+             << " and " << numberOfPoints << " points." << std::endl;
+        typedef std::map<int,int> CellContainer;
+        CellContainer cellMap;
+        for (int i = 0; i < numberOfCells; i++)
+          {
+          cellMap[dataSet->GetCellType(i)]++;
+          }
+
+        CellContainer::const_iterator it = cellMap.begin();
+        while (it != cellMap.end())
+          {
+          std::cout << "\tCell type "
+               << vtkCellTypes::GetClassNameFromTypeId(it->first)
+               << " occurs " << it->second << " times." << std::endl;
+          ++it;
+          }
+
+        // Now check for point data
+        vtkPointData *pd = dataSet->GetPointData();
+        if (pd)
+          {
+          std::cout << " contains point data with "
+               << pd->GetNumberOfArrays()
+               << " arrays." << std::endl;
+          for (int i = 0; i < pd->GetNumberOfArrays(); i++)
+            {
+            std::cout << "\tArray " << i
+                 << " is named "
+                 << (pd->GetArrayName(i) ? pd->GetArrayName(i) : "NULL")
+                 << std::endl;
+            }
+          }
+        // Now check for cell data
+        vtkCellData *cd = dataSet->GetCellData();
+        if (cd)
+          {
+          std::cout << " contains cell data with "
+               << cd->GetNumberOfArrays()
+               << " arrays." << std::endl;
+          for (int i = 0; i < cd->GetNumberOfArrays(); i++)
+            {
+            std::cout << "\tArray " << i
+                 << " is named "
+                 << (cd->GetArrayName(i) ? cd->GetArrayName(i) : "NULL")
+                 << std::endl;
+            }
+          }
+        // Now check for field data
+        if (dataSet->GetFieldData())
+          {
+          std::cout << " contains field data with "
+               << dataSet->GetFieldData()->GetNumberOfArrays()
+               << " arrays." << std::endl;
+          for (int i = 0; i < dataSet->GetFieldData()->GetNumberOfArrays(); i++)
+            {
+            std::cout << "\tArray " << i
+                 << " is named " << dataSet->GetFieldData()->GetArray(i)->GetName()
+                 << std::endl;
+            }
+          }
+        dataSet->Delete();
+
+
+    // IF  /////////////////////////////
+
+        //TO TEMPLATIZE
+        //ugrid = meshreader ->GetOutput();
+
+      vtkSmartPointer<vtkUnstructuredGridReader> reader =
+        vtkSmartPointer<vtkUnstructuredGridReader>::New();
+      //reader->SetFileName(inputFilename.c_str());
+      reader->SetFileName(fileName.toStdString().c_str());
+      reader->Update();
+
+
+        //vtkSmartPointer<vtkUnstructuredGrid> ugrid=
+        vtkSmartPointer<vtkUnstructuredGrid> ugrid=
+        vtkUnstructuredGrid::New();;
+        ugrid = reader->GetOutput();
+
+      double scalarRange[2];
+//      pd->GetScalars()->GetRange(scalarRange);
+
+//    //GeometryFilter
+////      vtkSmartPointer<vtkUnstructuredGridGeometryFilter> geometryFilter =
+//      vtkSmartPointer<vtkGeometryFilter> geometryFilter =
+//        vtkSmartPointer<vtkGeometryFilter>::New();
+//
+//        vtkSmartPointer<vtkDataSetSurfaceFilter> surfaceFilter =
+//        vtkSmartPointer<vtkDataSetSurfaceFilter>::New();
+//
+//      surfaceFilter->SetInputData(ugrid);
+//
+//    #if VTK_MAJOR_VERSION <= 5
+//      geometryFilter->SetInput(ugrid);
+//      surfaceFilter->SetInput(ugrid);
+//    #else
+//      geometryFilter->SetInputData(ugrid);
+//      surfaceFilter->SetInputData(ugrid);
+//    #endif
+//      geometryFilter->Update();
+//      surfaceFilter->Update();
+
+    //vtkSmartPointer<vtkPolyData>
+//    vtkPolyData *polydata= geometryFilter ->GetOutput ();
+//
+//
+//    //**************************** RANGE AND COLORS ******************************
+//      // Generate the colors for each point based on the color map
+//      vtkSmartPointer<vtkUnsignedCharArray> colors =
+//        vtkSmartPointer<vtkUnsignedCharArray>::New();
+//      colors->SetNumberOfComponents(3);
+//      colors->SetName("Colors");
+
+        //Lookuptable
+      // Create the color map
+//      vtkSmartPointer<vtkLookupTable> colorLookupTable =
+//        vtkSmartPointer<vtkLookupTable>::New();
+//     colorLookupTable->SetTableRange(minv, maxv);
+//      colorLookupTable->Build();
+
+
+//         vtkSmartPointer<vtkPolyDataMapper> pdmapper =
+//    vtkSmartPointer<vtkPolyDataMapper>::New();
+//    #if VTK_MAJOR_VERSION <= 5
+//      pdmapper->SetInputConnection(polydata->GetProducerPort());
+//    #else
+//     pdmapper->SetInputData(polydata);
+//    #endif
+//
+//      VTK_CREATE(vtkActor, actor);
+//        actor->SetMapper(pdmapper);
+//
+//        this->ren->AddActor(actor);
+//
+//
+
+
+	}
+
+
+
 
 }
 
@@ -521,4 +819,44 @@ void SimpleView::slotImportIn()
 
 void SimpleView::slotExit() {
   qApp->exit();
+}
+
+
+
+void FindAllData(vtkPolyData* polydata)
+{
+  std::cout << "Normals: " << polydata->GetPointData()->GetNormals() << std::endl;
+
+  vtkIdType numberOfPointArrays = polydata->GetPointData()->GetNumberOfArrays();
+  std::cout << "Number of PointData arrays: " << numberOfPointArrays << std::endl;
+
+  vtkIdType numberOfCellArrays = polydata->GetCellData()->GetNumberOfArrays();
+  std::cout << "Number of CellData arrays: " << numberOfCellArrays << std::endl;
+
+  std::cout << "Type table/key: " << std::endl;;
+  //more values can be found in <VTK_DIR>/Common/vtkSetGet.h
+  std::cout << VTK_UNSIGNED_CHAR << " unsigned char" << std::endl;
+  std::cout << VTK_UNSIGNED_INT << " unsigned int" << std::endl;
+  std::cout << VTK_FLOAT << " float" << std::endl;
+  std::cout << VTK_DOUBLE << " double" << std::endl;
+
+  for(vtkIdType i = 0; i < numberOfPointArrays; i++)
+    {
+    // The following two lines are equivalent
+    //arrayNames.push_back(polydata->GetPointData()->GetArray(i)->GetName());
+    //arrayNames.push_back(polydata->GetPointData()->GetArrayName(i));
+    int dataTypeID = polydata->GetPointData()->GetArray(i)->GetDataType();
+    std::cout << "Array " << i << ": " << polydata->GetPointData()->GetArrayName(i)
+              << " (type: " << dataTypeID << ")" << std::endl;
+    }
+
+  for(vtkIdType i = 0; i < numberOfCellArrays; i++)
+    {
+    // The following two lines are equivalent
+    //polydata->GetPointData()->GetArray(i)->GetName();
+    //polydata->GetPointData()->GetArrayName(i);
+    int dataTypeID = polydata->GetCellData()->GetArray(i)->GetDataType();
+    std::cout << "Array " << i << ": " << polydata->GetCellData()->GetArrayName(i)
+              << " (type: " << dataTypeID << ")" << std::endl;
+    }
 }

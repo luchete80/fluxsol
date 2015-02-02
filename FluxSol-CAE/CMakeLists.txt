@@ -117,9 +117,10 @@ set( Srcs main.cpp
 		  sortdialog.cpp 
 		  SimpleView.cpp 
 		  Tetrahedron.cpp 
-		  GraphicModel.cpp)
+		  GraphicModel.cpp
+		  GraphicResults.cpp)
 
-set( Hdrs SimpleView.h Param.h ParamDialog.h sortdialog.h Tetrahedron.h GraphicModel.h)
+set( Hdrs SimpleView.h Param.h ParamDialog.h sortdialog.h Tetrahedron.h GraphicModel.h GraphicResults.h)
 
 set( MOC_Hdrs SimpleView.h )
 
