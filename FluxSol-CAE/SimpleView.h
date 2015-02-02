@@ -60,6 +60,7 @@ public slots:
 	virtual void slotViewZpos();
 	virtual void slotExit();
 	virtual void slotImportMesh();
+	virtual void slotOpenResults();
 
 	protected:
 
