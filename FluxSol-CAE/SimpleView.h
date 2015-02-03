@@ -33,6 +33,105 @@
 #include "vtkSmartPointer.h"    // Required for smart pointer internal ivars.
 #include <QMainWindow>
 
+
+#include <vtkDataObjectToTable.h>
+#include <vtkElevationFilter.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkQtTableView.h>
+#include <vtkQtTreeView.h>
+#include <vtkAxesActor.h>
+
+#include <vtkTransform.h>
+
+#include <vtkTextActor.h>
+#include <vtkTextProperty.h>
+
+//GRID
+#include <vtkGeometryFilter.h>
+#include <vtkUnstructuredGrid.h>
+#include <vtkUnstructuredGridReader.h>
+#include <vtkUnstructuredGridGeometryFilter.h>
+
+#include <vtkShrinkFilter.h>
+#include <vtkProperty.h>
+#include <vtkOrientationMarkerWidget.h>
+
+//Qt Includes
+#include <QFileDialog>
+#include <QSpinBox>
+#include <QComboBox>
+
+//Visualization
+#include <vtkCamera.h>
+
+#include <vtkDataSet.h>
+#include <vtkDataSetMapper.h>
+
+
+#include "vtkSmartPointer.h"
+#define VTK_CREATE(type, name) \
+  vtkSmartPointer<type> name = vtkSmartPointer<type>::New()
+
+//// TEST SLIDER; TO DELETE
+
+#include <vtkSliderWidget.h>
+#include <vtkSliderRepresentation2D.h>
+
+#include <QvtkInteractor.h>
+
+
+// COMMAND AND INTERACTOR
+#include <vtkCommand.h>
+
+
+#include <vtkInteractorStyleTrackballCamera.h>
+
+#include <vtkObjectFactory.h>
+
+#include "FluxSol.h"
+
+
+// OUTPUT RESULTS
+
+#include <vtkUnstructuredGrid.h>
+#include <vtkUnstructuredGridReader.h>
+#include <vtkXMLPolyDataReader.h>
+#include <vtkAppendPolyData.h>
+#include <vtkDataSetSurfaceFilter.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkXMLUnstructuredGridReader.h>
+
+#include <vtkPolyData.h>
+#include <vtkPointData.h>
+#include <vtkCellData.h>
+
+#include <vtkXMLReader.h>
+#include <vtkXMLUnstructuredGridReader.h>
+#include <vtkXMLPolyDataReader.h>
+#include <vtkXMLStructuredGridReader.h>
+#include <vtkXMLRectilinearGridReader.h>
+#include <vtkXMLHyperOctreeReader.h>
+#include <vtkXMLCompositeDataReader.h>
+#include <vtkXMLStructuredGridReader.h>
+#include <vtkXMLImageDataReader.h>
+#include <vtkDataSetReader.h>
+#include <vtkDataSet.h>
+#include <vtkUnstructuredGrid.h>
+#include <vtkRectilinearGrid.h>
+#include <vtkHyperOctree.h>
+#include <vtkImageData.h>
+#include <vtkPolyData.h>
+#include <vtkStructuredGrid.h>
+#include <vtkPointData.h>
+#include <vtkCellData.h>
+#include <vtkFieldData.h>
+#include <vtkCellTypes.h>
+#include <vtksys/SystemTools.hxx>
+
+#include <vtkScalarBarActor.h>
+
+#include <vtkLookupTable.h>
+
 // Forward Qt class declarations
 class Ui_SimpleView;
 
@@ -44,9 +143,9 @@ class SimpleView : public QMainWindow
 {
   Q_OBJECT
 
-  
+
   vtkSmartPointer<vtkOpenGLRenderer> ren;
-  
+
 public:
 
   // Constructor/Destructor
@@ -69,6 +168,7 @@ protected slots:
 private:
 
   vtkSmartPointer<vtkQtTableView>         TableView;
+  QComboBox *comboBox;
 
 //    vtkSmartPointer<vtkQtTreeView>         TableView;
 

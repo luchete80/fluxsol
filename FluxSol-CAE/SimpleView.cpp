@@ -11,102 +11,16 @@
 #include "ui_SimpleView.h"
 #include "SimpleView.h"
 
-#include <vtkDataObjectToTable.h>
-#include <vtkElevationFilter.h>
-#include <vtkPolyDataMapper.h>
-#include <vtkQtTableView.h>
-#include <vtkQtTreeView.h>
-#include <vtkAxesActor.h>
-
-#include <vtkTransform.h>
-
-#include <vtkTextActor.h>
-#include <vtkTextProperty.h>
-
-//GRID
-#include <vtkGeometryFilter.h>
-#include <vtkUnstructuredGrid.h>
-#include <vtkUnstructuredGridReader.h>
-#include <vtkUnstructuredGridGeometryFilter.h>
-
-#include <vtkShrinkFilter.h>
-#include <vtkProperty.h>
-#include <vtkOrientationMarkerWidget.h>
-
-#include <QFileDialog>
-
-//Visualization
-#include <vtkCamera.h>
-
-#include <vtkDataSet.h>
-#include <vtkDataSetMapper.h>
-
-
-#include "vtkSmartPointer.h"
-#define VTK_CREATE(type, name) \
-  vtkSmartPointer<type> name = vtkSmartPointer<type>::New()
-
-//// TEST SLIDER; TO DELETE
-
-#include <vtkSliderWidget.h>
-#include <vtkSliderRepresentation2D.h>
-
-#include <QvtkInteractor.h>
-
-
-// COMMAND AND INTERACTOR
-#include <vtkCommand.h>
-
-
-#include <vtkInteractorStyleTrackballCamera.h>
-
-#include <vtkObjectFactory.h>
-
-#include "FluxSol.h"
-
-
-// OUTPUT RESULTS
-
-#include <vtkUnstructuredGrid.h>
-#include <vtkUnstructuredGridReader.h>
-#include <vtkXMLPolyDataReader.h>
-#include <vtkAppendPolyData.h>
-#include <vtkDataSetSurfaceFilter.h>
-#include <vtkPolyDataMapper.h>
-#include <vtkXMLUnstructuredGridReader.h>
-
-#include <vtkPolyData.h>
-#include <vtkPointData.h>
-#include <vtkCellData.h>
-
-#include <vtkXMLReader.h>
-#include <vtkXMLUnstructuredGridReader.h>
-#include <vtkXMLPolyDataReader.h>
-#include <vtkXMLStructuredGridReader.h>
-#include <vtkXMLRectilinearGridReader.h>
-#include <vtkXMLHyperOctreeReader.h>
-#include <vtkXMLCompositeDataReader.h>
-#include <vtkXMLStructuredGridReader.h>
-#include <vtkXMLImageDataReader.h>
-#include <vtkDataSetReader.h>
-#include <vtkDataSet.h>
-#include <vtkUnstructuredGrid.h>
-#include <vtkRectilinearGrid.h>
-#include <vtkHyperOctree.h>
-#include <vtkImageData.h>
-#include <vtkPolyData.h>
-#include <vtkStructuredGrid.h>
-#include <vtkPointData.h>
-#include <vtkCellData.h>
-#include <vtkFieldData.h>
-#include <vtkCellTypes.h>
-#include <vtksys/SystemTools.hxx>
-
 
 using namespace FluxSol;
 using namespace std;
 
 #include <map>
+
+#include <vector>
+
+using namespace std;
+
 
 template<class TReader> vtkDataSet *ReadAnXMLFile(const char*fileName)
 {
@@ -206,6 +120,11 @@ SimpleView::SimpleView()
 
 	// Place the table view in the designer form
   //this->ui->tableFrame->layout()->addWidget(this->TableView->GetWidget());
+
+
+    this->comboBox = new QComboBox(this);
+    this->ui->toolBar_Results->addWidget(comboBox);
+
 
   // Geometry
   VTK_CREATE(vtkVectorText, text);
@@ -363,14 +282,15 @@ SimpleView::SimpleView()
   ren->SetBackground(.2, .3, .4);
 
   ren->GradientBackgroundOn();
-  ren->SetBackground(1,1,1);
+  //ren->SetBackground(0.6,0.7,1.);
+  ren->SetBackground(1.,1.,1.);
   ren->SetBackground2(0,0,1);
 
 
 	vtkSmartPointer<vtkTextActor> textActor =
     vtkSmartPointer<vtkTextActor>::New();
   textActor->GetTextProperty()->SetFontSize ( 24 );
-  textActor->SetPosition2 ( 10, 40 );
+  textActor->SetPosition2 ( 1200, 1200 );
   ren->AddActor2D ( textActor );
   textActor->SetInput ( "FluxSol" );
   textActor->GetTextProperty()->SetColor ( 0.08,0.0,0.4 );
@@ -666,7 +586,7 @@ void SimpleView::slotOpenResults()
                  << std::endl;
             }
           }
-        dataSet->Delete();
+        //dataSet->Delete();
 
 
     // IF  /////////////////////////////
@@ -674,9 +594,9 @@ void SimpleView::slotOpenResults()
         //TO TEMPLATIZE
         //ugrid = meshreader ->GetOutput();
 
-      vtkSmartPointer<vtkUnstructuredGridReader> reader =
-        vtkSmartPointer<vtkUnstructuredGridReader>::New();
-      //reader->SetFileName(inputFilename.c_str());
+      vtkSmartPointer<vtkXMLUnstructuredGridReader> reader =
+        vtkSmartPointer<vtkXMLUnstructuredGridReader>::New();
+
       reader->SetFileName(fileName.toStdString().c_str());
       reader->Update();
 
@@ -685,35 +605,48 @@ void SimpleView::slotOpenResults()
         ugrid = reader->GetOutput();
 
       double scalarRange[2];
-//      pd->GetScalars()->GetRange(scalarRange);
+      pd->GetArray(0);
+
+      //int components =
+        //this->PointData->GetScalars()->GetNumberOfComponents();
+        double tuple[3];
+        //double* tuple = pd->GetArray(0)->GetTuple( 1 );
+        pd->GetArray(0)->GetTuple( 1 ,tuple);
+
+        pd->GetArray(0)->GetRange(scalarRange);
+
+        cout << "Tuple" << tuple[0]<<endl;
+
+      std::cout << pd->GetArrayName(0)<<std::endl;
 
 //    //GeometryFilter
-////      vtkSmartPointer<vtkUnstructuredGridGeometryFilter> geometryFilter =
-//      vtkSmartPointer<vtkGeometryFilter> geometryFilter =
-//        vtkSmartPointer<vtkGeometryFilter>::New();
-//
-//        vtkSmartPointer<vtkDataSetSurfaceFilter> surfaceFilter =
-//        vtkSmartPointer<vtkDataSetSurfaceFilter>::New();
-//
-//      surfaceFilter->SetInputData(ugrid);
-//
-//    #if VTK_MAJOR_VERSION <= 5
-//      geometryFilter->SetInput(ugrid);
-//      surfaceFilter->SetInput(ugrid);
-//    #else
-//      geometryFilter->SetInputData(ugrid);
-//      surfaceFilter->SetInputData(ugrid);
-//    #endif
-//      geometryFilter->Update();
-//      surfaceFilter->Update();
+
+
+      vtkSmartPointer<vtkGeometryFilter> geometryFilter =
+        vtkSmartPointer<vtkGeometryFilter>::New();
+
+        vtkSmartPointer<vtkDataSetSurfaceFilter> surfaceFilter =
+        vtkSmartPointer<vtkDataSetSurfaceFilter>::New();
+
+      surfaceFilter->SetInputData(ugrid);
+
+    #if VTK_MAJOR_VERSION <= 5
+      geometryFilter->SetInput(ugrid);
+      surfaceFilter->SetInput(ugrid);
+    #else
+      geometryFilter->SetInputData(ugrid);
+      surfaceFilter->SetInputData(ugrid);
+    #endif
+      geometryFilter->Update();
+      surfaceFilter->Update();
 
     //vtkSmartPointer<vtkPolyData>
-//    vtkPolyData *polydata= geometryFilter ->GetOutput ();
-//
+    vtkPolyData *polydata= geometryFilter ->GetOutput ();
+
 
 
 //**************************** RANGE AND COLORS ******************************
- /*  // Generate the colors for each point based on the color map
+//   Generate the colors for each point based on the color map
   vtkSmartPointer<vtkUnsignedCharArray> colors =
     vtkSmartPointer<vtkUnsignedCharArray>::New();
   colors->SetNumberOfComponents(3);
@@ -723,6 +656,19 @@ void SimpleView::slotOpenResults()
   // Create the color map
   vtkSmartPointer<vtkLookupTable> colorLookupTable =
     vtkSmartPointer<vtkLookupTable>::New();
+
+    double minv,maxv;
+    minv=scalarRange[0];
+    maxv=scalarRange[1];
+
+    vector<double> results;
+    results.assign(dataSet->GetNumberOfPoints(),0.);
+//////////Assigning results
+    for(int i = 0; i < polydata->GetNumberOfPoints(); i++)//Or dataset
+    {
+        results[i]=double(i)/double(polydata->GetNumberOfPoints());
+    }
+
   colorLookupTable->SetTableRange(minv, maxv);
   colorLookupTable->Build();
 
@@ -731,9 +677,10 @@ void SimpleView::slotOpenResults()
     {
         unsigned char color[3];
         double p[3];
-        polydata->GetPoint(i,p);
+        //polydata->GetPoint(i,p);
         double dcolor[3];
-        colorLookupTable->GetColor(results[i], dcolor);
+        pd->GetArray(0)->GetTuple( i ,tuple);
+        colorLookupTable->GetColor(tuple[0], dcolor);
         for(unsigned int j = 0; j < 3; j++)
           color[j] = static_cast<unsigned char>(255.0 * dcolor[j]);
         colors->InsertNextTupleValue(color);
@@ -753,13 +700,59 @@ void SimpleView::slotOpenResults()
     #else
      pdmapper->SetInputData(polydata);
     #endif
- */
+
 	/////// END OF CONTOUR
 
   ///////////////////////// RENDERING ////
 
+        VTK_CREATE(vtkActor, actor);
+        actor->SetMapper(pdmapper);
+        actor->GetProperty()->EdgeVisibilityOn();
+        this->ren->AddActor(actor);
 
-	}
+
+////////////////////////////////////////// COLOR BAR
+
+  vtkSmartPointer<vtkScalarBarActor> scalarBar =
+    vtkSmartPointer<vtkScalarBarActor>::New();
+  scalarBar->SetLookupTable(pdmapper->GetLookupTable());
+  scalarBar->SetTitle(pd->GetArrayName(0));
+  scalarBar->SetNumberOfLabels(4);
+  //scalarBar->GetLabelTextProperty()->SetFontSize(4);
+  scalarBar->SetHeight(0.40);
+  scalarBar->SetWidth(0.10);
+  scalarBar->GetTitleTextProperty()->SetFontFamilyToArial();
+  scalarBar->GetTitleTextProperty()->ShadowOff();
+  scalarBar->GetTitleTextProperty()->ItalicOff();
+  scalarBar->GetTitleTextProperty()->BoldOff();
+  scalarBar->GetTitleTextProperty()->SetFontSize(10);
+    scalarBar->GetTitleTextProperty()->SetColor ( 0.0,0.0,0.0 );
+
+  scalarBar->GetLabelTextProperty()->SetFontFamilyToArial();
+  scalarBar->GetLabelTextProperty()->ShadowOff();
+  scalarBar->GetLabelTextProperty()->ItalicOff();
+  scalarBar->GetLabelTextProperty()->BoldOff();
+  scalarBar->GetLabelTextProperty()->SetColor ( 0.0,0.0,0.0 );
+  //scalarBar->SetPosition(0.04, 0.02);
+//  this->colorBar->SetOrientationToHorizontal();
+
+//vtkScalarBarActor::SizeTitle()
+
+//  colorLookupTable->SetTableRange (0, 1);
+//  colorLookupTable->SetHueRange (0, 1);
+//  colorLookupTable->SetSaturationRange (1, 1);
+//  colorLookupTable->SetValueRange (1, 1);
+//  colorLookupTable->Build();
+
+  pdmapper->SetLookupTable( colorLookupTable );
+  scalarBar->SetLookupTable( colorLookupTable );
+
+        //Results Combo Box
+        this->comboBox->addItem(pd->GetArrayName(0));
+
+        this->ren->AddActor2D(scalarBar);
+
+	}//If file name is not empty
 
 
 
