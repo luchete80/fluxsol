@@ -376,53 +376,6 @@ SimpleView::SimpleView()
   textActor->GetTextProperty()->SetColor ( 0.08,0.0,0.4 );
 
 
-//**************************** RANGE AND COLORS ******************************
- /*  // Generate the colors for each point based on the color map
-  vtkSmartPointer<vtkUnsignedCharArray> colors =
-    vtkSmartPointer<vtkUnsignedCharArray>::New();
-  colors->SetNumberOfComponents(3);
-  colors->SetName("Colors");
-
-    //Lookuptable
-  // Create the color map
-  vtkSmartPointer<vtkLookupTable> colorLookupTable =
-    vtkSmartPointer<vtkLookupTable>::New();
-  colorLookupTable->SetTableRange(minv, maxv);
-  colorLookupTable->Build();
-
-
-    for(int i = 0; i < polydata->GetNumberOfPoints(); i++)
-    {
-        unsigned char color[3];
-        double p[3];
-        polydata->GetPoint(i,p);
-        double dcolor[3];
-        colorLookupTable->GetColor(results[i], dcolor);
-        for(unsigned int j = 0; j < 3; j++)
-          color[j] = static_cast<unsigned char>(255.0 * dcolor[j]);
-        colors->InsertNextTupleValue(color);
-    }
-
-	polydata->GetPointData()->SetScalars(colors);
-
-//    //************************************* MAPPER
-//
-     vtkSmartPointer<vtkPolyDataMapper> pdmapper =
-    vtkSmartPointer<vtkPolyDataMapper>::New();
-//
-//    //pdmapper->ScalarVisibilityOff();
-//
-    #if VTK_MAJOR_VERSION <= 5
-      pdmapper->SetInputConnection(polydata->GetProducerPort());
-    #else
-     pdmapper->SetInputData(polydata);
-    #endif
- */
-	/////// END OF CONTOUR
-
-  ///////////////////////// RENDERING ////
-
-
 
 
 
@@ -539,7 +492,9 @@ void SimpleView::slotImportMesh()
 {
 	QString fileName = QFileDialog::getOpenFileName(this,
 	tr("Import Mesh"), ".",
-	tr("Fluent Mesh files (*.msh);;CGNS Mesh files (*.cgns);;VTK Generic Mesh files (*.vtk)"));
+	tr("Fluent Mesh files (*.msh)\n"
+	   "CGNS Mesh files (*.cgns)\n"
+	   "VTK Generic Mesh files (*.vtk)"));
 
 
 	//Another option is to separate with commas
@@ -595,7 +550,9 @@ void SimpleView::slotOpenResults()
 {
 	QString fileName = QFileDialog::getOpenFileName(this,
 	tr("Open Results File"), ".",
-	tr("VTK Unstructured Grid Files (*.vtu)"));
+	tr(	"VTK Unstructured Grid Files (*.vtu)\n"
+		"VTK Polydata Files (*.vtp) \n"
+		"VTK Structured Grid Files(*.vts)"));
 
 	//Another option is to separate with commas
 	if (!fileName.isEmpty())
@@ -723,8 +680,6 @@ void SimpleView::slotOpenResults()
       reader->SetFileName(fileName.toStdString().c_str());
       reader->Update();
 
-
-        //vtkSmartPointer<vtkUnstructuredGrid> ugrid=
         vtkSmartPointer<vtkUnstructuredGrid> ugrid=
         vtkUnstructuredGrid::New();;
         ugrid = reader->GetOutput();
@@ -755,36 +710,53 @@ void SimpleView::slotOpenResults()
     //vtkSmartPointer<vtkPolyData>
 //    vtkPolyData *polydata= geometryFilter ->GetOutput ();
 //
-//
-//    //**************************** RANGE AND COLORS ******************************
-//      // Generate the colors for each point based on the color map
-//      vtkSmartPointer<vtkUnsignedCharArray> colors =
-//        vtkSmartPointer<vtkUnsignedCharArray>::New();
-//      colors->SetNumberOfComponents(3);
-//      colors->SetName("Colors");
-
-        //Lookuptable
-      // Create the color map
-//      vtkSmartPointer<vtkLookupTable> colorLookupTable =
-//        vtkSmartPointer<vtkLookupTable>::New();
-//     colorLookupTable->SetTableRange(minv, maxv);
-//      colorLookupTable->Build();
 
 
-//         vtkSmartPointer<vtkPolyDataMapper> pdmapper =
-//    vtkSmartPointer<vtkPolyDataMapper>::New();
-//    #if VTK_MAJOR_VERSION <= 5
-//      pdmapper->SetInputConnection(polydata->GetProducerPort());
-//    #else
-//     pdmapper->SetInputData(polydata);
-//    #endif
+//**************************** RANGE AND COLORS ******************************
+ /*  // Generate the colors for each point based on the color map
+  vtkSmartPointer<vtkUnsignedCharArray> colors =
+    vtkSmartPointer<vtkUnsignedCharArray>::New();
+  colors->SetNumberOfComponents(3);
+  colors->SetName("Colors");
+
+    //Lookuptable
+  // Create the color map
+  vtkSmartPointer<vtkLookupTable> colorLookupTable =
+    vtkSmartPointer<vtkLookupTable>::New();
+  colorLookupTable->SetTableRange(minv, maxv);
+  colorLookupTable->Build();
+
+
+    for(int i = 0; i < polydata->GetNumberOfPoints(); i++)
+    {
+        unsigned char color[3];
+        double p[3];
+        polydata->GetPoint(i,p);
+        double dcolor[3];
+        colorLookupTable->GetColor(results[i], dcolor);
+        for(unsigned int j = 0; j < 3; j++)
+          color[j] = static_cast<unsigned char>(255.0 * dcolor[j]);
+        colors->InsertNextTupleValue(color);
+    }
+
+	polydata->GetPointData()->SetScalars(colors);
+
+//    //************************************* MAPPER
 //
-//      VTK_CREATE(vtkActor, actor);
-//        actor->SetMapper(pdmapper);
+     vtkSmartPointer<vtkPolyDataMapper> pdmapper =
+    vtkSmartPointer<vtkPolyDataMapper>::New();
 //
-//        this->ren->AddActor(actor);
+//    //pdmapper->ScalarVisibilityOff();
 //
-//
+    #if VTK_MAJOR_VERSION <= 5
+      pdmapper->SetInputConnection(polydata->GetProducerPort());
+    #else
+     pdmapper->SetInputData(polydata);
+    #endif
+ */
+	/////// END OF CONTOUR
+
+  ///////////////////////// RENDERING ////
 
 
 	}

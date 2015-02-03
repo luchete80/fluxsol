@@ -15,9 +15,10 @@ set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fpermissive -static-libgcc -static-libstdc
 set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "${CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS} -static-libgcc -static-libstdc++ -s -g")
 SET(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -static-libgcc")
 
+set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
+
 #link_directories("/cygdrive/c/cygwin64/lib/gcc/x86_64-w64-mingw32/4.8.2")
-set (FLUXSOL_SOLVER_DIR "D:/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-Solver")
-set (FLUXSOL_SOLVER_DIR "D:/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-Solver")
+set (FLUXSOL_SOLVER_DIR "${FLUXSOL_DIR}/Src/FluxSol-Solver")
 
 set (NAME FluxSolCAE)
 
@@ -53,8 +54,6 @@ include_directories("${FLUXSOL_SOLVER_DIR}/Solver")
 include_directories("${FLUXSOL_SOLVER_DIR}/Tests")
 include_directories("${FLUXSOL_SOLVER_DIR}/Type")
 include_directories("${FLUXSOL_SOLVER_DIR}/Utils")
-
-set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
 
 set (LASPACK_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/laspack/src)
 set (CGNS_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src)

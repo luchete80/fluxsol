@@ -61,6 +61,9 @@
           <enum>Qt::Horizontal</enum>
          </property>
          <widget class="QTabWidget" name="tabWidget">
+          <property name="currentIndex">
+           <number>1</number>
+          </property>
           <widget class="QTreeWidget" name="ModelTree">
            <property name="headerHidden">
             <bool>true</bool>
@@ -104,10 +107,23 @@
             </item>
            </item>
           </widget>
-          <widget class="QWidget" name="ResultsTab">
+          <widget class="QTreeWidget" name="ResultsTab">
+           <property name="headerHidden">
+            <bool>true</bool>
+           </property>
            <attribute name="title">
             <string>Results</string>
            </attribute>
+           <column>
+            <property name="text">
+             <string>1</string>
+            </property>
+           </column>
+           <item>
+            <property name="text">
+             <string>Output Files</string>
+            </property>
+           </item>
           </widget>
          </widget>
          <widget class="QVTKWidget" name="qvtkWidget" native="true">
