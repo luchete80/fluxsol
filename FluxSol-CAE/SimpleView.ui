@@ -102,6 +102,11 @@
                 <normaloff>:/Icons/Materials.png</normaloff>:/Icons/Materials.png</iconset>
               </property>
              </item>
+             <item>
+              <property name="text">
+               <string>BCs</string>
+              </property>
+             </item>
             </item>
            </item>
            <item>
