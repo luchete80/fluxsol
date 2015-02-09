@@ -89,7 +89,7 @@
 #include "./Input/Read_Field_Def.h"
 
 // Mesh //
-#include "./Mesh/Cell.h"
+#include "Cell.h"
 #include "./Mesh/Face.h"
 #include "./Mesh/Grid.h"
 #include "./Mesh/MeshInfo.h"
@@ -97,7 +97,7 @@
 #include "./Mesh/Structured.h"
 #include "./Mesh/Vertex.h"
 
-#include "./Model/Model.h"
+#include "Model.h"
 
 
 // Nastran

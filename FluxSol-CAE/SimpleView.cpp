@@ -21,6 +21,20 @@ using namespace std;
 
 using namespace std;
 
+void addTreeChild(QTreeWidgetItem *parent,
+                  QString name, QString description)
+{
+    // QTreeWidgetItem(QTreeWidget * parent, int type = Type)
+    QTreeWidgetItem *treeItem = new QTreeWidgetItem();
+
+    // QTreeWidgetItem::setText(int column, const QString & text)
+    treeItem->setText(0, name);
+    treeItem->setText(1, description);
+
+    // QTreeWidgetItem::addChild(QTreeWidgetItem * child)
+    parent->addChild(treeItem);
+}
+
 
 template<class TReader> vtkDataSet *ReadAnXMLFile(const char*fileName)
 {
@@ -115,7 +129,7 @@ SimpleView::SimpleView()
 
 //    this->ui->tabWidget->currentWidget()->ExpandAll();
 //	QTreeWidget *modtree=qobject_cast<this->ui->tabWidget->currentWidget()>;
-//	modtree->ExpandAll();
+//    this->ui->ModelTree->ExpandAll();
 	//Another way to access tree item is widget(int)
 
 	// Place the table view in the designer form
@@ -778,7 +792,53 @@ void SimpleView::slotImportIn()
 	QString fileName = QFileDialog::getOpenFileName(this,
 	tr("Open FluxSol Input File"), ".",
 	tr("FluxSol Input Files (*.in)"));
-	//if (!fileName.isEmpty())
+	if (!fileName.isEmpty())
+    {
+
+        QString name="test";
+        QString Description="desc";
+
+        //TO Modify, at first is only a CFD Model
+        //GraphicCFDModel model(fileName.toStdString());
+
+        //QTreeWidgetItem *itm = new QTreeWidgetItem(this->ui->ModelTree); //WITH THIS ARGS DOES NOT WORK
+        QTreeWidgetItem *itm = new QTreeWidgetItem();
+        itm->setText(0,name);
+        itm->setText(1,Description);
+        //this->ui->ModelTree->topLevelItem( 0 )->addChild(itm);
+
+        //item->setFlags( Qt::ItemIsUserCheckable | Qt::ItemIsSelectable | Qt::ItemIsEnabled );
+        //item->setCheckState(0, Qt::Unchecked);
+
+        QList<QTreeWidgetItem*> items = this->ui->ModelTree->findItems("Models",Qt::MatchExactly);
+        int num = items.count();
+        cout <<"Items found"<<num;
+
+        addTreeChild(items[0], fileName, "Desc");
+
+        this->ui->ModelTree->update();
+        //items[0]->addChild(itm);
+
+        items = this->ui->ModelTree->findItems("Model-1",Qt::MatchExactly);
+        cout <<"Items found"<<num<<endl;
+        if (items.count()>0)
+        addTreeChild(items[0],
+                  "Hola2", "Desc");
+
+        //items[0]->insertChild(0,itm);
+        //items[0]->setText(0,"Changed");
+
+        QTreeView modtreeview(this->ui->ModelTree);
+
+
+        modtreeview.expandAll();
+        modtreeview.show();
+
+
+        this->ui->ModelTree->update();
+        this->ui->ModelTree->show();
+
+    }
 		//loadFile(fileName);
 }
 

@@ -40,15 +40,22 @@ void Ex2();
 void Ex2Def();
 void maintest();
 
-//int argc, char *argv[]
-int main ()
+// FLUXSOL MAIN
+int main (int argc, char *argv[])
 {
+    bool argsok=false;
+
     //Ex1();
-    cout << "Thermal test"<<endl;
-	Ex1();
-	cout << "Convection Diffusion Test" <<endl;
-	CDTest2();
+    //cout << "Thermal test"<<endl;
+	//Ex1();
+	//cout << "Convection Diffusion Test" <<endl;
+	//CDTest2();
 	//Ex2();
+    // If args are ok
+
+
+	// If args are not ok
+
 }
 
 

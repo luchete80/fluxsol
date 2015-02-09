@@ -14,7 +14,7 @@ if (${CMAKE_VERSION} VERSION_GREATER "2.8.7") # Compability with older version o
     option (USE_SHARED_LIB "Build shared library" ON)
     option (USE_STATIC_LIB "Build static library" OFF)
 endif ()
-option (DEBUG_MODE "Enable FLUXSOL DEBUG" ON)
+option (DEBUG_MODE "Enable FLUXSOL DEBUG" OFF)
 
 
 if(DEBUG_MODE)
@@ -27,7 +27,10 @@ else()
 	set (CMAKE_CXX_FLAGS "-fpermissive")
 endif ()
 
-set(CMAKE_CXX_FLAGS_RELEASE "-fpermissive")
+set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
+set (CMAKE_CXX_FLAGS_PROFILING "${CMAKE_CXX_FLAGS_PROFILING} -O2 -pg")
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
 
 set (NAME fluxsol)
 
@@ -133,8 +136,10 @@ add_library(${NAME}lib SHARED FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 												$<TARGET_OBJECTS:Boundary>
 												$<TARGET_OBJECTS:Field>
 												$<TARGET_OBJECTS:Input>
+												$<TARGET_OBJECTS:Laplacian>
 												$<TARGET_OBJECTS:Materials>
 												$<TARGET_OBJECTS:Mesh>
+												$<TARGET_OBJECTS:Model>
 												$<TARGET_OBJECTS:FvMesh>												
 												$<TARGET_OBJECTS:Output>
 												$<TARGET_OBJECTS:SistEcuac>
@@ -154,8 +159,10 @@ add_library(${NAME}lib_static STATIC FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 														$<TARGET_OBJECTS:Boundary>
 														$<TARGET_OBJECTS:Field>
 														$<TARGET_OBJECTS:Input>
+														$<TARGET_OBJECTS:Laplacian>
 														$<TARGET_OBJECTS:Materials>														
-														$<TARGET_OBJECTS:Mesh>	
+														$<TARGET_OBJECTS:Mesh>
+														$<TARGET_OBJECTS:Model>														
 														$<TARGET_OBJECTS:FvMesh>
 														$<TARGET_OBJECTS:Output>
 														$<TARGET_OBJECTS:SistEcuac>

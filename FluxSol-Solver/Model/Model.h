@@ -5,6 +5,7 @@
 #include "./Solver/SIMPLE.h"
 #include "./Nastran/Nastran.h"
 #include "./Nastran/Modelo.h"
+#include "Input.h"
 
 using namespace FluxSol::Nastran;
 
@@ -13,14 +14,35 @@ namespace FluxSol{
 //Modelo con Material
 //Malla, archivo Nastran, BCs
 //Pero sin analisis
+
+class Part
+{
+
+    Fv_CC_Grid mesh;
+
+    public:
+        Part();
+        Part (const Fv_CC_Grid & mesh);
+
+};
+
 class Model
 {
-	//En principio el archivo esta dentro del modelo
-	//Archivo *nasfile;	//Cambiar el nombre de la clase a una que incluya el nombre Nastran
-	Modelo *nasmodel;
+
 
 protected:
 	int bidim_model;
+	//En principio el archivo esta dentro del modelo
+	//Archivo *nasfile;	//Cambiar el nombre de la clase a una que incluya el nombre Nastran
+	std::vector <Part> part;
+	int numparts;
+	int numfields;
+	int nummats;
+	std::vector <Material> mat;
+
+    Fv_CC_Grid mesh;// COMPLETE MESH
+
+	InputFile inputfile;
 
 
 	//Devolucion de Miembros
@@ -28,34 +50,70 @@ protected:
 
 public:
 
-	//Creo el 
+	//Creo el
 	Model(){}
+	Model(const std::string );
+	Model(const Fv_CC_Grid &);
+
+    const int NumberOfParts()const{return this->numparts;}
+
+    const Material & Material(const int &i)const{return this->mat[i];}
+
+    virtual void Solve(){};
 
 
 };
 
-class Fv_CC_Model:public Model
+class CFDModel:public Model
 {
 
-	Fv_CC_Grid *mesh;	//Recordar que el Campo tb linkea a la malla
+    //FIELDS FOR EACH TIME STEP
+    _CC_Fv_Field <Vec3D> U; //
+    _CC_Fv_Field <Scalar> p;
+
+    _Surf_Fv_Field <Scalar>  phi; //Mass Flux
 
 	public:
 	//Constructores
-	Fv_CC_Model(){};
-	Fv_CC_Model(const Fv_CC_Grid &);
-	Fv_CC_Model(const Archivo &nasfile, const Fv_CC_Grid &); //Genero un modelo a partir de un Nastran
+	CFDModel(){}
+	CFDModel(const Archivo &nasfile, const Fv_CC_Grid &); //Genero un modelo a partir de un Nastran
 														 	 //Que a su vez genera la malla
-	
-	Fv_CC_Model(const Modelo &nasmod);
-	Fv_CC_Model(const std::string){};
-	void Fv_CC_Model::Extract_Cells_and_BoundaryFromNastran();
+
+	CFDModel(const std::string s):Model(s)
+	{
+        InitFields();
+	}
+
+	CFDModel(const Modelo &nasmod);
+
+	void Extract_Cells_and_BoundaryFromNastran();
+    void InitFields();
+    void Solve();
 
 	////////////////////////////////////
 	//Funciones que devuelven miembros//
 	////////////////////////////////////
 
-	Fv_CC_Grid & Mesh(){return (*mesh);}
+	//Fv_CC_Grid & Mesh(){return (*mesh);}
+//	const _CC_Fv_Field <Vec3D> &U()const{return this->U;}
 
+
+};
+
+class ThermalModel:public Model
+{
+
+    _CC_Fv_Field <Scalar> T;
+
+};
+
+class CFDThermalModel:public CFDModel, public ThermalModel
+{
+
+
+
+    public:
+        CFDThermalModel(){}
 
 };
 
