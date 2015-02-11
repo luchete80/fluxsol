@@ -1,13 +1,14 @@
 #ifndef _MODEL_H
 #define _MODEL_H
 
-#include "./FiniteVolume/Mesh/FvGrid.h"
-#include "./Solver/SIMPLE.h"
-#include "./Nastran/Nastran.h"
-#include "./Nastran/Modelo.h"
+#include "FvGrid.h"
+#include "SIMPLE.h"
+//#include "Nastran.h"
+#include "Solver.h"
 #include "Input.h"
+#include "Materials.h"
 
-using namespace FluxSol::Nastran;
+
 
 namespace FluxSol{
 
@@ -38,7 +39,7 @@ protected:
 	int numparts;
 	int numfields;
 	int nummats;
-	std::vector <Material> mat;
+	std::vector <Materials> mat;
 
     Fv_CC_Grid mesh;// COMPLETE MESH
 
@@ -57,7 +58,9 @@ public:
 
     const int NumberOfParts()const{return this->numparts;}
 
-    const Material & Material(const int &i)const{return this->mat[i];}
+    const Materials & Materials(const int &i)const{return this->mat[i];}
+
+    const Fv_CC_Grid & Mesh() const{return this->mesh;}     //Complete Mesh in part?
 
     virtual void Solve(){};
 
@@ -74,21 +77,22 @@ class CFDModel:public Model
     _Surf_Fv_Field <Scalar>  phi; //Mass Flux
 
 	public:
-	//Constructores
-	CFDModel(){}
-	CFDModel(const Archivo &nasfile, const Fv_CC_Grid &); //Genero un modelo a partir de un Nastran
-														 	 //Que a su vez genera la malla
-
-	CFDModel(const std::string s):Model(s)
-	{
-        InitFields();
-	}
-
-	CFDModel(const Modelo &nasmod);
 
 	void Extract_Cells_and_BoundaryFromNastran();
     void InitFields();
     void Solve();
+
+	//Constructores
+	CFDModel(){}
+//	CFDModel(const Archivo &nasfile, const Fv_CC_Grid &); //Genero un modelo a partir de un Nastran
+														 	 //Que a su vez genera la malla
+
+	CFDModel(const std::string s):Model(s)
+	{
+        //this->InitFields();
+	}
+
+
 
 	////////////////////////////////////
 	//Funciones que devuelven miembros//

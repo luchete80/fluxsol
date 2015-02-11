@@ -1,41 +1,10 @@
 #include "Model.h"
+#include <time.h>
+#include "OutputFile.h"
 
 using namespace FluxSol;
 using namespace std;
 
-
-CFDModel::CFDModel(const Modelo &nasmod)
-{
-
-	//Asumo que el modelo ya lo lei
-	//Primero chequeo las dimensiones de la malla
-	//recorro los elementos y si no hay elementos 3D la malla es bidimensional
-	//recordar que elementos CQUAD puede haber en un modelo 3D;
-	int e=0;
-	bidim_model=true;
-	//Tengo que igualar el miembro
-	//nasmodel=nasmod;
-	//while (e<this->numelem)
-	//{
-	//	if (this->Elementos[e].Tipo()=="CTETRA" || this->Elementos[e].Tipo()=="CHEXA")
-	//	{			bidim_model=false;
-	//		break;
-	//	}
-	//	e++;
-	//}
-
-	//vector <_Vertex> vv=this->Convert_VertexVector();
-	//
-	//Boundary bound;
-	//vector <Cell_CC> vcell;
-	//this->Extract_Cells_and_Boundary(vcell,bound);
-
-
-	////El constructor se encarga de crear los nodos, faces y otras cuestiones que exceden a NASTRAN
-	//Fv_CC_Grid fvmesh(vv,vcell,bound);
-
-
-}
 
 
 void CFDModel::Extract_Cells_and_BoundaryFromNastran()
@@ -137,7 +106,7 @@ void CFDModel::InitFields()
 	this->p=_CC_Fv_Field<Scalar>(this->mesh);
 
 
-	ReadVelocityFieldFromInput(this->inputfile,this-U,this->mesh);
+	//ReadVelocityFieldFromInput(this->inputfile,this->U,this->mesh);
 
 	_Surf_Fv_Field <Scalar>  phi(this->mesh); //Mass Flux
 
@@ -213,7 +182,7 @@ void CFDModel::Solve()
 
 
 	//ITERATION BEGINS
-	clock_t starttime,endtime;
+//	clock_t starttime,endtime;
 	time_t starttimec,endtimec;
 	int it=0;
 	while (it <100)
@@ -273,7 +242,7 @@ void CFDModel::Solve()
 		UEqn.Relax();   //This MUST INCLUDE R VECTOR
 
         starttimec= time(0);
-		Solve(UEqn);
+		//Solve(UEqn);
         endtimec= time(0);
 		//double timec=(double) (endtime-starttime) / CLOCKS_PER_SEC * 1000.0;
 		double time=(double) difftime(endtimec, starttimec);
@@ -335,7 +304,7 @@ void CFDModel::Solve()
         pEqn==FvExp::Div(phi);
         //pEqn.Eqn(36).SetValueCondition(0.);
         //Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
-        Solve(pEqn);
+        FluxSol::Solve(pEqn);
         //Important:
         //Since Correction is in flux we have yet the faces areas includes, then
         //we must not to compute inner product another time

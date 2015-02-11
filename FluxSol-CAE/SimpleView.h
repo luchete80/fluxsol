@@ -132,6 +132,8 @@
 
 #include <vtkLookupTable.h>
 
+#include "GraphicModel.h"
+
 // Forward Qt class declarations
 class Ui_SimpleView;
 
