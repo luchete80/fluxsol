@@ -1,15 +1,7 @@
-set (NAME Mesh)
+set (NAME Model)
 
 set (SOURCES 
-Cell.cpp
-Face.cpp
-Grid.cpp
-MeshInfo.cpp
-Node.cpp
-ReadCGNS.cpp
-Rectangular.cpp
-Structured.cpp
-Vertex.cpp
+Model.cpp
 )
 #Needed OBJECT to make independed linkeable library
 add_library(${NAME} OBJECT ${SOURCES} )

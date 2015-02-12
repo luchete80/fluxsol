@@ -21,6 +21,20 @@ using namespace std;
 
 using namespace std;
 
+void addTreeChild(QTreeWidgetItem *parent,
+                  QString name, QString description)
+{
+    // QTreeWidgetItem(QTreeWidget * parent, int type = Type)
+    QTreeWidgetItem *treeItem = new QTreeWidgetItem();
+
+    // QTreeWidgetItem::setText(int column, const QString & text)
+    treeItem->setText(0, name);
+    treeItem->setText(1, description);
+
+    // QTreeWidgetItem::addChild(QTreeWidgetItem * child)
+    parent->addChild(treeItem);
+}
+
 
 template<class TReader> vtkDataSet *ReadAnXMLFile(const char*fileName)
 {
@@ -115,7 +129,7 @@ SimpleView::SimpleView()
 
 //    this->ui->tabWidget->currentWidget()->ExpandAll();
 //	QTreeWidget *modtree=qobject_cast<this->ui->tabWidget->currentWidget()>;
-//	modtree->ExpandAll();
+//    this->ui->ModelTree->ExpandAll();
 	//Another way to access tree item is widget(int)
 
 	// Place the table view in the designer form
@@ -778,7 +792,161 @@ void SimpleView::slotImportIn()
 	QString fileName = QFileDialog::getOpenFileName(this,
 	tr("Open FluxSol Input File"), ".",
 	tr("FluxSol Input Files (*.in)"));
-	//if (!fileName.isEmpty())
+	if (!fileName.isEmpty())
+    {
+
+        QString name="test";
+        QString Description="desc";
+
+        //TO Modify, at first is only a CFD Model
+        GraphicCFDModel model(fileName.toStdString());
+
+        //QTreeWidgetItem *itm = new QTreeWidgetItem(this->ui->ModelTree); //WITH THIS ARGS DOES NOT WORK
+        QTreeWidgetItem *itm = new QTreeWidgetItem();
+        itm->setText(0,name);
+        itm->setText(1,Description);
+        //this->ui->ModelTree->topLevelItem( 0 )->addChild(itm);
+
+        //item->setFlags( Qt::ItemIsUserCheckable | Qt::ItemIsSelectable | Qt::ItemIsEnabled );
+        //item->setCheckState(0, Qt::Unchecked);
+
+        QList<QTreeWidgetItem*> items = this->ui->ModelTree->findItems("Models",Qt::MatchExactly);
+        int num = items.count();
+        cout <<"Items found"<<num;
+
+        addTreeChild(items[0], fileName, "Desc");
+
+        this->ui->ModelTree->update();
+        //items[0]->addChild(itm);
+
+        items = this->ui->ModelTree->findItems("Model-1",Qt::MatchExactly);
+        cout <<"Items found"<<num<<endl;
+        if (items.count()>0)
+        addTreeChild(items[0],
+                  "Hola2", "Desc");
+
+        //items[0]->insertChild(0,itm);
+        //items[0]->setText(0,"Changed");
+
+        QTreeView modtreeview(this->ui->ModelTree);
+
+
+        modtreeview.expandAll();
+        modtreeview.show();
+
+
+        this->ui->ModelTree->update();
+        this->ui->ModelTree->show();
+
+
+        /////////////////////////////
+        ///// MODEL VISUALIZATION ///
+        /////////////////////////////
+
+      vtkSmartPointer<vtkXMLUnstructuredGridReader> reader =
+        vtkSmartPointer<vtkXMLUnstructuredGridReader>::New();
+
+      reader->SetFileName(fileName.toStdString().c_str());
+      reader->Update();
+
+        vtkSmartPointer<vtkUnstructuredGrid> ugrid=
+        vtkUnstructuredGrid::New();;
+        ugrid = reader->GetOutput();
+
+      double scalarRange[2];
+      pd->GetArray(0);
+
+      //int components =
+        //this->PointData->GetScalars()->GetNumberOfComponents();
+        double tuple[3];
+        //double* tuple = pd->GetArray(0)->GetTuple( 1 );
+        pd->GetArray(0)->GetTuple( 1 ,tuple);
+        pd->GetArray(0)->GetRange(scalarRange);
+
+        cout << "Tuple" << tuple[0]<<endl;
+
+      std::cout << pd->GetArrayName(0)<<std::endl;
+
+//    //GeometryFilter
+
+
+      vtkSmartPointer<vtkGeometryFilter> geometryFilter =
+        vtkSmartPointer<vtkGeometryFilter>::New();
+
+        vtkSmartPointer<vtkDataSetSurfaceFilter> surfaceFilter =
+        vtkSmartPointer<vtkDataSetSurfaceFilter>::New();
+
+      surfaceFilter->SetInputData(ugrid);
+
+    #if VTK_MAJOR_VERSION <= 5
+      geometryFilter->SetInput(ugrid);
+      surfaceFilter->SetInput(ugrid);
+    #else
+      geometryFilter->SetInputData(ugrid);
+      surfaceFilter->SetInputData(ugrid);
+    #endif
+      geometryFilter->Update();
+      surfaceFilter->Update();
+
+    //vtkSmartPointer<vtkPolyData>
+    vtkPolyData *polydata= geometryFilter ->GetOutput ();
+
+
+
+//**************************** RANGE AND COLORS ******************************
+//   Generate the colors for each point based on the color map
+  vtkSmartPointer<vtkUnsignedCharArray> colors =
+    vtkSmartPointer<vtkUnsignedCharArray>::New();
+  colors->SetNumberOfComponents(3);
+  colors->SetName("Colors");
+
+    for(int i = 0; i < polydata->GetNumberOfPoints(); i++)
+    {
+        unsigned char color[3];
+        for(unsigned int j = 0; j < 3; j++)
+          //color[j] = static_cast<unsigned char>(255.0 * dcolor[j]);
+          color [j]=255.;
+        colors->InsertNextTupleValue(color);
+    }
+
+	polydata->GetPointData()->SetScalars(colors);
+
+//    //************************************* MAPPER
+//
+     vtkSmartPointer<vtkPolyDataMapper> pdmapper =
+    vtkSmartPointer<vtkPolyDataMapper>::New();
+//
+//    //pdmapper->ScalarVisibilityOff();
+//
+    #if VTK_MAJOR_VERSION <= 5
+      pdmapper->SetInputConnection(polydata->GetProducerPort());
+    #else
+     pdmapper->SetInputData(polydata);
+    #endif
+
+    // If i want to sinply display mesh
+    // Visualize
+    //  vtkSmartPointer<vtkDataSetMapper> mapper =
+    //    vtkSmartPointer<vtkDataSetMapper>::New();
+    //#if VTK_MAJOR_VERSION <= 5
+    //  mapper->SetInputConnection(uGrid->GetProducerPort());
+    //#else
+    //  mapper->SetInputData(uGrid);
+    //#endif
+
+
+
+	/////// END OF CONTOUR
+
+  ///////////////////////// RENDERING ////
+
+        VTK_CREATE(vtkActor, actor);
+        actor->SetMapper(pdmapper);
+        actor->GetProperty()->EdgeVisibilityOn();
+        this->ren->AddActor(actor);
+
+
+    }
 		//loadFile(fileName);
 }
 

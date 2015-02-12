@@ -35,7 +35,7 @@ Analysis::Analysis ( string archivo, const Fv_CC_Grid &mesh)
 	//Modelo para copiar las caracteristicas
 	Modelo modnas(archivo);	//Modelo de nastran
 
-	Fv_CC_Model fvmodel(archivo);	//Cargo el Fv model y dps le asigno su mesh a mesh
+	//Fv_CC_Model fvmodel(archivo);	//Cargo el Fv model y dps le asigno su mesh a mesh
 	//mesh=fvmodel->mesh;
 
 	//modnas.Convert2FvGrid();
