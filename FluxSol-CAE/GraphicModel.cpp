@@ -1,6 +1,6 @@
 #include "GraphicModel.h"
 
-GraphicCFDModel(const std::string s):CFDModel(s)
+GraphicCFDModel::GraphicCFDModel(const std::string s):CFDModel(s)
 {
   // Create the points
   points = vtkSmartPointer<vtkPoints>::New();

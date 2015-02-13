@@ -263,6 +263,7 @@ SimpleView::SimpleView()
 //#else
   this-> ren =
     vtkSmartPointer<vtkOpenGLRenderer>::New();
+    //vtkSmartPointer<vtkRenderer>::New();
 //#endif
 
 
@@ -305,9 +306,9 @@ SimpleView::SimpleView()
     vtkSmartPointer<vtkTextActor>::New();
   textActor->GetTextProperty()->SetFontSize ( 24 );
   textActor->SetPosition2 ( 1200, 1200 );
-  ren->AddActor2D ( textActor );
-  textActor->SetInput ( "FluxSol" );
-  textActor->GetTextProperty()->SetColor ( 0.08,0.0,0.4 );
+  //ren->AddActor2D ( textActor );
+  //textActor->SetInput ( "FluxSol" );
+  //textActor->GetTextProperty()->SetColor ( 0.08,0.0,0.4 );
 
 
 
@@ -353,24 +354,43 @@ SimpleView::SimpleView()
   //axes->SetUserTransform(transform);
 
 
-	// ----------------------- AXES
-    vtkSmartPointer<vtkOrientationMarkerWidget> widget =
-    vtkSmartPointer<vtkOrientationMarkerWidget>::New();
-
-    widget->SetOutlineColor( 0.9300, 0.5700, 0.1300 );
-    //widget->SetOrientationMarker( axes );
-    //widget->SetInteractor( this->ui->qvtkWidget->GetInteractor() );
-    //widget->SetViewport( 0.0, 0.0, 0.4, 0.4 );
-    //widget->SetEnabled( 1 );
-    //widget->InteractiveOn();
-
-
-
   // VTK/Qt wedded
   this->ui->qvtkWidget->GetRenderWindow()->AddRenderer(ren);	//Add
 
   //This is like the example Four Pane Viewer
   renderWindowInteractor = this->ui->qvtkWidget->GetInteractor();
+
+	// ----------------------- AXES
+//	char *filename="bunny.vtp";
+//          // Read the polydata for the icon
+//      vtkSmartPointer<vtkXMLPolyDataReader> bunnyreader =
+//        vtkSmartPointer<vtkXMLPolyDataReader>::New();
+//      reader->SetFileName(filename);
+//
+//      vtkSmartPointer<vtkDataSetMapper> iconMapper =
+//        vtkSmartPointer<vtkDataSetMapper>::New();
+//      iconMapper->SetInputConnection(bunnyreader->GetOutputPort());
+//
+//      vtkSmartPointer<vtkActor> iconActor =
+//        vtkSmartPointer<vtkActor>::New();
+//      iconActor->SetMapper(iconMapper);
+
+    vtkSmartPointer<vtkOrientationMarkerWidget> widget =
+    vtkSmartPointer<vtkOrientationMarkerWidget>::New();
+
+    widget->SetOutlineColor( 0.9300, 0.5700, 0.1300 );
+    widget->SetOrientationMarker( axes );
+    //widget->SetOrientationMarker( iconActor );
+    widget->SetInteractor(renderWindowInteractor );
+    widget->SetViewport( 0.4, 0.4, 0.4, 0.0 );
+    widget->SetEnabled( 1 );
+    widget->InteractiveOn();
+
+
+
+
+
+  //widget->SetInteractor( renderWindowInteractor);
 
 
   // Just a bit of Qt interest: Culling off the
@@ -854,18 +874,18 @@ void SimpleView::slotImportIn()
         ugrid = reader->GetOutput();
 
       double scalarRange[2];
-      pd->GetArray(0);
+      //spd->GetArray(0);
 
       //int components =
         //this->PointData->GetScalars()->GetNumberOfComponents();
         double tuple[3];
         //double* tuple = pd->GetArray(0)->GetTuple( 1 );
-        pd->GetArray(0)->GetTuple( 1 ,tuple);
-        pd->GetArray(0)->GetRange(scalarRange);
+        //pd->GetArray(0)->GetTuple( 1 ,tuple);
+        //pd->GetArray(0)->GetRange(scalarRange);
 
         cout << "Tuple" << tuple[0]<<endl;
 
-      std::cout << pd->GetArrayName(0)<<std::endl;
+      //std::cout << pd->GetArrayName(0)<<std::endl;
 
 //    //GeometryFilter
 

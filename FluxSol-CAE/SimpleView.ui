@@ -203,10 +203,25 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="baseSize">
+       <size>
+        <width>6</width>
+        <height>14</height>
+       </size>
+      </property>
       <property name="palette">
        <palette>
         <active>
          <colorrole role="Light">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>240</red>
+            <green>240</green>
+            <blue>240</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="BrightText">
           <brush brushstyle="SolidPattern">
            <color alpha="255">
             <red>240</red>
@@ -221,6 +236,33 @@
             <red>240</red>
             <green>240</green>
             <blue>240</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="HighlightedText">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>240</red>
+            <green>240</green>
+            <blue>240</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="AlternateBase">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>240</red>
+            <green>240</green>
+            <blue>240</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="NoRole">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>239</red>
+            <green>239</green>
+            <blue>239</blue>
            </color>
           </brush>
          </colorrole>
@@ -235,12 +277,48 @@
            </color>
           </brush>
          </colorrole>
+         <colorrole role="BrightText">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>240</red>
+            <green>240</green>
+            <blue>240</blue>
+           </color>
+          </brush>
+         </colorrole>
          <colorrole role="Base">
           <brush brushstyle="SolidPattern">
            <color alpha="255">
             <red>240</red>
             <green>240</green>
             <blue>240</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="HighlightedText">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>240</red>
+            <green>240</green>
+            <blue>240</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="AlternateBase">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>240</red>
+            <green>240</green>
+            <blue>240</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="NoRole">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>239</red>
+            <green>239</green>
+            <blue>239</blue>
            </color>
           </brush>
          </colorrole>
@@ -255,6 +333,15 @@
            </color>
           </brush>
          </colorrole>
+         <colorrole role="BrightText">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>240</red>
+            <green>240</green>
+            <blue>240</blue>
+           </color>
+          </brush>
+         </colorrole>
          <colorrole role="Base">
           <brush brushstyle="SolidPattern">
            <color alpha="255">
@@ -264,8 +351,38 @@
            </color>
           </brush>
          </colorrole>
+         <colorrole role="HighlightedText">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>240</red>
+            <green>240</green>
+            <blue>240</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="AlternateBase">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>240</red>
+            <green>240</green>
+            <blue>240</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="NoRole">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>239</red>
+            <green>239</green>
+            <blue>239</blue>
+           </color>
+          </brush>
+         </colorrole>
         </disabled>
        </palette>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::TabFocus</enum>
       </property>
       <property name="autoFillBackground">
        <bool>true</bool>
@@ -273,7 +390,19 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
+      <property name="usesScrollButtons">
+       <bool>false</bool>
+      </property>
+      <property name="tabsClosable">
+       <bool>false</bool>
+      </property>
       <widget class="QToolBar" name="toolBar_2">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="palette">
         <palette>
          <active>
@@ -365,6 +494,9 @@
          </disabled>
         </palette>
        </property>
+       <property name="acceptDrops">
+        <bool>false</bool>
+       </property>
        <property name="windowTitle">
         <string>Mesh</string>
        </property>
@@ -380,8 +512,12 @@
          <height>22</height>
         </size>
        </property>
+       <attribute name="icon">
+        <iconset resource="Icons/icons.qrc">
+         <normaloff>:/Icons/ImportMesh.png</normaloff>:/Icons/ImportMesh.png</iconset>
+       </attribute>
        <attribute name="title">
-        <string/>
+        <string>Mesh</string>
        </attribute>
        <addaction name="actionOpenFile"/>
        <addaction name="actionSave"/>
@@ -451,6 +587,9 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>

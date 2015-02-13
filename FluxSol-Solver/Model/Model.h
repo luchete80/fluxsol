@@ -53,7 +53,7 @@ public:
 
 	//Creo el
 	Model(){}
-	Model(const std::string );
+	Model(const std::string ){};
 	Model(const Fv_CC_Grid &);
 
     const int NumberOfParts()const{return this->numparts;}
@@ -80,7 +80,6 @@ class CFDModel:public Model
 
 	void Extract_Cells_and_BoundaryFromNastran();
     void InitFields();
-    void Solve();
 
 	//Constructores
 	CFDModel(){}
@@ -91,7 +90,7 @@ class CFDModel:public Model
 	{
         //this->InitFields();
 	}
-
+    void Solve(){};
 
 
 	////////////////////////////////////
@@ -118,7 +117,7 @@ class CFDThermalModel:public CFDModel, public ThermalModel
 
     public:
         CFDThermalModel(){}
-
+        void Solve(){};
 };
 
 };//Fin de FluxSol

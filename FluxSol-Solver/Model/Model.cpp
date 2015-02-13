@@ -2,6 +2,8 @@
 #include <time.h>
 #include "OutputFile.h"
 
+#include "Div.h"
+
 using namespace FluxSol;
 using namespace std;
 
@@ -357,28 +359,28 @@ void CFDModel::Solve()
         it++;
         _CC_Fv_Field <Vec3D> test(mesh);
         test=FvExp::Grad(p);
-        OutputFile("CellField-gradpx.vtu",test,0);
-        OutputFile("CellField-gradpy.vtu",test,2);
+//        OutputFile("CellField-gradpx.vtu",test,0);
+//        OutputFile("CellField-gradpy.vtu",test,2);
 	}
 
-	OutputFile("CellField-U.vtu",U);
-	OutputFile("CellField-Uy.vtu",U,1);
-    OutputFile("CellField-Uz.vtu",U,2);
-	OutputFile("CellField-p.vtu",p);
-
-    CenterToVertexInterpolation <Scalar> interp(mesh);
-    CenterToVertexInterpolation <Vec3D> interv(mesh);
-    Vertex_Fv_Field<Scalar> vF;
-    Vertex_Fv_Field<Vec3D> vv;
-
-
-	vF=interp.Interpolate(p);
-    OutputFile("VertexField-p.vtu",vF);
-
-    U.Boundaryfield().PatchField(1).AssignValue(Vec3D(1.,0.,0.));
-    vv=interv.Interpolate(U);
-    OutputFile("VertexField-U.vtu",vv);
-    OutputFile("VertexField-Uz.vtu",vv,2);
+//	OutputFile("CellField-U.vtu",U);
+//	OutputFile("CellField-Uy.vtu",U,1);
+//    OutputFile("CellField-Uz.vtu",U,2);
+//	OutputFile("CellField-p.vtu",p);
+//
+//    CenterToVertexInterpolation <Scalar> interp(mesh);
+//    CenterToVertexInterpolation <Vec3D> interv(mesh);
+//    Vertex_Fv_Field<Scalar> vF;
+//    Vertex_Fv_Field<Vec3D> vv;
+//
+//
+//	vF=interp.Interpolate(p);
+//    OutputFile("VertexField-p.vtu",vF);
+//
+//    U.Boundaryfield().PatchField(1).AssignValue(Vec3D(1.,0.,0.));
+//    vv=interv.Interpolate(U);
+//    OutputFile("VertexField-U.vtu",vv);
+//    OutputFile("VertexField-Uz.vtu",vv,2);
 
 }
 
