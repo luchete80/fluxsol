@@ -382,9 +382,9 @@ SimpleView::SimpleView()
     widget->SetOrientationMarker( axes );
     //widget->SetOrientationMarker( iconActor );
     widget->SetInteractor(renderWindowInteractor );
-    widget->SetViewport( 0.4, 0.4, 0.4, 0.0 );
-    widget->SetEnabled( 1 );
-    widget->InteractiveOn();
+    widget->SetViewport( 0., 0., 0.2, 0.2 );
+    //widget->SetEnabled( 1 );
+    //widget->InteractiveOn();
 
 
 

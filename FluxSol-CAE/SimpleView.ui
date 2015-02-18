@@ -62,7 +62,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="2" column="0">
+    <item row="3" column="0">
      <widget class="QGroupBox" name="groupBoxGraph">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -196,6 +196,14 @@
      </widget>
     </item>
     <item row="1" column="0">
+     <widget class="QGroupBox" name="groupBox">
+      <property name="title">
+       <string>Categories</string>
+      </property>
+      <zorder>tabWidget_2</zorder>
+     </widget>
+    </item>
+    <item row="2" column="0">
      <widget class="QTabWidget" name="tabWidget_2">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
@@ -519,7 +527,7 @@
        <attribute name="title">
         <string>Mesh</string>
        </attribute>
-       <addaction name="actionOpenFile"/>
+       <addaction name="actionMeshProp"/>
        <addaction name="actionSave"/>
        <addaction name="actionImport_in"/>
        <addaction name="actionExportIn"/>
@@ -823,6 +831,15 @@
    </property>
    <property name="toolTip">
     <string>Open Results File</string>
+   </property>
+  </action>
+  <action name="actionMeshProp">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/meshprop.png</normaloff>:/Icons/meshprop.png</iconset>
+   </property>
+   <property name="text">
+    <string>MeshProp</string>
    </property>
   </action>
  </widget>
