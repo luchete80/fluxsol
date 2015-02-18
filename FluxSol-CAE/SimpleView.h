@@ -172,6 +172,12 @@ private:
   vtkSmartPointer<vtkQtTableView>         TableView;
   QComboBox *comboBox;
 
+  bool  IsModelActive;
+
+  vtkSmartPointer<vtkOrientationMarkerWidget> _vtkAxesWidget;      //MUST BE MEMBER
+  vtkSmartPointer<vtkAxesActor> _vtkAxes;
+  vtkSmartPointer<vtkAxesActor> _vtkOriginAxes;
+
 //    vtkSmartPointer<vtkQtTreeView>         TableView;
 
   // Designer form

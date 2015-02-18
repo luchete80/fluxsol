@@ -139,6 +139,8 @@ SimpleView::SimpleView()
     this->comboBox = new QComboBox(this);
     this->ui->toolBar_Results->addWidget(comboBox);
 
+    this->ui->ModelTree->expandAll();
+
 
   // Geometry
   VTK_CREATE(vtkVectorText, text);
@@ -179,7 +181,8 @@ SimpleView::SimpleView()
   geometryFilter->SetInputConnection(reader->GetOutputPort());
   geometryFilter->Update();
 
-
+    double bounds[6];
+    //reader->GetBounds(bounds);
 
   //mapper->SetInputConnection(geometryFilter->GetOutputPort());
     mapper->SetInputConnection(reader->GetOutputPort());
@@ -278,7 +281,7 @@ SimpleView::SimpleView()
     vtkSmartPointer<vtkRenderWindowInteractor>::New();
 
 
-  vtkSmartPointer<vtkAxesActor> axes =
+   _vtkAxes =
     vtkSmartPointer<vtkAxesActor>::New();
 
   //Moving axes to screen corner
@@ -289,6 +292,7 @@ SimpleView::SimpleView()
 
   // The axes are positioned with a user transform
   //axes->SetUserTransform(transform);
+  _vtkAxes->AxisLabelsOff();
 
 
 
@@ -305,10 +309,21 @@ SimpleView::SimpleView()
 	vtkSmartPointer<vtkTextActor> textActor =
     vtkSmartPointer<vtkTextActor>::New();
   textActor->GetTextProperty()->SetFontSize ( 24 );
-  textActor->SetPosition2 ( 1200, 1200 );
-  //ren->AddActor2D ( textActor );
-  //textActor->SetInput ( "FluxSol" );
-  //textActor->GetTextProperty()->SetColor ( 0.08,0.0,0.4 );
+  ren->AddActor2D ( textActor );
+  textActor->SetInput ( "FluxSol" );
+  //textActor->SetPosition2 ( 1., 0.);
+  //textActor->SetPosition ( 400., 400.);
+  textActor->SetPosition ( 600, 600);
+  double xpos,ypos;
+
+  //GetRenderWindow()->GetSize()
+  cout << "xsize: "<<this->ui->qvtkWidget->GetRenderWindow()->GetSize()[0]<<endl;
+  cout << "ysize: "<<this->ui->qvtkWidget->GetRenderWindow()->GetSize()[1]<<endl;
+
+  xpos=(double)(renderWindow->GetSize()[0])*0.9;
+ //textActor->SetPosition ( 800, 50);
+//  textActor->GetTextProperty()->SetColor ( 0.08,0.0,0.4 );
+//  textActor->SetInput ( "v0.0.1" );
 
 
 
@@ -316,7 +331,7 @@ SimpleView::SimpleView()
 
    // Add Actor to renderer
   ren->AddActor(actor);
-  ren->AddActor(axes);
+  ren->AddActor(_vtkAxes);
 
  renderWindow->Render();	//If i want to obtain coordinates must to activate renderwindows with Render()
 
@@ -375,16 +390,17 @@ SimpleView::SimpleView()
 //        vtkSmartPointer<vtkActor>::New();
 //      iconActor->SetMapper(iconMapper);
 
-    vtkSmartPointer<vtkOrientationMarkerWidget> widget =
+    _vtkAxesWidget =
     vtkSmartPointer<vtkOrientationMarkerWidget>::New();
 
-    widget->SetOutlineColor( 0.9300, 0.5700, 0.1300 );
-    widget->SetOrientationMarker( axes );
+    _vtkAxesWidget->SetDefaultRenderer(ren);
+    _vtkAxesWidget->SetOutlineColor( 0.9300, 0.5700, 0.1300 );
+    _vtkAxesWidget->SetOrientationMarker( _vtkAxes );
     //widget->SetOrientationMarker( iconActor );
-    widget->SetInteractor(renderWindowInteractor );
-    widget->SetViewport( 0., 0., 0.2, 0.2 );
-    //widget->SetEnabled( 1 );
-    //widget->InteractiveOn();
+    _vtkAxesWidget->SetInteractor(renderWindowInteractor );
+    _vtkAxesWidget->SetViewport( 0., 0., 0.34, 0.34 );
+    _vtkAxesWidget->SetEnabled( 1 );
+    _vtkAxesWidget->InteractiveOn();
 
 
 
@@ -628,6 +644,17 @@ void SimpleView::slotOpenResults()
         //TO TEMPLATIZE
         //ugrid = meshreader ->GetOutput();
 
+        double bounds[6];
+        dataSet->GetBounds(bounds);
+
+   std::cout  << "xmin: " << bounds[0] << " "
+             << "xmax: " << bounds[1] << std::endl
+             << "ymin: " << bounds[2] << " "
+             << "ymax: " << bounds[3] << std::endl
+             << "zmin: " << bounds[4] << " "
+             << "zmax: " << bounds[5] << std::endl;
+
+
       vtkSmartPointer<vtkXMLUnstructuredGridReader> reader =
         vtkSmartPointer<vtkXMLUnstructuredGridReader>::New();
 
@@ -853,6 +880,8 @@ void SimpleView::slotImportIn()
 
         modtreeview.expandAll();
         modtreeview.show();
+
+        //this->ui->ModelTree->expandAll();
 
 
         this->ui->ModelTree->update();
