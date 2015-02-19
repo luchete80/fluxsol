@@ -94,7 +94,7 @@ void InputFile::readSection(string sectionName, int number) {
 	// Exit if the section is required but couldn't be found
 	if (section(sectionName,number).is_required && !section(sectionName,number).is_found) {
 		if (Rank==0) cerr << "[E] Required input section " << fullName << " could not be found!!" << endl;
-		exit(1);
+		exit(1);    //this-> readerror=true;
 		cout << "Warning! section " << fullName << " could not be found!!" << endl;
 	}
 

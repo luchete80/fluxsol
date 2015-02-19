@@ -53,7 +53,7 @@ public:
 
 	//Creo el
 	Model(){}
-	Model(const std::string ){};
+	Model(const std::string );
 	Model(const Fv_CC_Grid &);
 
     const int NumberOfParts()const{return this->numparts;}
@@ -90,7 +90,7 @@ class CFDModel:public Model
 	{
         //this->InitFields();
 	}
-    void Solve(){};
+    void Solve();
 
 
 	////////////////////////////////////

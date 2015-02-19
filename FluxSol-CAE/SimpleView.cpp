@@ -859,7 +859,7 @@ void SimpleView::slotImportIn()
 
         QList<QTreeWidgetItem*> items = this->ui->ModelTree->findItems("Models",Qt::MatchExactly);
         int num = items.count();
-        cout <<"Items found"<<num;
+        //cout <<"Items found"<<num;
 
         addTreeChild(items[0], fileName, "Desc");
 
@@ -867,7 +867,7 @@ void SimpleView::slotImportIn()
         //items[0]->addChild(itm);
 
         items = this->ui->ModelTree->findItems("Model-1",Qt::MatchExactly);
-        cout <<"Items found"<<num<<endl;
+
         if (items.count()>0)
         addTreeChild(items[0],
                   "Hola2", "Desc");
@@ -892,18 +892,15 @@ void SimpleView::slotImportIn()
         ///// MODEL VISUALIZATION ///
         /////////////////////////////
 
-      vtkSmartPointer<vtkXMLUnstructuredGridReader> reader =
-        vtkSmartPointer<vtkXMLUnstructuredGridReader>::New();
+//      reader->SetFileName(fileName.toStdString().c_str());
+//      reader->Update();
+//
+//        vtkSmartPointer<vtkUnstructuredGrid> ugrid=
+//        vtkUnstructuredGrid::New();;
+//        ugrid = reader->GetOutput();
+//
+//      double scalarRange[2];
 
-      reader->SetFileName(fileName.toStdString().c_str());
-      reader->Update();
-
-        vtkSmartPointer<vtkUnstructuredGrid> ugrid=
-        vtkUnstructuredGrid::New();;
-        ugrid = reader->GetOutput();
-
-      double scalarRange[2];
-      //spd->GetArray(0);
 
       //int components =
         //this->PointData->GetScalars()->GetNumberOfComponents();
@@ -912,7 +909,7 @@ void SimpleView::slotImportIn()
         //pd->GetArray(0)->GetTuple( 1 ,tuple);
         //pd->GetArray(0)->GetRange(scalarRange);
 
-        cout << "Tuple" << tuple[0]<<endl;
+
 
       //std::cout << pd->GetArrayName(0)<<std::endl;
 
@@ -925,42 +922,41 @@ void SimpleView::slotImportIn()
         vtkSmartPointer<vtkDataSetSurfaceFilter> surfaceFilter =
         vtkSmartPointer<vtkDataSetSurfaceFilter>::New();
 
-      surfaceFilter->SetInputData(ugrid);
+      surfaceFilter->SetInputData(model.UGrid());
 
     #if VTK_MAJOR_VERSION <= 5
-      geometryFilter->SetInput(ugrid);
-      surfaceFilter->SetInput(ugrid);
+      geometryFilter->SetInput(model.UGrid());
+      surfaceFilter->SetInput(model.UGrid());
     #else
-      geometryFilter->SetInputData(ugrid);
-      surfaceFilter->SetInputData(ugrid);
+      geometryFilter->SetInputData(model.UGrid());
+      surfaceFilter->SetInputData(model.UGrid());
     #endif
       geometryFilter->Update();
       surfaceFilter->Update();
 
-    //vtkSmartPointer<vtkPolyData>
     vtkPolyData *polydata= geometryFilter ->GetOutput ();
 
 
 
 //**************************** RANGE AND COLORS ******************************
 //   Generate the colors for each point based on the color map
-  vtkSmartPointer<vtkUnsignedCharArray> colors =
-    vtkSmartPointer<vtkUnsignedCharArray>::New();
-  colors->SetNumberOfComponents(3);
-  colors->SetName("Colors");
-
-    for(int i = 0; i < polydata->GetNumberOfPoints(); i++)
-    {
-        unsigned char color[3];
-        for(unsigned int j = 0; j < 3; j++)
-          //color[j] = static_cast<unsigned char>(255.0 * dcolor[j]);
-          color [j]=255.;
-        colors->InsertNextTupleValue(color);
-    }
-
-	polydata->GetPointData()->SetScalars(colors);
-
-//    //************************************* MAPPER
+//  vtkSmartPointer<vtkUnsignedCharArray> colors =
+//    vtkSmartPointer<vtkUnsignedCharArray>::New();
+//  colors->SetNumberOfComponents(3);
+//  colors->SetName("Colors");
+//
+//    for(int i = 0; i < polydata->GetNumberOfPoints(); i++)
+//    {
+//        unsigned char color[3];
+//        for(unsigned int j = 0; j < 3; j++)
+//          //color[j] = static_cast<unsigned char>(255.0 * dcolor[j]);
+//          color [j]=255.;
+//        colors->InsertNextTupleValue(color);
+//    }
+//
+//	polydata->GetPointData()->SetScalars(colors);
+//
+////    //************************************* MAPPER
 //
      vtkSmartPointer<vtkPolyDataMapper> pdmapper =
     vtkSmartPointer<vtkPolyDataMapper>::New();
@@ -972,23 +968,15 @@ void SimpleView::slotImportIn()
     #else
      pdmapper->SetInputData(polydata);
     #endif
-
-    // If i want to sinply display mesh
-    // Visualize
-    //  vtkSmartPointer<vtkDataSetMapper> mapper =
-    //    vtkSmartPointer<vtkDataSetMapper>::New();
-    //#if VTK_MAJOR_VERSION <= 5
-    //  mapper->SetInputConnection(uGrid->GetProducerPort());
-    //#else
-    //  mapper->SetInputData(uGrid);
-    //#endif
-
-
-
-	/////// END OF CONTOUR
-
-  ///////////////////////// RENDERING ////
-
+//
+//
+//
+//
+//
+//	/////// END OF CONTOUR
+//
+//  ///////////////////////// RENDERING ////
+//
         VTK_CREATE(vtkActor, actor);
         actor->SetMapper(pdmapper);
         actor->GetProperty()->EdgeVisibilityOn();

@@ -40,4 +40,6 @@ class GraphicCFDModel:public CFDModel
         GraphicCFDModel(const std::string s);
         GraphicCFDModel(){};
 
+        const vtkSmartPointer<vtkUnstructuredGrid> UGrid () const {return this->uGrid;}
+
 };
