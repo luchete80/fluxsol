@@ -134,6 +134,8 @@
 
 #include "GraphicModel.h"
 
+#include "ModelTree.h"
+
 // Forward Qt class declarations
 class Ui_SimpleView;
 
@@ -175,13 +177,20 @@ private:
   bool  IsModelActive;
 
   vtkSmartPointer<vtkOrientationMarkerWidget> _vtkAxesWidget;      //MUST BE MEMBER
-  vtkSmartPointer<vtkAxesActor> _vtkAxes;
-  vtkSmartPointer<vtkAxesActor> _vtkOriginAxes;
+
+  vtkSmartPointer<vtkAxesActor> _vtkAxes;                           //Orientation Axes
+  vtkSmartPointer<vtkAxesActor> _vtkOriginAxes;                     //Origin Axes
 
 //    vtkSmartPointer<vtkQtTreeView>         TableView;
 
   // Designer form
   Ui_SimpleView *ui;
+
+
+  //Derived Defined Object
+  ModelTreeWidget *ResultsTab;
+
+
 };
 
 #endif // SimpleView_H

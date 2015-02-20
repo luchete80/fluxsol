@@ -19,6 +19,25 @@ using namespace std;
 
 #include <vector>
 
+
+void showContextMenu(const QPoint &pos, QTreeWidget &tree)
+{
+  QMenu menu;
+
+  QTreeWidgetItem* item = tree.itemAt(pos);
+ // switch (item->type()) {
+ // case ItemType1:
+    menu.addAction("This is a type 1");
+    //break;
+
+//  case ItemType2:
+ //   menu.addAction("This is a type 2");
+  //  break;
+
+  menu.exec(tree.mapToGlobal(pos));
+}
+
+
 using namespace std;
 
 void addTreeChild(QTreeWidgetItem *parent,
@@ -140,6 +159,28 @@ SimpleView::SimpleView()
     this->ui->toolBar_Results->addWidget(comboBox);
 
     this->ui->ModelTree->expandAll();
+
+    //this->ui->ModelTree->setContextMenuPolicy(Qt::ActionsContextMenu);
+    //this->ui->ModelTree->addAction(this->ui->actionOpenResults);    //DEFAULT IS RIGHT CLICK
+
+
+    //ADDING MANUALLY QTREE ITEMS
+   // ResultsTab = new ModelTreeWidget();
+    //this->ui->tabWidget->addTab(this->ResultsTab, QString());
+    //this->ui->tabWidget->addTab(this->ResultsTab, QString("Results"));
+
+//
+//  QMenu *menu = new QMenu(ui->ModelTree);
+//  QAction*  myAction = menu->addAction("Remove");
+//  //myAction->setIcon(QIcon(QString::fromUtf8("Resources/Remove.png")));
+//  myAction->setShortcut(tr("Ctrl+D"));
+//  myAction->setStatusTip(tr("Remove the respective material from the User DB"));
+//  //myAction = menu->exec(ui->ModelTree->viewport()->mapToGlobal(pos));
+//  myAction = menu->exec(its[0]);
+//  if(myAction == NULL) return;
+//  on_deletefile_clicked();
+
+//    its[0]->addAction(this->ui->actionOpenResults);
 
 
   // Geometry
@@ -284,6 +325,9 @@ SimpleView::SimpleView()
    _vtkAxes =
     vtkSmartPointer<vtkAxesActor>::New();
 
+    _vtkOriginAxes =
+    vtkSmartPointer<vtkAxesActor>::New();
+
   //Moving axes to screen corner
 
   //vtkSmartPointer<vtkTransform> transform =
@@ -292,9 +336,7 @@ SimpleView::SimpleView()
 
   // The axes are positioned with a user transform
   //axes->SetUserTransform(transform);
-  _vtkAxes->AxisLabelsOff();
-
-
+  _vtkOriginAxes->AxisLabelsOff();
 
   //////////////////////////// EX
 
@@ -331,7 +373,6 @@ SimpleView::SimpleView()
 
    // Add Actor to renderer
   ren->AddActor(actor);
-  ren->AddActor(_vtkAxes);
 
  renderWindow->Render();	//If i want to obtain coordinates must to activate renderwindows with Render()
 
@@ -428,6 +469,9 @@ SimpleView::SimpleView()
   connect(this->ui->actionView_Z, SIGNAL(triggered()), this, SLOT(slotViewZpos()));
   connect(this->ui->actionImportMesh, SIGNAL(triggered()), this, SLOT(slotImportMesh()));
   connect(this->ui->actionOpenResults, SIGNAL(triggered()), this, SLOT(slotOpenResults()));
+
+
+
 
   //ren->ResetCamera();
   //renderWindow->Render();
@@ -982,8 +1026,9 @@ void SimpleView::slotImportIn()
         actor->GetProperty()->EdgeVisibilityOn();
         this->ren->AddActor(actor);
 
+        this->ren->AddActor(this->_vtkOriginAxes);
 
-    }
+    }//If not filename Empty
 		//loadFile(fileName);
 }
 

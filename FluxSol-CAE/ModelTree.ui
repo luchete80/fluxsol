@@ -106,9 +106,9 @@
          </property>
          <widget class="QTabWidget" name="tabWidget">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
-          <widget class="ModelTreeWidget" name="ModelTree">
+          <widget class="QTreeWidget" name="ModelTree">
            <property name="headerHidden">
             <bool>true</bool>
            </property>
@@ -167,11 +167,6 @@
              </property>
             </item>
            </item>
-          </widget>
-          <widget class="QWidget" name="ResultsTree">
-           <attribute name="title">
-            <string>Results</string>
-           </attribute>
           </widget>
          </widget>
          <widget class="QVTKWidget" name="qvtkWidget" native="true">
@@ -394,7 +389,7 @@
       <property name="tabsClosable">
        <bool>false</bool>
       </property>
-      <widget class="QToolBar" name="MeshToolBar">
+      <widget class="QToolBar" name="toolBar_2">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -523,125 +518,9 @@
        <addaction name="actionExportIn"/>
        <addaction name="actionImportMesh"/>
        <addaction name="actionOpenResults"/>
-       <addaction name="actionNewJob"/>
        <addaction name="separator"/>
       </widget>
-      <widget class="QToolBar" name="JobToolBar">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="palette">
-        <palette>
-         <active>
-          <colorrole role="Light">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>240</red>
-             <green>240</green>
-             <blue>240</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Base">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>240</red>
-             <green>240</green>
-             <blue>240</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="NoRole">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>240</red>
-             <green>240</green>
-             <blue>240</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </active>
-         <inactive>
-          <colorrole role="Light">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>240</red>
-             <green>240</green>
-             <blue>240</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Base">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>240</red>
-             <green>240</green>
-             <blue>240</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="NoRole">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>240</red>
-             <green>240</green>
-             <blue>240</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </inactive>
-         <disabled>
-          <colorrole role="Light">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>240</red>
-             <green>240</green>
-             <blue>240</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Base">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>240</red>
-             <green>240</green>
-             <blue>240</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="NoRole">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>240</red>
-             <green>240</green>
-             <blue>240</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </disabled>
-        </palette>
-       </property>
-       <property name="acceptDrops">
-        <bool>false</bool>
-       </property>
-       <property name="windowTitle">
-        <string>Job</string>
-       </property>
-       <property name="autoFillBackground">
-        <bool>true</bool>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>22</width>
-         <height>22</height>
-        </size>
-       </property>
+      <widget class="QWidget" name="tab">
        <attribute name="icon">
         <iconset resource="Icons/icons.qrc">
          <normaloff>:/Icons/Job.png</normaloff>:/Icons/Job.png</iconset>
@@ -649,8 +528,6 @@
        <attribute name="title">
         <string>Job</string>
        </attribute>
-       <addaction name="actionNewJob"/>
-       <addaction name="separator"/>
       </widget>
      </widget>
     </item>
@@ -954,26 +831,12 @@
     <string>MeshProp</string>
    </property>
   </action>
-  <action name="actionNewJob">
-   <property name="icon">
-    <iconset resource="Icons/icons.qrc">
-     <normaloff>:/Icons/New.png</normaloff>:/Icons/New.png</iconset>
-   </property>
-   <property name="text">
-    <string>NewJob</string>
-   </property>
-  </action>
  </widget>
  <customwidgets>
   <customwidget>
    <class>QVTKWidget</class>
    <extends>QWidget</extends>
    <header>QVTKWidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>ModelTreeWidget</class>
-   <extends>QTreeWidget</extends>
-   <header>ModelTree.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
