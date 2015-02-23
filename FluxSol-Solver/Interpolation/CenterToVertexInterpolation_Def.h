@@ -21,7 +21,7 @@
 
 *************************************************************************/
 #ifndef _CENTERTOVERTEXINTERPOLATION_DEF_H_
-#define _CENTERTOVERTEXINTERPOLATION_DEF_H
+#define _CENTERTOVERTEXINTERPOLATION_DEF_H_
 
 #include "ap.h"
 #include "interpolation.h" //ALGLIB
@@ -41,6 +41,7 @@ template <typename T>
 Vertex_Fv_Field<T>
 CenterToVertexInterpolation<T>::Interpolate(_CC_Fv_Field<T> &field)
 {
+
 	Vertex_Fv_Field<T> vfield(field.Grid());
 	//Depending on Field dimension, rbf model varies
 	rbfreport rep;
@@ -76,7 +77,6 @@ CenterToVertexInterpolation<T>::Interpolate(_CC_Fv_Field<T> &field)
 		//Simplest Case: only vertex common cells are considered for weighting
 		xy.setlength(commonvertcells[v].size(), 3 + numberofcomp);
 
-
 		for (int f=0;f<commonvertcells[v].size();f++)
 		{
 			int globalcell = commonvertcells[v][f];
@@ -87,13 +87,14 @@ CenterToVertexInterpolation<T>::Interpolate(_CC_Fv_Field<T> &field)
 				xy[f][  c]=this->grid.Node_(globalcell).comp[c];	//Assuming node id is equal to cell id
 
 			//Field Values
+			//cout << "field val"<<endl;
 			for (int c=0;c<numberofcomp;c++)
 				xy[f][3+c]=cellfieldval[c];
 
 
 		}
 		//Field values
-
+        //cout << "end verts..."<<endl;
 		rbfsetpoints(model, xy);
 
 
@@ -124,6 +125,7 @@ CenterToVertexInterpolation<T>::Interpolate(_CC_Fv_Field<T> &field)
 	}//for grid vertex v
 
 	//Boundary
+	//cout << "through patches..."<<endl;
     for (int p=0;p<field.Grid().vBoundary().Num_Patches();p++)
     {
         Patch patch=field.Grid().vBoundary().vPatch(p);
@@ -137,7 +139,7 @@ CenterToVertexInterpolation<T>::Interpolate(_CC_Fv_Field<T> &field)
                 {
                     int idvert=face.Vert(v);
                     T val=field.Boundaryfield().PatchField(p).Val(f);
-                    cout << "Patch: "<<p<<", Face: "<<idface<<"idvert: "<<idvert << ", Value" << val.outstr()<<endl;
+                    //cout << "Patch: "<<p<<", Face: "<<idface<<"idvert: "<<idvert << ", Value" << val.outstr()<<endl;
                     vfield.Val(idvert,val);
                 }
             }

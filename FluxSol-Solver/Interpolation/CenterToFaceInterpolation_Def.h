@@ -56,6 +56,7 @@ CenterToFaceInterpolation<T>::Interpolate(const _CC_Fv_Field <T> &fi)
 
 
 	//Loop throug faces
+	cout << " field faces " <<field.Grid().Num_Faces()<<endl;
 	for (int f = 0; f<field.Grid().Num_Faces(); f++)
 	{
 		_FvFace &face = field.Grid().Face(f);

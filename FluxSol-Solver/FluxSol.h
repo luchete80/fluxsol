@@ -40,13 +40,13 @@
 //////////////////
 // library file //
 //////////////////
-#include "./Analysis/Analysis.h"
+#include "Analysis.h"
 
-#include "./Boundary/Boundary.h"
+#include "Boundary.h"
 
 
 // FIELD
-#include "./Field/Field.h"
+#include "Field.h"
 #include "./Field/GeometricField.h"
 #include "./Field/FieldOperations.h"
 #include "./Field/_CC_Fv_field_Def.h"
@@ -107,14 +107,14 @@
 #include "./Nastran/Varios.h"
 
 //Output
-#include "./Output/OutputFile.h"
+#include "OutputFile.h"
 
 // SistEcuac //
-#include "./SistEcuac/SistEcuac.h"
+#include "SistEcuac.h"
 
 
-#include "./Solver/Solver.h"
-#include "./Solver/SIMPLE.h"
+#include "Solver.h"
+#include "SIMPLE.h"
 
 //#include "./Tmp/Tmp.h"
 //#include "./Tmp/TmpI.h"

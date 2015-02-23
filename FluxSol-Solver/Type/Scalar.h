@@ -141,7 +141,7 @@ public:
 	{
         string cad;
         std::ostringstream strs;
-        strs << val << "\n";
+        strs << std::setprecision(6) << std::scientific << val ;//<< "\n";
         cad+= strs.str();
         return cad;
 	}

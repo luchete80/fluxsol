@@ -94,6 +94,7 @@ private:
         vector <Vec3D> verts;
 
         //El nodo tiene el mismo indice que el cell
+//        cout << "creating nodes"<<endl;
         for (int cellid=0;cellid<this->Num_Cells();cellid++)
         {
             Cell_CC cell=this->Cell(cellid);
@@ -104,7 +105,6 @@ private:
             {
                 nod+=this->Vertex(cell.Id_Vert(n));
             }
-            //cout <<cellid<<endl;
             //Ahora divido por la cantidad de vertices
             nod/=(double)cell.Num_Vertex();
             nod.Id(cellid);
@@ -292,12 +292,16 @@ private:
 														//Si voy a tener vertices tipo baffle no lo voy a tener en cuenta
         this->num_cells_int=right.num_cells_int;				//Numero de celdas efectivas
         this->num_faces_int=right.num_faces_int;				//Numero de faces efectivas (INTERIORES)
-        this->num_faces=right.num_faces_int;
+        this->num_faces=right.num_faces;
         this->num_cells=right.num_cells;
         this->num_verts=right.num_verts;
 
 
-        for (int c=0;c<right.num_cells;c++) this->cell.push_back(right.Cell(c));
+        for (int c=0;c<right.num_cells;c++)
+        {
+            this->cell.push_back(right.Cell(c));
+            this->node.push_back(right.Node_(c));
+        }
         for (int v=0;v<right.num_verts;v++) this->vert.push_back(right.Vertex(v));
         for (int f=0;f<right.num_faces;f++) this->face.push_back(right.Face(f));
 

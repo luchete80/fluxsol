@@ -23,8 +23,8 @@
 #ifndef _OUPUT_FILE_H
 #define _OUPUT_FILE_H
 
-#include "../FiniteVolume/Mesh/FvGrid.h"
-#include "../Field/FvField.h"
+#include "FvGrid.h"
+#include "FvField.h"
 
 namespace FluxSol
 {

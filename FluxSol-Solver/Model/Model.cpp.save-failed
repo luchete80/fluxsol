@@ -186,6 +186,9 @@ void CFDModel::Solve()
     }
 
 
+    EqnSystem <Scalar> pEqn;
+    EqnSystem <Vec3D> UEqn;     //To modify: associate Eqn System with field
+
     UEqn.SetRelaxCoeff(alpha_u);
     pEqn.SetRelaxCoeff(alpha_p);
 

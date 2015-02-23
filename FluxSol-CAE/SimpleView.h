@@ -63,6 +63,7 @@
 
 //Visualization
 #include <vtkCamera.h>
+#include <vtkRenderer.h>
 
 #include <vtkDataSet.h>
 #include <vtkDataSetMapper.h>
@@ -165,6 +166,7 @@ public slots:
 	virtual void slotImportMesh();
 	virtual void slotOpenResults();
 
+
 	protected:
 
 protected slots:
@@ -189,6 +191,8 @@ private:
 
   //Derived Defined Object
   ModelTreeWidget *ResultsTab;
+
+  vtkSmartPointer<vtkTextActor> textFluxSolTitleActor;
 
 
 };

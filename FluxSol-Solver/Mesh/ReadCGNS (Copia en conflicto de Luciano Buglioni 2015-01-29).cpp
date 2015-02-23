@@ -303,7 +303,7 @@ void _Grid::Read_InitialCGNS() {
 	} // for zone
 	//} // for base
 
-	if (Rank==0) cout << "[I] Total Node Count= " << globalNodeCount << endl;
+	if (Rank==0) cout << "[I] Total Vertex Count= " << globalNodeCount << endl;
 	// Merge coordinates of the zones
 	raw.node.reserve(globalNodeCount);
 	// for zone 0

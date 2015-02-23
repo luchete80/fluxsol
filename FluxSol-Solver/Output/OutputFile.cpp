@@ -85,17 +85,34 @@ OutputFile::OutputFile(string name, _CC_Fv_Field<T> &field):grid (field.Grid())
 
 	file << "</Cells>" << endl;
 
-	file << "<CellData Scalars=\"scalars\" format=\"ascii\">" << endl;
+	int rank=int(pTraits<T>::rank);
+
+    int comp=(int)pow(3.,rank);
+
+    if (rank==0)
+        file << "<CellData Scalars=\"scalars\" format=\"ascii\">" << endl;
+
+    else
+        file << "<CellData Vectors=\"vectors\" format=\"ascii\" >" << endl;
 
 	//Begin data field output
-	file << "<DataArray Name=\"";
+	file << "<DataArray Name=\" ";
 
 	file << "Var";
-	file << "\" type=\"Float32\" format=\"ascii\" >" << endl;
+	file << "\" type=\"Float32\" format=\"ascii\" ";
+
+    if (rank==1)
+        file << " NumberOfComponents=\"3\"  ";
+
+	file <<">" << endl;
 
 	//If scalars
 	for (int n=0;n<grid.Num_Cells();n++)
-		file << field.Val(n).Comp()[0] << endl;
+    {
+        for (int d=0;d<comp;d++)
+            file << field.Val(n).Comp()[d] <<" ";
+        file <<endl;
+    }
 
 	file << "</DataArray>" << endl;
 
@@ -244,18 +261,35 @@ OutputFile::OutputFile(string name, Vertex_Fv_Field<T> &field):grid (field.Grid(
 
 	file << "</Cells>" << endl;
 
-	file << "<PointData Scalars=\"scalars\" format=\"ascii\">" << endl;
+	int rank=int(pTraits<T>::rank);
+
+    int comp=(int)pow(3.,rank);
+    if (rank==0)
+        file << "<PointData Scalars=\"scalars\" format=\"ascii\">" << endl;
+
+    else
+        file << "<PointData Vectors=\"vectors\" format=\"ascii\">" << endl;
 
 	//Begin data field output
-	file << "<DataArray Name=\"";
+	file << "<DataArray Name=\" ";
 
 	file << "Var";
 
-	file << "\" type=\"Float32\" format=\"ascii\" >" << endl;
+	file << "\" type=\"Float32\" format=\"ascii\" ";
+
+
+    if (rank==1)
+        file << " NumberOfComponents=\"3\"  ";
+
+    file << ">" << endl;
 
 	//If scalar
 	for (int n=0;n<grid.Num_Verts();n++)
-		file << field.Val(n).Comp()[0] << endl;
+    {
+        for (int d=0;d<comp;d++)
+            file << field.Val(n).Comp()[d] <<" ";
+        file <<endl;
+    }
 
 	file << "</DataArray>" << endl;
 

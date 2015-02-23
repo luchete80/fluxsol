@@ -8,6 +8,8 @@
 #include "Input.h"
 #include "Materials.h"
 
+#include "CenterToVertexInterpolation.h"
+#include "CenterToVertexInterpolation_Def.h"    //TO MODIFY
 
 
 namespace FluxSol{
@@ -45,6 +47,8 @@ protected:
 
 	InputFile inputfile;
 
+    //solution info
+    int maxiter;    //Override by input file info
 
 	//Devolucion de Miembros
 	//Archivo & NasFile(){return (*nasfile);}
@@ -76,6 +80,9 @@ class CFDModel:public Model
 
     _Surf_Fv_Field <Scalar>  phi; //Mass Flux
 
+    EqnSystem <Scalar> pEqn;
+    EqnSystem <Vec3D> UEqn;     //To modify: associate Eqn System with field
+
 	public:
 
 	void Extract_Cells_and_BoundaryFromNastran();
@@ -86,10 +93,7 @@ class CFDModel:public Model
 //	CFDModel(const Archivo &nasfile, const Fv_CC_Grid &); //Genero un modelo a partir de un Nastran
 														 	 //Que a su vez genera la malla
 
-	CFDModel(const std::string s):Model(s)
-	{
-        //this->InitFields();
-	}
+	CFDModel(const std::string s);
     void Solve();
 
 

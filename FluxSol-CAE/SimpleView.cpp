@@ -19,6 +19,77 @@ using namespace std;
 
 #include <vector>
 
+#include <vtkCallbackCommand.h>
+
+static void CameraModifiedCallback(vtkObject* caller,
+                                   long unsigned int vtkNotUsed(eventId),
+                                   void* vtkNotUsed(clientData),
+                                   void* vtkNotUsed(callData) )
+{
+  std::cout << caller->GetClassName() << " modified" << std::endl;
+
+  vtkCamera* camera = static_cast<vtkCamera*>(caller);
+  // print the interesting stuff
+  std::cout << "\tPosition: "
+            << camera->GetPosition()[0] << ", "
+            << camera->GetPosition()[1] << ", "
+            << camera->GetPosition()[2] << std::endl;
+  std::cout << "\tFocal point: "
+            << camera->GetFocalPoint()[0] << ", "
+            << camera->GetFocalPoint()[1] << ", "
+            << camera->GetFocalPoint()[2] << std::endl;
+}
+
+void WindowModifiedCallback( vtkObject*
+                      caller, long unsigned int vtkNotUsed(eventId), void* vtkNotUsed(clientData), void* vtkNotUsed(callData))
+{
+  std::cout << "Window modified" << std::endl;
+  std::cout << caller->GetClassName() << std::endl;
+
+  vtkRenderWindow* window = static_cast<vtkRenderWindow*>(caller); //Observer is put in renderwindow
+
+
+  vtkSmartPointer<vtkOpenGLRenderer>  renderer =
+    vtkSmartPointer<vtkOpenGLRenderer>::New();
+
+  int* windowSize = window->GetSize();
+  std::cout << "Size: " << windowSize[0] << " " << windowSize[1] << std::endl;
+
+  //if(windowSize[0] > 400)
+    {
+    //window->SetSize(400, windowSize[1]);
+    //window->Render();
+    //window->Modified();
+    //window->Render();
+
+    }
+
+vtkSmartPointer<vtkTextActor> textActor =
+    vtkSmartPointer<vtkTextActor>::New();
+  textActor ->GetTextProperty()->SetFontSize ( 24 );
+  //renderer->AddActor2D ( textActor  );
+  textActor ->SetInput ( "FluxSol" );
+  //textActor->SetPosition2 ( 1., 0.);
+  //textActor->SetPosition ( 400., 400.);
+   double xpos,ypos;
+//
+//  //GetRenderWindow()->GetSize()
+////  cout << "xsize: "<<this->ui->qvtkWidget->GetRenderWindow()->GetSize()[0]<<endl;
+//  //cout << "ysize: "<<this->ui->qvtkWidget->GetRenderWindow()->GetSize()[1]<<endl;
+//
+//    //double xsize=(double)(this->ui->qvtkWidget->GetRenderWindow()->GetSize()[0]);
+//    double xsize=windowSize[0];
+//    xpos=xsize*0.95;
+//  cout << "xsize" << xsize << "xpos" <<xpos<<endl;
+// textActor ->SetPosition ( xpos, 200);
+//
+    //window->Modified();
+    //window->AddRenderer(renderer);
+    //renderer->AddActor(textActor);
+//
+    //window->Render();
+
+}
 
 void showContextMenu(const QPoint &pos, QTreeWidget &tree)
 {
@@ -87,7 +158,7 @@ public:
 		  textActor2->GetTextProperty()->SetFontSize ( 24 );
 		 textActor2->SetPosition2 ( 50, 40 );
 
-		 //this->renderer->AddActor2D ( textActor2 );	//But this mantain the actor permanent
+		 this->renderer->AddActor2D ( textActor2 );	//But this mantain the actor permanent
 		 textActor2->SetInput ( "Test" );
 		 textActor2->GetTextProperty()->SetColor ( 0.08,0.0,0.4 );
 
@@ -348,22 +419,23 @@ SimpleView::SimpleView()
   ren->SetBackground2(0,0,1);
 
 
-	vtkSmartPointer<vtkTextActor> textActor =
+	textFluxSolTitleActor =
     vtkSmartPointer<vtkTextActor>::New();
-  textActor->GetTextProperty()->SetFontSize ( 24 );
-  ren->AddActor2D ( textActor );
-  textActor->SetInput ( "FluxSol" );
+  textFluxSolTitleActor->GetTextProperty()->SetFontSize ( 24 );
+  ren->AddActor2D ( textFluxSolTitleActor );
+  textFluxSolTitleActor->SetInput ( "FluxSol" );
   //textActor->SetPosition2 ( 1., 0.);
   //textActor->SetPosition ( 400., 400.);
-  textActor->SetPosition ( 600, 600);
-  double xpos,ypos;
+   double xpos,ypos;
 
   //GetRenderWindow()->GetSize()
   cout << "xsize: "<<this->ui->qvtkWidget->GetRenderWindow()->GetSize()[0]<<endl;
   cout << "ysize: "<<this->ui->qvtkWidget->GetRenderWindow()->GetSize()[1]<<endl;
 
-  xpos=(double)(renderWindow->GetSize()[0])*0.9;
- //textActor->SetPosition ( 800, 50);
+    double xsize=(double)(this->ui->qvtkWidget->GetRenderWindow()->GetSize()[0]);
+    xpos=xsize*0.95;
+  cout << "xsize" << xsize << "xpos" <<xpos<<endl;
+ textFluxSolTitleActor->SetPosition ( xpos, 200);
 //  textActor->GetTextProperty()->SetColor ( 0.08,0.0,0.4 );
 //  textActor->SetInput ( "v0.0.1" );
 
@@ -402,6 +474,18 @@ SimpleView::SimpleView()
 
   //double displayPt[3];
   //ren->GetDisplayPoint(displayPt);
+
+    vtkSmartPointer<vtkCallbackCommand> m_pModifiedCallback =
+    vtkSmartPointer<vtkCallbackCommand>::New();
+  m_pModifiedCallback->SetCallback (WindowModifiedCallback);
+  //m_pModifiedCallback->SetClientData(this);
+
+  vtkSmartPointer<vtkCallbackCommand> modifiedCallback =
+    vtkSmartPointer<vtkCallbackCommand>::New();
+  modifiedCallback->SetCallback (CameraModifiedCallback);
+
+  //renderWindow->AddObserver(vtkCommand::ModifiedEvent,m_pModifiedCallback);
+  ren->GetActiveCamera()->AddObserver(vtkCommand::ModifiedEvent,modifiedCallback);
 
   //Moving axes
     vtkSmartPointer<vtkTransform> transform =
@@ -481,6 +565,9 @@ SimpleView::SimpleView()
 
 	callback->SetRenderer(ren);
 	renderWindowInteractor->AddObserver( vtkCommand::MouseMoveEvent, callback );
+	this->ui->qvtkWidget->GetRenderWindow()->AddObserver(vtkCommand::ModifiedEvent,m_pModifiedCallback);
+
+	//renderWindowInteractor->Start();
 
 };
 

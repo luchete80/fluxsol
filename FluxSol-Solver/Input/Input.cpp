@@ -44,26 +44,29 @@ void InputFile::setFile(string fName) {
 	// Check if the input file exists
 	fileName=fName;
 	fstream file;
-	int Rank=1; //LB MODIFIED FROM FREE_CFD
+    bool found=false;
 	//MPI_Comm_rank(MPI_COMM_WORLD, &Rank);
+	cout << "[I] Reading ... "<<endl;
 	file.open(fileName.c_str());
 	if (file.is_open()) {
-		if (Rank==0) cout << "[I] Found input file " << fileName << endl;
+		cout << "[I] Found input file " << fileName << endl;
+		found=true;
 	} else {
-		if (Rank==0) cerr << "[E] Input file " << fileName << " could not be found!!" << endl;
-		exit(1);
+		cerr << "[E] Input file " << fileName << " could not be found!!" << endl;
 	}
 	// Read the whole input file to rawData
-	string line;
-	rawData="";
-	while(getline(file, line)) rawData += line + "\n";
-	file.close();
+	if (found)
+    {
+        string line;
+        rawData="";
+        while(getline(file, line)) rawData += line + "\n";
+        file.close();
 
-	// Strip all the inline or block comments (C++ style) from the rawData
-	stripComments(rawData);
-	// Strip all the white spaces from the rawData
-	strip_white_spaces(rawData);
-
+        // Strip all the inline or block comments (C++ style) from the rawData
+        stripComments(rawData);
+        // Strip all the white spaces from the rawData
+        strip_white_spaces(rawData);
+    }
 }
 
 void InputFile::read (string sectionName, int number) {
@@ -379,6 +382,7 @@ void InputFile::read_inputs(void) {
 	registerSection("grid",numbered,required);
 	section("grid",0).register_string("file",required);
 	section("grid",0).register_int("dimension",optional,3);
+	section("grid",0).register_string("solution_scheme",optional,"navier-stokes");                 //New, from FluxSol, if empty, solution is navier stokes
 	section("grid",0).register_string("solution_scheme",required);
 
 	//section("grid",0).register_string("equations",required);
