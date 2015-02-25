@@ -1,5 +1,7 @@
 #include "GraphicModel.h"
 
+using namespace FluxSol;
+
 GraphicCFDModel::GraphicCFDModel(const std::string s):CFDModel(s)
 {
     this->uGrid=vtkSmartPointer<vtkUnstructuredGrid>::New();
