@@ -11,8 +11,13 @@
 #include "CenterToVertexInterpolation.h"
 #include "CenterToVertexInterpolation_Def.h"    //TO MODIFY
 
+#include <time.h>
+#include "OutputFile.h"
+
+#include "Div.h"
 
 namespace FluxSol{
+
 
 //Modelo con Material
 //Malla, archivo Nastran, BCs
@@ -95,6 +100,7 @@ class CFDModel:public Model
 
 	CFDModel(const std::string s);
     void Solve();
+    void WriteOutput();
 
 
 	////////////////////////////////////

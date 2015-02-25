@@ -1,83 +1,11 @@
 #include "Model.h"
-#include <time.h>
-#include "OutputFile.h"
 
-#include "Div.h"
-
-using namespace FluxSol;
 using namespace std;
 
 
+using namespace FluxSol;
 
-void CFDModel::Extract_Cells_and_BoundaryFromNastran()
-{
-	vector <int> patchnum;	//Numero de la propiedad
-	int nump=0;
-	int numboundcells=0,numboundfaces=0,numintcells=0;
-	vector <Cell_CC> vc;
-	vector <Patch> vp;
-
-
-	//Recorro todos los elementos
-	//Aca tambien estan las condiciones de borde
-	//for (int e=0;e<NasFile().;e++)
-	//{
-	//	if (bidim_model)
-	//	{
-	//		//Discrimino los CQUAD4 y CQUADR
-	//		if (this->Elementos[e].Tipo()=="CQUAD4" || this->Elementos[e].Tipo()=="CQUADR" ||
-	//			this->Elementos[e].Tipo()=="CTRIA3" || this->Elementos[e].Tipo()=="CTRIAR" )
-	//		//Es un elemento del interior
-	//		{
-	//			//Este lo paso al vector
-	//			Cell_CC cell(this->Elementos[e].VerId(),this->Elementos[e].Conect());
-	//			vc.push_back(cell);
-	//			numintcells++;
-	//		}
-	//		else //Elemento de Boundary
-	//		{
-	//			int currpatch;
-
-	//			//Si las propiedades cambian son distintos patches
-	//			bool enc=false;	//Una propiedad existente
-	//			int p=0;
-	//
-	//			while (!enc && p<patchnum.size())
-	//			{
-	//				if(patchnum[p]==this->Elementos[e].VerPid())
-	//				{
-	//					enc=true;
-	//					currpatch=p;
-	//				}
-	//				p++;
-	//			}
-
-	//			if (!enc ||nump==0)//Si ese patch no esta
-	//			{
-	//				//patchnum.push_back(this->Elementos[e].VerPid());
-	//				currpatch=patchnum.size()-1;
-	//				nump++;
-	//				//Inserto el patch en el vector
-	//				//Patch patch(this->Elementos[e].VerPid());
-	//				//vp.push_back(patch);
-	//				//bound.AddPatch(patch);
-	//			}
-	//
-	//			//Agrego el face al patch que corresponda
-	//			vp[currpatch].AddFace(numboundfaces);
-	//			numboundfaces++;
-	//		}
-
-	//	}
-	//	else	//Modelo tridimensional
-	//	{}
-	//}//Fin del numero de elementos
-
-	//Incluyo el numero de patches al modelo
-
-}
-
-Model::Model(const string filename)
+Model::Model(const std::string filename)
 {
     this->inputfile=InputFile(filename);
 
@@ -105,6 +33,7 @@ CFDModel::CFDModel(const std::string s):Model(s)
 }
 
 
+
 void CFDModel::InitFields()
 {
      //Converts all mesh to one
@@ -129,9 +58,8 @@ void CFDModel::InitFields()
 	U.AssignPatchFieldTypes(FIXEDVALUE);
 }
 
-
-void CFDModel::Solve()
-{
+    void CFDModel::Solve()
+    {
     //Begins with SIMPLE method
 
     cout << "[I] Solving system ..." <<endl;
@@ -388,5 +316,87 @@ void CFDModel::Solve()
     OutputFile("VertexField-U.vtu",vv);
     OutputFile("VertexField-Uz.vtu",vv,2);
 
+    OutputFile of("Fields.vtu",this->mesh);
+
+    of.WriteGrid();
+    of.WriteField(vv);
+    of.WriteField(vF);
+    of.WriteFooter();   //TO QUIT
+
 }
+
+void CFDModel::WriteOutput()
+{
+
+}
+
+
+void CFDModel::Extract_Cells_and_BoundaryFromNastran()
+{
+	vector <int> patchnum;	//Numero de la propiedad
+	int nump=0;
+	int numboundcells=0,numboundfaces=0,numintcells=0;
+	vector <Cell_CC> vc;
+	vector <Patch> vp;
+
+
+	//Recorro todos los elementos
+	//Aca tambien estan las condiciones de borde
+	//for (int e=0;e<NasFile().;e++)
+	//{
+	//	if (bidim_model)
+	//	{
+	//		//Discrimino los CQUAD4 y CQUADR
+	//		if (this->Elementos[e].Tipo()=="CQUAD4" || this->Elementos[e].Tipo()=="CQUADR" ||
+	//			this->Elementos[e].Tipo()=="CTRIA3" || this->Elementos[e].Tipo()=="CTRIAR" )
+	//		//Es un elemento del interior
+	//		{
+	//			//Este lo paso al vector
+	//			Cell_CC cell(this->Elementos[e].VerId(),this->Elementos[e].Conect());
+	//			vc.push_back(cell);
+	//			numintcells++;
+	//		}
+	//		else //Elemento de Boundary
+	//		{
+	//			int currpatch;
+
+	//			//Si las propiedades cambian son distintos patches
+	//			bool enc=false;	//Una propiedad existente
+	//			int p=0;
+	//
+	//			while (!enc && p<patchnum.size())
+	//			{
+	//				if(patchnum[p]==this->Elementos[e].VerPid())
+	//				{
+	//					enc=true;
+	//					currpatch=p;
+	//				}
+	//				p++;
+	//			}
+
+	//			if (!enc ||nump==0)//Si ese patch no esta
+	//			{
+	//				//patchnum.push_back(this->Elementos[e].VerPid());
+	//				currpatch=patchnum.size()-1;
+	//				nump++;
+	//				//Inserto el patch en el vector
+	//				//Patch patch(this->Elementos[e].VerPid());
+	//				//vp.push_back(patch);
+	//				//bound.AddPatch(patch);
+	//			}
+	//
+	//			//Agrego el face al patch que corresponda
+	//			vp[currpatch].AddFace(numboundfaces);
+	//			numboundfaces++;
+	//		}
+
+	//	}
+	//	else	//Modelo tridimensional
+	//	{}
+	//}//Fin del numero de elementos
+
+	//Incluyo el numero de patches al modelo
+
+}
+
 

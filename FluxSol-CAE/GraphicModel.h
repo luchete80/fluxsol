@@ -12,12 +12,14 @@
 #include <vtkRenderer.h>
 #include <vtkRenderWindowInteractor.h>
 
-class GraphicModel:public Model
+using namespace FluxSol;
+
+class GraphicModel:public FluxSol::Model
 {
 
 };
 
-class GraphicCFDModel:public CFDModel
+class GraphicCFDModel:public FluxSol::CFDModel
 {
 
     protected:

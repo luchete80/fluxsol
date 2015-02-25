@@ -34,10 +34,16 @@ class OutputFile
 	//To check if new fields have same mesh
 	const Fv_CC_Grid &grid;
 
+	string fileName;
+    ofstream file;     //Previously this was inside each function
 
 	public:
 	//Constructors
-	OutputFile(string name, Fv_CC_Grid &grid);
+	OutputFile(string name, Fv_CC_Grid &grid)
+	{
+        this->fileName=name;
+        this->file.open((fileName).c_str(),ios::out);
+	}
 	template <typename T>
 	OutputFile(string name, _CC_Fv_Field<T> &field);
 
@@ -53,8 +59,22 @@ class OutputFile
     OutputFile(string name, Vertex_Fv_Field<T> &field,const int &comp);
 
 
+    void WriteGrid();
+
+    template <typename T>
+    void WriteField(const Vertex_Fv_Field<T> &field);
+
+
 	template <typename T>
 	void AddFieldValues(_CC_Fv_Field<T>);
+
+	void WriteFooter();
+
+	OutputFile::~OutputFile()    //Destructor
+    {
+        file.close();
+    }
+
 
 };
 }
