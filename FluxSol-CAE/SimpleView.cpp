@@ -596,26 +596,27 @@ void SimpleView::slotImportMesh()
             cout << "Importing CGNS Mesh: " << fileName.toStdString() <<" ... "<<endl;
 
          	Fv_CC_Grid mesh(fileName.toStdString());
+         	cout << "Mesh successfully imported ..."<<endl;
          	GraphicCFDModel model(mesh);
             mesh.Log("Log.txt");
 
             vtkSmartPointer<vtkGeometryFilter> geometryFilter =
             vtkSmartPointer<vtkGeometryFilter>::New();
-
+//
             #if VTK_MAJOR_VERSION <= 5
               geometryFilter->SetInput(model.UGrid());
               //surfaceFilter->SetInput(ugrid);
             #else
               geometryFilter->SetInputData(model.UGrid());
-              //surfaceFilter->SetInputData(ugrid);
+//              //surfaceFilter->SetInputData(ugrid);
             #endif
               geometryFilter->Update();
-              //surfaceFilter->Update();
-
-            //vtkSmartPointer<vtkPolyData>
+//              //surfaceFilter->Update();
+//
+//            //vtkSmartPointer<vtkPolyData>
             vtkPolyData *polydata= geometryFilter ->GetOutput ();
-
-
+//
+//
              vtkSmartPointer<vtkPolyDataMapper> pdmapper =
             vtkSmartPointer<vtkPolyDataMapper>::New();
         //

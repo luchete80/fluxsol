@@ -43,6 +43,6 @@ class GraphicCFDModel:public FluxSol::CFDModel
         GraphicCFDModel(const std::string s);
         GraphicCFDModel(){};
         GraphicCFDModel(const Fv_CC_Grid &im);  //TO MODIFY, INHERIT FROM MODEL
-        const vtkSmartPointer<vtkUnstructuredGrid> & UGrid () const {return this->uGrid;}
+        vtkSmartPointer<vtkUnstructuredGrid> UGrid () const {return this->uGrid;}
 
 };
