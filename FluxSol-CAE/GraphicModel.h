@@ -37,9 +37,10 @@ class GraphicCFDModel:public CFDModel
     double center[3];
 
     public:
+
         GraphicCFDModel(const std::string s);
         GraphicCFDModel(){};
-
-        const vtkSmartPointer<vtkUnstructuredGrid> UGrid () const {return this->uGrid;}
+        GraphicCFDModel(const Fv_CC_Grid &im);  //TO MODIFY, INHERIT FROM MODEL
+        const vtkSmartPointer<vtkUnstructuredGrid> & UGrid () const {return this->uGrid;}
 
 };

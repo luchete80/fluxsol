@@ -137,6 +137,8 @@
 
 #include "ModelTree.h"
 
+#include "GridSelection.h"
+
 // Forward Qt class declarations
 class Ui_SimpleView;
 
@@ -193,6 +195,9 @@ private:
   ModelTreeWidget *ResultsTab;
 
   vtkSmartPointer<vtkTextActor> textFluxSolTitleActor;
+
+  vtkSmartPointer<MouseInteractorStyle> gridselectionstyle;
+    vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor;
 
 
 };

@@ -26,18 +26,18 @@ static void CameraModifiedCallback(vtkObject* caller,
                                    void* vtkNotUsed(clientData),
                                    void* vtkNotUsed(callData) )
 {
-  std::cout << caller->GetClassName() << " modified" << std::endl;
+//  std::cout << caller->GetClassName() << " modified" << std::endl;
 
   vtkCamera* camera = static_cast<vtkCamera*>(caller);
   // print the interesting stuff
-  std::cout << "\tPosition: "
-            << camera->GetPosition()[0] << ", "
-            << camera->GetPosition()[1] << ", "
-            << camera->GetPosition()[2] << std::endl;
-  std::cout << "\tFocal point: "
-            << camera->GetFocalPoint()[0] << ", "
-            << camera->GetFocalPoint()[1] << ", "
-            << camera->GetFocalPoint()[2] << std::endl;
+//  std::cout << "\tPosition: "
+//            << camera->GetPosition()[0] << ", "
+//            << camera->GetPosition()[1] << ", "
+//            << camera->GetPosition()[2] << std::endl;
+//  std::cout << "\tFocal point: "
+//            << camera->GetFocalPoint()[0] << ", "
+//            << camera->GetFocalPoint()[1] << ", "
+//            << camera->GetFocalPoint()[2] << std::endl;
 }
 
 void WindowModifiedCallback( vtkObject*
@@ -171,6 +171,55 @@ public:
 
   };
 
+//Like previous callback, must to obtain current render
+class vtkWindowsModInteractionCallback  : public vtkCommand
+{
+public:
+  static vtkWindowsModInteractionCallback *New()
+    {
+    return new vtkWindowsModInteractionCallback;
+    }
+	void SetRenderer(vtkOpenGLRenderer* ren)
+	{
+		this->renderer=ren;
+	}
+
+	void SetTextActor(vtkTextActor *ta)
+	{
+		this->textActor=ta;
+	}
+
+  virtual void Execute(vtkObject *caller, unsigned long, void*)
+    {
+
+        //int* windowSize = window->GetSize();
+
+  vtkRenderWindow* window = static_cast<vtkRenderWindow*>(caller); //Observer is put in renderwindow
+
+  int* windowSize = window->GetSize();
+
+         double maxsize=windowSize[0]/40.;
+         textActor->GetTextProperty()->SetFontSize ( (int) maxsize);
+		 textActor->SetInput ( "FluxSol\nv0.0.1" );
+
+		 //textActor->SetPosition ( windowSize[0]*0.85, windowSize[1]*0.85);
+		 //textActor->GetTextProperty()->SetColor ( 1.,1.,1. );
+
+		 textActor->SetPosition ( windowSize[0]*0.9, windowSize[1]*0.05);
+		 textActor->GetTextProperty()->SetColor ( 0.,0.,0.3 );
+//         std::cout << "Size: " << windowSize[0] << " " << windowSize[1] << std::endl;
+//		 cout << "Mod 2"<<endl;
+
+	}
+
+	private:
+
+	vtkOpenGLRenderer* renderer;
+	QVTKWidget *widget;
+	vtkTextActor *textActor;
+
+  };
+
 ///////
 
 // Define interaction style
@@ -240,6 +289,10 @@ SimpleView::SimpleView()
     //this->ui->tabWidget->addTab(this->ResultsTab, QString());
     //this->ui->tabWidget->addTab(this->ResultsTab, QString("Results"));
 
+    this->ui->tabWidget->setCurrentIndex(0);
+    this->ui->ToolbarTab->setCurrentIndex(0);
+
+
 //
 //  QMenu *menu = new QMenu(ui->ModelTree);
 //  QAction*  myAction = menu->addAction("Remove");
@@ -262,110 +315,7 @@ SimpleView::SimpleView()
   elevation->SetLowPoint(0,0,0);
   elevation->SetHighPoint(10,0,0);
 
-  // Mapper
-  VTK_CREATE(vtkPolyDataMapper, textmapper);
 
-  vtkSmartPointer<vtkDataSetMapper> mapper =
-    vtkSmartPointer<vtkDataSetMapper>::New();
-    //vtkSmartPointer<vtkUnstructuredGridMapper> mapper =
-    //vtkSmartPointer<vtkUnstructuredGridMapper>::New();
-
-  textmapper->ImmediateModeRenderingOn();
-  textmapper->SetInputConnection(elevation->GetOutputPort());
-
-
-  /// MESH READING
-    // Read the file
-    //vtkSmartPointer<vtkUnstructuredGrid> ugrid;
-
-    vtkUnstructuredGrid *ugrid;
-
-  vtkSmartPointer<vtkUnstructuredGridReader> reader =
-    vtkSmartPointer<vtkUnstructuredGridReader>::New();
-  //reader->SetFileName(inputFilename.c_str());
-  reader->SetFileName("mesh.vtk");
-  reader->Update();
-
-  ugrid = reader->GetOutput();
-
-  vtkSmartPointer<vtkUnstructuredGridGeometryFilter> geometryFilter =
-    vtkSmartPointer<vtkUnstructuredGridGeometryFilter>::New();
-  geometryFilter->SetInputConnection(reader->GetOutputPort());
-  geometryFilter->Update();
-
-    double bounds[6];
-    //reader->GetBounds(bounds);
-
-  //mapper->SetInputConnection(geometryFilter->GetOutputPort());
-    mapper->SetInputConnection(reader->GetOutputPort());
-    //mapper->SetInputConnection(shrinkFilter->GetOutputPort());
-
-    //**********************************************************************************
-    //Read values At First
-//    vector<double> results;
-//    fstream in_stream("results.txt");
-//    while (!in_stream.eof())
-//   {
-//       string line;
-//        getline(in_stream, line);
-//        stringstream ss;
-//        ss << line;
-//        double d;
-//        ssd >> d;
-//        results.push_back(d);
-//   }
-
-
-
-    // Data taken from vtk examples ColoredElevationMap and Filled Contours
-    //This is interesting too
-    //http://www.vtk.org/Wiki/VTK/Examples/Cxx/Visualization/ElevationBandsWithGlyphs
-    //CONTOUR INFORMATION
-    //
-//
-//   //converter para polydata
-//   vtkUnstructuredGrid * unstructured= vtkUnstructuredGrid::New();
-//   unstructured = reader ->GetOutput();
-//   //unstructured ->Update();
-//
-//   vtkGeometryFilter *geometryFilter2  = vtkGeometryFilter::New();
-//    #if VTK_MAJOR_VERSION <= 5
-//      geometryFilter2->SetInput(unstructured);
-//    #else
-//      geometryFilter->SetInputData(unstructured);
-//    #endif
-//      geometryFilter2->Update();
-//
-//    vtkPolyData * polydata= vtkPolyData::New();
-//    polydata = geometryFilter2 ->GetOutput ();
-//
-//    //polydata -> SetPoints(teste->GetOutput()->GetPoints());
-//
-//       //TO OBTAIN RANGE
-//     double scalarRange[2];
-////     polydata->GetPointData()->GetScalars()->GetRange(scalarRange);
-//
-//    //************************************* MAPPER
-//
-//     vtkSmartPointer<vtkPolyDataMapper> pdmapper =
-//    vtkSmartPointer<vtkPolyDataMapper>::New();
-//
-//    //pdmapper->ScalarVisibilityOff();
-//
-//    #if VTK_MAJOR_VERSION <= 5
-//      pdmapper->SetInputConnection(polydata->GetProducerPort());
-//    #else
-//      mapper->SetInputData(polydata);
-//    #endif
-    //************************************** RENDER PHASE
-
-  // Actor in scene
-  VTK_CREATE(vtkActor, actor);
-  //Options are mapper
-  actor->SetMapper(mapper);
-
-  actor->GetProperty()->SetEdgeColor(0, 0, 0);
-  actor->GetProperty()->EdgeVisibilityOn();
 
   /////
 
@@ -389,7 +339,7 @@ SimpleView::SimpleView()
 
 
 
-  vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor =
+  this->renderWindowInteractor =
     vtkSmartPointer<vtkRenderWindowInteractor>::New();
 
 
@@ -408,6 +358,9 @@ SimpleView::SimpleView()
   // The axes are positioned with a user transform
   //axes->SetUserTransform(transform);
   _vtkOriginAxes->AxisLabelsOff();
+  _vtkOriginAxes->SetTipTypeToSphere();
+  //_vtkOriginAxes->SetSphereResolution(0);
+  _vtkOriginAxes->SetNormalizedTipLength(0.,0.,0.);
 
   //////////////////////////// EX
 
@@ -444,7 +397,6 @@ SimpleView::SimpleView()
 
 
    // Add Actor to renderer
-  ren->AddActor(actor);
 
  renderWindow->Render();	//If i want to obtain coordinates must to activate renderwindows with Render()
 
@@ -563,9 +515,30 @@ SimpleView::SimpleView()
     vtkSmartPointer<vtkImageInteractionCallback1> callback =
     vtkSmartPointer<vtkImageInteractionCallback1>::New();
 
-	callback->SetRenderer(ren);
-	renderWindowInteractor->AddObserver( vtkCommand::MouseMoveEvent, callback );
-	this->ui->qvtkWidget->GetRenderWindow()->AddObserver(vtkCommand::ModifiedEvent,m_pModifiedCallback);
+    vtkSmartPointer<vtkWindowsModInteractionCallback> callbackwinmod =
+    vtkSmartPointer<vtkWindowsModInteractionCallback>::New();
+
+	callback->SetRenderer(this->ren);
+
+	//renderWindowInteractor->AddObserver( vtkCommand::MouseMoveEvent, callback );
+
+	this->ui->qvtkWidget->GetRenderWindow()->AddObserver( vtkCommand::ModifiedEvent, callbackwinmod );
+
+	//this->ui->qvtkWidget->GetRenderWindow()->AddObserver(vtkCommand::ModifiedEvent,m_pModifiedCallback);
+
+    callbackwinmod->SetRenderer(this->ren);
+    callbackwinmod->SetTextActor(this->textFluxSolTitleActor);
+
+
+    //Grid Selection
+
+      this->gridselectionstyle =
+    vtkSmartPointer<MouseInteractorStyle>::New();
+  this->gridselectionstyle->SetDefaultRenderer(ren);
+  //style->Data = triangleFilter->GetOutput();
+
+
+  //renderWindowInteractor->SetInteractorStyle(style);
 
 	//renderWindowInteractor->Start();
 
@@ -601,40 +574,90 @@ void SimpleView::slotImportMesh()
 	//Another option is to separate with commas
 	if (!fileName.isEmpty())
 	{
-		Fv_CC_Grid mesh(fileName.toStdString());
-		mesh.Log("Log.txt");
+
+        std::string extension =
+        vtksys::SystemTools::GetFilenameLastExtension(fileName.toStdString().c_str());
 
 
 	    vtkUnstructuredGrid *ugrid;
 
-        // ------- SIMPLE READER
-
-          //read all the data from the file
-      vtkSmartPointer<vtkXMLUnstructuredGridReader> ugreader =
-        vtkSmartPointer<vtkXMLUnstructuredGridReader>::New();
-      ugreader->SetFileName(fileName.toStdString().c_str());
-      ugreader->Update();
-
+        vtkSmartPointer<vtkDataSetMapper> datasetmapper =
+        vtkSmartPointer<vtkDataSetMapper>::New();
 
           vtkSmartPointer<vtkUnstructuredGridGeometryFilter> geometryFilter =
             vtkSmartPointer<vtkUnstructuredGridGeometryFilter>::New();
-      geometryFilter->SetInputConnection(ugreader->GetOutputPort());
-      geometryFilter->Update();
+
+      vtkSmartPointer<vtkActor> actor =
+        vtkSmartPointer<vtkActor>::New();
+
+        if (extension ==".cgns")
+        {
+            // GraphicCFDModel model(fileName.toStdString());
+            cout << "Importing CGNS Mesh: " << fileName.toStdString() <<" ... "<<endl;
+
+         	Fv_CC_Grid mesh(fileName.toStdString());
+         	GraphicCFDModel model(mesh);
+            mesh.Log("Log.txt");
+
+            vtkSmartPointer<vtkGeometryFilter> geometryFilter =
+            vtkSmartPointer<vtkGeometryFilter>::New();
+
+            #if VTK_MAJOR_VERSION <= 5
+              geometryFilter->SetInput(model.UGrid());
+              //surfaceFilter->SetInput(ugrid);
+            #else
+              geometryFilter->SetInputData(model.UGrid());
+              //surfaceFilter->SetInputData(ugrid);
+            #endif
+              geometryFilter->Update();
+              //surfaceFilter->Update();
+
+            //vtkSmartPointer<vtkPolyData>
+            vtkPolyData *polydata= geometryFilter ->GetOutput ();
+
+
+             vtkSmartPointer<vtkPolyDataMapper> pdmapper =
+            vtkSmartPointer<vtkPolyDataMapper>::New();
+        //
+        //    //pdmapper->ScalarVisibilityOff();
+        //
+            #if VTK_MAJOR_VERSION <= 5
+              pdmapper->SetInputConnection(polydata->GetProducerPort());
+            #else
+             pdmapper->SetInputData(polydata);
+            #endif
+
+            /////// END OF CONTOUR
+
+          ///////////////////////// RENDERING ////
+
+            actor->SetMapper(pdmapper);
+
+        }
+        else if (extension==".vtk")
+        {
+            // ------- SIMPLE READER
+
+              //read all the data from the file
+          vtkSmartPointer<vtkXMLUnstructuredGridReader> ugreader =
+            vtkSmartPointer<vtkXMLUnstructuredGridReader>::New();
+          ugreader->SetFileName(fileName.toStdString().c_str());
+          ugreader->Update();
+
+          geometryFilter->SetInputConnection(ugreader->GetOutputPort());
+          geometryFilter->Update();
+
+          datasetmapper ->SetInputConnection(ugreader->GetOutputPort());
+            actor->SetMapper(datasetmapper);
+        }
+
+
 
       // Visualize
      // vtkSmartPointer<vtkPolyDataMapper> pdmapper =
      //   vtkSmartPointer<vtkPolyDataMapper>::New();
      // pdmapper->SetInputConnection(geometryFilter->GetOutputPort());
 
-
-
-          vtkSmartPointer<vtkDataSetMapper> datasetmapper =
-        vtkSmartPointer<vtkDataSetMapper>::New();
-      datasetmapper ->SetInputConnection(ugreader->GetOutputPort());
-
-      vtkSmartPointer<vtkActor> actor =
-        vtkSmartPointer<vtkActor>::New();
-      actor->SetMapper(datasetmapper);
 
 
           actor->GetProperty()->SetEdgeColor(0, 0, 0);
@@ -943,6 +966,14 @@ void SimpleView::slotOpenResults()
         this->comboBox->addItem(pd->GetArrayName(0));
 
         this->ren->AddActor2D(scalarBar);
+
+
+
+        //Mouse Selection //Test
+        this->gridselectionstyle->Data = polydata;
+        this->renderWindowInteractor->SetInteractorStyle(this->gridselectionstyle);
+
+
 
 	}//If file name is not empty
 

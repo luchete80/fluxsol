@@ -19,11 +19,15 @@
 	<file>Materials.png</file>
 	<file>view-Z.png</file>
 	<file>Job.png</file>
+	<file>JobFromInput.png</file>
 	<file>view+Y.png</file>
 	<file>view-Y.png</file>
 	<file>view+X.png</file>
 	<file>view-X.png</file>
 	<file>parts.png</file>
+	<file>GridSelectVertex.png</file>
+	<file>GridSelectFace.png</file>
+	<file>GridSelectCell.png</file>
     <!-- Help -->
     <file>help.png</file>
   </qresource>

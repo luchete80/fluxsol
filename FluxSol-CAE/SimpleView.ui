@@ -194,7 +194,7 @@
      </widget>
     </item>
     <item row="2" column="0">
-     <widget class="QTabWidget" name="tabWidget_2">
+     <widget class="QTabWidget" name="ToolbarTab">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
         <horstretch>0</horstretch>
@@ -386,7 +386,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="usesScrollButtons">
        <bool>false</bool>
@@ -650,6 +650,7 @@
         <string>Job</string>
        </attribute>
        <addaction name="actionNewJob"/>
+       <addaction name="actionNewJobFromInput"/>
        <addaction name="separator"/>
       </widget>
      </widget>
@@ -767,6 +768,30 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+  </widget>
+  <widget class="QToolBar" name="GridSelectToolBar">
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>22</width>
+     <height>22</height>
+    </size>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionGridSelectVertex"/>
+   <addaction name="actionGridSelectFace"/>
+   <addaction name="actionGridSelectCell"/>
+   <addaction name="separator"/>
   </widget>
   <action name="actionExit">
    <property name="text">
@@ -961,6 +986,45 @@
    </property>
    <property name="text">
     <string>NewJob</string>
+   </property>
+  </action>
+  <action name="actionNewJobFromInput">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/JobFromInput.png</normaloff>:/Icons/JobFromInput.png</iconset>
+   </property>
+   <property name="text">
+    <string>NewJobFromInput</string>
+   </property>
+   <property name="toolTip">
+    <string>Creates a Job from an Input File</string>
+   </property>
+  </action>
+  <action name="actionGridSelectVertex">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/GridSelectVertex.png</normaloff>:/Icons/GridSelectVertex.png</iconset>
+   </property>
+   <property name="text">
+    <string>GridSelectVertex</string>
+   </property>
+  </action>
+  <action name="actionGridSelectFace">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/GridSelectFace.png</normaloff>:/Icons/GridSelectFace.png</iconset>
+   </property>
+   <property name="text">
+    <string>GridSelectFace</string>
+   </property>
+  </action>
+  <action name="actionGridSelectCell">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/GridSelectCell.png</normaloff>:/Icons/GridSelectCell.png</iconset>
+   </property>
+   <property name="text">
+    <string>GridSelectCell</string>
    </property>
   </action>
  </widget>

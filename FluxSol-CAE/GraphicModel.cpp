@@ -44,3 +44,8 @@ GraphicCFDModel::GraphicCFDModel(const std::string s):CFDModel(s)
         //uGrid->InsertNextCell(hex->GetCellType(), hex->GetPointIds());
 
 }
+
+GraphicCFDModel::GraphicCFDModel(const Fv_CC_Grid &im)
+{
+    this->mesh=im;
+}
