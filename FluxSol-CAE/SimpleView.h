@@ -198,6 +198,7 @@ private:
 
   vtkSmartPointer<MouseInteractorStyle> gridselectionstyle;
     vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor;
+    vtkSmartPointer<vtkAreaPicker> areaPicker;
 
 
 };

@@ -28,6 +28,7 @@
 	<file>GridSelectVertex.png</file>
 	<file>GridSelectFace.png</file>
 	<file>GridSelectCell.png</file>
+	<file>MeshTransparency.png</file>
     <!-- Help -->
     <file>help.png</file>
   </qresource>

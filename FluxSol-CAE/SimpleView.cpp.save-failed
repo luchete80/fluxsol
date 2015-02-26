@@ -654,44 +654,9 @@ void SimpleView::slotImportMesh()
             actor->SetMapper(datasetmapper);
         }
 
-      areaPicker =
-        vtkSmartPointer<vtkAreaPicker>::New();
 
-        renderWindowInteractor->SetPicker(areaPicker);
-
-
-        //this->gridselectionstyle->Data = polydata;
-        //this->renderWindowInteractor->SetInteractorStyle(this->gridselectionstyle);
-
-
-
-      // For vtkInteractorStyleRubberBandPick - use 'r' and left-mouse to draw a selection box used to pick
-     // vtkSmartPointer<vtkInteractorStyleRubberBandPick> style =
-      //  vtkSmartPointer<vtkInteractorStyleRubberBandPick>::New();
-
-
-//------
-//  vtkSmartPointer<HighlightInteractorStyleCells> style =
-//    vtkSmartPointer<HighlightInteractorStyleCells>::New();
-//    style->SetPolyData(polydata);
-
-  vtkSmartPointer<HighlightInteractorStylePoints> style =
-    vtkSmartPointer<HighlightInteractorStylePoints>::New();
-  style->SetPoints(polydata);
-
-
-      // For vtkInteractorStyleTrackballCamera - use 'p' to pick at the current mouse position
-      //vtkSmartPointer<vtkInteractorStyleTrackballCamera> style =
-      //  vtkSmartPointer<vtkInteractorStyleTrackballCamera>::New(); //like paraview
-      style->SetCurrentRenderer(this->ren);
-      renderWindowInteractor->SetInteractorStyle( style );
-
-
-//      vtkSmartPointer<vtkCallbackCommand> pickCallback =
-//        vtkSmartPointer<vtkCallbackCommand>::New();
-//    pickCallback->SetCallback ( PickCallbackFunction );
-//
-//        areaPicker->AddObserver ( vtkCommand::EndPickEvent, pickCallback );
+        this->gridselectionstyle->Data = polydata;
+        this->renderWindowInteractor->SetInteractorStyle(this->gridselectionstyle);
 
       // Visualize
      // vtkSmartPointer<vtkPolyDataMapper> pdmapper =
