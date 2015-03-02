@@ -276,7 +276,8 @@ SimpleView::SimpleView()
 
 
     this->comboBox = new QComboBox(this);
-    this->ui->toolBar_Results->addWidget(comboBox);
+    //this->ui->toolBar_Results->addWidget(comboBox);
+    this->ui->ResultsToolBar->addWidget(comboBox);
 
     this->ui->ModelTree->expandAll();
 
