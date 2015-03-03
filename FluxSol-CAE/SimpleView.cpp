@@ -981,14 +981,17 @@ void SimpleView::slotOpenResults()
   scalarBar->GetTitleTextProperty()->ShadowOff();
   scalarBar->GetTitleTextProperty()->ItalicOff();
   scalarBar->GetTitleTextProperty()->BoldOff();
-  scalarBar->GetTitleTextProperty()->SetFontSize(10);
-    scalarBar->GetTitleTextProperty()->SetColor ( 0.0,0.0,0.0 );
+  scalarBar->GetTitleTextProperty()->SetFontSize(6);
+  scalarBar->GetTitleTextProperty()->SetColor ( 0.0,0.0,0.0 );
 
   scalarBar->GetLabelTextProperty()->SetFontFamilyToArial();
   scalarBar->GetLabelTextProperty()->ShadowOff();
   scalarBar->GetLabelTextProperty()->ItalicOff();
   scalarBar->GetLabelTextProperty()->BoldOff();
   scalarBar->GetLabelTextProperty()->SetColor ( 0.0,0.0,0.0 );
+
+    //scalarBar->GetPositionCoordinate()->SetValue(val1,val2);
+    //scalarBar->GetPosition2Coordinate()->SetValue(20.,20.);
   //scalarBar->SetPosition(0.04, 0.02);
 //  this->colorBar->SetOrientationToHorizontal();
 
