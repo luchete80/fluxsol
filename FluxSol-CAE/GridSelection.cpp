@@ -57,6 +57,13 @@ void MouseInteractorStyle::OnLeftButtonDown()
               << " points in the selection." << std::endl;
     std::cout << "There are " << selected->GetNumberOfCells()
               << " cells in the selection." << std::endl;
+
+    for (int c=0;c<selected->GetNumberOfCells();c++)
+    {
+        std:: cout << "Cell " << c << "points: " <<selected->GetCell (c)-> GetNumberOfPoints()<<std::endl;
+        // virtual vtkIdType* vtkCell::GetFaces	(		)
+
+    }
 //        std::cout << "There are " << selected->GetNumberOfFaces()
 //                  << " faces in the selection." << std::endl;
 
@@ -150,7 +157,7 @@ void HighlightInteractorStyleCells::OnLeftButtonUp()
 
   if(this->CurrentMode == VTKISRBP_SELECT)
     {
-    //vtkPlanes* frustum = static_cast<vtkAreaPicker*>(this->GetInteractor()->GetPicker())->GetFrustum();
+    vtkPlanes* frustum = static_cast<vtkAreaPicker*>(this->GetInteractor()->GetPicker())->GetFrustum();
 
     vtkSmartPointer<vtkExtractPolyDataGeometry> extractPolyDataGeometry =
       vtkSmartPointer<vtkExtractPolyDataGeometry>::New();
@@ -159,7 +166,7 @@ void HighlightInteractorStyleCells::OnLeftButtonUp()
 #else
     extractPolyDataGeometry->SetInputData(this->PolyData);
 #endif
-    //extractPolyDataGeometry->SetImplicitFunction(frustum);
+    extractPolyDataGeometry->SetImplicitFunction(frustum);
     extractPolyDataGeometry->Update();
 
     std::cout << "Extracted " << extractPolyDataGeometry->GetOutput()->GetNumberOfCells() << " cells." << std::endl;
@@ -172,7 +179,16 @@ void HighlightInteractorStyleCells::OnLeftButtonUp()
 #endif
     this->SelectedMapper->ScalarVisibilityOff();
 
-//    vtkIdTypeArray* ids = vtkIdTypeArray::SafeDownCast(selected->GetPointData()->GetArray("OriginalIds"));
+
+    for (int c=0;c<extractPolyDataGeometry->GetOutput()->GetNumberOfCells();c++)
+    {
+        std:: cout << "Cell " << c << "points: " <<extractPolyDataGeometry->GetOutput()->GetCell (c)-> GetNumberOfPoints()<<std::endl;
+        // virtual vtkIdType* vtkCell::GetFaces	(		)
+
+    }
+
+
+    //vtkIdTypeArray* ids = vtkIdTypeArray::SafeDownCast(selected->GetPointData()->GetArray("OriginalIds"));
 
     this->SelectedActor->GetProperty()->SetColor(1.0, 0.0, 0.0); //(R,G,B)
     this->SelectedActor->GetProperty()->SetPointSize(5);

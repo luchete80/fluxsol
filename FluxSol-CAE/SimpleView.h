@@ -175,7 +175,8 @@ protected slots:
 
 private:
 
-  vtkSmartPointer<vtkQtTableView>         TableView;
+    bool ThereIsActiveModel;                //Active Model Indicator
+  vtkSmartPointer<vtkQtTableView>           TableView;
   QComboBox *comboBox;
 
   bool  IsModelActive;
@@ -199,6 +200,8 @@ private:
   vtkSmartPointer<MouseInteractorStyle> gridselectionstyle;
     vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor;
     vtkSmartPointer<vtkAreaPicker> areaPicker;
+
+    CFDModel *activemodel;
 
 
 };

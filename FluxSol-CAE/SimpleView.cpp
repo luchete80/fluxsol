@@ -671,13 +671,15 @@ void SimpleView::slotImportMesh()
 
 
 //------
-//  vtkSmartPointer<HighlightInteractorStyleCells> style =
-//    vtkSmartPointer<HighlightInteractorStyleCells>::New();
-//    style->SetPolyData(polydata);
+  vtkSmartPointer<HighlightInteractorStyleCells> style =
+    vtkSmartPointer<HighlightInteractorStyleCells>::New();
+    style->SetPolyData(polydata);
 
-  vtkSmartPointer<HighlightInteractorStylePoints> style =
-    vtkSmartPointer<HighlightInteractorStylePoints>::New();
-  style->SetPoints(polydata);
+//  vtkSmartPointer<HighlightInteractorStylePoints> style =
+//    vtkSmartPointer<HighlightInteractorStylePoints>::New();
+//  style->SetPoints(polydata);
+
+
 
 
       // For vtkInteractorStyleTrackballCamera - use 'p' to pick at the current mouse position
@@ -685,6 +687,8 @@ void SimpleView::slotImportMesh()
       //  vtkSmartPointer<vtkInteractorStyleTrackballCamera>::New(); //like paraview
       style->SetCurrentRenderer(this->ren);
       renderWindowInteractor->SetInteractorStyle( style );
+
+//////////////////////////////////
 
 
 //      vtkSmartPointer<vtkCallbackCommand> pickCallback =
