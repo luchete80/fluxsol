@@ -22,6 +22,10 @@ Model::Model(const std::string filename)
         this->mesh=mesht;
         //TO MODIFY, READED BY INPUT
         this->maxiter=100;
+
+        std::vector<int> listi=inputfile.section("grid",0).subsection("patch",0).get_intList("list");
+        std::cout << "Getting list"<<endl;
+        std::cout <<"List size"<< listi.size()<<std::endl;
     }
 
 }

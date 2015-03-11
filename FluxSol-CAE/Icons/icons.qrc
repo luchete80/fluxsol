@@ -25,10 +25,13 @@
 	<file>view+X.png</file>
 	<file>view-X.png</file>
 	<file>parts.png</file>
+	<file>GridSelectVertex2.png</file>
+	<file>Arrow.png</file>
 	<file>GridSelectVertex.png</file>
 	<file>GridSelectFace.png</file>
 	<file>GridSelectCell.png</file>
 	<file>MeshTransparency.png</file>
+	<file>Results.png</file>
     <!-- Help -->
     <file>help.png</file>
   </qresource>
