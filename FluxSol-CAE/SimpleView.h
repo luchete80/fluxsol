@@ -177,6 +177,7 @@ private:
 
   vtkSmartPointer<vtkQtTableView>         TableView;
   QComboBox *comboBox;
+  QComboBox *ResultsVarDim;         //Second combo box of results dimension
 
   bool  IsModelActive;
 

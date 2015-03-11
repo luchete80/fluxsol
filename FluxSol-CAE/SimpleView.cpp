@@ -276,8 +276,16 @@ SimpleView::SimpleView()
 
 
     this->comboBox = new QComboBox(this);
+    this->ResultsVarDim = new QComboBox(this);
     //this->ui->toolBar_Results->addWidget(comboBox);
+
+    QWidget* empty = new QWidget();
+    //empty->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
+    empty->resize(10, empty->height());
     this->ui->ResultsToolBar->addWidget(comboBox);
+    this->ui->ResultsToolBar->addWidget(empty);
+    this->ui->ResultsToolBar->addWidget(ResultsVarDim);
+
 
     this->ui->ModelTree->expandAll();
 
@@ -967,27 +975,29 @@ void SimpleView::slotOpenResults()
         this->ren->AddActor(actor);
 
 
+    pdmapper->GetLookupTable()->SetRange(0,100.);
 ////////////////////////////////////////// COLOR BAR
 
   vtkSmartPointer<vtkScalarBarActor> scalarBar =
     vtkSmartPointer<vtkScalarBarActor>::New();
-  scalarBar->SetLookupTable(pdmapper->GetLookupTable());
+
   scalarBar->SetTitle(pd->GetArrayName(0));
   scalarBar->SetNumberOfLabels(4);
   //scalarBar->GetLabelTextProperty()->SetFontSize(4);
-  scalarBar->SetHeight(0.40);
+  scalarBar->SetHeight(0.60);
   scalarBar->SetWidth(0.10);
   scalarBar->GetTitleTextProperty()->SetFontFamilyToArial();
   scalarBar->GetTitleTextProperty()->ShadowOff();
   scalarBar->GetTitleTextProperty()->ItalicOff();
   scalarBar->GetTitleTextProperty()->BoldOff();
-  scalarBar->GetTitleTextProperty()->SetFontSize(6);
+  scalarBar->GetTitleTextProperty()->SetFontSize(1);
   scalarBar->GetTitleTextProperty()->SetColor ( 0.0,0.0,0.0 );
 
   scalarBar->GetLabelTextProperty()->SetFontFamilyToArial();
   scalarBar->GetLabelTextProperty()->ShadowOff();
   scalarBar->GetLabelTextProperty()->ItalicOff();
   scalarBar->GetLabelTextProperty()->BoldOff();
+  scalarBar->GetLabelTextProperty()->SetFontSize(4);
   scalarBar->GetLabelTextProperty()->SetColor ( 0.0,0.0,0.0 );
 
     //scalarBar->GetPositionCoordinate()->SetValue(val1,val2);
@@ -1005,6 +1015,8 @@ void SimpleView::slotOpenResults()
 
   pdmapper->SetLookupTable( colorLookupTable );
   scalarBar->SetLookupTable( colorLookupTable );
+    scalarBar->SetNumberOfLabels(5);
+  pdmapper->SetScalarRange(scalarRange);
 
         //Results Combo Box
         this->comboBox->addItem(pd->GetArrayName(0));

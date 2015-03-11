@@ -45,6 +45,8 @@
 #include "Laplacian.h"
 #include "Laplacian.h"
 #include "_CC_Fv_field_Def.h"
+
+#include "FvGrid.h"
 //#include <mpi.h>
 
 //Based on Free-CFD Input source Code
@@ -215,6 +217,48 @@ public:
 bool extract_in_between(string &data, string begin, string end, string &result,bool check_char_before=false, string acceptList="");
 int number_of_occurances(string haystack, string needle);
 void StringExplode(string str, string separator, vector<string>* results);
+
+
+ReadGridBoundary()
+{
+    vector <Patch> vpatch;
+
+    std::vector<std::list <int> >bpfaces;
+    bcell=0;
+    cout << "[I] Number of Patches: " << this->raw.bc_elem_list.size() <<endl;
+    cout << "[I] Creating Patches ..."<<endl;
+    for (int bp=0;bp<this->raw.bc_elem_list.size();bp++)
+    {
+        list <int> temp;
+        //Looking through raw elements (faces in Grid)
+        for (int el=0;el<bpelem[bp].size();el++)
+        {
+            vector<int> faceverts;
+            //Adding element vertices
+            //for (int iv=0;iv<this->Cell(bpelem[bp][el]).Num_Vertex();iv++)
+            for (int iv=0;iv<vboundcell[bcell].Num_Vertex();iv++)
+                faceverts.push_back(vboundcell[bcell].Vert(iv));
+
+            for (int idf=0;idf<this->Num_Faces();idf++)
+            {
+                bool enc=FindAllVals(faceverts,this->Face(idf).Vert());
+                if (enc)
+                {
+                    //Add face idf to Boundary patch - Agrego idf al Patch
+                    temp.push_back(idf);
+                }
+            }
+            bcell++;
+        }//End element
+        bpfaces.push_back(temp);
+        Patch p(bpfaces[bp]);
+        vpatch.push_back(p);
+    }//boundary patch
+
+    Boundary bound(vpatch);
+    this->AddBoundary(bound);
+
+}
 
 }//End of FluxSol
 #endif
