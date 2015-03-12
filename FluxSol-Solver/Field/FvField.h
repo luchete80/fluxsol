@@ -193,6 +193,13 @@ namespace FluxSol
 		Fv_CC_Grid  & Grid(){ Fv_CC_Grid *gptr=this->GridPtr; return *gptr; }
         const Fv_CC_Grid & ConstGrid()const { Fv_CC_Grid *gptr=this->GridPtr; return *gptr; }
 
+                //TO MODIFY, CHECKMESH
+        void AssignBoundaryField(const _BoundaryField <T> &bfield)
+        {
+            this->BoundaryField=bfield;
+        }
+
+
 		//_CC_Fv_Field (InputFile &inputfile);
 
 		_CC_Fv_Field(){};

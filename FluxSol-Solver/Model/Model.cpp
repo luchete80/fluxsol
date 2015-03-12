@@ -18,14 +18,15 @@ Model::Model(const std::string filename)
     {
         cout << "[I] Reading Mesh ..."<<endl;
         string meshfname=inputfile.section("grid",0).get_string("file");
-        Fv_CC_Grid mesht(meshfname);                                            //Assuming CGNS file
+        Fv_CC_Grid mesht(meshfname);
         this->mesh=mesht;
+        inputfile.AssignGridPtr(this->mesh);                                            //Assuming CGNS file
         //TO MODIFY, READED BY INPUT
         this->maxiter=100;
 
         std::vector<int> listi=inputfile.section("grid",0).subsection("patch",0).get_intList("list");
-        std::cout << "Getting list"<<endl;
-        std::cout <<"List size"<< listi.size()<<std::endl;
+//        std::cout << "Getting list"<<endl;
+//        std::cout <<"List size"<< listi.size()<<std::endl;
     }
 
 }
@@ -44,11 +45,19 @@ void CFDModel::InitFields()
 
 	//Fields
 	_CC_Fv_Field <Scalar> pt(this->mesh);
-	_CC_Fv_Field <Vec3D>  Ut(this->mesh);
+	//_CC_Fv_Field <Vec3D>  Ut(this->mesh);
 
 	this->p=_CC_Fv_Field<Scalar>(this->mesh);
-	this->U=_CC_Fv_Field<Vec3D>(this->mesh);
+	//this->U=_CC_Fv_Field<Vec3D>(this->mesh);
 
+    _CC_Fv_Field <Vec3D>  Ut;
+	this->U=inputfile.UField();
+
+
+    for (int i=0;i<4;i++)
+        cout << "patch cvalue" << U.Boundaryfield().PatchField(i).ConstValue()<<endl;
+
+    cout << "U vals"<<U.Numberofvals()<<endl;
 
 	//ReadVelocityFieldFromInput(this->inputfile,this->U,this->mesh);
 
@@ -66,6 +75,7 @@ void CFDModel::InitFields()
     {
     //Begins with SIMPLE method
 
+
     cout << "[I] Solving system ..." <<endl;
 	//Boundary conditions
 	Scalar wallvalue=0.;
@@ -80,11 +90,10 @@ void CFDModel::InitFields()
 	Scalar alpha_u=0.7;
 
     cout << "[I] Initializing Fields ..."<<endl;
-    U=Vec3D(0.0,0.,0.0);
+    //U=Vec3D(0.0,0.,0.0);
 
-    FvExp::Interpolate(this->U);
+    //FvExp::Interpolate(this->U);
     phi=this->mesh.Sf() & FvExp::Interpolate(this->U);
-
     //cout << "Initial Flux Info"<<endl;
     //cout << phi.outstr()<<endl;
 
@@ -98,29 +107,15 @@ void CFDModel::InitFields()
     //EXAMPLE PENDING TASKS
     //TO ADD BOUNDARY FIELD IN OPERATORS= FROM SURF AND VOLFIELDS
     //TO MODIFY: ASSIGN A FIELD
-    cout << "test" <<endl;
+
     vector<Vec3D> uant;
     uant.assign(mesh.Num_Cells(),Vec3D(0.,0.,0.));
 
     vector<Scalar> pant;
     pant.assign(mesh.Num_Cells(),Scalar(0.));
 
-//    _CC_Fv_Field <Scalar> pant(mesh);
-
-    cout << "Face Patches" <<endl;
-    for (int p=0;p<mesh.vBoundary().Num_Patches();p++)
-    {
-        cout << "Patch " <<p<<endl;
-        for (int f=0;f<mesh.vBoundary().vPatch(p).Num_Faces();f++)
-        {
-            cout <<mesh.vBoundary().vPatch(p).Id_Face(f)<<endl;
-        }
-    }
-
-
     UEqn.SetRelaxCoeff(alpha_u);
     pEqn.SetRelaxCoeff(alpha_p);
-
 
 	//ITERATION BEGINS
 //	clock_t starttime,endtime;
@@ -128,6 +123,11 @@ void CFDModel::InitFields()
     cout << "-----------------------------------------------------------------------------------------------"<<endl;
 	time_t starttimec,endtimec;
 	int it=0;
+
+        //TO MODIFY
+    _BoundaryField<Vec3D>bf =U.Boundaryfield();
+
+
 	while (it <100)
 	{
 //	    cout << "Iteration: "<<it+1<< endl;
@@ -141,9 +141,9 @@ void CFDModel::InitFields()
         for (int f=0;f<mesh.Num_Faces();f++)
         {
             if (mesh.Face(f).Boundaryface())
-                //cout << "Face "<<f << "is boundary"<<endl;
                 phi.Val(f,0.);
         }
+
 
         //To modify, correct in all faces
         //Surface fields have until now redundant information
@@ -157,8 +157,15 @@ void CFDModel::InitFields()
 
         //TO Modify (Simply correct an internal field constant value)
         //Like Update field Boundary Values
-        for (int pf=0;pf<4;pf++) U.Boundaryfield().PatchField(pf).AssignValue(Vec3D(0.,0.,0.));
-        U.Boundaryfield().PatchField(1).AssignValue(Vec3D(1.,0.,0.));
+
+
+
+        //for (int pf=0;pf<4;pf++) U.Boundaryfield().PatchField(pf).AssignValue(Vec3D(0.,0.,0.));
+
+        //U.Boundaryfield().PatchField(1).AssignValue(Vec3D(1.,0.,0.));
+
+
+        U.Boundaryfield().ApplyBC();
 
 		//2. U Calculation
 		//UEqn=FvImp::Div_CDS(phi, U)-FvImp::Laplacian(k,U);//TO MODIFY WITH CONVECTION SCHEME
@@ -191,6 +198,7 @@ void CFDModel::InitFields()
 //                std::setprecision(3)<<time <<"mseconds (time)"<<endl;
 //
 //
+
 		U=UEqn.Field();
 
         _CC_Fv_Field <Scalar> AUr(mesh);
@@ -284,7 +292,7 @@ void CFDModel::InitFields()
             if (pdiff.Val()>maxpdiff.Val())maxpdiff=pdiff;
         }
 
-        cout << " [I] Iter - Residuals u v w p - Time || " << it << " " <<maxudiff.outstr()<<maxpdiff.outstr()<<endl;
+        cout << "[I] Iter - Residuals u v w p - Time || " << it << " " <<maxudiff.outstr()<<maxpdiff.outstr()<<endl;
 
 
         for (int nu=0;nu<mesh.Num_Cells();nu++)
@@ -296,6 +304,12 @@ void CFDModel::InitFields()
         it++;
         _CC_Fv_Field <Vec3D> test(mesh);
         test=FvExp::Grad(p);
+
+
+        //TO MODIFY, Change
+        //TO MODIFY, CHECKMESH
+        U.AssignBoundaryField(bf);
+
 
 	}
 

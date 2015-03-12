@@ -179,6 +179,8 @@ void _Grid::Read_InitialCGNS() {
 				bcIndex=raw.bocoNameMap.size();
 				raw.bocoNameMap.insert(pair<string,int>(bcName,bcIndex));
 				raw.bocoNodes.resize(bcIndex+1);
+
+				this->imported_patchnames.push_back(bcName);//FluxSol Addeed
 			}
 
 			if (Rank==0) cout << "[I] ...Found boundary condition BC_" << bcIndex+1 << " : " << bcName << endl;
@@ -219,6 +221,7 @@ void _Grid::Read_InitialCGNS() {
 
 		} // for boco
 		nBocos=raw.bocoNameMap.size();
+
 
 		// Loop sections within the zone
 		// These include connectivities of cells and bonudary faces

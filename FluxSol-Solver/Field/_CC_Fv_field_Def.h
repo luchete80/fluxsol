@@ -32,7 +32,6 @@ namespace FluxSol
 template <typename T>
 _CC_Fv_Field<T>::_CC_Fv_Field(const Fv_CC_Grid &grid)
 {
-	{
 		this->GridPtr=&grid;
 
 		//Inicio variables PARA TODOS LOS CELLS (ver luego el borde
@@ -47,8 +46,8 @@ _CC_Fv_Field<T>::_CC_Fv_Field(const Fv_CC_Grid &grid)
 	//Para igualar los boundaryfield debo ver el Scalar =
 	this->BoundaryField=bf;
     this->numberofvals=this->GridPtr->Num_Cells();
-	}
 }
+
 
 //Must be verified the patch fields against mesh patches
 template <typename T>
@@ -56,7 +55,6 @@ _CC_Fv_Field<T>::_CC_Fv_Field(const Fv_CC_Grid &grid, const _BoundaryField <T> &
 {
 	_BoundaryField <T> bf = bfield;
 
-	{
 		this->GridPtr=&grid;
 
 		//Inicio variables PARA TODOS LOS CELLS (ver luego el borde
@@ -68,9 +66,9 @@ _CC_Fv_Field<T>::_CC_Fv_Field(const Fv_CC_Grid &grid, const _BoundaryField <T> &
 
 	//Para igualar los boundaryfield debo ver el Scalar =
 	this->BoundaryField=bf;
-
-	}
+    this->numberofvals=this->GridPtr->Num_Cells();
 }
+
 //
 //template <typename T>
 //void _CC_Fv_Field<T>::ToCellCenters(EqnSystem <T> &eqnsys)

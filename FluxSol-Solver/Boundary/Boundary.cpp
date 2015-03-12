@@ -45,6 +45,15 @@ Patch::Patch(std::list <int> &idfaces)
 
 }
 
+Patch::Patch(const string s, std::list <int> &idfaces):Patch(s)
+{
+
+   	std::list<int>::iterator it;
+	this->num_faces=idfaces.size();
+	for (it=idfaces.begin();it!=idfaces.end();it++)
+		this->id_face.push_back((*it));
+}
+
 Boundary::Boundary (std::vector < Patch > patchlist)
 {
 	std::vector< Patch >::iterator it;

@@ -40,7 +40,7 @@ class Patch{
 	std::vector <int> id_face;
 	std::vector <int> id_cell;	//Este puede ddeducirse del anterior pero no la inversa
 
-	const std::string name;
+	std::string name;
 
 
 	public:
@@ -49,6 +49,9 @@ class Patch{
 		Patch(const std::vector <int> cell, const std::vector <int> face){};
 		//template <typename T,unsigned S> Patch( T (&v)[S]);
 		Patch(std::list <int> &idfaces);
+		Patch(const std::string s){name=s;}
+
+		Patch(const std::string s, std::list <int> &idfaces);
 
 		void AddFace(const int &f){id_face.push_back(f);id_face[num_faces]=f;num_faces++;}
 		int & Num_Faces(){return num_faces;};
@@ -59,14 +62,19 @@ class Patch{
 		// LO PIDE EL COMPILADOR
 		Patch & operator=(const Patch&){return *this;}
 
+		const string & Name()const {return name;}
+
 
 	};
 
 class Boundary{
 
     std::vector<Patch> patch;
-	std::list <int> idpatch;	//Esta se recorre en orden
+	std::list <int> idpatch;	//This is used in order to use Field::ApplyBC
+                                //
 	std::vector <int> e;
+
+	std::vector <string> patchname;
 
 	int num_faces;			//En la construccion se suma todo
 	int num_patches;
@@ -81,6 +89,8 @@ class Boundary{
 	int & Num_Faces(){return num_faces;}
 	int & Num_Patches(){return num_patches;}
 	Patch & vPatch(const int &i){return patch[i];}
+
+	const string & PatchName(const int &id)const{return patchname[id];}
 };
 
 }

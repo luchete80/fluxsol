@@ -175,10 +175,16 @@ public:
 
 
 class InputFile: public InputBaseContainer {
+
+protected:
+    	Fv_CC_Grid *GridPtr;
+
 public:
 	string fileName;
 	map<string,Section> sections;
 	map<string,vector<Section> > numberedSections;
+
+	AssignGridPtr(const Fv_CC_Grid& gp){this->GridPtr=&gp;}
 
 	InputFile(void);
 	InputFile(string filename);
@@ -211,6 +217,13 @@ public:
 	void strip_white_spaces(string &data);
 	void read_inputs(void);
 
+	template <typename T>
+	const _BoundaryField<T> BoundaryField(const string &name)const;
+
+	template <typename T>
+	_BoundaryField<T> UBoundaryField();
+
+    _CC_Fv_Field <Vec3D> UField();
 
 };
 
@@ -218,47 +231,47 @@ bool extract_in_between(string &data, string begin, string end, string &result,b
 int number_of_occurances(string haystack, string needle);
 void StringExplode(string str, string separator, vector<string>* results);
 
-
-ReadGridBoundary()
-{
-    vector <Patch> vpatch;
-
-    std::vector<std::list <int> >bpfaces;
-    bcell=0;
-    cout << "[I] Number of Patches: " << this->raw.bc_elem_list.size() <<endl;
-    cout << "[I] Creating Patches ..."<<endl;
-    for (int bp=0;bp<this->raw.bc_elem_list.size();bp++)
-    {
-        list <int> temp;
-        //Looking through raw elements (faces in Grid)
-        for (int el=0;el<bpelem[bp].size();el++)
-        {
-            vector<int> faceverts;
-            //Adding element vertices
-            //for (int iv=0;iv<this->Cell(bpelem[bp][el]).Num_Vertex();iv++)
-            for (int iv=0;iv<vboundcell[bcell].Num_Vertex();iv++)
-                faceverts.push_back(vboundcell[bcell].Vert(iv));
-
-            for (int idf=0;idf<this->Num_Faces();idf++)
-            {
-                bool enc=FindAllVals(faceverts,this->Face(idf).Vert());
-                if (enc)
-                {
-                    //Add face idf to Boundary patch - Agrego idf al Patch
-                    temp.push_back(idf);
-                }
-            }
-            bcell++;
-        }//End element
-        bpfaces.push_back(temp);
-        Patch p(bpfaces[bp]);
-        vpatch.push_back(p);
-    }//boundary patch
-
-    Boundary bound(vpatch);
-    this->AddBoundary(bound);
-
-}
+//
+//ReadGridBoundary()
+//{
+//    vector <Patch> vpatch;
+//
+//    std::vector<std::list <int> >bpfaces;
+//    bcell=0;
+//    cout << "[I] Number of Patches: " << this->raw.bc_elem_list.size() <<endl;
+//    cout << "[I] Creating Patches ..."<<endl;
+//    for (int bp=0;bp<this->raw.bc_elem_list.size();bp++)
+//    {
+//        list <int> temp;
+//        //Looking through raw elements (faces in Grid)
+//        for (int el=0;el<bpelem[bp].size();el++)
+//        {
+//            vector<int> faceverts;
+//            //Adding element vertices
+//            //for (int iv=0;iv<this->Cell(bpelem[bp][el]).Num_Vertex();iv++)
+//            for (int iv=0;iv<vboundcell[bcell].Num_Vertex();iv++)
+//                faceverts.push_back(vboundcell[bcell].Vert(iv));
+//
+//            for (int idf=0;idf<this->Num_Faces();idf++)
+//            {
+//                bool enc=FindAllVals(faceverts,this->Face(idf).Vert());
+//                if (enc)
+//                {
+//                    //Add face idf to Boundary patch - Agrego idf al Patch
+//                    temp.push_back(idf);
+//                }
+//            }
+//            bcell++;
+//        }//End element
+//        bpfaces.push_back(temp);
+//        Patch p(bpfaces[bp]);
+//        vpatch.push_back(p);
+//    }//boundary patch
+//
+//    Boundary bound(vpatch);
+//    this->AddBoundary(bound);
+//
+//}
 
 }//End of FluxSol
 #endif

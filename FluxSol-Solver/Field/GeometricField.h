@@ -51,6 +51,9 @@ namespace FluxSol
 	//boundary type
 	enum _PatchFieldType { FIXEDVALUE, FIXEDGRADIENT };
 		//IN FORMER FLUXSOL VERSIONS THIS CLASS WERE CALLED FVPATCHFIELD; NOW IS GENERIC
+
+    enum _PatchFieldDistr { CONSTVALUE, VARVALUE }; //Constant value or variable value
+
 	template<typename T>
 	class _PatchField :
 		//public _Surf_Fv_Field<T>
@@ -59,18 +62,33 @@ namespace FluxSol
 	{
 	protected:
 		int patchid;
-		_PatchFieldType type;
+		_PatchFieldType     type;
+		_PatchFieldDistr    distr;
+
+		T cvalue;           //Field constant value
 
 
 	public:
 		_PatchField(){};
 		explicit _PatchField(const Patch &);
+        _PatchField(const Patch &p, const T &cval);
+
 		int & PatchId(){ return patchid; };
 		//This must be in parent class
 		void AssignValue(const T &val);
 		void AssignType(const _PatchFieldType &t) {this->type=t;}
 
 		_PatchFieldType& Type(){ return type; }
+
+		const T & ConstValue()const{return cvalue;}
+
+		void AssignBCValues()
+		{
+            if (distr==CONSTVALUE)
+            {
+                this->AssignValue(this->cvalue);
+            }
+		}
 
 
 	};
@@ -79,7 +97,7 @@ namespace FluxSol
 		//Instead a FieldField as in OpenFoam has a vector in Fields
 	//This will be soon a field
 	template<typename T>
-	class _BoundaryField
+	class _BoundaryField:public _Field<T>
 	{
 	protected:
 		//Can be Fixed Value and Fixed Gradient
@@ -100,6 +118,18 @@ namespace FluxSol
 
 		}
 
+		_BoundaryField(const Boundary &bound, const vector<T> &cvals) //Constant patch field values
+		{
+			Boundary b = bound;
+			//Generate a _PatchField for every patch in boundary
+			for (int np = 0; np<b.Num_Patches(); np++)
+			{
+				_PatchField < T > pf(b.vPatch(np),cvals[np]);
+				patchfield.push_back(pf);
+			}
+
+		}
+
 		_PatchField < T > & PatchField(const int &i){ return this->patchfield[i]; }
         void AssignPatchFieldTypes(const _PatchFieldType &t)
 		{
@@ -107,6 +137,12 @@ namespace FluxSol
                 this->PatchField(pf).AssignType(t);
 		}
 		void Add_PatchField(_PatchField<T> &field)  { patchfield.push_back(field); }
+
+		void ApplyBC()
+		{
+            for (int pf=0;pf<this->patchfield.size();pf++)
+                this->PatchField(pf).AssignBCValues();
+		}
         ~_BoundaryField(){}
 	};
 
@@ -209,7 +245,7 @@ namespace FluxSol
                 ret.AssignGrid(&right.Grid());
                 typename innerProduct < T, T> ::type val;
                 //Sizes must be equal and rank must be large than zero?
-//                cout << "Number of vals" <<this->Numberofvals()<<endl;
+
                 for (int c = 0; c < this->Numberofvals(); c++)
                 {
                     val = this->Val(c) & right.Val(c);

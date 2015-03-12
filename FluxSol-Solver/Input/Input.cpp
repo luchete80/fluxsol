@@ -430,6 +430,7 @@ void InputFile::read_inputs(void) {
     //std::vector<int> list=get_intLists    ("list");
 
 	section("grid",0).registerSubsection("BC",numbered,required);
+	section("grid",0).subsection("BC",0).register_string("patch",required);
 	section("grid",0).subsection("BC",0).register_string("type",required);
 	section("grid",0).subsection("BC",0).register_string("kind",optional,"none");
 	section("grid",0).subsection("BC",0).register_string("region",optional,"gridfile");
@@ -562,5 +563,60 @@ EqnSystem <Scalar> InputFile::ReadEqnSys(const Fv_CC_Grid &mesh) {
     return eqn;
 
 }
+
+//TO MODIFY, TEMPLATIZE!!!!!
+
+//NOT WORKING BECAUSE, REFERENCE IS DELETED, TO MODIFY
+_CC_Fv_Field <Vec3D>
+InputFile::UField()
+{
+    //Reading BC
+    int patchfieldnumber;   //number of boundary field patches
+    patchfieldnumber=section("grid",0).numberedSubsections["BC"].size();
+    cout << "Field Patches: "<<patchfieldnumber<<endl;
+    int numpatches=GridPtr->vBoundary().Num_Patches();
+    vector<int> asoc(numpatches,-1);   //Relation between Patch and bcond, size refers to patch
+    vector <Vec3D> cvalues(numpatches,Vec3D(0.));   //Def cvalues
+    vector <int> validpf_id;                        //Refers to global boundary condition
+
+    int validpfnum=0;        //valid patchfield number
+
+    for (int pf=0;pf<patchfieldnumber;pf++)
+    {
+        string pfname=section("grid",0).subsection("BC",pf).get_string("patch");
+
+        for (int meshp=0;meshp<numpatches;meshp++)
+        {
+           if(pfname==GridPtr->vBoundary().vPatch(meshp).Name())
+           {
+                //cout << "Found name in patch "<<meshp<<endl;
+                asoc[meshp]=validpfnum;
+                validpf_id.push_back(pf);
+                validpfnum++;
+           }
+        }
+    }
+
+    //Assign values
+    for (int meshp=0;meshp<numpatches;meshp++)
+    {
+        //cout << "meshp: "<<meshp<<endl;
+        int validpfid=asoc[meshp];
+        //cout << "validpfid: "<<validpfid<<endl;
+        int pf=validpf_id[validpfid];
+        //cout << "global pf: "<<pf<<endl;
+        cvalues[meshp]=section("grid",0).subsection("BC",pf).get_Vec3D("U");
+ //       cvalues[meshp]=section("grid",0).subsection("BC",pf).get_string("U");
+
+        //cout << "Applied "<<cvalues[meshp].outstr()<<"to patch "<<meshp<<endl;
+    }
+
+    _BoundaryField<Vec3D> bf(GridPtr->vBoundary(),cvalues);
+    cout << "Creating ret field"<<endl;
+    _CC_Fv_Field <Vec3D> ret(*GridPtr, bf);
+
+    return ret;
+}
+
 
 }

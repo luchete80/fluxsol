@@ -43,6 +43,23 @@ _PatchField<T>::_PatchField(const Patch &p)
 	}
 }
 
+template <typename T>
+_PatchField<T>::_PatchField(const Patch &p, const T &cval)
+{
+	Patch patch=p;
+
+	this->numberofvals=0;
+
+	for (int nf=0;nf<patch.Num_Faces();nf++)
+	{
+		T v(0.);
+		this->value.push_back(v);
+		this->numberofvals++;
+	}
+    //std::cout << "assign cval "<<cval.outstr()<<endl;
+	this->cvalue=cval;
+}
+
 
 template <typename T>
 void _PatchField<T>::AssignValue(const T &val)

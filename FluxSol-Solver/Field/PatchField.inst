@@ -7,6 +7,12 @@ template
 _PatchField<Vec3D>::_PatchField(const Patch &p);
 
 template
+_PatchField<Scalar>::_PatchField(const Patch &p, const Scalar &);
+
+template
+_PatchField<Vec3D>::_PatchField(const Patch &p, const Vec3D &);
+
+template
 void _PatchField<Scalar>::AssignValue(const Scalar &val);
 
 template

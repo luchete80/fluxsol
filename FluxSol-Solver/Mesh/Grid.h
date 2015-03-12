@@ -69,7 +69,7 @@ class _Grid{
 	//std::ostringstream hola;
     std::ofstream meshlog;
 
-
+    std::vector <string> imported_patchnames;  //Imported
 	bool escribir_log;				//Si escribir o no el log de creacion de malla
 														//Podria hacerlo por niveles. En principio es todo o nada
 

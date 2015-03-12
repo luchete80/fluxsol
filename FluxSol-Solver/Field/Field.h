@@ -55,6 +55,8 @@ class _Field{
 	std::vector <int> idgrid_domain;	//Ya sea vertex, surface o volume
 										//Son los id de los vertices que forman parte del dominio
 
+	std::string name;
+
 
     public:
     _Field(){};
@@ -86,6 +88,8 @@ class _Field{
 	//void operator=(const double &val);
 
 	_Field<T> operator=(const double &val);
+
+	const string & Name()const {return name;}
 
 	const std::string outstr() const
 	{

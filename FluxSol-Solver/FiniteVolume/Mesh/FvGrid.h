@@ -247,10 +247,14 @@ private:
         std::vector<std::list <int> >bpfaces;
         bcell=0;
         cout << "[I] Number of Patches: " << this->raw.bc_elem_list.size() <<endl;
+        int nBocos=raw.bocoNameMap.size();  //Extrcted from freecfd
         cout << "[I] Creating Patches ..."<<endl;
+        string pname;
+
         for (int bp=0;bp<this->raw.bc_elem_list.size();bp++)
         {
             list <int> temp;
+            pname=this->imported_patchnames[bp];
             //Looking through raw elements (faces in Grid)
             for (int el=0;el<bpelem[bp].size();el++)
             {
@@ -271,16 +275,21 @@ private:
                 }
                 bcell++;
             }//End element
+
             bpfaces.push_back(temp);
-            Patch p(bpfaces[bp]);
+            Patch p(pname,bpfaces[bp]);
+            //cout << "New Patch Name "<< pname<<endl;
             vpatch.push_back(p);
         }//boundary patch
 
         Boundary bound(vpatch);
         this->AddBoundary(bound);
 
+
+
 	}
     void Log_Conect();
+
 
 
 	// OUTPUT //

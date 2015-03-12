@@ -103,10 +103,10 @@ int main()
 
 //    _CC_Fv_Field <Scalar> pant(mesh);
 
-    cout << "Face Patches" <<endl;
+//    cout << "Face Patches" <<endl;
     for (int p=0;p<mesh.vBoundary().Num_Patches();p++)
     {
-        cout << "Patch " <<p<<endl;
+//        cout << "Patch " <<p<<endl;
         for (int f=0;f<mesh.vBoundary().vPatch(p).Num_Faces();f++)
         {
             cout <<mesh.vBoundary().vPatch(p).Id_Face(f)<<endl;
