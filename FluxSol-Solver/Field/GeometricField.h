@@ -278,6 +278,29 @@ namespace FluxSol
             return ret;
         }
 
+        friend const GeomField <T>  operator/ (const GeomField <T> &left, const GeomField <T> &right)
+        {
+                    //GeomField<T> *ret=new GeomField<T>(this->Numberofvals());
+            //TO MODIFY: USE COPY CONSTRUCTOR OR OPERATOR=
+            //POINTER MUST NOT BE PASSED HERE
+            GeomField<T> ret(right.Numberofvals());
+            //THIS IS WRONG
+            ret.AssignGrid(&right.Grid());
+
+            //GeomField<T> ret(this->Grid());
+            T val;
+            //Sizes must be equal and rank must be large than zero?
+            for (int c = 0; c < right.Numberofvals(); c++)
+            {
+                val = left.Val(c) / right.Val(c);
+                //cout << "val" << val.outstr()<<endl;
+                ret.Val(c,val);
+            }
+
+            return ret;
+        }
+
+
         //~GeomField(){};
 
 	};

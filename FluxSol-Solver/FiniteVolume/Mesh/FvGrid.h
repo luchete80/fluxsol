@@ -318,6 +318,19 @@ private:
 
         return *this;
 	}
+
+
+	const GeomField <Scalar> Vp() const
+	{
+        GeomField <Scalar> ret(this->Num_Cells());
+
+
+        for (int c=0;c<this->Num_Cells();c++)
+        {
+            ret.Val(c,this->Cell(c).Vp());
+        }
+        return ret;
+	}
 };
 
 } //Fin FluxSol

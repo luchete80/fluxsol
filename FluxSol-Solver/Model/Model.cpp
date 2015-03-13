@@ -69,6 +69,11 @@ void CFDModel::InitFields()
     cout << "[I] Assigning Flux Fields ..." <<endl;
 	p.AssignPatchFieldTypes(FIXEDGRADIENT);
 	U.AssignPatchFieldTypes(FIXEDVALUE);
+
+	for (int p=0;p<this->mesh.vBoundary().Num_Patches();p++)
+    {
+        //U.Boundaryfield().PatchField(i)
+    }
 }
 
     void CFDModel::Solve()
@@ -204,7 +209,8 @@ void CFDModel::InitFields()
         _CC_Fv_Field <Scalar> AUr(mesh);
 
         //TO MODIFY
-        AUr=0.001/UEqn.A();       // In OpenFoam these are scalar
+        //Mesh Volume
+        AUr=mesh.Vp()/UEqn.A();       // In OpenFoam these are scalar
 
 //        //Assign to U Eqn Solved values
         _Surf_Fv_Field <Vec3D> Uf_;
