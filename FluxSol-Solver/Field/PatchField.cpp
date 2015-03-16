@@ -64,8 +64,11 @@ _PatchField<T>::_PatchField(const Patch &p, const T &cval)
 template <typename T>
 void _PatchField<T>::AssignValue(const T &val)
 {
+    //""this->numberofvals
 	for (int n=0;n<this->numberofvals;n++)
 		this->value[n]=val;
+
+		//cout << "Assign Value"<<val.outstr()<<endl;
 }
 
 }

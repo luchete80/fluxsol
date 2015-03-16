@@ -1,6 +1,7 @@
 #ifndef _MODEL_H
 #define _MODEL_H
 
+#include "BoundaryCond.h"
 #include "FvGrid.h"
 #include "SIMPLE.h"
 //#include "Nastran.h"
@@ -47,6 +48,8 @@ protected:
 	int numfields;
 	int nummats;
 	std::vector <Materials> mat;
+
+	std::vector <BoundaryCond*> bcs;
 
     Fv_CC_Grid mesh;// COMPLETE MESH
 

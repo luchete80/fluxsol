@@ -57,7 +57,6 @@ class Patch{
 		int & Num_Faces(){return num_faces;};
 		int & Id_Face(const int &i){return this->id_face[i];}
 
-
 		// OJO QUE ESTA FUNCION DEBE CREARSE, VER EN DONDE
 		// LO PIDE EL COMPILADOR
 		Patch & operator=(const Patch&){return *this;}

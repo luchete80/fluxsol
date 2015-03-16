@@ -35,6 +35,7 @@
 #include <fstream>
 
 
+#include "BoundaryCond.h"
 #include "Utils.h"
 #include "Vec3d.h"
 #include "Field.h"
@@ -179,6 +180,10 @@ class InputFile: public InputBaseContainer {
 protected:
     	Fv_CC_Grid *GridPtr;
 
+    	_CC_Fv_Field <Vec3D> * ufield;
+    	_CC_Fv_Field <Scalar> * pfield;
+
+
 public:
 	string fileName;
 	map<string,Section> sections;
@@ -213,6 +218,10 @@ public:
 		else { return sections[sectionName]; }
 	}
 
+    void AssignFieldPtrs(_CC_Fv_Field <Vec3D> *u, _CC_Fv_Field <Scalar> *p)
+    {
+        this->ufield=u;this->pfield=p;
+    }
 	void stripComments(string &data);
 	void strip_white_spaces(string &data);
 	void read_inputs(void);
@@ -224,6 +233,9 @@ public:
 	_BoundaryField<T> UBoundaryField();
 
     _CC_Fv_Field <Vec3D> UField();
+    _CC_Fv_Field <Scalar> pField();
+
+    std::vector <BoundaryCond *> ReadBCs();
 
 };
 

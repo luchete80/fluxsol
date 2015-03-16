@@ -615,6 +615,138 @@ InputFile::UField()
     cout << "Creating ret field"<<endl;
     _CC_Fv_Field <Vec3D> ret(*GridPtr, bf);
 
+
+    return ret;
+}
+
+
+//TO MODIFY, to join with previous function
+_CC_Fv_Field <Scalar>
+InputFile::pField()
+{
+    //Reading BC
+    int patchfieldnumber;   //number of boundary field patches
+    patchfieldnumber=section("grid",0).numberedSubsections["BC"].size();
+    cout << "Field Patches: "<<patchfieldnumber<<endl;
+    int numpatches=GridPtr->vBoundary().Num_Patches();
+    vector<int> asoc(numpatches,-1);   //Relation between Patch and bcond, size refers to patch
+    vector <Scalar> cvalues(numpatches,Scalar(0.));   //Def cvalues
+    vector <int> validpf_id;                        //Refers to global boundary condition
+
+    int validpfnum=0;        //valid patchfield number
+
+    for (int pf=0;pf<patchfieldnumber;pf++)
+    {
+        string pfname=section("grid",0).subsection("BC",pf).get_string("patch");
+
+        for (int meshp=0;meshp<numpatches;meshp++)
+        {
+           if(pfname==GridPtr->vBoundary().vPatch(meshp).Name())
+           {
+                //cout << "Found name in patch "<<meshp<<endl;
+                asoc[meshp]=validpfnum;
+                validpf_id.push_back(pf);
+                validpfnum++;
+           }
+        }
+    }
+
+    //Assign values
+    for (int meshp=0;meshp<numpatches;meshp++)
+    {
+        //cout << "meshp: "<<meshp<<endl;
+        int validpfid=asoc[meshp];
+        //cout << "validpfid: "<<validpfid<<endl;
+        int pf=validpf_id[validpfid];
+        //cout << "global pf: "<<pf<<endl;
+        cvalues[meshp]=section("grid",0).subsection("BC",pf).get_double("p");
+ //       cvalues[meshp]=section("grid",0).subsection("BC",pf).get_string("U");
+
+        cout << "Applied pressure "<<cvalues[meshp].outstr()<<"to patch "<<meshp<<endl;
+    }
+
+    _BoundaryField<Scalar> bf(GridPtr->vBoundary(),cvalues);
+    cout << "Creating ret field"<<endl;
+    _CC_Fv_Field <Scalar> ret(*GridPtr, bf);
+
+
+    return ret;
+}
+
+
+std::vector <BoundaryCond*>
+InputFile::ReadBCs()
+{
+    std::vector <BoundaryCond*> ret;
+    //Reading BC
+    int patchfieldnumber;   //number of boundary field patches
+    patchfieldnumber=section("grid",0).numberedSubsections["BC"].size();
+    cout << "Reading Patch Types: "<<patchfieldnumber<<endl;
+    int numpatches=GridPtr->vBoundary().Num_Patches();
+    vector<int> asoc(numpatches,-1);   //Relation between Patch and bcond, size refers to patch
+    vector <Vec3D> cvalues(numpatches,Vec3D(0.));   //Def cvalues
+    vector <int> validpf_id;                        //Refers to global boundary condition
+
+    int validpfnum=0;        //valid patchfield number
+
+    for (int pf=0;pf<patchfieldnumber;pf++)
+    {
+        string pfname=section("grid",0).subsection("BC",pf).get_string("patch");
+
+        for (int meshp=0;meshp<numpatches;meshp++)
+        {
+           if(pfname==GridPtr->vBoundary().vPatch(meshp).Name())
+           {
+                //cout << "Found name in patch "<<meshp<<endl;
+                asoc[meshp]=validpfnum;
+                validpf_id.push_back(pf);
+                validpfnum++;
+
+                string type=section("grid",0).subsection("BC",pf).get_string("type");
+
+                cout << "BC " << pf << "is of type " << type << endl;
+                cout << "Creating BC for patch "<<meshp<<",Named: " << pfname <<endl;
+                if (type=="wall" || type =="WALL")
+                {
+                    WallBC *bc=new WallBC(this->ufield,this->pfield,meshp);
+
+                    ret.push_back(bc);
+                }
+                else if (type=="inlet" || type =="INLET")
+                {
+                    InletBC *bc=new InletBC(this->ufield,this->pfield,meshp);
+
+                    ret.push_back(bc);
+                }
+
+                else if (type=="pressure-outlet" || type =="PRESSURE-OUTLET")
+                {
+                    PressureOutletBC *bc=new PressureOutletBC(this->ufield,this->pfield,meshp);
+
+                    ret.push_back(bc);
+                }
+
+                else if (type=="pressure-inlet" || type =="PRESSURE-OUTLET")
+                {
+                    PressureInletBC *bc=new PressureInletBC(this->ufield,this->pfield,meshp);
+
+                    ret.push_back(bc);
+                }
+
+                else
+                {
+                    cout << "[E] Boundary condition type is not recognized, created Wall BC for this patch..." <<endl;
+                    WallBC *bc=new WallBC(this->ufield,this->pfield,meshp);
+
+                    ret.push_back(bc);
+                }
+           }
+        }
+    }
+
+    _BoundaryField<Vec3D> bf(GridPtr->vBoundary(),cvalues);
+    //cout << "Creating ret field"<<endl
+
     return ret;
 }
 

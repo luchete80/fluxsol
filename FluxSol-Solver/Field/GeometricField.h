@@ -84,10 +84,11 @@ namespace FluxSol
 
 		void AssignBCValues()
 		{
-            if (distr==CONSTVALUE)
-            {
+            //if (distr==CONSTVALUE)
+            //{
+//                cout << "Assigning value "<<cvalue<<endl;
                 this->AssignValue(this->cvalue);
-            }
+            //}
 		}
 
 
@@ -141,7 +142,7 @@ namespace FluxSol
 		void ApplyBC()
 		{
             for (int pf=0;pf<this->patchfield.size();pf++)
-                this->PatchField(pf).AssignBCValues();
+                this->patchfield[pf].AssignBCValues();
 		}
         ~_BoundaryField(){}
 	};

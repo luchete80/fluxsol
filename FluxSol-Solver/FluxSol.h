@@ -43,7 +43,7 @@
 #include "Analysis.h"
 
 #include "Boundary.h"
-
+#include "BoundaryCond.h"
 
 // FIELD
 #include "Field.h"

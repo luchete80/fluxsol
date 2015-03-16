@@ -16,17 +16,19 @@ Model::Model(const std::string filename)
 
     if (this->numparts==1)
     {
+        //TO MODIFY, INPUT FILE MUST RETURN A MESH
         cout << "[I] Reading Mesh ..."<<endl;
         string meshfname=inputfile.section("grid",0).get_string("file");
         Fv_CC_Grid mesht(meshfname);
         this->mesh=mesht;
-        inputfile.AssignGridPtr(this->mesh);                                            //Assuming CGNS file
+        inputfile.AssignGridPtr(this->mesh);                               //Assuming CGNS file
         //TO MODIFY, READED BY INPUT
         this->maxiter=100;
 
         std::vector<int> listi=inputfile.section("grid",0).subsection("patch",0).get_intList("list");
 //        std::cout << "Getting list"<<endl;
 //        std::cout <<"List size"<< listi.size()<<std::endl;
+
     }
 
 }
@@ -47,15 +49,20 @@ void CFDModel::InitFields()
 	_CC_Fv_Field <Scalar> pt(this->mesh);
 	//_CC_Fv_Field <Vec3D>  Ut(this->mesh);
 
-	this->p=_CC_Fv_Field<Scalar>(this->mesh);
+	//this->p=_CC_Fv_Field<Scalar>(this->mesh);
 	//this->U=_CC_Fv_Field<Vec3D>(this->mesh);
+    this->U=inputfile.UField();     //Read Field Boundary Values
+    this->p=inputfile.pField();
 
     _CC_Fv_Field <Vec3D>  Ut;
-	this->U=inputfile.UField();
+
+    for (int i=0;i<4;i++)
+        cout << "patch cvalue Velocity" << U.Boundaryfield().PatchField(i).ConstValue()<<endl;
 
 
     for (int i=0;i<4;i++)
-        cout << "patch cvalue" << U.Boundaryfield().PatchField(i).ConstValue()<<endl;
+        cout << "patch cvalue Pressure" << p.Boundaryfield().PatchField(i).ConstValue().outstr()<<endl;
+
 
     cout << "U vals"<<U.Numberofvals()<<endl;
 
@@ -67,13 +74,24 @@ void CFDModel::InitFields()
 
 	//To be Passed to input reader
     cout << "[I] Assigning Flux Fields ..." <<endl;
-	p.AssignPatchFieldTypes(FIXEDGRADIENT);
-	U.AssignPatchFieldTypes(FIXEDVALUE);
+	//p.AssignPatchFieldTypes(FIXEDGRADIENT);
+	//U.AssignPatchFieldTypes(FIXEDVALUE);
 
+    cout << "[I] Reading Boundary Conditions"<<endl;
+	inputfile.AssignFieldPtrs(&this->U,&this->p);
+    this->bcs=inputfile.ReadBCs();
+
+    cout << "[I] Assigning Patch Field Types"<<endl;
 	for (int p=0;p<this->mesh.vBoundary().Num_Patches();p++)
     {
         //U.Boundaryfield().PatchField(i)
+        cout << "[I] Patch "<<p<<endl;
+        bcs[p]->AssignPatchFieldType();
     }
+
+    //this->p=inputfile.UField();     //Read Field Boundary Values
+
+    //BEFORE READ BCs!
 }
 
     void CFDModel::Solve()
@@ -130,8 +148,12 @@ void CFDModel::InitFields()
 	int it=0;
 
         //TO MODIFY
-    _BoundaryField<Vec3D>bf =U.Boundaryfield();
+    _BoundaryField<Vec3D>  bf =U.Boundaryfield();
+    _BoundaryField<Scalar>pbf =p.Boundaryfield();
 
+
+    for (int i=0;i<4;i++)
+        cout << "patch cvalue" << U.Boundaryfield().PatchField(i).ConstValue()<<endl;
 
 	while (it <100)
 	{
@@ -140,7 +162,7 @@ void CFDModel::InitFields()
 //
 //      //Boundary Conditions
         //Pressure gradient is null at all walls
-        for (int pf=0;pf<4;pf++) p.Boundaryfield().PatchField(pf).AssignValue(0.0);
+        //for (int pf=0;pf<4;pf++) p.Boundaryfield().PatchField(pf).AssignValue(0.0);
         //p.Val(36,0.);    //Reference Pressure
 
         for (int f=0;f<mesh.Num_Faces();f++)
@@ -171,6 +193,7 @@ void CFDModel::InitFields()
 
 
         U.Boundaryfield().ApplyBC();
+        p.Boundaryfield().ApplyBC();
 
 		//2. U Calculation
 		//UEqn=FvImp::Div_CDS(phi, U)-FvImp::Laplacian(k,U);//TO MODIFY WITH CONVECTION SCHEME
@@ -315,7 +338,7 @@ void CFDModel::InitFields()
         //TO MODIFY, Change
         //TO MODIFY, CHECKMESH
         U.AssignBoundaryField(bf);
-
+        p.AssignBoundaryField(pbf);
 
 	}
 

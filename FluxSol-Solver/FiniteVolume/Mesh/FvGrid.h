@@ -256,6 +256,7 @@ private:
             list <int> temp;
             pname=this->imported_patchnames[bp];
             //Looking through raw elements (faces in Grid)
+            cout << "[I] Boundary Patch: "<<bp<<", Named: " <<pname<<", Faces: "<<bpelem[bp].size()<<endl;
             for (int el=0;el<bpelem[bp].size();el++)
             {
                 vector<int> faceverts;
