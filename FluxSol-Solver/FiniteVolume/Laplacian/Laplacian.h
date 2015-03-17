@@ -136,22 +136,26 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 		{
 			int idface=VolField.Grid().vBoundary().vPatch(p).Id_Face(f);
 			_FvFace face=VolField.Grid().Face(idface);  //TO MODIFY idface or face pos??
-			//Boundary type
-			//Instead of if sentence it is convenient to use inheritance
-			if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
-			{
-			    //cout <<"source"<<endl;
-				ap=-face.Norm_ad()/fabs(face.Dist_pf_LR(0))*fi;
-				source=VolField.Boundaryfield().PatchField(p).Val(f)*ap;
-				//cout <<"created" <<endl;
-				eqnsys.Eqn(face.Cell(0)).Ap()+=ap;
-				eqnsys.Eqn(face.Cell(0)).Source()+=source;
-			}
-			else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
-			{
-				source=VolField.Boundaryfield().PatchField(p).Val(f)*fi;
-				eqnsys.Eqn(face.Cell(0)).Source()+=source;
-			}
+
+            if (!face.Is_Null_Flux_Face())
+            {
+                //Boundary type
+                //Instead of if sentence it is convenient to use inheritance
+                if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
+                {
+                    //cout <<"source"<<endl;
+                    ap=-face.Norm_ad()/fabs(face.Dist_pf_LR(0))*fi;
+                    source=VolField.Boundaryfield().PatchField(p).Val(f)*ap;
+                    //cout <<"created" <<endl;
+                    eqnsys.Eqn(face.Cell(0)).Ap()+=ap;
+                    eqnsys.Eqn(face.Cell(0)).Source()+=source;
+                }
+                else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
+                {
+                    source=VolField.Boundaryfield().PatchField(p).Val(f)*fi;
+                    eqnsys.Eqn(face.Cell(0)).Source()+=source;
+                }
+            }//If !NullFluxFace
 		}
 
 	}

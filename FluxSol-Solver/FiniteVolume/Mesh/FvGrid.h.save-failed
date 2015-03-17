@@ -188,7 +188,7 @@ private:
                 boundnode++;
                 temp.push_back(*sit);
             }
-//            cout << "[I] BC "<< bp << "has " <<temp.size()<<endl;
+            cout << "[I] BC "<< bp << "has " <<temp.size()<<endl;
             bpnode.push_back(temp);
         }
 
@@ -232,6 +232,13 @@ private:
 
         cout << "boundary faces size" <<temp_boundfaces.size()<<endl;
         std::vector<std::list <int> >bpfaces;
+        bcell=0;
+        cout << "[I] Creating Boundary Faces ..."<<endl;
+
+        cout << "[I] "<< bpnode[0].size() << endl;
+        for (int node=0;node<bpnode[0].size();node++)
+            cout <<bpnode[0][node]<<" ";
+
 
 //        cout << "Boundary zone nodes" << bpnode[0][node]<<endl;
         cout << "[I] Number of Patches: " << this->raw.bc_elem_list.size() <<endl;
@@ -239,26 +246,26 @@ private:
         cout << "[I] Creating Patches ..."<<endl;
 
         string pname;
-        for (int bp=0;bp<this->raw.bc_elem_list.size();bp++)    //Look Through patch
+        for (int bp=0;bp<this->raw.bc_elem_list.size();bp++)
         {
             pname=this->imported_patchnames[bp];
             list <int> temp;
 
-            for (int bf=0;bf<temp_boundfaces.size();bf++)   //Look through all boundary faces
+            for (int bf=0;bf<temp_boundfaces.size();bf++)
             {
                 int idf=temp_boundfaces[bf];
-                //bool enc=FindAllVals(this->Face(idf).Vert(), bpnode[bp]);
-                bool enc=true;
-                for (int n=0;n<this->Face(idf).Vert().size();n++)
-                    if (!(this->raw.bocoNodes[bp].find(this->Face(idf).Vert()[n])!=this->raw.bocoNodes[bp].end())) enc=false;
-
+//                cout << "Face "<<idf<<endl;
+                //cout << "Boundary zone nodes" << bpnode[bp].size()<<endl;
+                bool enc=FindAllVals(this->Face(idf).Vert(), bpnode[bp]);
                 if (enc)
+                {
+                    cout << "Found face "<<idf <<endl;
                     temp.push_back(idf);
-
+                }
             }
 
             bpfaces.push_back(temp);
-            cout << "[I] Created Patch "<<pname<<", Face Count: " <<temp.size()<<endl;
+            cout << "Created Patch "<<pname<<", Face Count: " <<temp.size()<<endl;
             Patch p(pname,bpfaces[bp]);
             vpatch.push_back(p);
         }

@@ -40,12 +40,18 @@ inline bool  FindAllVals(std::vector <int> &ind, std::vector <int> &v)	//Devuelv
 {
 	bool enc=true;
 	int vi=0;
+	//cout << "SEARCHING VALS"<<endl;
+
+	//cout << "v size " << v.size()<<", ind size "<<ind.size()<<endl;
 	while (vi<v.size() && enc)
 	{
 		bool enc_elem=false;
 		for (int vind=0;vind<ind.size();vind++)
 			if (ind[vind]==v[vi])
+            {
 				enc_elem=true;
+                //cout << ind[vind]<< " ";
+            }
 
 		if(!enc_elem)
 			enc=false;

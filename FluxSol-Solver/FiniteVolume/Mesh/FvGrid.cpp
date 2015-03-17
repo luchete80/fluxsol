@@ -423,6 +423,9 @@ void Fv_CC_Grid::Iniciar_Caras()
 				//Si en esta funcion entra un vertice ya se que es una BoundaryFace
 				_FvFace f(nf,tempNodes,facevertex,facenodes,true);
 				face.push_back(f);
+
+				temp_boundfaces.push_back(numfaces);
+
 				nfb++;
 				numdummycells++;
 				numfaces++;

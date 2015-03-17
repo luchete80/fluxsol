@@ -66,7 +66,7 @@ int SearchVal(const int &i,std::vector <int> &v)
 inline bool FindAllVals(std::vector <int> &ind, std::vector <int> &v)
 {
 	bool r=true;
-
+    cout << "SEARCHING VALUES"<<endl;
 	bool enc=true;
 	int vi=0;
 	while (vi<v.size() && enc)
@@ -74,11 +74,15 @@ inline bool FindAllVals(std::vector <int> &ind, std::vector <int> &v)
 		bool enc_elem=false;
 		for (int vind=0;vind<ind.size();vind++)
 			if (ind[vind]==v[vi])
+            {
 				enc=true;
+                cout << ind[vind]<< " ";
+            }
 		if (!enc_elem)
 			enc=false;
 		vi++;
 	}
+	cout <<endl;
 	return r;
 }
 
@@ -102,7 +106,7 @@ inline bool FindAllVals(std::vector <int> &ind, std::vector <int> &v)
 //}
 
 //Valores en comun que tienen
-std::vector <int> & CommonValues(std::vector <int> &ind, std::vector <int> &v)
+std::vector <int> CommonValues(std::vector <int> &ind, std::vector <int> &v)
 {
 	vector <int> r;
 

@@ -95,7 +95,7 @@ void _Grid::Read_InitialCGNS() {
 		// Read number of sections
 		cg_nsections(fileIndex,baseIndex,zoneIndex,&nSections);
 		cg_nbocos(fileIndex,baseIndex,zoneIndex,&nBocos);
-		if (Rank==0) cout << "[I] In Zone " << zoneName << endl;
+//		if (Rank==0) cout << "[I] In Zone " << zoneName << endl;
 		if (Rank==0) cout << "[I] ...Number of Nodes= " << size[0] << endl;
 		if (Rank==0) cout << "[I] ...Number of Cells= " << size[1] << endl;
 		if (Rank==0) cout << "[I] ...Number of Sections= " << nSections << endl;

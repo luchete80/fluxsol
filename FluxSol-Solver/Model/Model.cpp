@@ -64,8 +64,6 @@ void CFDModel::InitFields()
         cout << "patch cvalue Pressure" << p.Boundaryfield().PatchField(i).ConstValue().outstr()<<endl;
 
 
-    cout << "U vals"<<U.Numberofvals()<<endl;
-
 	//ReadVelocityFieldFromInput(this->inputfile,this->U,this->mesh);
 
 	_Surf_Fv_Field <Scalar>  phi(this->mesh); //Mass Flux
@@ -89,6 +87,7 @@ void CFDModel::InitFields()
         bcs[p]->AssignPatchFieldType();
     }
 
+    cout << "[I] Field initialized"<<endl;
     //this->p=inputfile.UField();     //Read Field Boundary Values
 
     //BEFORE READ BCs!

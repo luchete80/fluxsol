@@ -573,7 +573,7 @@ InputFile::UField()
     //Reading BC
     int patchfieldnumber;   //number of boundary field patches
     patchfieldnumber=section("grid",0).numberedSubsections["BC"].size();
-    cout << "Field Patches: "<<patchfieldnumber<<endl;
+    cout << "[I] Field Patches: "<<patchfieldnumber<<endl;
     int numpatches=GridPtr->vBoundary().Num_Patches();
     vector<int> asoc(numpatches,-1);   //Relation between Patch and bcond, size refers to patch
     vector <Vec3D> cvalues(numpatches,Vec3D(0.));   //Def cvalues

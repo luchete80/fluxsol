@@ -199,19 +199,24 @@ void _Grid::Read_InitialCGNS() {
 			if (ptset_type==PointList) {
 				bc_method[bcIndex]=POINT_LIST;
 				for (int i=0;i<list.size();++i) raw.bocoNodes[bcIndex].insert(zoneCoordMap[zoneIndex-1][list[i]-1]);
+				cerr<< "[I] Boundary condition specification is with points list" <<endl;
 			} else if (ptset_type==ElementList) {
+			    cerr<< "[I] Boundary condition specification is with elements list" <<endl;
 				bc_method[bcIndex]=ELEMENT_LIST;
 				for (int i=0;i<list.size();++i)
 				{
 					bc_element_list[bcIndex].insert(list[i]);
+					//cout << "Element "<<list[i]<<endl;
 					//Modification
 					this->raw.bc_elem_list[bcIndex].insert(list[i]);
 				}
 			} else if (ptset_type==PointRange) {
+			    cerr<< "[I] Boundary condition specification is with points range" <<endl;
 				bc_method[bcIndex]=POINT_LIST;
 				for (int i=list[0];i<=list[1];++i) raw.bocoNodes[bcIndex].insert(zoneCoordMap[zoneIndex-1][i-1]);
 			} else if (ptset_type==ElementRange) {
 				// Convert element range to element list
+			    cerr<< "[I] Boundary condition specification is with elements range" <<endl;
 				bc_method[bcIndex]=ELEMENT_LIST;
 				for (int i=list[0];i<=list[1];++i) bc_element_list[bcIndex].insert(i);
 			} else {
@@ -288,10 +293,13 @@ void _Grid::Read_InitialCGNS() {
 					for (int nbc=0;nbc<nBocos;++nbc) {
 						if (bc_method[nbc]==ELEMENT_LIST) {
 							for (int elem=0;elem<=(elemEnd-elemStart);++elem) {
+                                //cout << "Elem "<<elem<<endl;
 								if (bc_element_list[nbc].find(elemStart+elem)!=bc_element_list[nbc].end()) {
 									for (int n=0;n<elemNodeCount;++n) {
 										raw.bocoNodes[nbc].insert(zoneCoordMap[zoneIndex-1][elemNodes[connIndex+n]-1]);
+										//cout << "Inserted Node" << zoneCoordMap[zoneIndex-1][elemNodes[connIndex+n]-1]<<endl;
 									}
+									//cout << "-------------------------------"<<endl;
 									connIndex+=elemNodeCount;
 								}
 							}
