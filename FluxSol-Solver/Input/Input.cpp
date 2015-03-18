@@ -718,7 +718,12 @@ InputFile::ReadBCs()
 
                     ret.push_back(bc);
                 }
+                else if (type=="velocity-inlet" || type =="VELOCITY-INLET")
+                {
+                    VelocityInletBC *bc=new VelocityInletBC(this->ufield,this->pfield,meshp);
 
+                    ret.push_back(bc);
+                }
                 else if (type=="pressure-outlet" || type =="PRESSURE-OUTLET")
                 {
                     PressureOutletBC *bc=new PressureOutletBC(this->ufield,this->pfield,meshp);
@@ -732,7 +737,12 @@ InputFile::ReadBCs()
 
                     ret.push_back(bc);
                 }
+                else if (type=="null-flux-face" || type =="NULL-FLUX-FACE")
+                {
+                    NullFluxBC *bc=new NullFluxBC(this->ufield,this->pfield,meshp);
 
+                    ret.push_back(bc);
+                }
                 else
                 {
                     cout << "[E] Boundary condition type is not recognized, created Wall BC for this patch..." <<endl;

@@ -239,12 +239,15 @@ private:
         cout << "[I] Creating Patches ..."<<endl;
 
         string pname;
+        int totalboundfaces=temp_boundfaces.size();
         for (int bp=0;bp<this->raw.bc_elem_list.size();bp++)    //Look Through patch
         {
+            cout << "[I] Searching patch " << bp << ", remaining boundary faces count: "<<temp_boundfaces.size()<<endl;
             pname=this->imported_patchnames[bp];
             list <int> temp;
 
-            for (int bf=0;bf<temp_boundfaces.size();bf++)   //Look through all boundary faces
+            int nfoundfaces=0;
+            for (int bf=0;bf<temp_boundfaces.size();bf++)   //Look through all boundary faces, coincidence with each boconodes patch
             {
                 int idf=temp_boundfaces[bf];
                 //bool enc=FindAllVals(this->Face(idf).Vert(), bpnode[bp]);
@@ -253,14 +256,35 @@ private:
                     if (!(this->raw.bocoNodes[bp].find(this->Face(idf).Vert()[n])!=this->raw.bocoNodes[bp].end())) enc=false;
 
                 if (enc)
+                {
                     temp.push_back(idf);
-
+                    temp_boundfaces.erase(temp_boundfaces.begin()+bf);
+                    bf--;
+                }
             }
 
-            bpfaces.push_back(temp);
-            cout << "[I] Created Patch "<<pname<<", Face Count: " <<temp.size()<<endl;
-            Patch p(pname,bpfaces[bp]);
-            vpatch.push_back(p);
+//
+//            bool badpatch=false;
+//            if (  ( bp==(this->raw.bc_elem_list.size()-1) && (temp.size()==totalboundfaces) )  )  //If it is last pacth and has all faces
+//                badpatch=true;
+
+            //if (!badpatch)
+            {
+                bpfaces.push_back(temp);
+                cout << "[I] Created Patch "<<pname<<", Face Count: " <<temp.size()<<endl;
+                Patch p(pname,bpfaces[bp]);
+                vpatch.push_back(p);
+            }
+//            else
+//            {
+//                cout << "[E] Wrong Last Patch found. Created Patch_1"<<endl;
+//                temp.clear();
+//                for (int i=0;i<temp_boundfaces.size();i++)temp.push_back(temp_boundfaces[i]);
+//
+//                bpfaces.push_back(temp);
+//                Patch p(pname,bpfaces[bp]);
+//                vpatch.push_back(p);
+//            }
         }
 
 

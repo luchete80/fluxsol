@@ -436,15 +436,16 @@ void Fv_CC_Grid::Iniciar_Caras()
 	}// Fin de for de cell c1
 
 	//Bidimensional case
-	if (this->bidim_mesh)
-	{
-		for(cellit=cell.begin();cellit!=cell.end();cellit++)
-		{
-			//In bidimensional cases face 0 and 1 are null_flux_faces
-			this->Face(cellit->Id_Face(0)).Null_Flux_Face(true);
-			this->Face(cellit->Id_Face(1)).Null_Flux_Face(true);
-		}
-	}
+	//Only for regular mesh case
+//	if (this->bidim_mesh)
+//	{
+//		for(cellit=cell.begin();cellit!=cell.end();cellit++)
+//		{
+//			//In bidimensional cases face 0 and 1 are null_flux_faces
+//			this->Face(cellit->Id_Face(0)).Null_Flux_Face(true);
+//			this->Face(cellit->Id_Face(1)).Null_Flux_Face(true);
+//		}
+//	}
 
 	num_faces=numfaces;
 	num_boundary_faces=nfb;

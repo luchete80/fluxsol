@@ -113,6 +113,24 @@ class InletBC:
         void AssignPatchFieldType(){}
 };
 
+class VelocityInletBC:
+    public BoundaryCond
+
+{
+
+    public:
+        VelocityInletBC(){}
+        VelocityInletBC(_CC_Fv_Field <Vec3D> *u, _CC_Fv_Field <Scalar>  *p, const int &pa):
+            BoundaryCond(u, p, pa){}
+
+        void AssignPatchFieldType()
+        {
+            this->ufieldptr->AssignType(FIXEDVALUE);
+            this->pfieldptr->AssignType(FIXEDGRADIENT);
+        }
+};
+
+
 class OutletBC:
     public BoundaryCond
 
@@ -161,6 +179,25 @@ class PressureInletBC:
         }
 };
 
+class NullFluxBC:
+    public BoundaryCond
+
+{
+
+    public:
+        NullFluxBC(){}
+        NullFluxBC(_CC_Fv_Field <Vec3D> *u, _CC_Fv_Field <Scalar>  *p, const int &pa):
+            BoundaryCond(u, p, pa){}
+
+        void AssignPatchFieldType()
+        {
+            for (int f=0;f<this->patchptr->Num_Faces();f++)
+            {
+                int idface=this->patchptr->Id_Face(f);
+                this->grid->Face(idface).Null_Flux_Face(true);
+            }
+        }
+};
 
 }//FluxSol
 

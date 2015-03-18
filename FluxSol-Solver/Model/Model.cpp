@@ -154,7 +154,7 @@ void CFDModel::InitFields()
     for (int i=0;i<4;i++)
         cout << "patch cvalue" << U.Boundaryfield().PatchField(i).ConstValue()<<endl;
 
-	while (it <100)
+	while (it <200)
 	{
 //	    cout << "Iteration: "<<it+1<< endl;
 		//1.Restore Iteration
@@ -356,18 +356,19 @@ void CFDModel::InitFields()
 	vF=interp.Interpolate(p);
     OutputFile("VertexField-p.vtu",vF);
 //
-    U.Boundaryfield().PatchField(1).AssignValue(Vec3D(1.,0.,0.));
+    //Rewrite BCs?
+    //U.Boundaryfield().PatchField(1).AssignValue(Vec3D(1.,0.,0.));
     vv=interv.Interpolate(U);
 //    OutputFile("VertexField-U.vtu",vv);
     OutputFile("VertexField-U.vtu",vv);
     OutputFile("VertexField-Uz.vtu",vv,2);
 
-    OutputFile of("Fields.vtu",this->mesh);
+    //OutputFile of("Fields.vtu",this->mesh);
 
-    of.WriteGrid();
-    of.WriteField(vv);
-    of.WriteField(vF);
-    of.WriteFooter();   //TO QUIT
+    //of.WriteGrid();
+    //of.WriteField(vv);
+    //of.WriteField(vF);
+    //of.WriteFooter();   //TO QUIT
 
 }
 

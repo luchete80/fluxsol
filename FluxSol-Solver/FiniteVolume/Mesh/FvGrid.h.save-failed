@@ -180,7 +180,7 @@ private:
 
             //Search bc vertex in each 2D Cell
             set <int> sbc =this->raw.bocoNodes[bp];
-            set <int>::iterator sit=sbc.begin();
+            set <int>::iterator sit=sbc.bengin();
 
 
             for (; sit!=sbc.end();sit++)
