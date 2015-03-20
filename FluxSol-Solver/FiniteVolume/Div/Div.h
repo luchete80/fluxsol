@@ -191,7 +191,7 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
             _FvFace bface=phi.Grid().Face(idface);  //TO MODIFY idface or face pos??
             if (!bface.Is_Null_Flux_Face())
             {
-                //Boundary type
+                //Boundary typeº
                 //Instead of if sentence it is convenient to use inheritance
                 if (phi.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
                 {

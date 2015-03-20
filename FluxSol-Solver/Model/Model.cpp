@@ -136,6 +136,10 @@ void CFDModel::InitFields()
     vector<Scalar> pant;
     pant.assign(mesh.Num_Cells(),Scalar(0.));
 
+    vector<Scalar> phiant;
+    phiant.assign(mesh.Num_Faces(),Scalar(0.));
+
+
     UEqn.SetRelaxCoeff(alpha_u);
     pEqn.SetRelaxCoeff(alpha_p);
 
@@ -150,12 +154,13 @@ void CFDModel::InitFields()
     _BoundaryField<Vec3D>  bf =U.Boundaryfield();
     _BoundaryField<Scalar>pbf =p.Boundaryfield();
 
-
     for (int i=0;i<4;i++)
-        cout << "patch cvalue" << U.Boundaryfield().PatchField(i).ConstValue()<<endl;
+        cout << "patch " << i << "cvalue phi" << phi.Boundaryfield().PatchField(i).ConstValue().outstr()<<endl;
 
-	while (it <200)
+    conv=false;
+	while (!conv)
 	{
+
 //	    cout << "Iteration: "<<it+1<< endl;
 		//1.Restore Iteration
 //
@@ -189,7 +194,6 @@ void CFDModel::InitFields()
         //for (int pf=0;pf<4;pf++) U.Boundaryfield().PatchField(pf).AssignValue(Vec3D(0.,0.,0.));
 
         //U.Boundaryfield().PatchField(1).AssignValue(Vec3D(1.,0.,0.));
-
 
         U.Boundaryfield().ApplyBC();
         p.Boundaryfield().ApplyBC();
@@ -260,13 +264,27 @@ void CFDModel::InitFields()
         phi=Uf_ & mesh.Sf();
         phi= phi - alpha_u*AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
 
+
+        //TO MODIFY
+        //IF THERE ARE WALLS
         //To modify FvExp::Interpolate
-        for (int f=0;f<mesh.Num_Faces();f++)
-        {
-            if (mesh.Face(f).Boundaryface())
-                //cout << "Face "<<f << "is boundary"<<endl;
-                phi.Val(f,0.);
-        }
+//        for (int f=0;f<mesh.Num_Faces();f++)
+//        {
+//            if (mesh.Face(f).Boundaryface())
+//            {
+//
+//                phi.Val(f,0.);
+//            }
+//                //cout << "Face "<<f << "is boundary"<<endl;
+//        }
+
+        phi.Boundaryfield().ApplyBC();
+
+
+    for (int i=0;i<4;i++)
+        cout << "patch " << i << "cvalue phi" << p.Boundaryfield().PatchField(i).ConstValue().outstr()<<endl;
+
+
 
 //        cout << "Corrected phi"<<phi.outstr()<< endl;
 //
@@ -309,6 +327,7 @@ void CFDModel::InitFields()
 
         Vec3D maxudiff=0.;
         Scalar maxpdiff=0.;
+        Scalar maxphidiff=0.;
 
         for (int nu=0;nu<mesh.Num_Cells();nu++)
         {
@@ -318,6 +337,14 @@ void CFDModel::InitFields()
 
             Scalar pdiff=(p.Val(nu)-pant[nu])/p.Val(nu).Norm();
             if (pdiff.Val()>maxpdiff.Val())maxpdiff=pdiff;
+        }
+
+
+        for (int nu=0;nu<mesh.Num_Faces();nu++)
+        {
+            Scalar diff=(phi.Val(nu)-phiant[nu])/phi.Val(nu).Norm();
+
+            if (diff.Val()>maxphidiff.Val())  maxphidiff=diff;
         }
 
         cout << "[I] Iter - Residuals u v w p - Time || " << it << " " <<maxudiff.outstr()<<maxpdiff.outstr()<<endl;
@@ -330,9 +357,9 @@ void CFDModel::InitFields()
         }
 
         it++;
-        _CC_Fv_Field <Vec3D> test(mesh);
-        test=FvExp::Grad(p);
 
+
+        if (maxudiff[0]<1.e-4 && maxudiff[1]<1.e-4 && maxudiff[2]<1.e-4  && maxpdiff<1.e-4 )   conv=true;
 
         //TO MODIFY, Change
         //TO MODIFY, CHECKMESH
@@ -340,11 +367,11 @@ void CFDModel::InitFields()
         p.AssignBoundaryField(pbf);
 
 	}
-
 //	OutputFile("CellField-U.vtu",U);
 //	OutputFile("CellField-Uy.vtu",U,1);
 //    OutputFile("CellField-Uz.vtu",U,2);
 	OutputFile("CellField-p.vtu",p);
+	OutputFile("CellField-U.vtu",U,0);
 //
     CenterToVertexInterpolation <Scalar> interp(mesh);
     CenterToVertexInterpolation <Vec3D> interv(mesh);

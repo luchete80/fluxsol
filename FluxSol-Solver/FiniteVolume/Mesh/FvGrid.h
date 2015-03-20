@@ -173,6 +173,71 @@ private:
         vector<vector<int> > bpnode;
 
         int boundnode =0;
+
+        //--------------------------------
+        //IF INPUT IS WITH BOUNDARY CELLS
+        //--------------------------------
+                //raw->Cells
+        vector <Cell_CC> vboundcell;    //For bidimensional cells
+        int boundelem =0;
+        //Read boundary cells - Assuming boundary cell entry
+        vector<vector<int> > bpelem;
+        //Boundary Patches bc
+        for (int bp=0;bp<this->raw.bc_elem_list.size();bp++)
+        {
+            //Associate face <-> 2d cell coinc
+            //bcfaces.push_back()
+            vector <int> temp;
+
+            //Search bc vertex in each 2D Cell
+            set <int> sbc = this->raw.bc_elem_list[bp];
+            set <int>::iterator sit=sbc.begin();
+
+
+            for (; sit!=sbc.end();sit++)
+            {
+                boundelem++;
+                temp.push_back(*sit);
+            }
+            bpelem.push_back(temp);
+        }
+
+        //vector<vector<int>> idbcellasoc(boundelem,vector<int>(2,-1)); //Id cells
+        vector<int> idbcell(boundelem,-1);
+        int bcell=0;
+
+        for (int idcell =0 ; idcell<raw.cellConnIndex.size();idcell++)
+        {
+            int cellvertnum;
+            if (idcell<(raw.cellConnIndex.size()-1))
+                cellvertnum = raw.cellConnIndex [idcell+1] - raw.cellConnIndex [idcell];
+            else cellvertnum = raw.cellConnectivity.size()- raw.cellConnIndex [idcell] ;
+
+            vector<int> connect;
+            for (int cv =0 ; cv<cellvertnum;cv++)
+                connect.push_back(raw.cellConnectivity[ raw.cellConnIndex [idcell] + cv]);
+
+            Cell_CC scell(idcell,connect);
+
+                //Check if this is a boundary element
+                //TO MODIFY, MUST CONSIDER TETRA CELLS
+                if (connect.size()<=4)   //All connectivity numbers are 3d
+                    for (int bp=0;bp<bpelem.size();bp++)
+                        for(int el=0;el<bpelem[bp].size();el++)
+                            if (idcell==(bpelem[bp][el]-1))     //Index of rawdata is counting from 1
+                            {
+                                vboundcell.push_back(scell);
+                                idbcell[bcell]=idcell;
+                                bcell++;
+                            }
+
+                //}
+
+        }
+
+        //----------------------------
+        // BOUNDARY NODES
+        //----------------------------
         //Boundary Patches bc
         for (int bp=0;bp<this->raw.bc_elem_list.size();bp++)
         {
@@ -188,12 +253,12 @@ private:
                 boundnode++;
                 temp.push_back(*sit);
             }
-//            cout << "[I] BC "<< bp << "has " <<temp.size()<<endl;
+            cout << "[I] BC "<< bp << "has " <<temp.size()<< " nodes" <<endl;
             bpnode.push_back(temp);
         }
 
         //vector<vector<int>> idbcellasoc(boundelem,vector<int>(2,-1));	//Id cells
-        int bcell=0;
+        bcell=0;
 
         for (int idcell =0 ; idcell<raw.cellConnIndex.size();idcell++)
         {
@@ -247,20 +312,46 @@ private:
             list <int> temp;
 
             int nfoundfaces=0;
-            for (int bf=0;bf<temp_boundfaces.size();bf++)   //Look through all boundary faces, coincidence with each boconodes patch
+            if (raw.bocoNodes[bp].size()>0)
             {
-                int idf=temp_boundfaces[bf];
-                //bool enc=FindAllVals(this->Face(idf).Vert(), bpnode[bp]);
-                bool enc=true;
-                for (int n=0;n<this->Face(idf).Vert().size();n++)
-                    if (!(this->raw.bocoNodes[bp].find(this->Face(idf).Vert()[n])!=this->raw.bocoNodes[bp].end())) enc=false;
-
-                if (enc)
+                for (int bf=0;bf<temp_boundfaces.size();bf++)   //Look through all boundary faces, coincidence with each boconodes patch
                 {
-                    temp.push_back(idf);
-                    temp_boundfaces.erase(temp_boundfaces.begin()+bf);
-                    bf--;
+                    int idf=temp_boundfaces[bf];
+                    //bool enc=FindAllVals(this->Face(idf).Vert(), bpnode[bp]);
+                    bool enc=true;
+                    for (int n=0;n<this->Face(idf).Vert().size();n++)
+                        if (!(this->raw.bocoNodes[bp].find(this->Face(idf).Vert()[n])!=this->raw.bocoNodes[bp].end())) enc=false;
+
+                    if (enc)
+                    {
+                        temp.push_back(idf);
+                        temp_boundfaces.erase(temp_boundfaces.begin()+bf);
+                        bf--;
+                    }
                 }
+            }
+            else if (bpelem[bp].size()>0) //If bc are defined via
+            {
+               //Looking through raw elements (faces in Grid)
+                for (int el=0;el<bpelem[bp].size();el++)
+                {
+                    vector<int> faceverts;
+                    //Adding element vertices
+                    //for (int iv=0;iv<this->Cell(bpelem[bp][el]).Num_Vertex();iv++)
+                    for (int iv=0;iv<vboundcell[bcell].Num_Vertex();iv++)
+                        faceverts.push_back(vboundcell[bcell].Vert(iv));
+
+                    for (int idf=0;idf<this->Num_Faces();idf++)
+                    {
+                        bool enc=FindAllVals(faceverts,this->Face(idf).Vert());
+                        if (enc)
+                        {
+                            //Add face idf to Boundary patch - Agrego idf al Patch
+                            temp.push_back(idf);
+                        }
+                    }
+                    bcell++;
+                }//End element
             }
 
 //
@@ -268,13 +359,12 @@ private:
 //            if (  ( bp==(this->raw.bc_elem_list.size()-1) && (temp.size()==totalboundfaces) )  )  //If it is last pacth and has all faces
 //                badpatch=true;
 
-            //if (!badpatch)
-            {
-                bpfaces.push_back(temp);
-                cout << "[I] Created Patch "<<pname<<", Face Count: " <<temp.size()<<endl;
-                Patch p(pname,bpfaces[bp]);
-                vpatch.push_back(p);
-            }
+
+            bpfaces.push_back(temp);
+            cout << "[I] Created Patch "<<pname<<", Face Count: " <<temp.size()<<endl;
+            Patch p(pname,bpfaces[bp]);
+            vpatch.push_back(p);
+
 //            else
 //            {
 //                cout << "[E] Wrong Last Patch found. Created Patch_1"<<endl;

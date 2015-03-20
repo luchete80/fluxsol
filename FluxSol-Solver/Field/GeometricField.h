@@ -350,6 +350,7 @@ namespace FluxSol
             T v;
             this->value.assign(field.Numberofvals(),v);
             this->GridPtr=&field.Grid();
+            cout << "Numvals: "<<field.Numberofvals()<<endl;
             for (int c=0;c<field.Numberofvals();c++)
                 this->value[c]=field.Val(c);
             //TO MODIFY

@@ -239,6 +239,7 @@ namespace FluxSol
 
 		_CC_Fv_Field<T> & operator=(const double &val)
 		{
+		    //cout << "Numvals"<<this->value.size()<<endl;
 			for (int v = 0; v<this->value.size(); v++)
 			{
 				this->value[v] = val;

@@ -386,6 +386,7 @@ void InputFile::read_inputs(void) {
 	section("grid",0).register_string("solution_scheme",required);
 
 
+
 	//section("grid",0).register_string("equations",required);
 
 //	section("grid",0).registerSubsection("writeoutput",single,required);
@@ -426,8 +427,12 @@ void InputFile::read_inputs(void) {
 	section("grid",0).subsection("patch",0).register_string("type",required);
 	section("grid",0).subsection("patch",0).register_intList("list",optional);
 
-
     //std::vector<int> list=get_intLists    ("list");
+
+    section("grid",0).registerSubsection("nodes",numbered,required);
+    section("grid",0).subsection("nodes",0).register_string("type",required);
+    section("grid",0).subsection("nodes",0).register_string("list",optional);
+    //section("grid",0).subsection("nodes",0).register_Vec3DList("list",file);
 
 	section("grid",0).registerSubsection("BC",numbered,required);
 	section("grid",0).subsection("BC",0).register_string("patch",required);
@@ -662,7 +667,7 @@ InputFile::pField()
         cvalues[meshp]=section("grid",0).subsection("BC",pf).get_double("p");
  //       cvalues[meshp]=section("grid",0).subsection("BC",pf).get_string("U");
 
-        cout << "Applied pressure "<<cvalues[meshp].outstr()<<"to patch "<<meshp<<endl;
+//        cout << "Applied pressure "<<cvalues[meshp].outstr()<<"to patch "<<meshp<<endl;
     }
 
     _BoundaryField<Scalar> bf(GridPtr->vBoundary(),cvalues);
@@ -737,7 +742,7 @@ InputFile::ReadBCs()
 
                     ret.push_back(bc);
                 }
-                else if (type=="null-flux-face" || type =="NULL-FLUX-FACE")
+                else if (type=="null-flux" || type =="NULL-FLUX")
                 {
                     NullFluxBC *bc=new NullFluxBC(this->ufield,this->pfield,meshp);
 

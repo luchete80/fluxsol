@@ -227,7 +227,6 @@ void _Grid::Read_InitialCGNS() {
 		} // for boco
 		nBocos=raw.bocoNameMap.size();
 
-
 		// Loop sections within the zone
 		// These include connectivities of cells and bonudary faces
 		for (int sectionIndex=1;sectionIndex<=nSections;++sectionIndex) {
@@ -290,10 +289,12 @@ void _Grid::Read_InitialCGNS() {
 					globalCellCount+=(elemEnd-elemStart+1);
 				} else { // If not a volume element
 					// Scan all the boundary condition regions
+					//cout << "Face element "<<endl;
 					for (int nbc=0;nbc<nBocos;++nbc) {
 						if (bc_method[nbc]==ELEMENT_LIST) {
 							for (int elem=0;elem<=(elemEnd-elemStart);++elem) {
                                 //cout << "Elem "<<elem<<endl;
+//                                cout << "BC Element list size "<<bc_element_list[nbc].size()<<endl;
 								if (bc_element_list[nbc].find(elemStart+elem)!=bc_element_list[nbc].end()) {
 									for (int n=0;n<elemNodeCount;++n) {
 										raw.bocoNodes[nbc].insert(zoneCoordMap[zoneIndex-1][elemNodes[connIndex+n]-1]);
