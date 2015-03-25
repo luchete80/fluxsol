@@ -63,9 +63,10 @@ CenterToVertexInterpolation<T>::Interpolate(_CC_Fv_Field<T> &field)
 		}
 	}
 
-	//Look trough vertices
+	//cout << "Look trough vertices"<<endl;
 	for (int v=0;v<this->grid.Num_Verts();v++)
 	{
+	    //cout << "Vertex "<<v<<endl;
 		rbfmodel model;
 		alglib_impl::ae_state state;
 		//Dimensionality of space (always 3) and field (1 or 3)
@@ -91,7 +92,7 @@ CenterToVertexInterpolation<T>::Interpolate(_CC_Fv_Field<T> &field)
 			for (int c=0;c<numberofcomp;c++)
 				xy[f][3+c]=cellfieldval[c];
 
-
+           //cout << "Commonvert val: "<< xy[f][3+0]<< " "<< xy[f][3+1] << " "<< xy[f][3+2]<<endl;
 		}
 		//Field values
         //cout << "end verts..."<<endl;
@@ -115,12 +116,18 @@ CenterToVertexInterpolation<T>::Interpolate(_CC_Fv_Field<T> &field)
 		//Passing vertfieldval from real_1d_array to T
 		T val;
 
+        //cout << "Field values"<<endl;
 		vector<double> vecval;
 		for (int c=0;c<numberofcomp;c++)
+        {
 			vecval.push_back(vertfieldval[c]);
+			//cout << vertfieldval[c] <<" "<<endl;
+        }
+        //cout <<endl;
 		val=vecval;
 
 		vfield.Val(v,val);
+		//cout << vfield.Val(v).outstr()<<endl;
 
 	}//for grid vertex v
 

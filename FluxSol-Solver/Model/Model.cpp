@@ -154,8 +154,8 @@ void CFDModel::InitFields()
     _BoundaryField<Vec3D>  bf =U.Boundaryfield();
     _BoundaryField<Scalar>pbf =p.Boundaryfield();
 
-    for (int i=0;i<4;i++)
-        cout << "patch " << i << "cvalue phi" << phi.Boundaryfield().PatchField(i).ConstValue().outstr()<<endl;
+//    for (int i=0;i<4;i++)
+//        cout << "patch " << i << "cvalue phi" << phi.Boundaryfield().PatchField(i).ConstValue().outstr()<<endl;
 
     conv=false;
 	while (!conv)
@@ -163,17 +163,6 @@ void CFDModel::InitFields()
 
 //	    cout << "Iteration: "<<it+1<< endl;
 		//1.Restore Iteration
-//
-//      //Boundary Conditions
-        //Pressure gradient is null at all walls
-        //for (int pf=0;pf<4;pf++) p.Boundaryfield().PatchField(pf).AssignValue(0.0);
-        //p.Val(36,0.);    //Reference Pressure
-
-        for (int f=0;f<mesh.Num_Faces();f++)
-        {
-            if (mesh.Face(f).Boundaryface())
-                phi.Val(f,0.);
-        }
 
 
         //To modify, correct in all faces
@@ -183,17 +172,8 @@ void CFDModel::InitFields()
         //null at walls
         //TEMPORARYLLY SURFACE FIELDS HAVE NOT ACTIVE PATCHES
         //TO MODIFY
-        //for (int wf=0;wf<6;wf++)    phi.Val(wallfaces[wf],0.0);
-        //phi.Val(15,0.0);phi.Val(19,0.0);
-
         //TO Modify (Simply correct an internal field constant value)
         //Like Update field Boundary Values
-
-
-
-        //for (int pf=0;pf<4;pf++) U.Boundaryfield().PatchField(pf).AssignValue(Vec3D(0.,0.,0.));
-
-        //U.Boundaryfield().PatchField(1).AssignValue(Vec3D(1.,0.,0.));
 
         U.Boundaryfield().ApplyBC();
         p.Boundaryfield().ApplyBC();
@@ -208,7 +188,6 @@ void CFDModel::InitFields()
 		//_CC_Fv_Field<Vec3D> pru2(-FvExp::Grad(p));
         //TO MODIFY: IF MESH IS NOT ASSIGNED PREVIOUSLY TO EQUAL, ERROR
 		_CC_Fv_Field <Vec3D> gradpV(mesh);
-//		-FvExp::Grad(p);
 		gradpV=-FvExp::GradV(p);
 		//Correct boundary conditions, by imposing zero pressure gradient at wall
 
@@ -268,21 +247,36 @@ void CFDModel::InitFields()
         //TO MODIFY
         //IF THERE ARE WALLS
         //To modify FvExp::Interpolate
-//        for (int f=0;f<mesh.Num_Faces();f++)
-//        {
-//            if (mesh.Face(f).Boundaryface())
-//            {
-//
-//                phi.Val(f,0.);
-//            }
-//                //cout << "Face "<<f << "is boundary"<<endl;
-//        }
+        //
+        // TO MODIFY
+        for (int pa=0;pa<mesh.vBoundary().Num_Patches();pa++)
+        {
+            //cout << "Velocity val"<<bf.PatchField(pa).ConstValue().outstr()<<endl;
+            for (int f=0;f<mesh.vBoundary().vPatch(pa).Num_Faces();f++)
+            {
+                int idface=mesh.vBoundary().vPatch(pa).Id_Face(f);
+                _FvFace face=mesh.Face(idface);  //TO MODIFY idface or face pos??
 
-        phi.Boundaryfield().ApplyBC();
+                Scalar val;
+                //if (!face.Is_Null_Flux_Face())
+                if (bf.PatchField(pa).Type()==FIXEDVALUE)
+                {
+                    //If constant value
+                    val=bf.PatchField(pa).ConstValue() & face.Af();
+                    //cout << "boundary val"<<val.outstr()<<endl;
+                    phi.Val(idface,val);
+                }
+                else //fixedgradient
+                {
+
+                }
+            }
+        }
+//        phi.Boundaryfield().ApplyBC();
 
 
-    for (int i=0;i<4;i++)
-        cout << "patch " << i << "cvalue phi" << p.Boundaryfield().PatchField(i).ConstValue().outstr()<<endl;
+//    for (int i=0;i<mesh.vBoundary().Num_Patches();i++)
+//        cout << "patch " << i << "cvalue phi" << phi.Boundaryfield().PatchField(i).ConstValue().outstr()<<endl;
 
 
 
@@ -359,7 +353,7 @@ void CFDModel::InitFields()
         it++;
 
 
-        if (maxudiff[0]<1.e-4 && maxudiff[1]<1.e-4 && maxudiff[2]<1.e-4  && maxpdiff<1.e-4 )   conv=true;
+        if (maxudiff[0]<1.e-3 && maxudiff[1]<1.e-3 && maxudiff[2]<1.e-3  && maxpdiff<1.e-3 )   conv=true;
 
         //TO MODIFY, Change
         //TO MODIFY, CHECKMESH
@@ -387,7 +381,7 @@ void CFDModel::InitFields()
     //U.Boundaryfield().PatchField(1).AssignValue(Vec3D(1.,0.,0.));
     vv=interv.Interpolate(U);
 //    OutputFile("VertexField-U.vtu",vv);
-    OutputFile("VertexField-U.vtu",vv);
+    OutputFile("VertexField-Ux.vtu",vv,0);
     OutputFile("VertexField-Uz.vtu",vv,2);
 
     //OutputFile of("Fields.vtu",this->mesh);
