@@ -83,6 +83,7 @@ include_directories("${PROJECT_SOURCE_DIR}/SistEcuac")
 include_directories("${PROJECT_SOURCE_DIR}/Solver")
 include_directories("${PROJECT_SOURCE_DIR}/Tests")
 include_directories("${PROJECT_SOURCE_DIR}/Type")
+include_directories("${PROJECT_SOURCE_DIR}/UDO")
 include_directories("${PROJECT_SOURCE_DIR}/Utils")
 
 #Temporalmente no lo incluyo (librerias)
@@ -115,6 +116,7 @@ add_subdirectory(SistEcuac)
 add_subdirectory(Solver)
 add_subdirectory(Tests)
 add_subdirectory(Type)
+add_subdirectory(UDO)
 add_subdirectory(Utils)
 
 set (FSOL_LIBS Analysis Boundary Mesh Field FvMesh Input Tests Type Utils Output)
@@ -147,6 +149,7 @@ add_library(${NAME}lib SHARED FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 												$<TARGET_OBJECTS:Solver>	
 												$<TARGET_OBJECTS:Tests>
 												$<TARGET_OBJECTS:Type>
+												$<TARGET_OBJECTS:UDO>
 												$<TARGET_OBJECTS:Utils>
 											)
 #target_link_libraries (${NAME} ${EXTRA_LIBS} ${EXT_LIBS})
@@ -170,6 +173,7 @@ add_library(${NAME}lib_static STATIC FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 														$<TARGET_OBJECTS:Solver>	
 														$<TARGET_OBJECTS:Tests>
 														$<TARGET_OBJECTS:Type>
+														$<TARGET_OBJECTS:UDO>
 														$<TARGET_OBJECTS:Utils>
 											)
 

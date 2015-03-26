@@ -26,6 +26,8 @@
 
 using namespace std;
 
+using namespace FluxSol;
+
 vector<Materials> SetMaterials()
 {
     vector<Materials> material;                 // Vector of materials

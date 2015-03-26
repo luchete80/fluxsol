@@ -7,10 +7,10 @@
 //#include "Nastran.h"
 #include "Solver.h"
 #include "Input.h"
-#include "Materials.h"
+#include "Materials/Materials.h"
 
-#include "CenterToVertexInterpolation.h"
-#include "CenterToVertexInterpolation_Def.h"    //TO MODIFY
+#include "Interpolation/CenterToVertexInterpolation.h"
+#include "Interpolation/CenterToVertexInterpolation_Def.h"    //TO MODIFY
 
 #include <time.h>
 #include "OutputFile.h"

@@ -32,6 +32,10 @@
 
 using namespace std;
 
+namespace FluxSol
+{
+
+
 class Materials             // Material class definition
 {
 public:
@@ -91,4 +95,5 @@ public:
 
 };
 
+}//FluxSol
 #endif
