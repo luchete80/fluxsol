@@ -1,0 +1,177 @@
+
+
+
+
+Discussion:
+Labeling points of an unstructured grid
+(too old to reply)
+Jochen 3 years ago
+Hi all,
+
+I would like to label all points of an unstructured grid with their original
+id. This sounds like easy to accomplish. I'm running out of any idea what
+I'm doing wrong. And to be honest, I'm out of order now. Hopefully there is
+somebody out there, who can help me.
+
+(my context: vtk 5.8.0, activiz, c#)
+
+As soon as I add /vtkUnstructuredGridGeometryFilter/-filter points are
+labeled with wrong ids.
+In the case I use the pure grid as input for /vtkIdFilter/ everything is
+fine except that I see labels for inner points, which I cannot accept.
+
+This code shows the correct ids: ( but I see the inner points)
+
+private void ShowNodes() {
+vtkUnstructuredGridReader reader;
+vtkUnstructuredGrid ugrid;
+vtkVertexGlyphFilter vertexFilter;
+vtkIdFilter idFilter;
+vtkPolyDataMapper ptsMapper;
+vtkLabeledDataMapper lblMapper;
+vtkActor ptsActor;
+vtkActor2D lblActor;
+
+// read ugrid
+reader = vtkUnstructuredGridReader.New();
+reader.SetFileName(@"c:\vtk\data\cube.1.vtk"); // created by tetgen.exe
+(cube with 48 tetrahedrons)
+reader.Update();
+ugrid = reader.GetOutput();
+
+// filter original point ids
+idFilter = vtkIdFilter.New();
+idFilter.SetInputConnection(ugrid.GetProducerPort());
+idFilter.PointIdsOn();
+idFilter.Update();
+
+// points
+vertexFilter = vtkVertexGlyphFilter.New();
+vertexFilter.SetInputConnection(ugrid.GetProducerPort());
+vertexFilter.Update();
+ptsMapper = vtkPolyDataMapper.New();
+ptsMapper.SetInputConnection(vertexFilter.GetOutputPort());
+ptsMapper.ScalarVisibilityOn();
+ptsActor = vtkActor.New();
+ptsActor.SetMapper(ptsMapper);
+ptsActor.GetProperty().SetPointSize(10.0f);
+
+// point labels
+lblMapper = vtkLabeledDataMapper.New();
+lblMapper.SetInputConnection(idFilter.GetOutputPort());
+lblMapper.SetLabelModeToLabelFieldData();
+lblActor = vtkActor2D.New();
+lblActor.SetMapper(lblMapper);
+
+// render
+renderer.AddActor(ptsActor);
+renderer.AddActor(lblActor);
+renWin.Render();
+}
+
+----------------------------------------------------
+This code shows totally wrong ids (Differences to code above in bold)
+
+private void ShowSurfaceNodes() {
+vtkUnstructuredGridReader reader;
+vtkUnstructuredGrid ugrid;
+vtkVertexGlyphFilter vertexFilter;
+vtkIdFilter idFilter;
+vtkPolyDataMapper ptsMapper;
+vtkLabeledDataMapper lblMapper;
+vtkActor ptsActor;
+vtkActor2D lblActor;
+*	vtkUnstructuredGridGeometryFilter geo;
+*
+// read ugrid
+reader = vtkUnstructuredGridReader.New();
+reader.SetFileName(@"c:\vtk\data\cube.1.vtk"); // created by tetgen.exe
+(cube with 48 tetrahedrons)
+reader.Update();
+ugrid = reader.GetOutput();
+
+// filter inner points, so only surface points will be available
+*	geo = vtkUnstructuredGridGeometryFilter.New();
+geo.SetInputConnection(ugrid.GetProducerPort());
+*
+// filter original point ids
+idFilter = vtkIdFilter.New();
+idFilter.SetInputConnection(*geo.GetOutputPort()*);
+idFilter.PointIdsOn();
+idFilter.Update();
+
+// points
+vertexFilter = vtkVertexGlyphFilter.New();
+vertexFilter.SetInputConnection(*geo.GetOutputPort()*);
+vertexFilter.Update();
+ptsMapper = vtkPolyDataMapper.New();
+ptsMapper.SetInputConnection(vertexFilter.GetOutputPort());
+ptsMapper.ScalarVisibilityOn();
+ptsActor = vtkActor.New();
+ptsActor.SetMapper(ptsMapper);
+ptsActor.GetProperty().SetPointSize(10.0f);
+
+// point labels
+lblMapper = vtkLabeledDataMapper.New();
+lblMapper.SetInputConnection(idFilter.GetOutputPort());
+lblMapper.SetLabelModeToLabelFieldData();
+lblActor = vtkActor2D.New();
+lblActor.SetMapper(lblMapper);
+
+
+renderer.AddActor(ptsActor);
+renderer.AddActor(lblActor);
+renWin.Render();
+}
+
+I hope code is not too long.
+Please help. I tried so many things, unfortunately with no success.
+
+with kind regards
+Jochen
+
+
+
+--
+View this message in context: http://vtk.1045678.n5.nabble.com/Labeling-points-of-an-unstructured-grid-tp5520458p5520458.html
+Sent from the VTK - Users mailing list archive at Nabble.com.
+John Platt 3 years ago
+Hi,
+
+vtkUnstructuredGridGeometryFilter creates new, 0-based, contiguous, points
+and cell ids. I suspect you are labelling these new ids. Have you tried
+putting the id filter before the geometry filter?
+
+HTH
+
+John.
+
+----- Original Message -----
+From: "Jochen" <***@email.de>
+To: <***@vtk.org>
+Sent: Tuesday, February 28, 2012 12:24 AM
+Subject: [vtkusers] Labeling points of an unstructured grid
+...
+rakesh patil 3 years ago
+Hi,
+
+I guess the direct output of IdFilter should give you proper Id's, rather
+than passing it through geometry filter.
+
+See this example
+http://www.vtk.org/Wiki/VTK/Examples/Cxx/PolyData/PointCellIds
+
+Hope that helps
+
+Regards
+...
+2 Replies
+1 View 
+Switch to linear view 
+Disable enhanced parsing 
+Permalink to this page 
+
+Thread Navigation
+Jochen 3 years ago
+John Platt 3 years ago
+rakesh patil 3 years ago

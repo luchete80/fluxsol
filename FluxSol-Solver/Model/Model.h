@@ -12,6 +12,9 @@
 #include "Interpolation/CenterToVertexInterpolation.h"
 #include "Interpolation/CenterToVertexInterpolation_Def.h"    //TO MODIFY
 
+
+//#define _USE_32BIT_TIME_T  //MINGW BUG
+
 #include <time.h>
 #include "OutputFile.h"
 

@@ -24,8 +24,10 @@ if(DEBUG_MODE)
 	set (CMAKE_CXX_FLAGS "-fpermissive -g")
 else()
 	set (CMAKE_BUILD_TYPE Release)
-	set (CMAKE_CXX_FLAGS "-fpermissive")
+	set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fpermissive")
 endif ()
+
+set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fpermissive")
 
 set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 set (CMAKE_CXX_FLAGS_PROFILING "${CMAKE_CXX_FLAGS_PROFILING} -O2 -pg")

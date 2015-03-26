@@ -19,8 +19,19 @@ Model::Model(const std::string filename)
         //TO MODIFY, INPUT FILE MUST RETURN A MESH
         cout << "[I] Reading Mesh ..."<<endl;
         string meshfname=inputfile.section("grid",0).get_string("file");
-        Fv_CC_Grid mesht(meshfname);
-        this->mesh=mesht;
+
+        if (meshfname=="")
+        {
+
+        }
+        else
+        {
+            cout << "[I] Reading mesh file "<< meshfname <<endl;
+            Fv_CC_Grid mesht(meshfname);
+            this->mesh=mesht;
+        }
+
+
         inputfile.AssignGridPtr(this->mesh);                               //Assuming CGNS file
         //TO MODIFY, READED BY INPUT
         this->maxiter=100;
@@ -157,6 +168,12 @@ void CFDModel::InitFields()
 //    for (int i=0;i<4;i++)
 //        cout << "patch " << i << "cvalue phi" << phi.Boundaryfield().PatchField(i).ConstValue().outstr()<<endl;
 
+    clock_t begin, end;
+    double time_spent;
+
+    begin = clock();
+    /* here, do your time-consuming job */
+
     conv=false;
 	while (!conv)
 	{
@@ -202,10 +219,10 @@ void CFDModel::InitFields()
         starttimec= time(0);
 		FluxSol::Solve(UEqn);
         endtimec= time(0);
+
+
 		//double timec=(double) (endtime-starttime) / CLOCKS_PER_SEC * 1000.0;
 		double time=(double) difftime(endtimec, starttimec);
-//		cout    << "Solving U time: "<<
-//                std::setprecision(3)<<time <<"mseconds (time)"<<endl;
 //
 //
 
@@ -341,7 +358,10 @@ void CFDModel::InitFields()
             if (diff.Val()>maxphidiff.Val())  maxphidiff=diff;
         }
 
-        cout << "[I] Iter - Residuals u v w p - Time || " << it << " " <<maxudiff.outstr()<<maxpdiff.outstr()<<endl;
+        end = clock();
+        time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+
+        cout << "[I] Iter - Residuals u v w p - Time || " << it << " - " <<maxudiff.outstr()<<maxpdiff.outstr()<< " - " << time_spent<<endl;
 
 
         for (int nu=0;nu<mesh.Num_Cells();nu++)

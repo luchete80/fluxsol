@@ -102,6 +102,8 @@ void PickCallbackFunction(vtkObject* caller,
     }
 }
 
+
+//This is from http://www.vtk.org/Wiki/VTK/Examples/Cxx/Picking/HighlightSelectedPoints
     void HighlightInteractorStylePoints::OnLeftButtonUp()
     {
       // Forward events
@@ -134,15 +136,29 @@ void PickCallbackFunction(vtkObject* caller,
 #endif
       this->SelectedMapper->ScalarVisibilityOff();
 
-        vtkIdTypeArray* ids;
-      //vtkIdTypeArray* ids = vtkIdTypeArray::SafeDownCast(selected->GetPointData()->GetArray("OriginalIds"));
-      //for(vtkIdType i = 0; i < ids->GetNumberOfTuples(); i++)
-      //  {
-      //  std::cout << "Id " << i << " : " << ids->GetValue(i) << std::endl;
-      //  }
+
+//        vtkIdTypeArray* ids;
+
+     // vtkIdTypeArray* ids = vtkIdTypeArray::SafeDownCast(selected->GetPointData()->GetArray("OriginalIds"));
+    //  for(vtkIdType i = 0; i < ids->GetNumberOfTuples(); i++)
+    //  {
+    //   std::cout << "Id " << i << " : " << ids->GetValue(i) << std::endl;
+    //}
+
+    //cout << "Number of Point arrays: "<< this->idFilter->GetOutput()->GetPointData()->GetNumberOfArrays() <<endl;
+    cout << "Number of Point arrays: "<< selected->GetPointData()->GetNumberOfArrays() <<endl;
+
+
+    vtkIdTypeArray* pointIds = vtkIdTypeArray::SafeDownCast(this->idFilter->GetOutput()->GetPointData()->GetArray("ids"));
+    std::cout << "There are " << pointIds->GetNumberOfTuples() << " point ids" << std::endl;
+    for(vtkIdType i = 0; i < pointIds->GetNumberOfTuples(); i++)
+    {
+        std::cout << "Id " << i << " : " << pointIds->GetValue(i) << std::endl;
+    }
+
 
       this->SelectedActor->GetProperty()->SetColor(1.0, 0.0, 0.0); //(R,G,B)
-      this->SelectedActor->GetProperty()->SetPointSize(3);
+      this->SelectedActor->GetProperty()->SetPointSize(5);
 
       this->CurrentRenderer->AddActor(SelectedActor);
       this->GetInteractor()->GetRenderWindow()->Render();

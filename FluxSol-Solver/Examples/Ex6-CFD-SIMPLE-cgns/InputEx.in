@@ -24,14 +24,24 @@
 
 // Example of Input file.
 
-grid {
+grid_1 {
 	file = square.cgns;
 	dimension = 2;
 		
-	solution_scheme = diffusion;
+	solution_scheme = navier-stokes;
 	
-	BC_1 (type=fixedvalue;T=0.0;); 
-	BC_2 (type=fixedvalue;T=0.0;);
-	BC_3 (type=fixedvalue;T=0.0;); 
-	BC_4 (type=fixedvalue;T=1.0;);
+	material 	(
+				k=1.;
+				rho=1.;);
+	
+	//material(dbname=air);
+	
+	patch_1(name=top;type=faces;list=[1,2,3];);
+		
+	BC_2 (patch=BC-2;type=wall;U=[1.,0.,0.];);
+	BC_1 (patch=BC-4;type=wall;U=[0.,0.,0.];); 
+	BC_3 (patch=BC-3;type=wall;U=0.0;); 
+	BC_4 (patch=BC-1;type=wall;U=[0.,0.,0.];);	
+	//BC_5 (patch=test;type=wall;U=[0.,0.,0.];);
+	
 }

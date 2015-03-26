@@ -37,8 +37,33 @@
 #include <vtkExtractPolyDataGeometry.h>
 #include <vtkExtractGeometry.h>
 
+#include <vtkPointData.h>
 #include <vtkVertexGlyphFilter.h>
 #include <vtkIdFilter.h>
+
+
+// POINT SELECTION
+#include <vtkIdTypeArray.h>
+#include <vtkDataSetSurfaceFilter.h>
+#include <vtkRendererCollection.h>
+#include <vtkProperty.h>
+#include <vtkPlanes.h>
+#include <vtkObjectFactory.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkActor.h>
+#include <vtkRenderWindow.h>
+#include <vtkRenderer.h>
+#include <vtkRenderWindowInteractor.h>
+#include <vtkPolyData.h>
+#include <vtkPointSource.h>
+#include <vtkInteractorStyleRubberBandPick.h>
+#include <vtkAreaPicker.h>
+#include <vtkExtractGeometry.h>
+#include <vtkDataSetMapper.h>
+#include <vtkUnstructuredGrid.h>
+#include <vtkVertexGlyphFilter.h>
+#include <vtkIdFilter.h>
+
 
 #define VTKISRBP_ORIENT 0
 #define VTKISRBP_SELECT 1
@@ -113,15 +138,25 @@ class HighlightInteractorStylePoints : public vtkInteractorStyleRubberBandPick
       this->SelectedMapper = vtkSmartPointer<vtkDataSetMapper>::New();
       this->SelectedActor = vtkSmartPointer<vtkActor>::New();
       this->SelectedActor->SetMapper(SelectedMapper);
+
+      this->idFilter =
+        vtkSmartPointer<vtkIdFilter>::New();
+      this->surfaceFilter=
+        vtkSmartPointer<vtkDataSetSurfaceFilter>::New();
     }
 
     virtual void OnLeftButtonUp();
 
     void SetPoints(vtkSmartPointer<vtkPolyData> points) {this->Points = points;}
+
+    vtkSmartPointer<vtkIdFilter> IdFilter(){return this->idFilter;}
+    vtkSmartPointer<vtkDataSetSurfaceFilter> SurfaceFilter(){return this->surfaceFilter;}
   private:
     vtkSmartPointer<vtkPolyData> Points;
     vtkSmartPointer<vtkActor> SelectedActor;
     vtkSmartPointer<vtkDataSetMapper> SelectedMapper;
+    vtkSmartPointer<vtkIdFilter> idFilter;
+    vtkSmartPointer<vtkDataSetSurfaceFilter> surfaceFilter;
 
 };
 //vtkStandardNewMacro(HighlightInteractorStylePoints);

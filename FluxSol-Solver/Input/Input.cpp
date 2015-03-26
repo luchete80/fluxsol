@@ -380,7 +380,7 @@ void InputFile::read_inputs(void) {
 //	read("reference");
 
 	registerSection("grid",numbered,required);
-	section("grid",0).register_string("file",required);
+	section("grid",0).register_string("file",optional);
 	section("grid",0).register_int("dimension",optional,3);
 	section("grid",0).register_string("solution_scheme",optional,"navier-stokes");                 //New, from FluxSol, if empty, solution is navier stokes
 	section("grid",0).register_string("solution_scheme",required);
@@ -429,10 +429,9 @@ void InputFile::read_inputs(void) {
 
     //std::vector<int> list=get_intLists    ("list");
 
-    section("grid",0).registerSubsection("nodes",numbered,required);
-    section("grid",0).subsection("nodes",0).register_string("type",required);
-    section("grid",0).subsection("nodes",0).register_string("list",optional);
-    //section("grid",0).subsection("nodes",0).register_Vec3DList("list",file);
+    section("grid",0).registerSubsection("list",single,optional);
+    section("grid",0).subsection("list").register_stringList("nodes",optional);
+    section("grid",0).subsection("list").register_stringList("cells",optional);
 
 	section("grid",0).registerSubsection("BC",numbered,required);
 	section("grid",0).subsection("BC",0).register_string("patch",required);

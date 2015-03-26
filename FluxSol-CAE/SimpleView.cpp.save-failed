@@ -276,7 +276,16 @@ SimpleView::SimpleView()
 
 
     this->comboBox = new QComboBox(this);
-    this->ui->toolBar_Results->addWidget(comboBox);
+    this->ResultsVarDim = new QComboBox(this);
+    //this->ui->toolBar_Results->addWidget(comboBox);
+
+    QWidget* empty = new QWidget();
+    //empty->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
+    empty->resize(10, empty->height());
+    this->ui->ResultsToolBar->addWidget(comboBox);
+    this->ui->ResultsToolBar->addWidget(empty);
+    this->ui->ResultsToolBar->addWidget(ResultsVarDim);
+
 
     this->ui->ModelTree->expandAll();
 
@@ -654,9 +663,80 @@ void SimpleView::slotImportMesh()
             actor->SetMapper(datasetmapper);
         }
 
+      areaPicker =
+        vtkSmartPointer<vtkAreaPicker>::New();
 
-        this->gridselectionstyle->Data = polydata;
-        this->renderWindowInteractor->SetInteractorStyle(this->gridselectionstyle);
+        renderWindowInteractor->SetPicker(areaPicker);
+
+
+        //this->gridselectionstyle->Data = polydata;
+        //this->renderWindowInteractor->SetInteractorStyle(this->gridselectionstyle);
+
+
+
+      // For vtkInteractorStyleRubberBandPick - use 'r' and left-mouse to draw a selection box used to pick
+     // vtkSmartPointer<vtkInteractorStyleRubberBandPick> style =
+      //  vtkSmartPointer<vtkInteractorStyleRubberBandPick>::New();
+
+///////////////////////////////////
+// FACE SELECTION /////////////
+//------
+//  vtkSmartPointer<HighlightInteractorStyleCells> style =
+//    vtkSmartPointer<HighlightInteractorStyleCells>::New();
+//    style->SetPolyData(polydata);
+
+
+    //////////////////////
+    // POINT SELECTION ///
+    //////////////////////
+
+
+
+  vtkSmartPointer<HighlightInteractorStylePoints> style =
+    vtkSmartPointer<HighlightInteractorStylePoints>::New();
+
+
+    vtkSmartPointer<vtkExtractPolyDataGeometry> extractPolyDataGeometry =
+      vtkSmartPointer<vtkExtractPolyDataGeometry>::New();
+
+    extractPolyDataGeometry->SetInput(this->PolyData);
+
+
+      style->IdFilter()->SetInputConnection(extractPolyDataGeometry->GetOutputPort());   //This takes a polydata (in original example takes a pointsource)
+      style->IdFilter()->SetIdsArrayName("OriginalIds");
+      style->IdFilter()->Update();
+
+      style->surfaceFilter->SetInputConnection(idFilter->GetOutputPort());
+      style->surfaceFilter->Update();
+
+
+      style->surfaceFilter->SetInputConnection(style->idFilter->GetOutputPort());
+      style->surfaceFilter->Update();
+
+        style->SetPoints(polydata); //All points
+
+    // INPUT POLYDATA NLY FOR VISUALIZATION
+  //vtkPolyData* input = surfaceFilter->GetOutput();
+    ///// END OF POINT SELECTION //////
+    ///////////////////////////////////
+
+
+
+
+      // For vtkInteractorStyleTrackballCamera - use 'p' to pick at the current mouse position
+      //vtkSmartPointer<vtkInteractorStyleTrackballCamera> style =
+      //  vtkSmartPointer<vtkInteractorStyleTrackballCamera>::New(); //like paraview
+      style->SetCurrentRenderer(this->ren);
+      renderWindowInteractor->SetInteractorStyle( style );
+
+//////////////////////////////////
+
+
+//      vtkSmartPointer<vtkCallbackCommand> pickCallback =
+//        vtkSmartPointer<vtkCallbackCommand>::New();
+//    pickCallback->SetCallback ( PickCallbackFunction );
+//
+//        areaPicker->AddObserver ( vtkCommand::EndPickEvent, pickCallback );
 
       // Visualize
      // vtkSmartPointer<vtkPolyDataMapper> pdmapper =
@@ -931,28 +1011,33 @@ void SimpleView::slotOpenResults()
         this->ren->AddActor(actor);
 
 
+    pdmapper->GetLookupTable()->SetRange(0,100.);
 ////////////////////////////////////////// COLOR BAR
 
   vtkSmartPointer<vtkScalarBarActor> scalarBar =
     vtkSmartPointer<vtkScalarBarActor>::New();
-  scalarBar->SetLookupTable(pdmapper->GetLookupTable());
+
   scalarBar->SetTitle(pd->GetArrayName(0));
   scalarBar->SetNumberOfLabels(4);
   //scalarBar->GetLabelTextProperty()->SetFontSize(4);
-  scalarBar->SetHeight(0.40);
+  scalarBar->SetHeight(0.60);
   scalarBar->SetWidth(0.10);
   scalarBar->GetTitleTextProperty()->SetFontFamilyToArial();
   scalarBar->GetTitleTextProperty()->ShadowOff();
   scalarBar->GetTitleTextProperty()->ItalicOff();
   scalarBar->GetTitleTextProperty()->BoldOff();
-  scalarBar->GetTitleTextProperty()->SetFontSize(10);
-    scalarBar->GetTitleTextProperty()->SetColor ( 0.0,0.0,0.0 );
+  scalarBar->GetTitleTextProperty()->SetFontSize(1);
+  scalarBar->GetTitleTextProperty()->SetColor ( 0.0,0.0,0.0 );
 
   scalarBar->GetLabelTextProperty()->SetFontFamilyToArial();
   scalarBar->GetLabelTextProperty()->ShadowOff();
   scalarBar->GetLabelTextProperty()->ItalicOff();
   scalarBar->GetLabelTextProperty()->BoldOff();
+  scalarBar->GetLabelTextProperty()->SetFontSize(4);
   scalarBar->GetLabelTextProperty()->SetColor ( 0.0,0.0,0.0 );
+
+    //scalarBar->GetPositionCoordinate()->SetValue(val1,val2);
+    //scalarBar->GetPosition2Coordinate()->SetValue(20.,20.);
   //scalarBar->SetPosition(0.04, 0.02);
 //  this->colorBar->SetOrientationToHorizontal();
 
@@ -966,6 +1051,8 @@ void SimpleView::slotOpenResults()
 
   pdmapper->SetLookupTable( colorLookupTable );
   scalarBar->SetLookupTable( colorLookupTable );
+    scalarBar->SetNumberOfLabels(5);
+  pdmapper->SetScalarRange(scalarRange);
 
         //Results Combo Box
         this->comboBox->addItem(pd->GetArrayName(0));

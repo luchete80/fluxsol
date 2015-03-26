@@ -599,7 +599,7 @@ void SimpleView::slotImportMesh()
       vtkSmartPointer<vtkActor> actor =
         vtkSmartPointer<vtkActor>::New();
 
-        vtkPolyData *polydata;
+        vtkSmartPointer<vtkPolyData> polydata;
 
         if (extension ==".cgns")
         {
@@ -678,15 +678,48 @@ void SimpleView::slotImportMesh()
      // vtkSmartPointer<vtkInteractorStyleRubberBandPick> style =
       //  vtkSmartPointer<vtkInteractorStyleRubberBandPick>::New();
 
-
+///////////////////////////////////
+// FACE SELECTION /////////////
 //------
-  vtkSmartPointer<HighlightInteractorStyleCells> style =
-    vtkSmartPointer<HighlightInteractorStyleCells>::New();
-    style->SetPolyData(polydata);
+//  vtkSmartPointer<HighlightInteractorStyleCells> style =
+//    vtkSmartPointer<HighlightInteractorStyleCells>::New();
+//    style->SetPolyData(polydata);
 
-//  vtkSmartPointer<HighlightInteractorStylePoints> style =
-//    vtkSmartPointer<HighlightInteractorStylePoints>::New();
-//  style->SetPoints(polydata);
+
+    //////////////////////
+    // POINT SELECTION ///
+    //////////////////////
+
+
+
+  vtkSmartPointer<HighlightInteractorStylePoints> style =
+    vtkSmartPointer<HighlightInteractorStylePoints>::New();
+
+
+      //style->IdFilter()->SetInputConnection(polydata->GetProducerPort());   //This takes a polydata (in original example takes a pointsource)
+
+        //style->IdFilter()->SetInputConnection(ugrid->GetProducerPort());
+        //style->IdFilter()->SetInputData(ugrid);
+
+        cout << "Creating Id Filter"<<endl;
+        style->IdFilter()->SetInputData(polydata);
+
+      style->IdFilter()->SetIdsArrayName("ids");
+      style->IdFilter()->Update();
+
+      style->SurfaceFilter()->SetInputConnection(style->IdFilter()->GetOutputPort());
+      style->SurfaceFilter()->Update();
+
+
+      style->SurfaceFilter()->SetInputConnection(style->IdFilter()->GetOutputPort());
+      style->SurfaceFilter()->Update();
+
+        style->SetPoints(polydata); //All points
+
+    // INPUT POLYDATA NLY FOR VISUALIZATION
+  //vtkPolyData* input = surfaceFilter->GetOutput();
+    ///// END OF POINT SELECTION //////
+    ///////////////////////////////////
 
 
 
