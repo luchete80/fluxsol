@@ -308,6 +308,8 @@ void Fv_CC_Grid::Iniciar_Caras()
 		cellfaces.assign(numcellfaces[cellit->Num_Vertex()],false);
 		cellfacefound.push_back(cellfaces);
 	}
+	//cout << "end cell loop"<<endl;
+
     //Esto antes era sin iteradores
     //Ahora recorro asi las celdas
 	int c1=0;	//indice de la celda 1
@@ -315,7 +317,7 @@ void Fv_CC_Grid::Iniciar_Caras()
     for (cellit=cell.begin();cellit!=cell.end();cellit++)
     {
         //cout <<"cell loop"<<endl;
-		//cout <<"Rcorriendo celda"<<c1<<endl;
+		cout <<"Looking through cell "<<c1<<endl;
 		vector <int> intverts;				//Los vertices interiores que voy encontrando
 
 		vector <Cell_CC>::iterator cellit2;		//cellit 2 es a la segunda cara del elemento

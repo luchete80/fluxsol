@@ -260,6 +260,7 @@ private:
         //vector<vector<int>> idbcellasoc(boundelem,vector<int>(2,-1));	//Id cells
         bcell=0;
 
+        cout << "[I] Creating cells ..."<<endl;
         for (int idcell =0 ; idcell<raw.cellConnIndex.size();idcell++)
         {
             int cellvertnum;
@@ -284,14 +285,18 @@ private:
         this->num_cells=cell.size();
 
         // Nodes
+        cout << "[I] Creating Central Nodes ..."<<endl;
         CreateNodesFromCellVerts();
 
         this->inicie_nodes=true;
         this->inicie_cells=true;
+        cout << "[I] Assigning Faces ..."<<endl;
         Iniciar_Caras();
+        cout << "[I] Assigning Neighbours ..."<<endl;
         AssignNeigboursCells();
+        cout << "[I] Calculating Volumes ..."<<endl;
         CalcCellVolumes();
-        CreateNodesFromCellVerts();
+        //CreateNodesFromCellVerts();
 
         vector <Patch> vpatch;
 
