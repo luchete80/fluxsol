@@ -67,12 +67,12 @@ void CFDModel::InitFields()
 
     _CC_Fv_Field <Vec3D>  Ut;
 
-    for (int i=0;i<4;i++)
-        cout << "patch cvalue Velocity" << U.Boundaryfield().PatchField(i).ConstValue()<<endl;
+//    for (int i=0;i<4;i++)
+//        cout << "patch cvalue Velocity" << U.Boundaryfield().PatchField(i).ConstValue()<<endl;
 
 
-    for (int i=0;i<4;i++)
-        cout << "patch cvalue Pressure" << p.Boundaryfield().PatchField(i).ConstValue().outstr()<<endl;
+//    for (int i=0;i<4;i++)
+//        cout << "patch cvalue Pressure" << p.Boundaryfield().PatchField(i).ConstValue().outstr()<<endl;
 
 
 	//ReadVelocityFieldFromInput(this->inputfile,this->U,this->mesh);
@@ -174,9 +174,24 @@ void CFDModel::InitFields()
     begin = clock();
     /* here, do your time-consuming job */
 
+    //Iteration Log
+	ofstream fitlog;
+    bool found=false;
+	fitlog.open("Iteration-Log.txt");
+
+
+    fitlog<< "BC_Appply U_LHS U_RHS U_Solve phi_calc phi_BC peqn_RLHS peqn_Solve phi_recorr Total"<<endl;
+
+    clock_t ittime_begin, ittime_end;
+    double ittime_spent;
+
+    ittime_end = clock();
+
     conv=false;
 	while (!conv)
 	{
+	    ittime_begin = clock();
+
 
 //	    cout << "Iteration: "<<it+1<< endl;
 		//1.Restore Iteration
@@ -195,10 +210,17 @@ void CFDModel::InitFields()
         U.Boundaryfield().ApplyBC();
         p.Boundaryfield().ApplyBC();
 
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        ittime_end = clock();
+        fitlog << scientific <<ittime_spent <<" " ;
 		//2. U Calculation
 		//UEqn=FvImp::Div_CDS(phi, U)-FvImp::Laplacian(k,U);//TO MODIFY WITH CONVECTION SCHEME
 
 		UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
+
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        ittime_end = clock();
+        fitlog << std::setprecision(6)<<ittime_spent <<" " ;
 //
 //		//4. Solve Momentum predictor (UEqn)
 		//Solve(UEqn==-FvExp::Grad(p));
@@ -212,12 +234,20 @@ void CFDModel::InitFields()
 		//UEqn==gradpV;
 		UEqn==(1.-alpha_u)/alpha_u*(UEqn.A()*U)+gradpV;
 
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        ittime_end = clock();
+        fitlog << ittime_spent <<" " ;
 
                         //TO MODIFY
 		UEqn.Relax();   //This MUST INCLUDE R VECTOR
 
         starttimec= time(0);
 		FluxSol::Solve(UEqn);
+
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        ittime_end = clock();
+        fitlog << ittime_spent <<" " ;
+
         endtimec= time(0);
 
 
@@ -259,6 +289,10 @@ void CFDModel::InitFields()
         //phi=phi - AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
         phi=Uf_ & mesh.Sf();
         phi= phi - alpha_u*AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
+
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        ittime_end = clock();
+        fitlog << ittime_spent <<" " ;
 
 
         //TO MODIFY
@@ -305,12 +339,24 @@ void CFDModel::InitFields()
 //		//THIS IS INSIDE DIV ALGORITHM Sum(-rhof (Df) Grad(p´f)Af + Sum (m*f) = 0
 //		//for the prescribed for the non orth steps
 
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        ittime_end = clock();
+        fitlog << ittime_spent <<" " ;
 
         pEqn=FvImp::Laplacian(rho*AUr,p);   //Solve Laplacian for p (by the way, is p´)
         pEqn==FvExp::Div(phi);
+
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        ittime_end = clock();
+        fitlog << ittime_spent <<" " ;
+
         //pEqn.Eqn(36).SetValueCondition(0.);
         //Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
         FluxSol::Solve(pEqn);
+
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        ittime_end = clock();
+        fitlog << ittime_spent <<" " ;
         //Important:
         //Since Correction is in flux we have yet the faces areas includes, then
         //we must not to compute inner product another time
@@ -327,6 +373,10 @@ void CFDModel::InitFields()
         pcorr=pEqn.Field();
         //phi= phi - alpha_u*FvExp::SnGrad(pcorr);
         phi= phi - alpha_u*AUrf_*FvExp::SnGrad(pcorr);
+
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        ittime_end = clock();
+        fitlog << ittime_spent <<" " ;
 
         //TO MODIFY, CORRECT THIS
         //phi=phi-alpha_u*(AUrf_*FvExp::SnGrad(prod));
@@ -359,10 +409,13 @@ void CFDModel::InitFields()
         }
 
         end = clock();
+
+        ittime_spent = (double)(clock() - ittime_begin) / CLOCKS_PER_SEC;
+        ittime_end = clock();
         time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 
         cout << "[I] Iter - Residuals u v w p - Time || " << it << " - " <<maxudiff.outstr()<<maxpdiff.outstr()<< " - " << time_spent<<endl;
-
+        fitlog << ittime_spent <<" "<<endl;
 
         for (int nu=0;nu<mesh.Num_Cells();nu++)
         {
@@ -380,29 +433,34 @@ void CFDModel::InitFields()
         U.AssignBoundaryField(bf);
         p.AssignBoundaryField(pbf);
 
+
+        //Write Output in every iterations
+        OutputFile("CellField-p.vtu",p);
+        OutputFile("CellField-U.vtu",U,0);
+    //
+        CenterToVertexInterpolation <Scalar> interp(mesh);
+        CenterToVertexInterpolation <Vec3D> interv(mesh);
+        Vertex_Fv_Field<Scalar> vF;
+        Vertex_Fv_Field<Vec3D> vv;
+    //
+    //
+    //    cout << "INTERPOLATING"<<endl;
+        vF=interp.Interpolate(p);
+        OutputFile("VertexField-p.vtu",vF);
+    //
+        //Rewrite BCs?
+        //U.Boundaryfield().PatchField(1).AssignValue(Vec3D(1.,0.,0.));
+        vv=interv.Interpolate(U);
+    //    OutputFile("VertexField-U.vtu",vv);
+        OutputFile("VertexField-Ux.vtu",vv,0);
+        OutputFile("VertexField-Uz.vtu",vv,2);
+
 	}
+	fitlog.close();
+
 //	OutputFile("CellField-U.vtu",U);
 //	OutputFile("CellField-Uy.vtu",U,1);
 //    OutputFile("CellField-Uz.vtu",U,2);
-	OutputFile("CellField-p.vtu",p);
-	OutputFile("CellField-U.vtu",U,0);
-//
-    CenterToVertexInterpolation <Scalar> interp(mesh);
-    CenterToVertexInterpolation <Vec3D> interv(mesh);
-    Vertex_Fv_Field<Scalar> vF;
-    Vertex_Fv_Field<Vec3D> vv;
-//
-//
-//    cout << "INTERPOLATING"<<endl;
-	vF=interp.Interpolate(p);
-    OutputFile("VertexField-p.vtu",vF);
-//
-    //Rewrite BCs?
-    //U.Boundaryfield().PatchField(1).AssignValue(Vec3D(1.,0.,0.));
-    vv=interv.Interpolate(U);
-//    OutputFile("VertexField-U.vtu",vv);
-    OutputFile("VertexField-Ux.vtu",vv,0);
-    OutputFile("VertexField-Uz.vtu",vv,2);
 
     //OutputFile of("Fields.vtu",this->mesh);
 

@@ -47,7 +47,7 @@ set (ALGLIB_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/src)
 
 set (CGNS_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src/lib)
 set (ALGLIB_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/bin)
-set (LASPACK_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/laspack/bin)
+set (LASPACK_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/laspack/bin_release)
 
 #set (fluxsol_VERSION_MAJOR 2)
 #set (fluxsol_VERSION_MINOR 0)
