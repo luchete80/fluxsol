@@ -207,11 +207,11 @@ void CFDModel::InitFields()
         //TO Modify (Simply correct an internal field constant value)
         //Like Update field Boundary Values
 
+        ittime_end = clock();
         U.Boundaryfield().ApplyBC();
         p.Boundaryfield().ApplyBC();
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
-        ittime_end = clock();
         fitlog << scientific <<ittime_spent <<" " ;
 		//2. U Calculation
 		//UEqn=FvImp::Div_CDS(phi, U)-FvImp::Laplacian(k,U);//TO MODIFY WITH CONVECTION SCHEME
