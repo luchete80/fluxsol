@@ -29,6 +29,7 @@ Model::Model(const std::string filename)
             cout << "[I] Reading mesh file "<< meshfname <<endl;
             Fv_CC_Grid mesht(meshfname);
             this->mesh=mesht;
+            this->mesh.Log("MeshLog.txt");
         }
 
 
@@ -188,6 +189,13 @@ void CFDModel::InitFields()
     ittime_end = clock();
 
     conv=false;
+
+
+
+    //UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
+    UEqn=FvImp::Div(phi, U);
+    cout << "Eqn Log"<<endl<<UEqn.outstr()<<endl;
+    cout << "End Log"<<endl;
 	while (!conv)
 	{
 	    ittime_begin = clock();
@@ -217,6 +225,9 @@ void CFDModel::InitFields()
 		//UEqn=FvImp::Div_CDS(phi, U)-FvImp::Laplacian(k,U);//TO MODIFY WITH CONVECTION SCHEME
 
 		UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
+
+        cout << "Eqn Log"<<endl<<UEqn.outstr()<<endl;
+        cout << "End Log"<<endl;
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         ittime_end = clock();

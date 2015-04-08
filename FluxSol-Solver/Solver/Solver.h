@@ -76,7 +76,7 @@ void Solve (EqnSystem <T> &eq)
 		int sparsecol=0;
 		int row=e*numberofcomp;
 
-        cout << "Eqn " <<e << "Width: "<<eq.Eqn(e).Width()<<endl;
+//        cout << "Eqn " <<e << "Width: "<<eq.Eqn(e).Width()<<endl;
 
 		for (int dim=0;dim<numberofcomp;dim++)
         {

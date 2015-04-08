@@ -127,6 +127,7 @@ public:
 
 	//Log
 	void Log(ofstream &f);
+
 };
 
 //Can derive a Class With Finite Volume information
@@ -293,7 +294,22 @@ class EqnSystem{   //Es un vector de ecuaciones
             field.Val(e,this->Eqn(e).Ap());
         }
         return field;
-	};
+	}
+
+    const string outstr()const
+	{
+        string ret;
+        string cad;
+        std::ostringstream strs;
+        //strs << std::setprecision(6) << std::scientific << val ;//<< "\n";
+        strs<< "Eqn System Width"<<endl;
+
+        for (int e=0;e<this->eqn.size();e++)
+            strs << this->eqn[e].Width()<<endl;
+        cad+= strs.str();
+        return cad;
+
+	}
 };
 
 

@@ -310,7 +310,7 @@ FvImp::Div_CDS(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
  // TO MODIFY!!!!
  //This Way is too expensive, only for evaluation
                 if (neigh>=0 /*&& neigh <VolField.ConstGrid().Cell(cell[0]).Num_Neighbours()*/)
-                    //cout << "Cell 0 Neigh (Nrigh 1)" <<neigh<<endl;
+                    cout << "Cell 0 Neigh (Nrigh 1)" <<neigh<<endl;
                     //eqnsys.Eqn(cell[0]).An(neigh,coeff_an);
                     eqnsys.Eqn(cell[0]).An(neigh)+=coeff_ap;
 
@@ -319,7 +319,7 @@ FvImp::Div_CDS(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
 
                 if (neigh2>=0 /*&& neigh <VolField.ConstGrid().Cell(cell[1]).Num_Neighbours()*/)
                     //eqnsys.Eqn(cell[1]).An(neigh2,coeff_ap);
-                    //cout << "Cell 1 Neigh (Nrigh 2)" <<neigh2<<endl;
+                    cout << "Cell 1 Neigh (Nrigh 2)" <<neigh2<<endl;
                     eqnsys.Eqn(cell[1]).An(neigh2)-=coeff_ap;
             }
 		}//End if !NullFluxFace
