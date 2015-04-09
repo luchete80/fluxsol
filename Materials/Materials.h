@@ -22,7 +22,7 @@
 
 *************************************************************************/
 #ifndef MATERIALS_H_
-#define MATERIASL_H_
+#define MATERIALS_H_
 
 #include <iostream>
 #include <string>
