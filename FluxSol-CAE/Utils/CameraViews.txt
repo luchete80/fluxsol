@@ -1,0 +1,56 @@
+Hi,
+
+You need to work with the camera. Basically, there are three ivars you can
+work with in vtkCamera:
+
+1. The FocalPoint - this controls the point the camera "looks" at.
+2. The Position - this controls _where_ the camera is in space.
+3. The ViewUp - this controls what the "up" direction is (i.e., the
+direction that goes bottom-to-top in the view).
+
+The constraint is that ViewUp should be orthogonal to the direction from
+Position to FocalPoint (this is accessible through
+GetDirectionOfProjection).
+
+There are convenience functions to set these too (like SetRoll, which rolls
+the camera around the DirectionOfProjection).
+
+Normally, what I do is,
+a) Move the FocalPoint to the center of my object, or wherever on the object
+I want to center my view
+b) Move the Position to a point in the corresponding axis. For looking from
+positive X, I move the camera to something like (1, 0, 0).
+c) Set the ViewUp to whatever should be the appropriate up vector for my
+scene - (0, 0, 1) for Z axis.
+d) Call ResetCamera on the renderer to give me the full view. There's also
+an overload to ResetCamera that takes bounds, so that you can reset to view
+only a specific region.
+
+You can either have multiple cameras and call SetActiveCamera on the
+renderer, or get the camera from the renderer, and manipulate it.
+
+HTH
+Shash
+
+
+///////////////////////////// CODIGO ////////////////////////////////////
+
+vtkSmartPointer<vtkCamera> camera = vtkSmartPointer<vtkCamera>::New();
+renderer->SetActiveCamera(camera);
+camera->SetPosition(0, 650, 0);
+and then render the scene by calling:
+
+renderWindow->Render();
+renderWindowInteractor->Start();
+The problem is, under this perspective projection the model is not showing at this viewpoint. I can get and set the near and far values of the frustum by calling:
+
+double near, far;
+camera->GetClippingRange(near, far);
+near = 0.001;
+far = 1000000;
+camera->GetClippingRange(near, far);
+
+camera->SetFocalPoint(0,0,0);
+camera->SetViewUp(0,1,0);
+camera->SetPosition(0,650,0);
+

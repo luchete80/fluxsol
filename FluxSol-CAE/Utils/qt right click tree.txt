@@ -1,0 +1,80 @@
+QTreeWidgetItem 
+
+I've modified jmk's code slightly to show how this can be done with
+
+setContextMenuPolicy(Qt::CustomContextMenu) and customContextMenuRequested(const QPoint&) signal.
+
+mytreewidget.h
+
+#include <QTreeWidget>
+
+static const int ItemType1 = QTreeWidgetItem::UserType + 1;
+static const int ItemType2 = QTreeWidgetItem::UserType + 2;
+
+class MyTreeWidget : public QTreeWidget
+{
+    Q_OBJECT
+public:
+    MyTreeWidget(QWidget *parent = 0);
+
+private slots:
+    void showContextMenu(const QPoint &pos);
+};
+mytreewidget.cpp:
+
+#include "mytreewidget.h"
+
+#include <QMenu>
+#include <QTreeWidgetItem>
+
+MyTreeWidget::MyTreeWidget(QWidget *parent)
+  : QTreeWidget(parent)
+{
+    setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
+            SLOT(showContextMenu(const QPoint&)));
+}
+
+void MyTreeWidget::showContextMenu(const QPoint &pos)
+{
+  QMenu menu;
+
+  QTreeWidgetItem* item = itemAt(pos);
+  switch (item->type()) {
+  case ItemType1:
+    menu.addAction("This is a type 1");
+    break;
+
+  case ItemType2:
+    menu.addAction("This is a type 2");
+    break;
+  }
+
+  menu.exec(mapToGlobal(pos));
+}
+main.cpp:
+
+#include <QApplication>
+
+#include "mytreewidget.h"
+
+int main(int argc, char** argv)
+{
+    QApplication app(argc, argv);
+
+    MyTreeWidget w;
+
+    // Add test items.
+    w.addTopLevelItem(new QTreeWidgetItem(QStringList("A (type 1)"),
+                                          ItemType1));
+    w.addTopLevelItem(new QTreeWidgetItem(QStringList("B (type 1)"),
+                                          ItemType1));
+
+    w.addTopLevelItem(new QTreeWidgetItem(QStringList("C (type 2)"),
+                                      ItemType2));
+    w.addTopLevelItem(new QTreeWidgetItem(QStringList("D (type 2)"),
+                                          ItemType2));
+    w.show();
+
+    return app.exec();
+}

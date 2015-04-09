@@ -1,0 +1,43 @@
+
+namespace FluxSol
+{
+	template
+	OutputFile::OutputFile(string name, _CC_Fv_Field<Scalar> &field);
+
+	template
+	OutputFile::OutputFile(string name, _CC_Fv_Field<Vec3D> &field);
+
+    //TO MODIFY
+	template
+    OutputFile::OutputFile(string name, _CC_Fv_Field<Scalar> &field, const int &comp);
+
+	template
+    OutputFile::OutputFile(string name, _CC_Fv_Field<Vec3D> &field, const int &comp);
+
+	template
+	OutputFile::OutputFile(string name, Vertex_Fv_Field<Scalar> &field);
+
+	template
+	OutputFile::OutputFile(string name, Vertex_Fv_Field<Vec3D> &field);
+
+
+	template
+    OutputFile::OutputFile(string name, Vertex_Fv_Field<Scalar> &field,const int &comp);
+
+	template
+    OutputFile::OutputFile(string name, Vertex_Fv_Field<Vec3D> &field,const int &comp);
+
+	template
+    void OutputFile::WriteField(const Vertex_Fv_Field<Scalar> &field);
+
+	template
+    void OutputFile::WriteField(const Vertex_Fv_Field<Vec3D> &field);
+
+	template
+	void OutputFile::AddFieldValues(_CC_Fv_Field<Scalar>);
+
+	template
+	void OutputFile::AddFieldValues(_CC_Fv_Field<Vec3D>);
+
+}
+

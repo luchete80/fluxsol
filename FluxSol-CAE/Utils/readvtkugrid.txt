@@ -1,0 +1,106 @@
+  // Mapper
+  VTK_CREATE(vtkPolyDataMapper, textmapper);
+
+  vtkSmartPointer<vtkDataSetMapper> mapper =
+    vtkSmartPointer<vtkDataSetMapper>::New();
+    //vtkSmartPointer<vtkUnstructuredGridMapper> mapper =
+    //vtkSmartPointer<vtkUnstructuredGridMapper>::New();
+
+  textmapper->ImmediateModeRenderingOn();
+  textmapper->SetInputConnection(elevation->GetOutputPort());
+
+
+  /// MESH READING
+    // Read the file
+    //vtkSmartPointer<vtkUnstructuredGrid> ugrid;
+
+    vtkUnstructuredGrid *ugrid;
+
+  vtkSmartPointer<vtkUnstructuredGridReader> reader =
+    vtkSmartPointer<vtkUnstructuredGridReader>::New();
+  //reader->SetFileName(inputFilename.c_str());
+  reader->SetFileName("mesh.vtk");
+  reader->Update();
+
+  ugrid = reader->GetOutput();
+
+  vtkSmartPointer<vtkUnstructuredGridGeometryFilter> geometryFilter =
+    vtkSmartPointer<vtkUnstructuredGridGeometryFilter>::New();
+  geometryFilter->SetInputConnection(reader->GetOutputPort());
+  geometryFilter->Update();
+
+    double bounds[6];
+    //reader->GetBounds(bounds);
+
+  //mapper->SetInputConnection(geometryFilter->GetOutputPort());
+    mapper->SetInputConnection(reader->GetOutputPort());
+    //mapper->SetInputConnection(shrinkFilter->GetOutputPort());
+
+    //**********************************************************************************
+    //Read values At First
+//    vector<double> results;
+//    fstream in_stream("results.txt");
+//    while (!in_stream.eof())
+//   {
+//       string line;
+//        getline(in_stream, line);
+//        stringstream ss;
+//        ss << line;
+//        double d;
+//        ssd >> d;
+//        results.push_back(d);
+//   }
+
+
+
+    // Data taken from vtk examples ColoredElevationMap and Filled Contours
+    //This is interesting too
+    //http://www.vtk.org/Wiki/VTK/Examples/Cxx/Visualization/ElevationBandsWithGlyphs
+    //CONTOUR INFORMATION
+    //
+//
+//   //converter para polydata
+//   vtkUnstructuredGrid * unstructured= vtkUnstructuredGrid::New();
+//   unstructured = reader ->GetOutput();
+//   //unstructured ->Update();
+//
+//   vtkGeometryFilter *geometryFilter2  = vtkGeometryFilter::New();
+//    #if VTK_MAJOR_VERSION <= 5
+//      geometryFilter2->SetInput(unstructured);
+//    #else
+//      geometryFilter->SetInputData(unstructured);
+//    #endif
+//      geometryFilter2->Update();
+//
+//    vtkPolyData * polydata= vtkPolyData::New();
+//    polydata = geometryFilter2 ->GetOutput ();
+//
+//    //polydata -> SetPoints(teste->GetOutput()->GetPoints());
+//
+//       //TO OBTAIN RANGE
+//     double scalarRange[2];
+////     polydata->GetPointData()->GetScalars()->GetRange(scalarRange);
+//
+//    //************************************* MAPPER
+//
+//     vtkSmartPointer<vtkPolyDataMapper> pdmapper =
+//    vtkSmartPointer<vtkPolyDataMapper>::New();
+//
+//    //pdmapper->ScalarVisibilityOff();
+//
+//    #if VTK_MAJOR_VERSION <= 5
+//      pdmapper->SetInputConnection(polydata->GetProducerPort());
+//    #else
+//      mapper->SetInputData(polydata);
+//    #endif
+    //************************************** RENDER PHASE
+
+  // Actor in scene
+  VTK_CREATE(vtkActor, actor);
+  //Options are mapper
+  actor->SetMapper(mapper);
+
+  actor->GetProperty()->SetEdgeColor(0, 0, 0);
+  actor->GetProperty()->EdgeVisibilityOn();
+  
+    ren->AddActor(actor);
