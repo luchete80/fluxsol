@@ -193,9 +193,9 @@ void CFDModel::InitFields()
 
 
     //UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
-    UEqn=FvImp::Div(phi, U);
-    cout << "Eqn Log"<<endl<<UEqn.outstr()<<endl;
-    cout << "End Log"<<endl;
+//    UEqn=FvImp::Div(phi, U);
+//    cout << "Eqn Log"<<endl<<UEqn.outstr()<<endl;
+//    cout << "End Log"<<endl;
 	while (!conv)
 	{
 	    ittime_begin = clock();
@@ -226,8 +226,8 @@ void CFDModel::InitFields()
 
 		UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
 
-        cout << "Eqn Log"<<endl<<UEqn.outstr()<<endl;
-        cout << "End Log"<<endl;
+        //cout << "Eqn Log"<<endl<<UEqn.outstr()<<endl;
+        //cout << "End Log"<<endl;
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         ittime_end = clock();
@@ -436,15 +436,16 @@ void CFDModel::InitFields()
 
         it++;
 
-
         if (maxudiff[0]<1.e-3 && maxudiff[1]<1.e-3 && maxudiff[2]<1.e-3  && maxpdiff<1.e-3 )   conv=true;
 
         //TO MODIFY, Change
         //TO MODIFY, CHECKMESH
+
+	}
         U.AssignBoundaryField(bf);
         p.AssignBoundaryField(pbf);
 
-
+//        cout << "Creating Fields"<<endl;
         //Write Output in every iterations
         OutputFile("CellField-p.vtu",p);
         OutputFile("CellField-U.vtu",U,0);
@@ -466,7 +467,8 @@ void CFDModel::InitFields()
         OutputFile("VertexField-Ux.vtu",vv,0);
         OutputFile("VertexField-Uz.vtu",vv,2);
 
-	}
+
+
 	fitlog.close();
 
 //	OutputFile("CellField-U.vtu",U);
