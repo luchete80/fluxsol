@@ -26,6 +26,8 @@
 //Este archivo contiene una malla de volumenes finitos centrada en el cuerpo
 //que se hereda de una malla general
 #include <vector>
+#include <set>
+#include <map>
 #include <math.h> //For max function
 
 #include "../../Mesh/Node.h"
@@ -85,6 +87,7 @@ private:
     //para crear una funcion dentro de la misma clase
     //Esta lo hace ya habiendo iniciado
     void Malla_Rectangular(const double &lx,const double &ly){GenerarMallaRectangular(lx,ly,(*this));};
+    void Init_Faces();
 
 	Node & Node_(const int &i){return this->node[i];}
     Node & CreateNodeFromCellVerts(const int &cellid);
@@ -292,6 +295,7 @@ private:
         this->inicie_cells=true;
         cout << "[I] Assigning Faces ..."<<endl;
         Iniciar_Caras();
+        //Init_Faces();
         cout << "[I] Assigning Neighbours ..."<<endl;
         AssignNeigboursCells();
         cout << "[I] Calculating Volumes ..."<<endl;

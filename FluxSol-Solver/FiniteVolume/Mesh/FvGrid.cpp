@@ -461,6 +461,130 @@ void Fv_CC_Grid::Iniciar_Caras()
 }
 
 
+
+//If searching for an element is important, I'd recommend std::set instead of std::vector. Using this:
+//
+//std::find(vec.begin(), vec.end(), x)
+//
+//runs in O(n) time, but std::set has its own find() member (ie. myset.find(x)) which runs in O(log n) time - much more efficient with large numbers of elements.
+//
+//std::set also guarantees all the added elements are unique, which saves you from having to do anything like 'if not contained then push_back()...`.
+
+void Fv_CC_Grid::Init_Faces()
+{
+	//Numero de faces dependiendo de los numeros de vertices
+	int numcellfaces [9]={0,0,0,0,4,5,5,0,6};
+
+	int v1,v2;
+//
+	int numfaces=0;
+	int nfi=0;	//Numero de caras interiores
+	int nfb=0;	//Numero de caras en el borde
+	bool intfacefound;
+	int dc=0;		//dummy cells
+	int c2;
+
+
+//    //Declaro otro iterador que no esta aca
+//
+//    //Inicio las celdas
+    //cout << "Cell initialized "<<inicie_cells<<endl;
+    //cout << "Node initialized "<<inicie_nodes<<endl;
+    if (!inicie_cells || !inicie_nodes)
+    {
+        cout << "Nodes or cells not initiated. Grid initiation failed..."<<endl;
+        return;
+
+    }
+    else
+    {
+        set < vector <int> > faceverts;
+        vector <int> cellsperface;  //Indicates
+        set< vector <int> > ::iterator it;
+        std::pair<std::set< vector <int> >::iterator,bool> ret;    //To check if face are stored
+        vector<vector <int> > cellglobalfaces;                      //Index to global cell faces
+        //vector<vector<int> > vec(4, vector<int>(4))
+
+
+        //Para borde
+        int numdummycells=0;
+
+        vector < vector <bool> > cellfacefound;
+        //cout << "cell loop"<<endl;
+        //Control for
+        //Init cell face containers
+        int c=0;
+        for (cellit=cell.begin();cellit!=cell.end();cellit++)
+        {
+            vector<int> tempglobalfaces;
+ //           //cout <<"cell loop"<<endl;
+ //           cellit->Init_Idface(numcellfaces[cellit->Num_Vertex()]);
+ //           cellit->Init_NumberofFaces(numcellfaces[cellit->Num_Vertex()]);
+
+            //cellfaces.assign(numcellfaces[cellit->Num_Vertex()],false);
+            //cellfacefound.push_back(cellfaces);
+
+            cout << "Cell "<<c<<endl;
+            for (int nf=0;nf<numcellfaces[cellit->Num_Vertex()];nf++)
+            {
+                //Pushing cell faces to set
+                int numfaceverts;
+                vector <int> tempNodes;							//Nodos de cada cara
+                tempNodes=cellit->GlobalVertFace(nf);
+                numfaceverts=tempNodes.size();
+
+                ret = faceverts.insert(tempNodes);
+
+                it=ret.first;
+
+                int facepos=std::distance(faceverts.begin(),it);
+
+                if (ret.second==true)   //Inserted, New faces
+                {
+                    cellsperface.push_back(1);
+                }
+                else
+                {
+                    cellsperface[facepos]++;
+                }
+                //tempglobalfaces.push_back(facepos);
+                //Face position is it - vec.begin()
+                //cout <<"Cell " <<c<< "face "<< nf<<": "  << facepos<<endl;
+
+                it=faceverts.end();
+            }
+
+            //cellglobalfaces.push_back(tempglobalfaces);
+
+            c++;
+        }
+
+        cout << "Faces inserted: "<<faceverts.size()<<endl;
+        //Checking boundary faces
+        for (it=faceverts.begin(); it!=faceverts.end(); ++it)
+        {
+
+        }
+        //Face Insertion
+        for (it=faceverts.begin(); it!=faceverts.end(); ++it)
+        {
+            //Face constructor index:
+            //_FvFace f (faceid, GlobalFaceVerts, , BoundaryFace)
+        }
+        //                _FvFace f(nf,tempNodes,*it,facenodes,false);
+//                //Adding global face indexes for each cell
+//                this->Cell(c1).Id_Face(nf,numfaces);
+//                this->Cell(c2).Id_Face(nfenc2,numfaces);
+//                //cout << "Found internal face"<<numfaces<<endl;
+//                //cout << "Internal faces"<<nfi<<endl;
+//                face.push_back(f);
+        //cout << "end cell loop"<<endl;
+
+
+    }//If there are initiated values
+
+}
+
 void Fv_CC_Grid::CalcCellVolumes()
 {
 	for (int c=0;c<Num_Cells();c++)
