@@ -170,6 +170,7 @@ private:
 
         //raw data - vertices
         //base class function
+        cout << "[I] Reading Initial CGNS ..."<<endl;
         Read_InitialCGNS();
 
         //Read boundary cells - Assuming boundary cell entry
@@ -294,8 +295,8 @@ private:
         this->inicie_nodes=true;
         this->inicie_cells=true;
         cout << "[I] Assigning Faces ..."<<endl;
-        Iniciar_Caras();
-        //Init_Faces();
+        //Iniciar_Caras();
+        Init_Faces();
         cout << "[I] Assigning Neighbours ..."<<endl;
         AssignNeigboursCells();
         cout << "[I] Calculating Volumes ..."<<endl;

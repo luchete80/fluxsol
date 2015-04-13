@@ -13,7 +13,7 @@ Model::Model(const std::string filename)
     //TO MODIFY
     this->numparts=1;
 
-
+    cout << "[I] Initializing Model ..."<<endl;
     if (this->numparts==1)
     {
         //TO MODIFY, INPUT FILE MUST RETURN A MESH
@@ -22,7 +22,7 @@ Model::Model(const std::string filename)
 
         if (meshfname=="")
         {
-
+            cout << "[E] No input file set ..."<<endl;
         }
         else
         {

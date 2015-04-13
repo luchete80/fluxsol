@@ -28,6 +28,11 @@ template <class T> const T& max_int(const T& a, const T& b) {
 	return (a<b) ? b : a;     // or: return comp(a,b)?b:a; for version (2)
 }
 
+struct myclass {
+  bool operator() (int i,int j) { return (i<j);}
+} myobject;
+
+
 using namespace std;
 
 namespace FluxSol {
@@ -501,7 +506,6 @@ void Fv_CC_Grid::Init_Faces()
         set < vector <int> > faceverts;
         vector <int> cellsperface;  //Indicates
         set< vector <int> > ::iterator it;
-        std::pair<std::set< vector <int> >::iterator,bool> ret;    //To check if face are stored
         vector<vector <int> > cellglobalfaces;                      //Index to global cell faces
         //vector<vector<int> > vec(4, vector<int>(4))
 
@@ -514,50 +518,82 @@ void Fv_CC_Grid::Init_Faces()
         //Control for
         //Init cell face containers
         int c=0;
+        double tenperc=this->Num_Cells()/10.0;
+        int tennum=0;
+        bool foundten[10];for (int i=0;i<10;i++)foundten[i]=false;
+        double perc;
         for (cellit=cell.begin();cellit!=cell.end();cellit++)
         {
             vector<int> tempglobalfaces;
- //           //cout <<"cell loop"<<endl;
+            //cout <<"cell "<<c<<endl;
  //           cellit->Init_Idface(numcellfaces[cellit->Num_Vertex()]);
  //           cellit->Init_NumberofFaces(numcellfaces[cellit->Num_Vertex()]);
 
             //cellfaces.assign(numcellfaces[cellit->Num_Vertex()],false);
             //cellfacefound.push_back(cellfaces);
 
-            cout << "Cell "<<c<<endl;
+            //cout << "Cell "<<c<<endl;
             for (int nf=0;nf<numcellfaces[cellit->Num_Vertex()];nf++)
             {
+                std::pair<std::set< vector <int> >::iterator,bool> ret;    //To check if face are stored
                 //Pushing cell faces to set
                 int numfaceverts;
                 vector <int> tempNodes;							//Nodos de cada cara
                 tempNodes=cellit->GlobalVertFace(nf);
                 numfaceverts=tempNodes.size();
 
+                //std::sort (myvector.begin(), myvector.end(), myobject);
+
                 ret = faceverts.insert(tempNodes);
 
                 it=ret.first;
 
+
                 int facepos=std::distance(faceverts.begin(),it);
+                //if ((facepos)>cellsperface.size()) cout << "ERROR"<<endl;
+
+                cout << "new face: ";
 
                 if (ret.second==true)   //Inserted, New faces
                 {
                     cellsperface.push_back(1);
+                    cout << "true"<<endl;
                 }
                 else
                 {
-                    cellsperface[facepos]++;
+                    //cellsperface[facepos]++;
+                    cout << "false"<<endl;
                 }
                 //tempglobalfaces.push_back(facepos);
                 //Face position is it - vec.begin()
                 //cout <<"Cell " <<c<< "face "<< nf<<": "  << facepos<<endl;
+                cout << "facepos"<<facepos<<" cellsperfacesize "<<cellsperface.size()<<endl;
 
                 it=faceverts.end();
             }
+            if (!foundten[tennum] && c>tennum*tenperc)
+            {
+                foundten[tennum]=true;
+                tennum++;
+                cout << tennum*10<< " % ";
+            }
 
-            //cellglobalfaces.push_back(tempglobalfaces);
+            cellglobalfaces.push_back(tempglobalfaces);
 
             c++;
         }
+
+        cout << "cellsperface size "<<cellsperface.size()<<endl;
+        set <vector <int> >::iterator sit;
+        for (sit=faceverts.begin();sit!=faceverts.end();sit++)
+        {
+            vector <int>tempv=*sit;
+            for (int i=0;i<tempv.size();i++)
+                cout << tempv[i]<< " ";
+            cout << endl;
+        }
+
+
 
         cout << "Faces inserted: "<<faceverts.size()<<endl;
         //Checking boundary faces

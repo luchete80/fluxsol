@@ -21,10 +21,11 @@ if(DEBUG_MODE)
 # Default is debug build
 #if (NOT CMAKE_BUILD_TYPE)
 	set (CMAKE_BUILD_TYPE Debug)
-	set (CMAKE_CXX_FLAGS "-fpermissive -g")
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 else()
 	set (CMAKE_BUILD_TYPE Release)
 	set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fpermissive")
+	set (CMAKE_CXX_FLAGS "-fpermissive")
 endif ()
 
 set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fpermissive")
@@ -47,7 +48,7 @@ set (ALGLIB_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/src)
 
 set (CGNS_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src/lib)
 set (ALGLIB_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/bin)
-set (LASPACK_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/laspack/bin_release)
+set (LASPACK_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/laspack/bin)
 
 #set (fluxsol_VERSION_MAJOR 2)
 #set (fluxsol_VERSION_MINOR 0)
