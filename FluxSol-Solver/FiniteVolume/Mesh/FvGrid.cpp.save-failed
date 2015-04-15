@@ -595,6 +595,7 @@ void Fv_CC_Grid::Init_Faces()
 
                     //cout << "Global Face Id "<< globalfaceid<<endl;
                     this->Cell(c).Id_Face(nf,globalfaceid);
+
                     globalfaceid++;
                     //*it=tempNodes;
                     //cout << "true"<<endl;
@@ -627,8 +628,7 @@ void Fv_CC_Grid::Init_Faces()
 
             c++;
         }
-        cout << "\n";
-//        cout << "Num faces" <<numfaces<<endl;
+        cout << "Num faces" <<numfaces<<endl;
 
 //        c=0;
 //        for (cellit=cell.begin();cellit!=cell.end();cellit++)
@@ -659,10 +659,9 @@ void Fv_CC_Grid::Init_Faces()
 //        }
 
 
-//        cout << "Faces inserted: "<<deffaceverts.size()<<endl;
+        cout << "Faces inserted: "<<deffaceverts.size()<<endl;
 
         //Inserting faces
-        cout << "[I] Creating Faces ..." <<endl;
         int nf=0;
         int nfb=0;
         for (it=deffaceverts.begin(); it!=deffaceverts.end(); ++it)
@@ -690,7 +689,6 @@ void Fv_CC_Grid::Init_Faces()
             {
                 boundaryface=true;
                 //this->Cell(facecells[1]).Id_Face(nfenc2,nf);    //Id_Face(nfenc2,Face Id);
-                temp_boundfaces.push_back(nf);
                 nfb++;
             }
             else

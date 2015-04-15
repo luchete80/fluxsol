@@ -97,7 +97,7 @@ class _Grid{
 
 	int num_boundary_faces;
 
-    vector <int> temp_boundfaces;    //Used for mesh building
+    vector <int> temp_boundfaces;    //Used for mesh building, TO MODIFY, delete
 
 	//Para malla estructurada solamente
     vector <int> num_cells_xyz;
