@@ -6,8 +6,11 @@
 #include <stdlib.h>
 
 #include "FluentMesh.h"
+#include "FvGrid.h"
 
 using namespace std;
+
+using namespace FluxSol;
 
 vector< vector<double> > process_nodes(const vector<string> &data);
 vector< vector<int> > process_cells(const vector<string> &data);
@@ -29,6 +32,38 @@ FluentMesh::FluentMesh(const string &file) {
     nodes=process_nodes(data);
     connectivity=process_cells(data);
     //patches=process_patches(data);
+
+    cout << "[I] Creating cells..." << endl;
+    for (int idcell=0; idcell<connectivity.size(); idcell++) {
+        Cell_CC scell(idcell, connectivity[idcell]);
+        this->cell.push_back(scell);
+        }
+    this->num_cells=cell.size();
+
+    // Paso del vector nodes al Vertex<Vec3D>
+    for (int i=0; i<nodes.size(); i++) {
+        Vec3D temp(0.);
+        for (int j=0; j<3; j++) {
+            temp[j]=nodes[i][j];
+            this->Vertex.push_back(temp);
+        }
+    }
+
+    // se crean los nodos centrados en el cuerpo de cada celda
+    cout << "[I] Creating Central Nodes ..."<< endl;
+    CreateNodesFromCellVerts();
+
+    this->inicie_nodes=true;
+    this->inicie_cells=true;
+
+    cout << "[I] Assigning Faces ..." << endl;
+    Iniciar_Caras();
+
+    cout << "[I] Assigning Neighbours ..."<<endl;
+    AssignNeigboursCells();
+
+    cout << "[I] Calculating Volumes ..."<<endl;
+    CalcCellVolumes();
 
 }
 

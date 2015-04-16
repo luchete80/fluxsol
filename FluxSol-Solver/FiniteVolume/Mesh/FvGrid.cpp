@@ -254,7 +254,7 @@ void Fv_CC_Grid::AssignNeigboursCells()
     }
     else
     {
-        cout <<"ERROR: Grid does not have any face..." <<endl;
+        cout << "ERROR: Grid does not have any face..." << endl;
     }
 }
 

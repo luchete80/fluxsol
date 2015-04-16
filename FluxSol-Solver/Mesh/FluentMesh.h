@@ -7,21 +7,25 @@
 #include <sstream>
 #include <vector>
 #include <stdlib.h>
+#include "FvGrid.h"
 
 using namespace std;
 
-class FluentMesh {
+namespace FluxSol {
+
+class FluentMesh:public  Fv_CC_Grid {
     FluentMesh() {}
 
-public:
-    FluentMesh(const string &file);
     vector< vector<double> > nodes;
     vector< vector<int> > faces;
     //vector< vector<int> > patches;
     vector< vector<int> > connectivity;
 
+public:
+    FluentMesh(const string &file);
     ~FluentMesh() {}
 
 };
+}
 
 #endif

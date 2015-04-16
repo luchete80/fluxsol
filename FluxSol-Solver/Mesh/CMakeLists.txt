@@ -3,6 +3,7 @@ set (NAME Mesh)
 set (SOURCES 
 Cell.cpp
 Face.cpp
+FluentMesh.cpp
 Grid.cpp
 MeshInfo.cpp
 Node.cpp
