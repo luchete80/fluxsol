@@ -55,11 +55,12 @@ void InputFile::setFile(string fName) {
 		cerr << "[E] Input file " << fileName << " could not be found!!" << endl;
 	}
 	// Read the whole input file to rawData
+	int l=0;
 	if (found)
     {
         string line;
         rawData="";
-        while(getline(file, line)) rawData += line + "\n";
+        while(getline(file, line)) {rawData += line + "\n"; l++;}
         file.close();
 
         // Strip all the inline or block comments (C++ style) from the rawData
@@ -67,6 +68,7 @@ void InputFile::setFile(string fName) {
         // Strip all the white spaces from the rawData
         strip_white_spaces(rawData);
     }
+    cout << "[I] "<<l << " lines readed ..." <<endl;
 }
 
 void InputFile::read (string sectionName, int number) {

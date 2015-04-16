@@ -21,10 +21,11 @@ if(DEBUG_MODE)
 # Default is debug build
 #if (NOT CMAKE_BUILD_TYPE)
 	set (CMAKE_BUILD_TYPE Debug)
-	set (CMAKE_CXX_FLAGS "-fpermissive -g")
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 else()
 	set (CMAKE_BUILD_TYPE Release)
 	set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fpermissive")
+	set (CMAKE_CXX_FLAGS "-fpermissive")
 endif ()
 
 set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fpermissive")

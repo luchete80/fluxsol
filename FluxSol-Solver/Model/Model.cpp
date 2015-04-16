@@ -13,7 +13,7 @@ Model::Model(const std::string filename)
     //TO MODIFY
     this->numparts=1;
 
-
+    cout << "[I] Initializing Model ..."<<endl;
     if (this->numparts==1)
     {
         //TO MODIFY, INPUT FILE MUST RETURN A MESH
@@ -22,7 +22,7 @@ Model::Model(const std::string filename)
 
         if (meshfname=="")
         {
-
+            cout << "[E] No input file set ..."<<endl;
         }
         else
         {
@@ -216,6 +216,7 @@ void CFDModel::InitFields()
         //Like Update field Boundary Values
 
         ittime_end = clock();
+
         U.Boundaryfield().ApplyBC();
         p.Boundaryfield().ApplyBC();
 
@@ -428,12 +429,12 @@ void CFDModel::InitFields()
         cout << "[I] Iter - Residuals u v w p - Time || " << it << " - " <<maxudiff.outstr()<<maxpdiff.outstr()<< " - " << time_spent<<endl;
         fitlog << ittime_spent <<" "<<endl;
 
+
         for (int nu=0;nu<mesh.Num_Cells();nu++)
         {
             uant[nu]=U.Val(nu);
             pant[nu]=p.Val(nu);
         }
-
         it++;
 
         if (maxudiff[0]<1.e-3 && maxudiff[1]<1.e-3 && maxudiff[2]<1.e-3  && maxpdiff<1.e-3 )   conv=true;
@@ -442,6 +443,8 @@ void CFDModel::InitFields()
         //TO MODIFY, CHECKMESH
 
 	}
+
+        cout << "[I] Process Terminated ..." <<endl;
         U.AssignBoundaryField(bf);
         p.AssignBoundaryField(pbf);
 

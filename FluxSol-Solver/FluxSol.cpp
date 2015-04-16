@@ -33,7 +33,7 @@ int main (int argc, char *argv[])
 {
 
     // CHECK WHICH TIPE OF MODEL
-    cout <<"arg number: "<<argc<<", "<< argv[1]<<endl;
+    //cout <<"arg number: "<<argc<<", "<< argv[1]<<endl;
     if (argc > 1)
     {
         string inputFileName=argv[1];
