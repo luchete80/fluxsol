@@ -28,10 +28,6 @@ template <class T> const T& max_int(const T& a, const T& b) {
 	return (a<b) ? b : a;     // or: return comp(a,b)?b:a; for version (2)
 }
 
-struct myclass {
-  bool operator() (int i,int j) { return (i<j);}
-} myobject;
-
 
 using namespace std;
 
@@ -711,6 +707,22 @@ void Fv_CC_Grid::Init_Faces()
 
 }
 
+const map<vector <int> , int > Fv_CC_Grid::FaceVertsMap()const
+{
+    map<vector <int> , int > ret;
+
+
+    for (int f=0;f<this->Num_Faces();f++)
+    {
+        vector<int >faceverts=this->Face(f).Vert();
+        std::sort (faceverts.begin(), faceverts.end(), myobject);
+        ret.insert(std::pair< vector <int> , int > (faceverts, f) );
+    }
+
+
+
+    return ret;
+}
 ////
 ////Adapted From freecfd
 ////void Fv_CC_Grid::Init_Faces()
