@@ -133,5 +133,10 @@ unsigned arraysize(/*const*/ T (&v)[S]) { return S; }
 //}
 
 
+struct myclass {
+  bool operator() (int i,int j) { return (i<j);}
+} myobject;
+
+
 }
 #endif

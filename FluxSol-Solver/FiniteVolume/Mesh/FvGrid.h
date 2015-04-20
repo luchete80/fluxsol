@@ -30,15 +30,15 @@
 #include <map>
 #include <math.h> //For max function
 
-#include "../../Mesh/Node.h"
-#include "../../Mesh/Grid.h"
-#include "../../FiniteVolume/Mesh/CC_Cell.h"
+#include "Node.h"
+#include "Grid.h"
+#include "CC_Cell.h"
 #include "FvFace.h"
-#include "../Boundary/Boundary.h"
-#include "../Mesh/Structured.h"
-#include "../Mesh/Vertex.h"
-#include "../Utils/Utils.h"
-#include "../../Type/Operations.h"	//For mixed types
+#include "Boundary.h"
+#include "Structured.h"
+#include "Vertex.h"
+#include "Utils.h"
+#include "Operations.h"	//For mixed types
 #include "GeometricField.h"
 
 #include <algorithm>    // std::sort
@@ -131,6 +131,8 @@ private:
 	const _FvFace & Face(const int &i)const {return face[i];}
 
 	void AssignNeigboursCells();
+
+	const map<vector <int> , int > FaceVertsMap()const;
 
     std::vector<Cell_CC>::iterator BeginCell(){return cell.begin();}
     std::vector<Cell_CC>::iterator EndCell()  {return cell.end();}
