@@ -23,6 +23,9 @@
 *************************************************************************/
 #include "FluxSol.h"
 
+using namespace std;
+using namespace FluxSol;
+
 //int main(int argc, char *argv[])
 
 int main()
@@ -31,12 +34,12 @@ int main()
     //cout << "Input file: "<< argv[1]<<endl;
 
     cout << "Reading test.msh... "<< endl;
-	
-	FluentMesh malla("test.msh");
-	
-	cout << "Nodes: " << malla.nodes.size() << endl;
 
-    cout << "Cells: " << malla.connectivity.size() << endl;
+	FluentMesh malla("test.msh");
+
+	//cout << "Nodes: " << malla.nodes.size() << endl;
+
+    //cout << "Cells: " << malla.connectivity.size() << endl;
 
 	return 0;
 }

@@ -16,6 +16,7 @@ namespace FluxSol {
 class FluentMesh:public  Fv_CC_Grid {
     FluentMesh() {}
 
+private:
     vector< vector<double> > nodes;
     vector< vector<int> > faces;
     //vector< vector<int> > patches;
@@ -24,6 +25,8 @@ class FluentMesh:public  Fv_CC_Grid {
 public:
     FluentMesh(const string &file);
     ~FluentMesh() {}
+
+    //void init_patches();
 
 };
 }

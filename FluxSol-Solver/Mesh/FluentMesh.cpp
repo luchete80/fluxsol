@@ -42,15 +42,15 @@ FluentMesh::FluentMesh(const string &file) {
 
     // Paso del vector nodes al Vertex<Vec3D>
     for (int i=0; i<nodes.size(); i++) {
-        Vec3D temp(0.);
+        _Vertex temp(0.);
         for (int j=0; j<3; j++) {
             temp[j]=nodes[i][j];
-            this->Vertex.push_back(temp);
+            this->vert.push_back(temp);
         }
     }
 
     // se crean los nodos centrados en el cuerpo de cada celda
-    cout << "[I] Creating Central Nodes ..."<< endl;
+    cout << "[I] Creating Central Nodes..." << endl;
     CreateNodesFromCellVerts();
 
     this->inicie_nodes=true;

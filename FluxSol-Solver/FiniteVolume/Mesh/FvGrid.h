@@ -52,13 +52,13 @@ class Fv_CC_Grid:public _Grid{
 
 private:
 	 std::vector <_FvFace> face;
-	 std::vector <Cell_CC> cell;    //Celdas con nodos centrados en el cuerpo
 	 std::vector <Node>    node;    //En el centro de cada una de las cells
 
 	 std::vector<Node>::iterator nodeit;
 	 std::vector<_FvFace>::iterator faceit;
 
 	protected:
+	    std::vector <Cell_CC> cell;    //Celdas con nodos centrados en el cuerpo
 
 	public:
 	std::vector<Cell_CC>::iterator cellit;

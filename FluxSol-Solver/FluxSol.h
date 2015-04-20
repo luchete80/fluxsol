@@ -83,7 +83,7 @@
 #include "./FiniteVolume/Mesh/CC_Cell.h"
 #include "./FiniteVolume/Mesh/FvFace.h"
 #include "./FiniteVolume/Mesh/FvGrid.h"
-#include "./FiniteVolume/Mesh/FluentMesh.h"
+#include "FluentMesh.h"
 
 // Input //
 #include "./Input/Input.h"
