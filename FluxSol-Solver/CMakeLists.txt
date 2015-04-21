@@ -244,7 +244,6 @@ install (TARGETS ${NAME}lib DESTINATION lib)
 install (FILES ${NAME}.h DESTINATION include)
 
 #FLUXSOL EXECUTABLE
+
 add_executable(${NAME} ${SOURCES})
 target_link_libraries (${NAME} ${NAME}lib)
-
-target_link_libraries (${NAME} ${EXT_LIBS})
