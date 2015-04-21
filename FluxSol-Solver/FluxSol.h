@@ -116,6 +116,8 @@
 
 #include "Solver.h"
 #include "SIMPLE.h"
+#include "PETSC_Solver.h"
+
 
 //#include "./Tmp/Tmp.h"
 //#include "./Tmp/TmpI.h"

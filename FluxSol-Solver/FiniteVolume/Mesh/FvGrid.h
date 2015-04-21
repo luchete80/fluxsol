@@ -57,6 +57,8 @@ private:
 	 std::vector<Node>::iterator nodeit;
 	 std::vector<_FvFace>::iterator faceit;
 
+    struct myclass myobject;        //Object usedd to sort, TO MODIFY
+
 	protected:
 	    std::vector <Cell_CC> cell;    //Celdas con nodos centrados en el cuerpo
 

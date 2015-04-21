@@ -30,7 +30,9 @@
 namespace FluxSol{
 
 //SIMPLE tipo de solver
-class Solver_SIMPLE: public _Solver{
+template <typename number>
+class Solver_SIMPLE
+: public Solver<number>{
 
     //Notar que ambos sistemas de ecuaciones son clases, y el tipo de variable
     //variara
@@ -44,7 +46,7 @@ class Solver_SIMPLE: public _Solver{
 public:
     //El constructor por defecto Llama al constructor de la clase base!
     //Por que me conviene hacerlo asi??
-    Solver_SIMPLE():_Solver(){};
+    Solver_SIMPLE():Solver<number>(){};
     Solver_SIMPLE(const int &dim_cell);
     //Resuelve una iteracion
     //La funcion virtual la debo llamar virtual aca??

@@ -21,6 +21,7 @@
 
 *************************************************************************/
 #include "Analysis.h"
+
 using namespace FluxSol;
 using namespace FluxSol::Nastran;
 

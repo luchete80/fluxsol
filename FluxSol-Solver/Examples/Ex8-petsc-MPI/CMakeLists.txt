@@ -28,7 +28,7 @@ set (MY_PETSC_ARCH arch-mswin-c-mpi-hpc-release-64)
 #######################################################################
 
 ## PETSC
-##if (USE_PETSC)
+if (USE_PETSC)
 find_package (PETSc REQUIRED HINTS "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/conf")
 include_directories (..)
 include_directories ("${MY_PETSC_DIR}/include" "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/include" ${PETSC_INCLUDE_PATH})
@@ -47,7 +47,7 @@ set (EXT_LIBS ${EXT_LIBS} ${PETSC_LIB} flapack fblas)
 set (MODULE_LIST ${MODULE_LIST} "PETSc")
 set (USE_MPI ON)
 add_definitions (-D__PETSC_MODULE)
-##endif ()
+endif ()
 
 
 link_directories(${MPI_LIB_DIR})

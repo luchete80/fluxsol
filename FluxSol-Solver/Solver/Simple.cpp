@@ -23,16 +23,3 @@
 #include "Solver.h"
 #include "Simple.h"
 
-FluxSol::_Solver::_Solver()
-{
-    maxiter=100;
-    ptol=1.0e-3;
-    vtol=1.e-03;    //Todos los valores iguales
-
-}
-
-
-FluxSol::Solver_SIMPLE::Solver_SIMPLE(const int &dim_cell):_Solver()
-{
-
-}

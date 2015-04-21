@@ -33,7 +33,9 @@
 //#include "./Nastran/Varios.h"
 #include "Utils.h"
 namespace FluxSol{
-class _Solver{
+
+template <typename number>
+class Solver{
 
 
     protected:
@@ -43,13 +45,30 @@ class _Solver{
     double actualiter;  //iteracion actual
 
 
+	number rtol,abstol;
+	const int matdim;		//CONST?
+	int maxits;
+
+
     public:
-	_Solver();
-    _Solver(const int  ){}; //Numero de iteraciones
+
     //ES VIRTUAL!!
     //Ojo que si no la defino, si no coloco nada y solo la declaro tengo problemas con la vtable en compilacion
     virtual void Resolver_Iteracion(){};
+
+	Solver<number>():matdim(0)
+	{
+	    maxiter=100;
+        ptol=1.0e-3;
+        vtol=1.e-03;    //Todos los valores iguales
+	}
+	Solver<number>(const int &d):
+	matdim(d)
+	{}
+
+
 };
+
 
 template <typename T>
 void Solve (EqnSystem <T> &eq)

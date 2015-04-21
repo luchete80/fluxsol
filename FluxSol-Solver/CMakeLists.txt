@@ -8,7 +8,7 @@ include (CheckCXXSourceCompiles)
 #######################################################################
 ######################## Options ######################################
 #######################################################################
-option (USE_PETSC "Enable PETSc support (required for parallel)" OFF)
+option (USE_PETSC "Enable PETSc support (required for parallel)" ON)
 option (USE_METIS "Enable METIS support	                       " OFF)
 if (${CMAKE_VERSION} VERSION_GREATER "2.8.7") # Compability with older version of cmake
     option (USE_SHARED_LIB "Build shared library" ON)
@@ -50,6 +50,21 @@ set (CGNS_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src/lib)
 set (ALGLIB_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/bin)
 set (LASPACK_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/laspack/bin)
 
+
+
+set (MY_PETSC_DIR "$ENV{PETSC_DIR}")
+set (MPI_LIB_DIR "$ENV{MPI_LIB_DIR}")
+set (MPI_INC_DIR "$ENV{MPI_INC_DIR}")
+set (MY_PETSC_ARCH "$ENV{PETSC_ARCH}")
+
+#if(DEBUG_MODE)
+#set (MY_PETSC_ARCH arch-mswin-c-debug-shared-mpi0-fc0)
+#else ()
+#set (MY_PETSC_ARCH arch-mswin-c-release-mpi0-fc0)
+#endif ()
+
+
+
 #set (fluxsol_VERSION_MAJOR 2)
 #set (fluxsol_VERSION_MINOR 0)
 
@@ -61,6 +76,37 @@ set (LASPACK_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/laspack/bin)
 #	"${PROJECT_SOURCE_DIR}/cmake_vars.h.in"
 #	"${PROJECT_BINARY_DIR}/cmake_vars.h"
 #)
+
+#This must be included before including another thing else. By now
+if (USE_PETSC)
+	find_package (PETSc REQUIRED HINTS "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/conf")
+	include_directories (..)
+	include_directories ("${MY_PETSC_DIR}/include" "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/include" ${PETSC_INCLUDE_PATH})
+	include_directories ("${MY_PETSC_DIR}/include/mpiuni")
+	include_directories ("E:/Programas/cygwin64/petsc-3.4.4/include")
+	find_library (PETSC_LIB petsc PATH "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/lib/") 
+	if (${PETSC_LIB} STREQUAL "PETSC_LIB-NOTFOUND")
+		message (FATAL_ERROR "PETSc library not found")
+	endif ()
+	##set (EXT_LIBS ${EXT_LIBS} ${PETSC_LIB} ${PETSC_PACKAGE_LIBS})
+
+	#Blas And Lapack, Manual, can be also automatic
+	set (PETSC_LIBRARY_DIRS  ${MY_PETSC_DIR}/${MY_PETSC_ARCH}/lib)
+	link_directories(${PETSC_LIBRARY_DIRS})
+	set (EXT_LIBS ${EXT_LIBS} ${PETSC_LIB} flapack fblas)
+
+	set (MODULE_LIST ${MODULE_LIST} "PETSc")
+	set (USE_MPI ON)
+	add_definitions (-D__PETSC_MODULE)
+
+
+	link_directories(${MPI_LIB_DIR})
+	include_directories(${MPI_INC_DIR})
+
+	set (EXT_LIBS ${EXT_LIBS} msmpi gfortran)
+	
+
+endif ()
 
 set (CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/../)
 
@@ -131,8 +177,12 @@ set (SOURCES
 FluxSol.cpp
 )
 
+
+
 #Para cuando agregue las librerias
 #target_link_libraries (fluxsol ${FCFD_LIBS} ${EXTRA_LIBS})
+
+
 
 if (USE_SHARED_LIB)
 #Before creating library
@@ -180,9 +230,12 @@ add_library(${NAME}lib_static STATIC FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 														$<TARGET_OBJECTS:Utils>
 											)
 
+											## PETSC
+
 #target_link_libraries (${NAME} ${EXTRA_LIBS} ${EXT_LIBS})
 target_link_libraries (${NAME}lib_static ${EXTRA_LIBS} ${EXT_LIBS})
 endif()
+
 
 
 ### INSTALL ####
@@ -193,4 +246,5 @@ install (FILES ${NAME}.h DESTINATION include)
 #FLUXSOL EXECUTABLE
 add_executable(${NAME} ${SOURCES})
 target_link_libraries (${NAME} ${NAME}lib)
- 
+
+target_link_libraries (${NAME} ${EXT_LIBS})
