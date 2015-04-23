@@ -82,7 +82,10 @@ if (USE_PETSC)
 	find_package (PETSc REQUIRED HINTS "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/conf")
 	include_directories (..)
 	include_directories ("${MY_PETSC_DIR}/include" "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/include" ${PETSC_INCLUDE_PATH})
-	include_directories ("${MY_PETSC_DIR}/include/mpiuni")
+	
+	#THIS IS NOT USED IN WINDOWS, USED MSMPI
+	#include_directories ("${MY_PETSC_DIR}/include/mpiuni")
+	
 	include_directories ("E:/Programas/cygwin64/petsc-3.4.4/include")
 	find_library (PETSC_LIB petsc PATH "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/lib/") 
 	if (${PETSC_LIB} STREQUAL "PETSC_LIB-NOTFOUND")

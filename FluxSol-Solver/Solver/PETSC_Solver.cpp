@@ -47,9 +47,12 @@ void PETSC_KSP_Solver<number>::PETSC_Init()
 
 	PetscInitialize(&argc,&args,(char *)0,help);
 
+    PetscMPIInt size,rank;
+	ierr = MPI_Comm_size(PETSC_COMM_WORLD,&size);CHKERRQ(ierr);
+	ierr = MPI_Comm_rank(PETSC_COMM_WORLD,&rank);CHKERRQ(ierr);
+	if (size != 1) SETERRQ(PETSC_COMM_WORLD,1,"This is a uniprocessor example only!");
+	//MPI_Init()
 
-	//ierr = MPI_Comm_size(PETSC_COMM_WORLD,&size);CHKERRQ(ierr);
-	//if (size != 1) SETERRQ(PETSC_COMM_WORLD,1,"This is a uniprocessor example only!");
 	ierr = PetscOptionsGetInt(PETSC_NULL,"-n",&n,PETSC_NULL);CHKERRQ(ierr);
 	ierr = PetscOptionsGetBool(PETSC_NULL,"-nonzero_guess",&nonzeroguess,PETSC_NULL);CHKERRQ(ierr);
 
