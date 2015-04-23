@@ -73,8 +73,13 @@ void PETSC_KSP_Solver<number>::PETSC_Init()
 	performance. See the matrix chapter of the users manual for details.
 	*/
 
+    //THIS FUNCTIONS MUST NOT BE CALLED (SLOW ACCORDING TO PETSC MANUAL)
 	ierr = MatCreate(PETSC_COMM_WORLD,&A);CHKERRQ(ierr);	//Instead of create Sij
 	ierr = MatSetSizes(A,PETSC_DECIDE,PETSC_DECIDE,n,n);CHKERRQ(ierr);
+
+
+
+
 	ierr = MatSetFromOptions(A);CHKERRQ(ierr);
 	//TEMPORARY
 	//THIS IS NOT RECOMMENDED DIRECTLY
@@ -141,296 +146,201 @@ void PETSC_KSP_Solver<number>::PETSC_Init()
 	cout << "Solver Initialized." <<endl;
 }
 //
+template <typename number>
+PETSC_KSP_Solver<number>::
+PETSC_KSP_Solver(const int &d):
+Solver<number>(d)
+{
+	PETSC_Init();
+}
+
+
 //template <typename number,int dim>
-//PETSC_Solver<number,dim>::
-//PETSC_Solver(const int &d):
-//Solver<number,dim>(d)
-//{
-//	PETSC_Init();
-//}
-//
-//
-//template <typename number,int dim>
-//void PETSC_Solver<number,dim>::PreAllocateRows(const vector <int> &nnz)
+//void PETSC_KSP_Solver<number,dim>::PreAllocateRows(const vector <int> &nnz)
 //{
 //	MatSeqAIJSetPreallocation(this->A,PETSC_NULL,&nnz[0]);
 //}
 //
 //template <typename number,int dim>
-//void PETSC_Solver<number,dim>::PreAllocateRows(const PetscInt &cols)
+//void PETSC_KSP_Solver<number,dim>::PreAllocateRows(const PetscInt &cols)
 //{
 //	MatSeqAIJSetPreallocation(this->A,cols,PETSC_NULL);
 //}
 //
+template <typename number>
+void PETSC_KSP_Solver<number>::Solve()
+{
+	ierr = MatAssemblyBegin(this->A,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
+	ierr = MatAssemblyEnd(this->A,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
+
+	//ierr = MatSetOption(this->A,MAT_SYMMETRIC,PETSC_TRUE);
+
+
+	ierr = KSPSolve(ksp,b,x);CHKERRQ(ierr);
+	/*
+	View solver info; we could instead use the option -ksp_view to
+	print this info to the screen at the coknclusion of KSPSolve().
+	*/
+	ierr = KSPView(ksp,PETSC_VIEWER_STDOUT_WORLD);CHKERRQ(ierr);
+	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	Check solution and clean up
+	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
+	/*
+	Check the error
+	*/
+	PetscReal norm;
+	PetscInt its;
+
+	ierr = VecNorm(x,NORM_2,&norm);CHKERRQ(ierr);
+	ierr = KSPGetIterationNumber(ksp,&its);CHKERRQ(ierr);
+	ierr = PetscPrintf(PETSC_COMM_WORLD,"Norm of error %A, Iterations %D\n",
+	norm,its);CHKERRQ(ierr);
+	/*
+	Free work space. All PETSc objects should be destroyed when they
+	are no longer needed.
+	*/
+
+}
+
+template <typename number>
+void PETSC_KSP_Solver<number>::InsertRow(const int &row, const std::vector<int> &cols, const std::vector <double> &vals)
+{
+	//ierr = MatSetValues(this->A,1,row,cols.size(),cols,&vals[0],INSERT_VALUES);CHKERRQ(ierr);
+}
+
+template <typename number>
+void PETSC_KSP_Solver<number>::SetMatVal(const PetscInt &row, const PetscInt &col, const PetscScalar &value)
+{
+	ierr=MatSetValues(this->A,1,&row,1,&col,&value,INSERT_VALUES);
+}
+
+template <typename number>
+void PETSC_KSP_Solver<number>::AddMatVal(const PetscInt &row, const PetscInt &col, const PetscScalar &value)
+{
+	ierr=MatSetValues(this->A,1,&row,1,&col,&value,ADD_VALUES);
+}
+
+
+template <typename number>
+void PETSC_KSP_Solver<number>::ViewInfo()
+{
+
+	ierr = MatAssemblyBegin(this->A,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
+	ierr = MatAssemblyEnd(this->A,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
+
+	cout << "Matrix A: "<<endl;
+	MatView(this->A,PETSC_VIEWER_STDOUT_SELF);
+	cout << "RHS: "<<endl;
+	VecView(b,PETSC_VIEWER_STDOUT_SELF);
+	cout << "Solution: "<<endl;
+	VecView(x,PETSC_VIEWER_STDOUT_SELF);
+}
+
+template <typename number>
+void PETSC_KSP_Solver<number>::SetbValues(const PetscInt &row, const PetscScalar &value)
+{
+	ierr=VecSetValues(this->b,1,&row,&value,INSERT_VALUES);
+}
+
 //template <typename number,int dim>
-//void PETSC_Solver<number,dim>::Solve()
-//{
-//	ierr = MatAssemblyBegin(this->A,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
-//	ierr = MatAssemblyEnd(this->A,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
-//
-//	//ierr = MatSetOption(this->A,MAT_SYMMETRIC,PETSC_TRUE);
-//
-//
-//	ierr = KSPSolve(ksp,b,x);CHKERRQ(ierr);
-//	/*
-//	View solver info; we could instead use the option -ksp_view to
-//	print this info to the screen at the coknclusion of KSPSolve().
-//	*/
-//	ierr = KSPView(ksp,PETSC_VIEWER_STDOUT_WORLD);CHKERRQ(ierr);
-//	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//	Check solution and clean up
-//	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
-//	/*
-//	Check the error
-//	*/
-//	PetscReal norm;
-//	PetscInt its;
-//
-//	ierr = VecNorm(x,NORM_2,&norm);CHKERRQ(ierr);
-//	ierr = KSPGetIterationNumber(ksp,&its);CHKERRQ(ierr);
-//	ierr = PetscPrintf(PETSC_COMM_WORLD,"Norm of error %A, Iterations %D\n",
-//	norm,its);CHKERRQ(ierr);
-//	/*
-//	Free work space. All PETSc objects should be destroyed when they
-//	are no longer needed.
-//	*/
-//
-//}
-//
-//template <typename number,int dim>
-//void PETSC_Solver<number,dim>::InsertRow(const int &row, const std::vector<int> &cols, const std::vector <double> &vals)
-//{
-//	//ierr = MatSetValues(this->A,1,row,cols.size(),cols,&vals[0],INSERT_VALUES);CHKERRQ(ierr);
-//}
-//
-//template <typename number,int dim>
-//void PETSC_Solver<number,dim>::SetMatVal(const PetscInt &row, const PetscInt &col, const PetscScalar &value)
-//{
-//	ierr=MatSetValues(this->A,1,&row,1,&col,&value,INSERT_VALUES);
-//}
-//
-//template <typename number,int dim>
-//void PETSC_Solver<number,dim>::AddMatVal(const PetscInt &row, const PetscInt &col, const PetscScalar &value)
-//{
-//	ierr=MatSetValues(this->A,1,&row,1,&col,&value,ADD_VALUES);
-//}
-//
-//
-//template <typename number,int dim>
-//void PETSC_Solver<number,dim>::ViewInfo()
-//{
-//
-//	ierr = MatAssemblyBegin(this->A,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
-//	ierr = MatAssemblyEnd(this->A,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
-//
-//	cout << "Matrix A: "<<endl;
-//	MatView(this->A,PETSC_VIEWER_STDOUT_SELF);
-//	cout << "RHS: "<<endl;
-//	VecView(b,PETSC_VIEWER_STDOUT_SELF);
-//	cout << "Solution: "<<endl;
-//	VecView(x,PETSC_VIEWER_STDOUT_SELF);
-//}
-//
-//template <typename number,int dim>
-//void PETSC_Solver<number,dim>::SetbValues(const PetscInt &row, const PetscScalar &value)
-//{
-//	ierr=VecSetValues(this->b,1,&row,&value,INSERT_VALUES);
-//}
-//
-//template <typename number,int dim>
-//void PETSC_Solver<number,dim>::AddbValues(const PetscInt &row, const PetscScalar &value)
+//void PETSC_KSP_Solver<number,dim>::AddbValues(const PetscInt &row, const PetscScalar &value)
 //{
 //	ierr=VecSetValues(this->b,1,&row,&value,ADD_VALUES);
 //}
 //
 //template <typename number,int dim>
-//void PETSC_Solver<number,dim>::SetbValues(const PetscScalar &value)
+//void PETSC_KSP_Solver<number,dim>::SetbValues(const PetscScalar &value)
 //{
 //	ierr=VecSet(this->b,value);
 //}
 //
-////This function must not call get_dof_indices, because is called directly dof
-////Applies a fixity
-//template <typename number,int dim>
-//void PETSC_Solver<number,dim>::ApplyBCOnDoF(const int &dof, const DoFHandler<dim> &dofhandler)
-//{
-//
-//	for (int i = 0; i < dofhandler.Adj_DoF_Number()[dof]; i++)
-//	{
-//		unsigned int adof = dofhandler.AdjDoF(dof,i);
-//		//cout << "Applying BC on DoF [dof][i]: "<< dof << " "<<i <<": "<< adof<<endl;
-//		//Have to set up only the nonzero matrix values
-//		this->SetMatVal(dof,adof,0.);
-//		this->SetMatVal(adof,dof,0.);
-//	}
-//	this->SetMatVal(dof,dof,1.);
-//	this->SetbValues(dof, 0.);
-//
-//
-//}
-//
-//template <typename number,int dim>
-//void PETSC_Solver<number,dim>::ApplyBCOnDoF(const int &dof, const DoFHandler<dim> &dofhandler, const number &n)
-//{
-//    number bval,matval;
-//	double y[1];
-//	int idxm[1];    //row
-//	int idxn[1];    //col
-//
-//    //Look through all adjacent node numbers
-//	for (int i = 0; i < dofhandler.Adj_DoF_Number()[dof]; i++)
-//	{
-//	    ierr = MatAssemblyBegin(this->A,MAT_FINAL_ASSEMBLY);
-//        ierr = MatAssemblyEnd  (this->A,MAT_FINAL_ASSEMBLY);
-//
-//		unsigned int adof = dofhandler.AdjDoF(dof,i);
-//		//cout << "Applying BC on DoF [dof][i]: "<< dof << " "<<i <<": "<< adof<<endl;
-//		//Have to set up only the nonzero matrix values
-//		//bval=this->SysMat
-//		//ierr=MatGetValues(Mat mat,PetscInt m,const PetscInt idxm[],PetscInt n,const PetscInt idxn[],PetscScalar v[])
-//        //cout << "Getting values" <<endl;
-//        idxm[0]=adof;idxn[0]=dof;
-//        //cout << "Adjdof " <<adof << " Dof " <<dof<<endl;
-//        ierr=MatGetValues(this->A,1,idxm,1,idxn,y);
-//        //ierr=MatGetValues(this->A,1,&adof,1,&dof,y);
-//        matval=y[0];
-//        //cout << "value "<<matval<<endl;
-//        bval=-matval*n;
-//        //cout << "bval "<<bval<<endl;
-//
-//        ierr = MatAssemblyBegin(this->A,MAT_FLUSH_ASSEMBLY);
-//        ierr = MatAssemblyEnd  (this->A,MAT_FLUSH_ASSEMBLY);
-//
-//		this->SetMatVal(dof,adof,0.);
-//		this->SetMatVal(adof,dof,0.);
-//        //VecSetValues(Vec x,PetscInt ni,const PetscInt ix[],const PetscScalar y[],InsertMode iora)
-//        //cout << "Setting b values adj pos "<< adof<<endl;
-//        ierr=VecSetValues(this->b,1,&adof,&bval,ADD_VALUES);
-//	}
-//	this->SetMatVal(dof,dof,1.);
-//	ierr=VecSetValues(this->b,1,&dof,&n,INSERT_VALUES);
-//
-//
-//
-//}
-//
-//template <typename number,int dim>
-//void PETSC_Solver<number,dim>::ApplyDispOnDoF(const int &dof, const number &u, const DoFHandler<dim> &dofhandler)
-//{
-//	ApplyBCOnDoF(dof, dofhandler);
-//	ierr=VecSetValues(this->b,1,&dof,&u,INSERT_VALUES);
-//
-//}
-//
-//template <typename number, int dim>
-//const FluxSol::Vector <number>
-//PETSC_Solver<number,dim>::X() const
-//{
-//	Vector <number> v(this->matdim);
-//
-//	int ix[1];
-//	double y[1];
-//
-//	for (int i=0;i<this->matdim;i++) //TO EVALUATE SPEED
-//	{
-//		ix[0]=i;
-//		VecGetValues(x,1,ix,y);
-//		number val;
-//		val=y[0];
-//		v[i]=val;
-//	}
-//
-//	//PetscErrorCode  VecGetValues(Vec x,PetscInt ni,const PetscInt ix[],PetscScalar y[])
-//
-//	return v;
-//}
-//
-//template <typename number,int dim>
-//void PETSC_Solver<number,dim>::ClearMat()
-//{
-//	//TO MODIFY
-//	int row,col;
-//	//for (int i=0;i<)
-//	//ierr=MatSetValue(this->A,1,&row,1,&col,&value,INSERT_VALUES);
-//
-//}
-//
-//template <typename number,int dim>
-//const number
-//PETSC_Solver<number,dim>::B(const int &i)const
-//{
-//	double y[1];
-//	int ix[1];
-//	ix[0]=i;
-//
-//	VecGetValues(this->b,1,ix,y);
-//	//cout << "value get" << y[0] <<endl;
-//	number n=y[0];
-//	return n;
-//}
-//
-//template <typename number,int dim>
-//const number
-//PETSC_Solver<number,dim>::X(const int &i)const
-//{
-//	double y[1];
-//	int ix[1];
-//	ix[0]=i;
-//
-//	VecGetValues(this->x,1,ix,y);
-//	//cout << "value get" << y[0] <<endl;
-//	number n=y[0];
-//	return n;
-//}
-//
-//template <typename number, int dim>
-//const FluxSol::Vector <number>
-//PETSC_Solver<number,dim>::B() const
-//{
-//	Vector <number> v(this->matdim);
-//
-//	int ix[1];
-//	double y[1];
-//
-//	for (int i=0;i<this->matdim;i++) //TO EVALUATE SPEED
-//	{
-//		ix[0]=i;
-//		VecGetValues(this->b,1,ix,y);
-//		number val;
-//		val=y[0];
-//		v[i]=val;
-//	}
-//
-//	//PetscErrorCode  VecGetValues(Vec x,PetscInt ni,const PetscInt ix[],PetscScalar y[])
-//
-//	return v;
-//}
-//
-//template <typename number,int dim>
-//void PETSC_Solver<number,dim>::ResetMatrix(const DoFHandler<dim> &dofhandler)
-//{
-//    for (int dof=0;dof<dofhandler.NumDoF();dof++)
-//    //int ix[1];
-//    //TO MODIFY: MAKE IT FAST, CALL PETSC Function MatSetValues once per Matrix Solver row
-//	for (int i = 0; i < dofhandler.Adj_DoF_Number()[dof]; i++)
-//	{
-//		unsigned int adof = dofhandler.AdjDoF(dof,i);
-//		//cout << "Applying BC on DoF [dof][i]: "<< dof << " "<<i <<": "<< adof<<endl;
-//		//Have to set up only the nonzero matrix values
-//		this->SetMatVal(dof,adof,0.);
-//		this->SetMatVal(adof,dof,0.);
-//	}
-//}
-//
-//template <typename number,int dim>
-//void PETSC_Solver<number,dim>::ResetB(const DoFHandler<dim> &dofhandler)
-//{
-//    for (int dof=0;dof<dofhandler.NumDoF();dof++)
-//    {
-//		this->SetbValues(dof,0.);
-//	}
-//}
+
+
+
+template <typename number>
+const std::vector <number>
+PETSC_KSP_Solver<number>::X() const
+{
+	std::vector <number> v(this->matdim);
+
+	int ix[1];
+	double y[1];
+
+	for (int i=0;i<this->matdim;i++) //TO EVALUATE SPEED
+	{
+		ix[0]=i;
+		VecGetValues(x,1,ix,y);
+		number val;
+		val=y[0];
+		v[i]=val;
+	}
+
+	//PetscErrorCode  VecGetValues(Vec x,PetscInt ni,const PetscInt ix[],PetscScalar y[])
+
+	return v;
+}
+
+template <typename number>
+void PETSC_KSP_Solver<number>::ClearMat()
+{
+	//TO MODIFY
+	int row,col;
+	//for (int i=0;i<)
+	//ierr=MatSetValue(this->A,1,&row,1,&col,&value,INSERT_VALUES);
 
 }
+
+template <typename number>
+const number
+PETSC_KSP_Solver<number>::B(const int &i)const
+{
+	double y[1];
+	int ix[1];
+	ix[0]=i;
+
+	VecGetValues(this->b,1,ix,y);
+	//cout << "value get" << y[0] <<endl;
+	number n=y[0];
+	return n;
+}
+
+template <typename number>
+const number
+PETSC_KSP_Solver<number>::X(const int &i)const
+{
+	double y[1];
+	int ix[1];
+	ix[0]=i;
+
+	VecGetValues(this->x,1,ix,y);
+	//cout << "value get" << y[0] <<endl;
+	number n=y[0];
+	return n;
+}
+
+template <typename number>
+const std::vector <number>
+PETSC_KSP_Solver<number>::B() const
+{
+	std::vector <number> v(this->matdim);
+
+	int ix[1];
+	double y[1];
+
+	for (int i=0;i<this->matdim;i++) //TO EVALUATE SPEED
+	{
+		ix[0]=i;
+		VecGetValues(this->b,1,ix,y);
+		number val;
+		val=y[0];
+		v[i]=val;
+	}
+
+	//PetscErrorCode  VecGetValues(Vec x,PetscInt ni,const PetscInt ix[],PetscScalar y[])
+
+	return v;
+}
+
+} //FluxSol
 
 #include "PETSC_Solver.inst"

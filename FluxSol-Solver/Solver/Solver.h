@@ -32,6 +32,10 @@
 #include "laspack.h"
 //#include "./Nastran/Varios.h"
 #include "Utils.h"
+
+#include <time.h>
+
+
 namespace FluxSol{
 
 template <typename number>
@@ -73,6 +77,17 @@ class Solver{
 template <typename T>
 void Solve (EqnSystem <T> &eq)
 {
+
+    //TO MODIFY, DELETE
+    //ofstream fitlog;
+	//fitlog.open("Iteration-Log.txt");
+
+    clock_t ittime_begin, ittime_end, temp;
+    double ittime_spent;
+
+    ittime_begin = clock();
+
+
 	QMatrix K;
 	Vector U,R;
 	int numberofcomp=pow(3.,eq.Dim());
@@ -216,10 +231,14 @@ void Solve (EqnSystem <T> &eq)
 	V_SetAllCmp(&U,0.0);
 	SetRTCAccuracy(1e-5);
 
-
-
+    ittime_spent = (double)(clock() - ittime_begin) / CLOCKS_PER_SEC;
+    cout << "assembly time spent "<< ittime_spent <<endl;
+    temp= clock;
     BiCGSTABIter (&K,&U,&R,1000,SSORPrecond,1.2);
 
+    ittime_spent = (double)(clock() - temp) / CLOCKS_PER_SEC;
+    cout << "solving time "<< ittime_spent <<endl;
+    temp= clock;
 
 
     for (int j=0;j<totrows;j++)
@@ -246,6 +265,12 @@ void Solve (EqnSystem <T> &eq)
 	Q_Destr(&K);
 	V_Destr(&U);
 	V_Destr(&R);
+
+    ittime_spent = (double)(clock() - temp) / CLOCKS_PER_SEC;
+    cout << "post solving time "<< ittime_spent <<endl;
+
+    ittime_spent = (double)(clock() - ittime_begin) / CLOCKS_PER_SEC;
+    cout << "total time "<< ittime_spent <<endl;
 }
 
 }

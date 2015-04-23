@@ -425,9 +425,9 @@ void InputFile::read_inputs(void) {
 //	section("grid",0).subsection("IC",0).register_double("turbulenceintensity",optional,1.e-2);
 //	section("grid",0).subsection("IC",0).register_double("eddyviscosityratio",optional,0.1);
 
-    section("grid",0).registerSubsection("patch",numbered,required);
-	section("grid",0).subsection("patch",0).register_string("type",required);
-	section("grid",0).subsection("patch",0).register_intList("list",optional);
+    //section("grid",0).registerSubsection("patch",numbered,required);
+	//section("grid",0).subsection("patch",0).register_string("type",required);
+	//section("grid",0).subsection("patch",0).register_intList("list",optional);
 
     //std::vector<int> list=get_intLists    ("list");
 
