@@ -233,12 +233,12 @@ void Solve (EqnSystem <T> &eq)
 
     ittime_spent = (double)(clock() - ittime_begin) / CLOCKS_PER_SEC;
     cout << "assembly time spent "<< ittime_spent <<endl;
-    temp= clock;
+    temp= clock();
     BiCGSTABIter (&K,&U,&R,1000,SSORPrecond,1.2);
 
     ittime_spent = (double)(clock() - temp) / CLOCKS_PER_SEC;
     cout << "solving time "<< ittime_spent <<endl;
-    temp= clock;
+    temp= clock();
 
 
     for (int j=0;j<totrows;j++)

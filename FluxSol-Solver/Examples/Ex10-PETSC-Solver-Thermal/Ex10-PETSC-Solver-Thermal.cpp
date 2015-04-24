@@ -27,15 +27,15 @@
 // TEMPERATURE EXAMPLE 2
 // READS FROM A FILE
 
-//int main(int argc, char *argv[])
+int main(int argc, char *argv[])
 
-int main()
+//int main()
 {
 
-    //cout << "Input file: "<< argv[1]<<endl;
+    cout << "Input file: "<< argv[1]<<endl;
 
     cout << "Reading square.cgns ..."<<endl;
-	Fv_CC_Grid malla("square.cgns");
+	Fv_CC_Grid malla(argv[1]);
 	//malla.ReadCGNS();
 
 	malla.Log("Log.txt");
@@ -83,23 +83,23 @@ int main()
 	{
 	    //Width Assign
 
-//        //cout << "eqn "<<e<<endl;
+      cout << "Assemblying Eqn "<<e<<endl;
 		vector <double> ap=TEqn.Eqn(e).Ap().Comp();
-//		Scalar ap_sc=TEqn.Eqn(e).Ap();
-//		Scalar value;
-//		int width=(TEqn.Eqn(e).Width()-1)*numberofcomp+1;
-//		//int width=TEqn.Eqn(e).Width()*numberofcomp;
+		Scalar ap_sc=TEqn.Eqn(e).Ap();
+		Scalar value;
+		int width=(TEqn.Eqn(e).Width()-1)*numberofcomp+1;
+//		//int width=TEqn.Eqn(e).Width()*numberofcomp;   // THIS IS WRONG
 //
-//		int sparsecol=0;
+		int sparsecol=0;
 		int row=e*numberofcomp;
-//
-////        cout << "Eqn " <<e << "Width: "<<TEqn.Eqn(e).Width()<<endl;
-//
-//		for (int dim=0;dim<numberofcomp;dim++)
-//        {
-//            //cout <<"Row "<< row+dim+1<<" length: "<<width<<endl;
-//            Q_SetLen(&K,row+dim+1,width);
-//        }
+
+//        cout << "Eqn " <<e << "Width: "<<TEqn.Eqn(e).Width()<<endl;
+
+		for (int dim=0;dim<numberofcomp;dim++)
+        {
+            //cout <<"Row "<< row+dim+1<<" length: "<<width<<endl;
+            Q_SetLen(&K,row+dim+1,width);
+        }
 
 		vector <double> nullval;
 		nullval.assign(numberofcomp,0.);
@@ -140,6 +140,7 @@ int main()
                     //cout << "(From zero) Sparse col: " << numberofcomp*width_cells <<endl;
 
 					//Q_SetEntry(&K,row+dim+1,numberofcomp*width_cells,columnid+dim+1,col[0]);
+					Solver.SetMatVal(row+dim, columnid+dim, col[0]);
 
 				}
 
@@ -149,7 +150,7 @@ int main()
                 //cout << "Cell Not Found" <<endl;
 				for (int dim=0;dim<numberofcomp;dim++)
                 {
-
+                    Solver.SetMatVal(row+dim, columnid+dim, 0.);
 					//Q_SetEntry(&K,row+dim+1,numberofcomp*width_cells,columnid+dim+1,0.0);
                     //INFO
                     //cout << "(Indexes From 1)  K(" <<  row+dim+1<<","<<columnid+dim+1<<")"<<"=" << 0.0<<endl;
@@ -174,6 +175,7 @@ int main()
 		vector <double> source=TEqn.Eqn(e).Source().Comp();
 		for (int dim=0;dim<numberofcomp;dim++)
         {
+            Solver.SetbValues(e*numberofcomp+dim, source[dim]);
 			//V_SetCmp(&R,e*numberofcomp+dim+1,source[dim]);
             //cout << R.Cmp[e*numberofcomp+dim+1]<< " ";
         }
@@ -181,15 +183,27 @@ int main()
 
 	}
 	//cout << "tot rows" << totrows<<endl;
-	std::vector <double> Ui,Ri;
-	Ui.assign(totrows,0.);
-	Ri.assign(totrows,0.);
+	//std::vector <double> Ui,Ri;
+	//Ui.assign(totrows,0.);
+	//Ri.assign(totrows,0.);
 	//V_SetAllCmp(&U,0.0);
-	SetRTCAccuracy(1e-5);
+	//SetRTCAccuracy(1e-5);
 
 
+    Solver.Solve();
 
+    ofstream file;     //Previously this was inside each function
+    file.open("salida.3D");
+    file << " x y z val"<<endl;
+    vector <double> sol=Solver.X();
 
+    for (int i=0;i<sol.size();i++)
+    {
+        for (int c=0;c<3;c++)   file << malla.Node_(i).comp[c]<<" ";
+        file << sol[i]<<endl;
+    }
+
+    file.close();
 	//////////// RESULTS ///////
 	CenterToVertexInterpolation <Scalar> interp(malla);
 

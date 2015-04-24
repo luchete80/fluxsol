@@ -92,6 +92,38 @@ void PETSC_KSP_Solver<number>::PETSC_Init()
 	//Symmetric, THIS IS TEMP, TO MODIFY
 	//ierr = MatSetOption(A,MAT_SYMMETRIC,PETSC_TRUE);
 
+
+    vector<int> diagonal_nonzeros, off_diagonal_nonzeros;
+	int nextCellCount;
+
+	int nVars=3;
+
+
+//	// Calculate space necessary for matrix memory allocation
+//	for (int cellit=grid[gid].cell.begin();cit!=grid[gid].cell.end();cit++) {
+//		nextCellCount=0;
+//		for (it=(*cit).faces.begin();it!=(*cit).faces.end();it++) {
+//			if (grid[gid].face[*it].bc==INTERNAL_FACE) {
+//				nextCellCount++;
+//			}
+//		}
+//		for (int i=0;i<nVars;++i) {
+//			diagonal_nonzeros.push_back( (nextCellCount+1)*nVars);
+//			off_diagonal_nonzeros.push_back( ((*cit).ghosts.size())*nVars);
+//		}
+//	}
+//
+//	MatCreateMPIAIJ(
+//					PETSC_COMM_WORLD,
+//					grid[gid].cellCount*nVars,
+//					grid[gid].cellCount*nVars,
+//					grid[gid].globalCellCount*nVars,
+//					grid[gid].globalCellCount*nVars,
+//					0,&diagonal_nonzeros[0],
+//					0,&off_diagonal_nonzeros[0],
+//					&impOP);
+
+
 	//Must call MatXXXSetPreallocation() or MatSetUp() on argument 1 "mat" before MatSetValues()!
 
 	ierr = MatSetUp(A);
