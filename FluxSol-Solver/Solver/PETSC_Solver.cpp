@@ -123,6 +123,12 @@ void PETSC_KSP_Solver<number>::PETSC_Init()
 //					0,&off_diagonal_nonzeros[0],
 //					&impOP);
 
+    //  MatCreateSeqAIJ(MPI_Comm comm,PetscInt m,PetscInt n,PetscInt nz,const PetscInt nnz[],Mat *A)
+//    	comm 	- MPI communicator, set to PETSC_COMM_SELF
+//	m 	- number of rows
+//	n 	- number of columns
+//	nz 	- number of nonzeros per row (same for all rows)
+//	nnz 	- array containing the number of nonzeros in the various rows (possibly different for each row) or NULL
 
 	//Must call MatXXXSetPreallocation() or MatSetUp() on argument 1 "mat" before MatSetValues()!
 
