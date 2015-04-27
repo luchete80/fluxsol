@@ -57,6 +57,8 @@ set (MPI_LIB_DIR "$ENV{MPI_LIB_DIR}")
 set (MPI_INC_DIR "$ENV{MPI_INC_DIR}")
 set (MY_PETSC_ARCH "$ENV{PETSC_ARCH}")
 
+set (PARMETIS_DIR "$ENV{PARMETIS_DIR}")
+
 #if(DEBUG_MODE)
 #set (MY_PETSC_ARCH arch-mswin-c-debug-shared-mpi0-fc0)
 #else ()
@@ -142,6 +144,10 @@ include_directories("${PROJECT_SOURCE_DIR}/Utils")
 include_directories(${CGNS_INCLUDE_DIRS})
 include_directories(${LASPACK_INCLUDE_DIRS})
 include_directories(${ALGLIB_INCLUDE_DIRS})
+
+include_directories("${PARMETIS_DIR}/include")
+include_directories("${PARMETIS_DIR}/metis/include")
+
 #include_directories(${PARMETIS_INCLUDE_DIRS})
 #include_directories(${PETSC_INCLUDE_DIRS})
 link_directories(${CGNS_LIBRARY_DIRS})

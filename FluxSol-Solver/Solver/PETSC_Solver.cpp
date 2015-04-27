@@ -196,18 +196,18 @@ Solver<number>(d)
 }
 
 
-//template <typename number,int dim>
-//void PETSC_KSP_Solver<number,dim>::PreAllocateRows(const vector <int> &nnz)
-//{
-//	MatSeqAIJSetPreallocation(this->A,PETSC_NULL,&nnz[0]);
-//}
-//
-//template <typename number,int dim>
-//void PETSC_KSP_Solver<number,dim>::PreAllocateRows(const PetscInt &cols)
-//{
-//	MatSeqAIJSetPreallocation(this->A,cols,PETSC_NULL);
-//}
-//
+template <typename number>
+void PETSC_KSP_Solver<number>::PreAllocateRows(const vector <int> &nnz)
+{
+	MatSeqAIJSetPreallocation(this->A,PETSC_NULL,&nnz[0]);
+}
+
+template <typename number>
+void PETSC_KSP_Solver<number>::PreAllocateRows(const PetscInt &cols)
+{
+	MatSeqAIJSetPreallocation(this->A,cols,PETSC_NULL);
+}
+
 template <typename number>
 void PETSC_KSP_Solver<number>::Solve()
 {

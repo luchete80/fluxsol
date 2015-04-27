@@ -57,6 +57,8 @@ private:
 	 std::vector<Node>::iterator nodeit;
 	 std::vector<_FvFace>::iterator faceit;
 
+    int np;     //Number of processors
+
     struct myclass myobject;        //Object usedd to sort, TO MODIFY
 
 	protected:
@@ -216,6 +218,8 @@ private:
         }
         return ret;
 	}
+
+	int Partition();
 };
 
 } //Fin FluxSol

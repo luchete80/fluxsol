@@ -79,11 +79,20 @@ int main(int argc, char *argv[])
 	int numberofcomp=pow(3.,TEqn.Dim());
 	int totrows=numberofcomp*TEqn.Num_Eqn();
 
+    vector <int> rowswidth;
+	for (int e=0;e<TEqn.Num_Eqn();e++)	//Aca voy con las filas de a 2
+    {
+        int width=(TEqn.Eqn(e).Width()-1)*numberofcomp+1;
+        for (int dim=0;dim<numberofcomp;dim++)  rowswidth.push_back(width);
+    }
+
+    Solver.PreAllocateRows(rowswidth);
+
 	for (int e=0;e<TEqn.Num_Eqn();e++)	//Aca voy con las filas de a 2
 	{
 	    //Width Assign
 
-      cout << "Assemblying Eqn "<<e<<endl;
+        //cout << "Assemblying Eqn "<<e<<endl;
 		vector <double> ap=TEqn.Eqn(e).Ap().Comp();
 		Scalar ap_sc=TEqn.Eqn(e).Ap();
 		Scalar value;
@@ -98,7 +107,7 @@ int main(int argc, char *argv[])
 		for (int dim=0;dim<numberofcomp;dim++)
         {
             //cout <<"Row "<< row+dim+1<<" length: "<<width<<endl;
-            Q_SetLen(&K,row+dim+1,width);
+            //Q_SetLen(&K,row+dim+1,width);
         }
 
 		vector <double> nullval;
@@ -189,11 +198,20 @@ int main(int argc, char *argv[])
 	//V_SetAllCmp(&U,0.0);
 	//SetRTCAccuracy(1e-5);
 
+    clock_t ittime_begin, ittime_end;
+    double ittime_spent;
+
+    ittime_begin = clock();
 
     Solver.Solve();
 
+    ittime_spent = (double)(clock() - ittime_begin) / CLOCKS_PER_SEC;
+
+    cout << "PETSC Solving elapsed time: "<<ittime_spent<<endl;
+
+
     ofstream file;     //Previously this was inside each function
-    file.open("salida.3D");
+    file.open("Out.3D");
     file << " x y z val"<<endl;
     vector <double> sol=Solver.X();
 
@@ -219,64 +237,6 @@ int main(int argc, char *argv[])
 	cout<<"Writing files"<<endl;
 	OutputFile("CellField.vtu",T);
 	OutputFile("VertexField.vtu",vT);
-
-	cout << "End. Now Reading input.in"<<endl;
-
-    ////////////////////////////////////////////////////////////////////////////
-//
-//    string inputFileName="InputEx.in";
-//	//InputFile input(inputFileName);
-//	InputFile input(inputFileName);
-//
-//	//vector<int> equations;
-//
-//	Fv_CC_Grid mesh(input.section("grid",0).get_string("file"));
-//
-//	_CC_Fv_Field<Scalar> T;
-//
-//	ReadFieldFromInput(input,T,mesh);
-//	mesh.Log("Log.txt");
-//
-//	// Materiales
-//	vector<Materials> material=SetMaterials();
-//
-//	EqnSystem <Scalar> TEqn;
-//
-//	//Scalar k(1.);	//Diffusion
-//	//Scalar kdiff=material[0].k;
-//
-//	cout<<"Generating system"<<endl;
-//
-//	//TEqn=(FvImp::Laplacian(kdiff,T)==0.);
-//	//TO MODIFY
-//	T.Boundaryfield().PatchField(0).AssignValue(Scalar(1.));
-//	TEqn=input.ReadEqnSys(mesh);
-//
-//
-//	cout<<"Solving system"<<endl;
-//	Solve(TEqn);
-//
-//
-//	TEqn.Log("EqLog.txt");
-//
-//	cout<<"Generating field"<<endl;
-//	CenterToVertexInterpolation <Scalar>interp(mesh);
-//
-//	Vertex_Fv_Field<Scalar> vT;
-//
-//
-//	T=TEqn.Field();
-//	//_CC_Fv_Field<Vec3D> gradT = FvExp::Grad(T);
-//
-//	//_CC_Fv_Field <Vec3D> gradT=FvExp::Grad(T);
-//
-//	cout<<"Interpolating to vertices"<<endl;
-//	vT=interp.Interpolate(T);
-//
-//	cout<<"Writing files"<<endl;
-//	OutputFile("CellField-2.vtu",T);
-//	OutputFile("VertexField.vtu",vT);
-
 
 	return 0;
 }
