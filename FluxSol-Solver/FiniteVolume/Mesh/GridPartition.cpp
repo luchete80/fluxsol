@@ -73,6 +73,21 @@ int Fv_CC_Grid::Partition()
 	// else {
 		// eindSize=raw.cellConnIndex[offset+cellCount]-raw.cellConnIndex[offset]+1;
 	// }
+
+    // eind = new idx_t[eindSize];
+    idx_t* elmwgt = NULL;
+	 int wgtflag=0; // no weights associated with elem or edges
+	 int numflag=0; // C-style numbering
+	 int ncon=1; // # of weights or constraints
+	 int ncommonnodes=3; // set to 3 for tetrahedra or mixed type
+
+    //float tpwgts[np];
+	//for (int p=0; p<np; ++p) tpwgts[p]=1./float(np);
+	float ubvec=1.02;
+	int options[3]; // default values for timing info set 0 -> 1
+	options[0]=0; options[1]=1; options[2]=15;
+	int edgecut ; // output
+	//idx_t* part = new idx_t[cellCount];
 }
 //FRE:CFD Structure
 // int Grid::partition() {

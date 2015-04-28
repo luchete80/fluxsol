@@ -166,7 +166,20 @@ void PETSC_KSP_Solver<number>::PETSC_Init()
 	*/
 	ierr = KSPGetPC(ksp,&pc);CHKERRQ(ierr);
 	ierr = PCSetType(pc,PCJACOBI);CHKERRQ(ierr);
+	//ierr = PCSetType(pc,PCGAMG);CHKERRQ(ierr);
 	ierr = KSPSetTolerances(ksp,1.e-5,PETSC_DEFAULT,PETSC_DEFAULT,PETSC_DEFAULT);CHKERRQ(ierr);
+	//PetscErrorCode  KSPSetTolerances(KSP ksp,PetscReal rtol,PetscReal abstol,PetscReal dtol,PetscInt maxits)
+
+    //ksp	- the Krylov subspace context
+    //rtol	- the relative convergence tolerance, relative decrease in the (possibly preconditioned) residual norm
+    //abstol	- the absolute convergence tolerance absolute size of the (possibly preconditioned) residual norm
+    //dtol	- the divergence tolerance, amount (possibly preconditioned) residual norm can increase before KSPConvergedDefault() concludes that the method is diverging
+    //maxits	- maximum number of iterations to use
+
+	KSPSetInitialGuessKnoll(ksp,PETSC_TRUE);
+	//KSPSetType(ksp,KSPGMRES);
+	KSPSetType(ksp,KSPBCGS);    //BiCGSTAB
+
 	/*
 	Set runtime options, e.g.,
 	-ksp_type <type> -pc_type <type> -ksp_monitor -ksp_rtol <rtol>
@@ -174,7 +187,8 @@ void PETSC_KSP_Solver<number>::PETSC_Init()
 	KSPSetFromOptions() is called _after_ any other customization
 	routines.
 	*/
-	ierr = KSPSetFromOptions(ksp);CHKERRQ(ierr);
+	//ierr = KSPSetFromOptions(ksp);CHKERRQ(ierr); THIS IS PREFERRED BEFORE PREVIOUS SOLVER
+	//AND MUST BE CALLED SETUP,
 	if (nonzeroguess)
 	{
 		PetscScalar p = .5;
