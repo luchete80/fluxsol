@@ -34,11 +34,14 @@ static char help[] = "Creates a matrix from quadrilateral finite elements in 2D,
 
 #undef __FUNCT__
 #define __FUNCT__ "main"
+
+using namespace FluxSol;
+
 int main(int argc,char **args)
 {
 
     cout << "Reading cgns file..."<<endl;
-	Fv_CC_Grid mesh(argv[1]);
+	Fv_CC_Grid mesh(args[1]);
 	//malla.ReadCGNS();
 
 	mesh.Log("Log.txt");
@@ -53,28 +56,40 @@ int main(int argc,char **args)
 
 	T.Boundaryfield().PatchField(3).AssignValue(topvalue);
 
+	EqnSystem <Scalar> TEqn;
+	//Construir aca con la malla
+	//Scalar k(1.);	//Difusion, puede ser un escalar
+	//Scalar kdiff=material[0].k;
+	Scalar kdiff=1.;
+	cout<<"Generating system"<<endl;
+	TEqn=(FvImp::Laplacian(kdiff,T)==0.);
+	cout<<"Solving system"<<endl;
+	Solve(TEqn);
+	TEqn.Log("EqLog.txt");
+
+	cout<<"Generating field"<<endl;
+
+    //Setting MAT values
+	int numberofcomp=pow(3.,TEqn.Dim());
+	int totrows=numberofcomp*TEqn.Num_Eqn();
 
 
-// PETSC VALUES //
-  Mat            Amat,Pmat;
-  PetscErrorCode ierr;
-  PetscInt       i,m,M,its,Istart,Iend,j,Ii,bs,ix,ne=4;
-  PetscReal      x,y,h;
-  Vec            xx,bb;
-  KSP            ksp;
-  PetscReal      soft_alpha = 1.e-3;
-  MPI_Comm       comm;
-  PetscMPIInt    npe,mype;
-  PC             pc;
-  PetscScalar    DD[4][4],DD2[4][4];
-#if defined(PETSC_USE_LOG)
-  PetscLogStage stage;
-#endif
-#define DIAG_S 0.0
-  PetscScalar DD1[4][4] = { {5.0+DIAG_S, -2.0, -1.0, -2.0},
-                            {-2.0, 5.0+DIAG_S, -2.0, -1.0},
-                            {-1.0, -2.0, 5.0+DIAG_S, -2.0},
-                            {-2.0, -1.0, -2.0, 5.0+DIAG_S} };
+    // PETSC VALUES //
+      Mat            Amat,Pmat;
+      PetscErrorCode ierr;
+      PetscInt       i,m,M,its,Istart,Iend,j,Ii,bs,ix,ne=4;
+      PetscReal      x,y,h;
+      Vec            xx,bb;
+      KSP            ksp;
+      PetscReal      soft_alpha = 1.e-3;
+    #if defined(PETSC_USE_LOG)
+      PetscLogStage stage;
+    #endif
+    #define DIAG_S 0.0   //Softening
+      MPI_Comm       comm;
+      PetscMPIInt    npe,mype;
+      PC             pc;
+
 
   PetscInitialize(&argc,&args,(char*)0,help);
   comm = PETSC_COMM_WORLD;
@@ -84,8 +99,17 @@ int main(int argc,char **args)
   h     = 1./ne;
   /* ne*ne; number of global elements */
   ierr = PetscOptionsGetReal(NULL,"-alpha",&soft_alpha,NULL);CHKERRQ(ierr);
-  M    = (ne+1)*(ne+1); /* global number of nodes */
+  M    = totrows*totrows; /* global number of nodes */
   /* create stiffness matrix */
+  //PetscErrorCode  MatCreateAIJ(MPI_Comm comm,PetscInt m,PetscInt n,PetscInt M,PetscInt N,
+                                 //PetscInt d_nz,const PetscInt d_nnz[],PetscInt o_nz,const PetscInt o_nnz[],Mat *A)
+//M	- number of global rows (or PETSC_DETERMINE to have calculated if m is given)
+//N	- number of global columns (or PETSC_DETERMINE to have calculated if n is given)
+//d_nz	- number of nonzeros per row in DIAGONAL portion of local submatrix (same value is used for all local rows)
+//d_nnz	- array containing the number of nonzeros in the various rows of the DIAGONAL portion of the local submatrix (possibly different for each row) or NULL, if d_nz is used to specify the nonzero structure. The size of this array is equal to the number of local rows, i.e 'm'.
+//o_nz	- number of nonzeros per row in the OFF-DIAGONAL portion of local submatrix (same value is used for all local rows).
+//o_nnz	- array containing the number of nonzeros in the various rows of the OFF-DIAGONAL portion of the local submatrix (possibly different for each row) or NULL, if o_nz is used to specify the nonzero structure. The size of this array is equal to the number of local rows, i.e 'm'.
+
   ierr = MatCreateAIJ(comm,PETSC_DECIDE,PETSC_DECIDE,M,M,
                       18,NULL,6,NULL,&Amat);CHKERRQ(ierr);
   ierr = MatCreateAIJ(comm,PETSC_DECIDE,PETSC_DECIDE,M,M,
@@ -99,9 +123,6 @@ int main(int argc,char **args)
   ierr = VecSetFromOptions(xx);CHKERRQ(ierr);
   ierr = VecDuplicate(xx,&bb);CHKERRQ(ierr);
   ierr = VecSet(bb,.0);CHKERRQ(ierr);
-
-
-    //Setting MAT values
 
 
 	for (int e=0;e<TEqn.Num_Eqn();e++)	//Aca voy con las filas de a 2
@@ -164,8 +185,8 @@ int main(int argc,char **args)
                     //cout << "(Indexes From 1)  K(" <<  row+dim+1<<","<<columnid+dim+1<<")"<<"=" << 0.0<<endl;
                     //cout << "(From zero) Sparse col: " << numberofcomp*width_cells <<endl;
 
-					//Q_SetEntry(&K,row+dim+1,numberofcomp*width_cells,columnid+dim+1,col[0]);
-					Solver.SetMatVal(row+dim, columnid+dim, col[0]);
+
+					//Solver.SetMatVal(row+dim, columnid+dim, col[0]);
 
 				}
 
@@ -175,8 +196,8 @@ int main(int argc,char **args)
                 //cout << "Cell Not Found" <<endl;
 				for (int dim=0;dim<numberofcomp;dim++)
                 {
-                    Solver.SetMatVal(row+dim, columnid+dim, 0.);
-					//Q_SetEntry(&K,row+dim+1,numberofcomp*width_cells,columnid+dim+1,0.0);
+                    //Solver.SetMatVal(row+dim, columnid+dim, 0.);
+
                     //INFO
                     //cout << "(Indexes From 1)  K(" <<  row+dim+1<<","<<columnid+dim+1<<")"<<"=" << 0.0<<endl;
                     //cout << "(From zero) Sparse col: " << numberofcomp*width_cells <<endl;
@@ -192,85 +213,41 @@ int main(int argc,char **args)
 	}//End of cells
 
 
-
-
-
-
-  /* generate element matrices */
-  {
-    FILE *file;
-    char fname[] = "data/elem_2d_therm.txt";
-    file = fopen(fname, "r");
-    if (file == 0) {
-      DD1[0][0] =  0.66666666666666663;
-      DD1[0][1] = -0.16666666666666669;
-      DD1[0][2] = -0.33333333333333343;
-      DD1[0][3] = -0.16666666666666666;
-      DD1[1][0] = -0.16666666666666669;
-      DD1[1][1] =  0.66666666666666663;
-      DD1[1][2] = -0.16666666666666666;
-      DD1[1][3] = -0.33333333333333343;
-      DD1[2][0] = -0.33333333333333343;
-      DD1[2][1] = -0.16666666666666666;
-      DD1[2][2] =  0.66666666666666663;
-      DD1[2][3] = -0.16666666666666663;
-      DD1[3][0] = -0.16666666666666666;
-      DD1[3][1] = -0.33333333333333343;
-      DD1[3][2] = -0.16666666666666663;
-      DD1[3][3] =  0.66666666666666663;
-    } else {
-      for (i=0;i<4;i++) {
-        for (j=0;j<4;j++) {
-          ierr = fscanf(file, "%le", &DD1[i][j]);
-        }
-      }
-    }
-    /* BC version of element */
-    for (i=0;i<4;i++) {
-      for (j=0;j<4;j++) {
-        if (i<2 || j < 2) {
-          if (i==j) DD2[i][j] = .1*DD1[i][j];
-          else DD2[i][j] = 0.0;
-        } else DD2[i][j] = DD1[i][j];
-      }
-    }
-  }
-  {
-    PetscReal coords[2*m];
+    PetscReal coords[3*m];
     /* forms the element stiffness for the Laplacian and coordinates */
     for (Ii=Istart,ix=0; Ii<Iend; Ii++,ix++) {
       j = Ii/(ne+1); i = Ii%(ne+1);
       /* coords */
       x            = h*(Ii % (ne+1)); y = h*(Ii/(ne+1));
       coords[2*ix] = x; coords[2*ix+1] = y;
-      if (i<ne && j<ne) {
-        PetscInt jj,ii,idx[4] = {Ii, Ii+1, Ii + (ne+1) + 1, Ii + (ne+1)};
-        /* radius */
-        PetscReal radius = PetscSqrtScalar((x-.5+h/2)*(x-.5+h/2) + (y-.5+h/2)*(y-.5+h/2));
-        PetscReal alpha  = 1.0;
-        if (radius < 0.25) alpha = soft_alpha;
-
-
-        for (ii=0; ii<4; ii++) {
-          for (jj=0; jj<4; jj++) DD[ii][jj] = alpha*DD1[ii][jj];
-        }
-        ierr = MatSetValues(Pmat,4,idx,4,idx,(const PetscScalar*)DD,ADD_VALUES);CHKERRQ(ierr);
-        if (j>0) {
-          ierr = MatSetValues(Amat,4,idx,4,idx,(const PetscScalar*)DD,ADD_VALUES);CHKERRQ(ierr);
-        } else {
-          /* a BC */
-          for (ii=0;ii<4;ii++) {
-            for (jj=0;jj<4;jj++) DD[ii][jj] = alpha*DD2[ii][jj];
-          }
-          ierr = MatSetValues(Amat,4,idx,4,idx,(const PetscScalar*)DD,ADD_VALUES);CHKERRQ(ierr);
-        }
-      }
-      if (j>0) {
-        PetscScalar v  = h*h;
-        PetscInt    jj = Ii;
-        ierr = VecSetValues(bb,1,&jj,&v,INSERT_VALUES);CHKERRQ(ierr);
-      }
-    }
+//      if (i<ne && j<ne) {
+//        PetscInt jj,ii,idx[4] = {Ii, Ii+1, Ii + (ne+1) + 1, Ii + (ne+1)};
+//        /* radius */
+//        PetscReal radius = PetscSqrtScalar((x-.5+h/2)*(x-.5+h/2) + (y-.5+h/2)*(y-.5+h/2));
+//        PetscReal alpha  = 1.0;
+//        if (radius < 0.25) alpha = soft_alpha;
+//
+//
+//        for (ii=0; ii<4; ii++) {
+//          for (jj=0; jj<4; jj++) DD[ii][jj] = alpha*DD1[ii][jj];
+//        }
+//        ierr = MatSetValues(Pmat,4,idx,4,idx,(const PetscScalar*)DD,ADD_VALUES);CHKERRQ(ierr);
+//        if (j>0) {
+//          ierr = MatSetValues(Amat,4,idx,4,idx,(const PetscScalar*)DD,ADD_VALUES);CHKERRQ(ierr);
+//        } else {
+//          /* a BC */
+//          for (ii=0;ii<4;ii++) {
+//            for (jj=0;jj<4;jj++) DD[ii][jj] = alpha*DD2[ii][jj];
+//          }
+//          ierr = MatSetValues(Amat,4,idx,4,idx,(const PetscScalar*)DD,ADD_VALUES);CHKERRQ(ierr);
+//        }
+//      }
+//      if (j>0) {
+//        PetscScalar v  = h*h;
+//        PetscInt    jj = Ii;
+//        ierr = VecSetValues(bb,1,&jj,&v,INSERT_VALUES);CHKERRQ(ierr);
+//      }
+//    }
     ierr = MatAssemblyBegin(Amat,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
     ierr = MatAssemblyEnd(Amat,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
     ierr = MatAssemblyBegin(Pmat,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);

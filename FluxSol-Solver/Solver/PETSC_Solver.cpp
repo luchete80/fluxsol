@@ -220,6 +220,12 @@ template <typename number>
 void PETSC_KSP_Solver<number>::PreAllocateRows(const PetscInt &cols)
 {
 	MatSeqAIJSetPreallocation(this->A,cols,PETSC_NULL);
+    //PetscErrorCode  MatSeqAIJSetPreallocation(Mat B,PetscInt nz,const PetscInt nnz[])
+    //
+    //B	- The matrix
+    //nz	- number of nonzeros per row (same for all rows)
+    //nnz	- array containing the number of nonzeros in the various rows (possibly different for each row) or NULL
+
 }
 
 template <typename number>

@@ -79,14 +79,16 @@ int main(int argc, char *argv[])
 	int numberofcomp=pow(3.,TEqn.Dim());
 	int totrows=numberofcomp*TEqn.Num_Eqn();
 
-    vector <int> rowswidth;
+    vector <int> nonzerosperrow;
 	for (int e=0;e<TEqn.Num_Eqn();e++)	//Aca voy con las filas de a 2
     {
         int width=(TEqn.Eqn(e).Width()-1)*numberofcomp+1;
-        for (int dim=0;dim<numberofcomp;dim++)  rowswidth.push_back(width);
+        //int nz=(TEqn.Eqn(e).An().size()-1)*numberofcomp+1;
+        for (int dim=0;dim<numberofcomp;dim++)  nonzerosperrow.push_back(5);
     }
 
-    Solver.PreAllocateRows(rowswidth);
+
+    Solver.PreAllocateRows(nonzerosperrow);
 
 	for (int e=0;e<TEqn.Num_Eqn();e++)	//Aca voy con las filas de a 2
 	{
@@ -159,7 +161,7 @@ int main(int argc, char *argv[])
                 //cout << "Cell Not Found" <<endl;
 				for (int dim=0;dim<numberofcomp;dim++)
                 {
-                    Solver.SetMatVal(row+dim, columnid+dim, 0.);
+                    //Solver.SetMatVal(row+dim, columnid+dim, 0.);
 					//Q_SetEntry(&K,row+dim+1,numberofcomp*width_cells,columnid+dim+1,0.0);
                     //INFO
                     //cout << "(Indexes From 1)  K(" <<  row+dim+1<<","<<columnid+dim+1<<")"<<"=" << 0.0<<endl;
