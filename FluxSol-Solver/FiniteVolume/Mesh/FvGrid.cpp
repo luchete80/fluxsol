@@ -1031,6 +1031,7 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 
         int boundnode =0;
 
+        cout << "[I] Creating boundary Elements ..."<<endl;
         //--------------------------------
         //IF INPUT IS WITH BOUNDARY CELLS
         //--------------------------------
@@ -1058,6 +1059,7 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
             }
             bpelem.push_back(temp);
         }
+        cout << "[I] Boundary Elements Count: "<<boundelem<<endl;
 
         //vector<vector<int>> idbcellasoc(boundelem,vector<int>(2,-1)); //Id cells
         vector<int> idbcell(boundelem,-1);
@@ -1078,41 +1080,20 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 
                 //Check if this is a boundary element
                 //TO MODIFY, MUST CONSIDER TETRA CELLS
-                if (connect.size()<=4)   //All connectivity numbers are 3d
-                    for (int bp=0;bp<bpelem.size();bp++)
-                        for(int el=0;el<bpelem[bp].size();el++)
-                            if (idcell==(bpelem[bp][el]-1))     //Index of rawdata is counting from 1
-                            {
-                                vboundcell.push_back(scell);
-                                idbcell[bcell]=idcell;
-                                bcell++;
-                            }
+            //if (connect.size()<=4)   //All connectivity numbers are 3d
+            for (int bp=0;bp<bpelem.size();bp++)
+                for(int el=0;el<bpelem[bp].size();el++)
+                    if (idcell==(bpelem[bp][el]-1))     //Index of rawdata is counting from 1
+                    {
+                        vboundcell.push_back(scell);
+                        idbcell[bcell]=idcell;
+                        bcell++;
+                    }
 
                 //}
 
         }
 
-        //----------------------------
-        // BOUNDARY NODES
-        //----------------------------
-        //Boundary Patches bc
-        for (int bp=0;bp<this->raw.bc_elem_list.size();bp++)
-        {
-            vector <int> temp;
-
-            //Search bc vertex in each 2D Cell
-            set <int> sbc =this->raw.bocoNodes[bp];
-            set <int>::iterator sit=sbc.begin();
-
-
-            for (; sit!=sbc.end();sit++)
-            {
-                boundnode++;
-                temp.push_back(*sit);
-            }
-            cout << "[I] BC "<< bp << "has " <<temp.size()<< " nodes" <<endl;
-            bpnode.push_back(temp);
-        }
 
         //vector<vector<int>> idbcellasoc(boundelem,vector<int>(2,-1));	//Id cells
         bcell=0;
@@ -1133,11 +1114,11 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 
                 //Check if this is a boundary element
                 //TO MODIFY
-                if (connect.size()>4)	//All connectivity numbers are 3d, BUT TETRA?
-                    this->cell.push_back(scell);
+                //if (connect.size()>4)	//All connectivity numbers are 3d, BUT TETRA?
+            this->cell.push_back(scell);
 
         }
-
+        cout << "[I] Created " << this->cell.size() << " cells. "<<endl;
         //Updating cell number
         this->num_cells=cell.size();
 
@@ -1158,7 +1139,7 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 
         vector <Patch> vpatch;
 
-        cout << "boundary faces size" <<temp_boundfaces.size()<<endl;
+        cout << "[I] Boundary Faces count: " <<temp_boundfaces.size()<<endl;
         std::vector<std::list <int> >bpfaces;
 
 //        cout << "Boundary zone nodes" << bpnode[0][node]<<endl;
@@ -1170,9 +1151,10 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
         int totalboundfaces=temp_boundfaces.size();
         for (int bp=0;bp<this->raw.bc_elem_list.size();bp++)    //Look Through patch
         {
-            cout << "[I] Searching patch " << bp << ", remaining boundary faces count: "<<temp_boundfaces.size()<<endl;
             pname=this->imported_patchnames[bp];
             list <int> temp;
+
+            cout << "[I] Searching patch " << bp << ", named "<< pname<<", remaining boundary faces count: "<<temp_boundfaces.size()<<endl;
 
             int nfoundfaces=0;
             if (raw.bocoNodes[bp].size()>0)
@@ -1193,7 +1175,7 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
                     }
                 }
             }
-            else if (bpelem[bp].size()>0) //If bc are defined via
+            else if (bpelem[bp].size()>0) //If bc are defined via 2D elements
             {
                //Looking through raw elements (faces in Grid)
                 for (int el=0;el<bpelem[bp].size();el++)
@@ -1201,21 +1183,30 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
                     vector<int> faceverts;
                     //Adding element vertices
                     //for (int iv=0;iv<this->Cell(bpelem[bp][el]).Num_Vertex();iv++)
-                    for (int iv=0;iv<vboundcell[bcell].Num_Vertex();iv++)
-                        faceverts.push_back(vboundcell[bcell].Vert(iv));
+                    for (int iv=0;iv<vboundcell[bcell].Num_Vertex();iv++)   faceverts.push_back(vboundcell[bcell].Vert(iv));
 
-                    for (int idf=0;idf<this->Num_Faces();idf++)
+                    //TO MODIFY: THIS MUST BE DONE WTH A MAP of sets
+                    for (int bf=0;bf<temp_boundfaces.size();bf++)   //Look through all boundary faces, coincidence with each boconodes patch
                     {
+                        int idf=temp_boundfaces[bf];
                         bool enc=FindAllVals(faceverts,this->Face(idf).Vert());
+//                        bool enc=true;
+//                        for (int n=0;n<this->Face(idf).Vert().size();n++)
+//                            if (!(this->raw.bocoNodes[bp].find(this->Face(idf).Vert()[n])!=faceverts.end())) enc=false;
+
                         if (enc)
                         {
                             //Add face idf to Boundary patch - Agrego idf al Patch
                             temp.push_back(idf);
+                            temp_boundfaces.erase(temp_boundfaces.begin()+bf);
+                            bf--;
                         }
                     }
                     bcell++;
                 }//End element
             }
+            else
+            cout << "[I] WARNING: No Boundary defined. "<<endl;
 
 //
 //            bool badpatch=false;
