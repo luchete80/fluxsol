@@ -1071,6 +1071,7 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
             if (idcell<(raw.cellConnIndex.size()-1))
                 cellvertnum = raw.cellConnIndex [idcell+1] - raw.cellConnIndex [idcell];
             else cellvertnum = raw.cellConnectivity.size()- raw.cellConnIndex [idcell] ;
+            bool found =false;
 
             vector<int> connect;
             for (int cv =0 ; cv<cellvertnum;cv++)
@@ -1088,8 +1089,10 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
                         vboundcell.push_back(scell);
                         idbcell[bcell]=idcell;
                         bcell++;
+                        found=true;
                     }
-
+            if (!found)
+                this->cell.push_back(scell);
                 //}
 
         }
@@ -1098,26 +1101,26 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
         //vector<vector<int>> idbcellasoc(boundelem,vector<int>(2,-1));	//Id cells
         bcell=0;
 
-        cout << "[I] Creating cells ..."<<endl;
-        for (int idcell =0 ; idcell<raw.cellConnIndex.size();idcell++)
-        {
-            int cellvertnum;
-            if (idcell<(raw.cellConnIndex.size()-1))
-                cellvertnum = raw.cellConnIndex [idcell+1] - raw.cellConnIndex [idcell];
-            else cellvertnum = raw.cellConnectivity.size()- raw.cellConnIndex [idcell] ;
-
-            vector<int> connect;
-            for (int cv =0 ; cv<cellvertnum;cv++)
-                connect.push_back(raw.cellConnectivity[ raw.cellConnIndex [idcell] + cv]);
-
-            Cell_CC scell(idcell,connect);
-
-                //Check if this is a boundary element
-                //TO MODIFY
-                //if (connect.size()>4)	//All connectivity numbers are 3d, BUT TETRA?
-            this->cell.push_back(scell);
-
-        }
+//        cout << "[I] Creating cells ..."<<endl;
+//        for (int idcell =0 ; idcell<raw.cellConnIndex.size();idcell++)
+//        {
+//            int cellvertnum;
+//            if (idcell<(raw.cellConnIndex.size()-1))
+//                cellvertnum = raw.cellConnIndex [idcell+1] - raw.cellConnIndex [idcell];
+//            else cellvertnum = raw.cellConnectivity.size()- raw.cellConnIndex [idcell] ;
+//
+//            vector<int> connect;
+//            for (int cv =0 ; cv<cellvertnum;cv++)
+//                connect.push_back(raw.cellConnectivity[ raw.cellConnIndex [idcell] + cv]);
+//
+//            Cell_CC scell(idcell,connect);
+//
+//                //Check if this is a boundary element
+//                //TO MODIFY
+//                //if (connect.size()>4)	//All connectivity numbers are 3d, BUT TETRA?
+//            this->cell.push_back(scell);
+//
+//        }
         cout << "[I] Created " << this->cell.size() << " cells. "<<endl;
         //Updating cell number
         this->num_cells=cell.size();

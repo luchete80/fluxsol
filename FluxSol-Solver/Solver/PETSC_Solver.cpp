@@ -402,6 +402,271 @@ PETSC_KSP_Solver<number>::B() const
 	return v;
 }
 
+//
+//template <typename T>
+//void Solve(EqnSystem <T> &TEqn)
+//{
+//
+//    ///// PETSC SOLVE MANUALLY ///////
+//
+//	int numberofcomp=pow(3.,TEqn.Dim());
+//	int totrows=numberofcomp*TEqn.Num_Eqn();
+//
+//    cout << "Creating Solver"<<endl;
+//	PETSC_KSP_Solver<double> Solver(totrows);
+//
+//    cout << "Number of comps" << numberofcomp<<endl;
+//    cout << "Number of rows" << totrows<<endl;
+//
+//    vector <int> nonzerosperrow;
+//	for (int e=0;e<TEqn.Num_Eqn();e++)	//Aca voy con las filas de a 2
+//    {
+//        //TO MODIFY
+//        for (int dim=0;dim<numberofcomp;dim++)  nonzerosperrow.push_back(5);
+//    }
+//
+//    cout << "Allocating Rows..."<<endl;
+//    Solver.PreAllocateRows(nonzerosperrow);
+//    cout << "Assembying Eqns"<<endl;
+//	for (int e=0;e<TEqn.Num_Eqn();e++)	//Aca voy con las filas de a 2
+//	{
+//	    //Width Assign
+//
+//        //cout << "Assemblying Eqn "<<e<<endl;
+//		vector <double> ap=TEqn.Eqn(e).Ap().Comp();
+//		Scalar ap_sc=TEqn.Eqn(e).Ap();
+//		Scalar value;
+//		int width=(TEqn.Eqn(e).Width()-1)*numberofcomp+1;
+////		//int width=TEqn.Eqn(e).Width()*numberofcomp;   // THIS IS WRONG
+////
+//		int sparsecol=0;
+//		int row=e*numberofcomp;
+//
+//		vector <double> nullval;
+//		nullval.assign(numberofcomp,0.);
+//
+//		//This id is relative to the cell, not the column
+//		int fisrt_nonzero_col=TEqn.Eqn(e).MinNeigbourId();  //In a single component matrix
+//		int realcellid;
+//
+//
+//
+//		//Look trough entire width for neighbours id
+//		//The main idea is to look through eqn width
+//		//Real cell id is taken, and then are watched all neighbours to check if each real cell id belongs to neighbours vector
+//		for (int width_cells=0;width_cells<TEqn.Eqn(e).Width();width_cells++)
+//		{
+//			realcellid=width_cells+fisrt_nonzero_col;   //Wich cell
+//
+//			vector <double> col;
+//			int columnid;
+//			//Found central
+//			bool foundcell=false;
+//			int localneighbourfound=FluxSol::SearchVal(realcellid,TEqn.Eqn(e).NeighboursIds());
+//			//vector <int> neigh=TEqn.Eqn(e).NeighboursIds();
+//			//std::vector<int>::iterator it;
+//			if (TEqn.Eqn(e).Id()==realcellid)
+//			{col=ap;columnid=row;foundcell=true;}//row is equal to
+//			//Neighbours ids are not neccesarily ordered, then must search for cellid in all neighbours
+//			else if(localneighbourfound>-1)
+//			{col=TEqn.Eqn(e).An(localneighbourfound).Comp();columnid=numberofcomp*realcellid;foundcell=true;}
+//			else //column index is not a neighbour neither central cell
+//			{columnid=numberofcomp*realcellid;}
+//
+//			//Write Matrix
+//			if (foundcell)
+//			{
+//                //cout << "Found Cell " <<endl;
+//				for (int dim=0;dim<numberofcomp;dim++)
+//				{
+//                    //INFO
+//                    //cout << "(Indexes From 1)  K(" <<  row+dim+1<<","<<columnid+dim+1<<")"<<"=" << 0.0<<endl;
+//                    //cout << "(From zero) Sparse col: " << numberofcomp*width_cells <<endl;
+//
+//					//Q_SetEntry(&K,row+dim+1,numberofcomp*width_cells,columnid+dim+1,col[0]);
+//					Solver.SetMatVal(row+dim, columnid+dim, col[0]);
+//
+//				}
+//
+//			}
+//
+//		}//En of width
+//
+//
+//	}//End of cells
+//
+//    //cout << "R vector (from zero)"<<endl;
+//	//V_SetAllCmp(&R,0.0);
+//	for (int e=0;e<TEqn.Num_Eqn();e++)
+//	{
+//	    //cout << "Eqn " << e<<endl;
+//	    //cout << "[" <<e<<"]: "  ;
+//		vector <double> source=TEqn.Eqn(e).Source().Comp();
+//		for (int dim=0;dim<numberofcomp;dim++)
+//        {
+//            Solver.SetbValues(e*numberofcomp+dim, source[dim]);
+//        }
+//        //cout << endl;
+//
+//	}
+//	//cout << "tot rows" << totrows<<endl;
+//	//std::vector <double> Ui,Ri;
+//	//Ui.assign(totrows,0.);
+//	//Ri.assign(totrows,0.);
+//	//V_SetAllCmp(&U,0.0);
+//	//SetRTCAccuracy(1e-5);
+//
+//    clock_t ittime_begin, ittime_end;
+//    double ittime_spent;
+//
+//    ittime_begin = clock();
+//
+//    Solver.Solve();
+//
+//    ittime_spent = (double)(clock() - ittime_begin) / CLOCKS_PER_SEC;
+//
+//    cout << "PETSC Solving elapsed time: "<<ittime_spent<<endl;
+//
+//    cout <<"Solver Results "<<endl;
+//	 for (int e=0;e<TEqn.Num_Eqn();e++)
+//	 {
+//	     //cout << "e= "<<e<<endl;
+//		 vector <double> r;
+//		 for (int dim=0;dim<numberofcomp;dim++)
+//         {
+// 			 r.push_back(Solver.X(numberofcomp*e+dim));
+// 			 //cout << "xi= "<<numberofcomp*e+dim<<", ";
+//             //cout <<U.Cmp[numberofcomp*e+dim+1]<<" ";
+//         }
+////         //cout <<endl;
+//
+//        TEqn.Eqn(e).X()=r;
+//		 //cout << " X Copied Vector: "<<eq.Eqn(e).X().outstr()<<endl;
+//		 //cout << endl;
+//     }
+//
+//     cout << "Destroying "<<endl;
+//
+//    Solver.Destroy();
+//
+//    cout << "Destroyed"<<endl;
+//
+//}
+
+//
+///////////// FAST SOLVER /////////////
+/////////////  FIXED ALLOCATING NEIGHBOURS SECTION
+//
+template <typename T>
+void Solve(EqnSystem <T> &TEqn)
+{
+
+    ///// PETSC SOLVE MANUALLY ///////
+
+	int numberofcomp=pow(3.,TEqn.Dim());
+	int totrows=numberofcomp*TEqn.Num_Eqn();
+
+    cout << "Creating Solver"<<endl;
+	PETSC_KSP_Solver<double> Solver(totrows);
+
+    cout << "Number of comps" << numberofcomp<<endl;
+    cout << "Number of rows" << totrows<<endl;
+
+    vector <int> nonzerosperrow;
+	for (int e=0;e<TEqn.Num_Eqn();e++)	//Aca voy con las filas de a 2
+    {
+        //TO MODIFY
+        for (int dim=0;dim<numberofcomp;dim++)  nonzerosperrow.push_back(5);
+    }
+
+    cout << "Allocating Rows..."<<endl;
+    Solver.PreAllocateRows(nonzerosperrow);
+    cout << "Assembying Eqns"<<endl;
+	for (int e=0;e<TEqn.Num_Eqn();e++)	//Aca voy con las filas de a 2
+	{
+	    //Width Assign
+
+        //cout << "Assemblying Eqn "<<e<<endl;
+		vector <double> ap=TEqn.Eqn(e).Ap().Comp();
+		Scalar ap_sc=TEqn.Eqn(e).Ap();
+		Scalar value;
+
+		int row=e*numberofcomp;
+
+        vector <double> col;
+        //CENTRAL COEFFS
+        col=ap;
+        for (int dim=0;dim<numberofcomp;dim++)
+            Solver.SetMatVal(row+dim, row+dim, col[0]);    //An is scalar
+
+
+		//Look trough entire width for neighbours id
+		//The main idea is to look through eqn width
+		//Real cell id is taken, and then are watched all neighbours to check if each real cell id belongs to neighbours vector
+		for (int nc=0;nc<TEqn.Eqn(e).Num_Neighbours();nc++)
+		{
+			int realcellid=TEqn.Eqn(e).Neighbour(nc);   //Wich cell
+
+			col=TEqn.Eqn(e).An(nc).Comp();
+			int columnid=numberofcomp*realcellid;
+
+            //cout << "Found Cell " <<endl;
+            for (int dim=0;dim<numberofcomp;dim++)
+                Solver.SetMatVal(row+dim, columnid+dim, col[0]);    //An is scalar
+
+		}//En of neighbours
+
+
+	}//End of cells
+
+    //cout << "R vector (from zero)"<<endl;
+	//V_SetAllCmp(&R,0.0);
+	for (int e=0;e<TEqn.Num_Eqn();e++)
+	{
+	    //cout << "Eqn " << e<<endl;
+	    //cout << "[" <<e<<"]: "  ;
+		vector <double> source=TEqn.Eqn(e).Source().Comp();
+		for (int dim=0;dim<numberofcomp;dim++)
+        {
+            Solver.SetbValues(e*numberofcomp+dim, source[dim]);
+        }
+        //cout << endl;
+
+	}
+    clock_t ittime_begin, ittime_end;
+    double ittime_spent;
+
+    ittime_begin = clock();
+
+    Solver.Solve();
+
+    ittime_spent = (double)(clock() - ittime_begin) / CLOCKS_PER_SEC;
+
+    cout << "PETSC Solving elapsed time: "<<ittime_spent<<endl;
+
+    cout <<"Solver Results "<<endl;
+	 for (int e=0;e<TEqn.Num_Eqn();e++)
+	 {
+         //cout << "e= "<<e<<endl;
+         vector <double> r;
+         for (int dim=0;dim<numberofcomp;dim++)
+         {
+             r.push_back(Solver.X(numberofcomp*e+dim));
+             //cout << "xi= "<<numberofcomp*e+dim<<", ";
+             //cout <<U.Cmp[numberofcomp*e+dim+1]<<" ";
+         }
+        TEqn.Eqn(e).X()=r;
+
+     }
+
+     cout << "Destroying "<<endl;
+
+    Solver.Destroy();
+
+    cout << "Destroyed"<<endl;
+
+}
+
 } //FluxSol
 
 #include "PETSC_Solver.inst"

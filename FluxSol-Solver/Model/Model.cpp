@@ -70,8 +70,8 @@ void CFDModel::InitFields()
 
 //    for (int i=0;i<4;i++)
 //        cout << "patch cvalue Velocity" << U.Boundaryfield().PatchField(i).ConstValue()<<endl;
-
-
+//
+//
 //    for (int i=0;i<4;i++)
 //        cout << "patch cvalue Pressure" << p.Boundaryfield().PatchField(i).ConstValue().outstr()<<endl;
 
@@ -220,6 +220,7 @@ void CFDModel::InitFields()
         U.Boundaryfield().ApplyBC();
         p.Boundaryfield().ApplyBC();
 
+
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         fitlog << scientific <<ittime_spent <<" " ;
 		//2. U Calculation
@@ -335,11 +336,11 @@ void CFDModel::InitFields()
                 }
             }
         }
-//        phi.Boundaryfield().ApplyBC();
+        //phi.Boundaryfield().ApplyBC();
 
 
-//    for (int i=0;i<mesh.vBoundary().Num_Patches();i++)
-//        cout << "patch " << i << "cvalue phi" << phi.Boundaryfield().PatchField(i).ConstValue().outstr()<<endl;
+    //for (int i=0;i<mesh.vBoundary().Num_Patches();i++)
+    //    cout << "patch " << i << "cvalue phi" << phi.Boundaryfield().PatchField(i).ConstValue().outstr()<<endl;
 
 
 
@@ -439,14 +440,18 @@ void CFDModel::InitFields()
 
         if (maxudiff[0]<1.e-3 && maxudiff[1]<1.e-3 && maxudiff[2]<1.e-3  && maxpdiff<1.e-3 )   conv=true;
 
+        // THESE ASSIGS MUST BE INSIDE ITERATIONS!!!! THESE COPIES CVALUES
+        U.AssignBoundaryField(bf);
+        p.AssignBoundaryField(pbf);
+
         //TO MODIFY, Change
         //TO MODIFY, CHECKMESH
+        OutputFile("CellField-p.vtu",p);
+        OutputFile("CellField-U.vtu",U,0);
 
 	}
 
         cout << "[I] Process Terminated ..." <<endl;
-        U.AssignBoundaryField(bf);
-        p.AssignBoundaryField(pbf);
 
 //        cout << "Creating Fields"<<endl;
         //Write Output in every iterations

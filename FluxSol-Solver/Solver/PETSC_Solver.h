@@ -78,6 +78,9 @@ public Solver<number>
 	void PreAllocateRows(const PetscInt &cols);
 
 	void Solve();
+	template <typename T>
+    void Solve(EqnSystem <T> &TEqn){};
+
 	void InsertRow(const int &row, const std::vector<int> &cols, const std::vector <double> &vals);
 
 
@@ -102,6 +105,19 @@ public Solver<number>
 
 	inline void ClearMat();
 
+	void Destroy()
+	{
+        //cout << "Destying  ksp, "<< KSPDestroy(&ksp);
+        MatDestroy(&A);
+        //MatDestroy(&SysMat);
+        VecDestroy(&b);
+        VecDestroy(&x);
+	}
+	~PETSC_KSP_Solver<number>()
+	{
+	    //this->Destroy();
+	}
+
 	// ierr = VecDestroy(&x);CHKERRQ(ierr); ierr = VecDestroy(&u);CHKERRQ(ierr);
 	// ierr = VecDestroy(&b);CHKERRQ(ierr); ierr = MatDestroy(&A);CHKERRQ(ierr);
 	// ierr = KSPDestroy(&ksp);CHKERRQ(ierr);
@@ -114,7 +130,6 @@ public Solver<number>
 	// ierr = PetscFinalize();
 
 };//PETSC Solver
-
 
 } //FluxSol
 #endif

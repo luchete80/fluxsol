@@ -53,5 +53,18 @@ const std::vector <double> PETSC_KSP_Solver<double>::B() const;
 template
 const double PETSC_KSP_Solver<double>::B(const int &i) const;
 
+//TO MODIFY
+
+template
+void PETSC_KSP_Solver<double>::Solve(EqnSystem <Scalar> &eq);
+
+template
+void PETSC_KSP_Solver<double>::Solve(EqnSystem <Vec3D> &eq);
+
+template
+void Solve(EqnSystem <Scalar> &eq);
+
+template
+void Solve(EqnSystem <Vec3D> &eq);
 
 }
