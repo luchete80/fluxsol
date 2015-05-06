@@ -51,6 +51,9 @@ public Solver<number>
 		Vec x; // solution, residual vectors
 		Mat SysMat;
 
+		MatOrderingType mat_ord_type;       //For Matrix reordering (See PETSC example 1 and 18)
+		IS rowperm,colperm;
+
 		KSP ksp; // linear solver context
 		PC pc; // preconditioner context
 

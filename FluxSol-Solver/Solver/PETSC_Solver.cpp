@@ -165,8 +165,10 @@ void PETSC_KSP_Solver<number>::PETSC_Init()
 	KSPSetFromOptions();
 	*/
 	ierr = KSPGetPC(ksp,&pc);CHKERRQ(ierr);
-	ierr = PCSetType(pc,PCJACOBI);CHKERRQ(ierr);
+	//ierr = PCSetType(pc,PCJACOBI);CHKERRQ(ierr);
 	//ierr = PCSetType(pc,PCGAMG);CHKERRQ(ierr);
+	//ierr = PCSetType(pc,PCICC);CHKERRQ(ierr);
+	ierr = PCSetType(pc,PCICC);CHKERRQ(ierr);
 	ierr = KSPSetTolerances(ksp,1.e-5,PETSC_DEFAULT,PETSC_DEFAULT,PETSC_DEFAULT);CHKERRQ(ierr);
 	//PetscErrorCode  KSPSetTolerances(KSP ksp,PetscReal rtol,PetscReal abstol,PetscReal dtol,PetscInt maxits)
 
@@ -231,8 +233,30 @@ void PETSC_KSP_Solver<number>::PreAllocateRows(const PetscInt &cols)
 template <typename number>
 void PETSC_KSP_Solver<number>::Solve()
 {
+
+    //For matrix Reordering
+
+    MatOrderingType mat_ord_type;       //For Matrix reordering (See PETSC example 1 and 18)
+    IS rowperm,colperm;
+
+    PetscBool permute=PETSC_FALSE;     //Matrix reordering
+    mat_ord_type=MATORDERINGRCM;
+    rowperm = NULL,colperm = NULL;
+
 	ierr = MatAssemblyBegin(this->A,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
 	ierr = MatAssemblyEnd(this->A,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
+
+
+    if (permute)
+    {
+        Mat Aperm;
+        MatGetOrdering(this->A,mat_ord_type,&rowperm,&colperm);
+        MatPermute(this->A,rowperm,colperm,&Aperm);
+        VecPermute(b,colperm,PETSC_FALSE);
+        MatDestroy(&A);
+        this->A    = Aperm;               /* Replace original operator with permuted version */
+        //MatDestroy(&Aperm);
+    }
 
 	//ierr = MatSetOption(this->A,MAT_SYMMETRIC,PETSC_TRUE);
 
@@ -256,11 +280,15 @@ void PETSC_KSP_Solver<number>::Solve()
 	ierr = KSPGetIterationNumber(ksp,&its);CHKERRQ(ierr);
 	ierr = PetscPrintf(PETSC_COMM_WORLD,"Norm of error %A, Iterations %D\n",
 	norm,its);CHKERRQ(ierr);
+
+	if (permute) {VecPermute(x,rowperm,PETSC_TRUE);}
+
 	/*
 	Free work space. All PETSc objects should be destroyed when they
 	are no longer needed.
 	*/
 
+	ISDestroy(&rowperm);  ISDestroy(&colperm);
 }
 
 template <typename number>
@@ -561,6 +589,8 @@ template <typename T>
 void Solve(EqnSystem <T> &TEqn)
 {
 
+
+
     ///// PETSC SOLVE MANUALLY ///////
 
 	int numberofcomp=pow(3.,TEqn.Dim());
@@ -581,6 +611,13 @@ void Solve(EqnSystem <T> &TEqn)
 
     cout << "Allocating Rows..."<<endl;
     Solver.PreAllocateRows(nonzerosperrow);
+
+    clock_t ittime_begin, ittime_end;
+    double ittime_spent;
+
+    ittime_begin = clock();
+
+
     cout << "Assembying Eqns"<<endl;
 	for (int e=0;e<TEqn.Num_Eqn();e++)	//Aca voy con las filas de a 2
 	{
@@ -617,7 +654,10 @@ void Solve(EqnSystem <T> &TEqn)
 		}//En of neighbours
 
 
-	}//End of cells
+	}//End of cells	for (int e=0;e<TEqn.Num_Eqn();e++)	//Aca voy con las filas de a 2
+
+
+
 
     //cout << "R vector (from zero)"<<endl;
 	//V_SetAllCmp(&R,0.0);
@@ -631,10 +671,11 @@ void Solve(EqnSystem <T> &TEqn)
             Solver.SetbValues(e*numberofcomp+dim, source[dim]);
         }
         //cout << endl;
-
 	}
-    clock_t ittime_begin, ittime_end;
-    double ittime_spent;
+
+
+    ittime_spent = (double)(clock() - ittime_begin) / CLOCKS_PER_SEC;
+	cout << "Assemblying elapsed time: "<<ittime_spent<<endl;
 
     ittime_begin = clock();
 

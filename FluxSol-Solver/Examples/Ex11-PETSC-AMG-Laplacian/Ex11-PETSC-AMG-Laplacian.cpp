@@ -118,9 +118,9 @@ int main(int argc,char **args)
     }
 
   ierr = MatCreateAIJ(comm,PETSC_DECIDE,PETSC_DECIDE,M,M,
-                      10,NULL,10,NULL,&Amat);CHKERRQ(ierr);
+                      18,NULL,6,NULL,&Amat);CHKERRQ(ierr);
   ierr = MatCreateAIJ(comm,PETSC_DECIDE,PETSC_DECIDE,M,M,
-                      10,NULL,10,NULL,&Pmat);CHKERRQ(ierr);
+                      18,NULL,6,NULL,&Pmat);CHKERRQ(ierr);
   ierr = MatGetOwnershipRange(Amat,&Istart,&Iend);CHKERRQ(ierr);
   m    = Iend-Istart;
   bs   = 1;
@@ -131,10 +131,16 @@ int main(int argc,char **args)
   ierr = VecDuplicate(xx,&bb);CHKERRQ(ierr);
   ierr = VecSet(bb,.0);CHKERRQ(ierr);
 
-double value=1.;
-  MatSetValues(Amat,1,0,1,0,&value,INSERT_VALUES);
+    double value=1.;
+    PetscInt index=0;
+
+    //cout << "Setting Initial Mat values..."<<endl;
+    //ierr=MatSetValues(this->A,1,&row,1,&col,&value,INSERT_VALUES);
+    MatSetValues(Amat,1,&index,1,&index,&value,INSERT_VALUES);
 
     cout << "Inserting Matrix Values"<<endl;
+
+    cout << "Assembying Eqns"<<endl;
 	for (int e=0;e<TEqn.Num_Eqn();e++)	//Aca voy con las filas de a 2
 	{
 	    //Width Assign
@@ -143,75 +149,46 @@ double value=1.;
 		vector <double> ap=TEqn.Eqn(e).Ap().Comp();
 		Scalar ap_sc=TEqn.Eqn(e).Ap();
 		Scalar value;
-		int width=(TEqn.Eqn(e).Width()-1)*numberofcomp+1;
-//		//int width=TEqn.Eqn(e).Width()*numberofcomp;   // THIS IS WRONG
-//
-		int sparsecol=0;
+
 		int row=e*numberofcomp;
 
-//        cout << "Eqn " <<e << "Width: "<<TEqn.Eqn(e).Width()<<endl;
+        vector <double> col;
+        //CENTRAL COEFFS
+        col=ap;
+        for (int dim=0;dim<numberofcomp;dim++)
+            {
+                PetscInt r,c;
+                r=row+dim;
+                MatSetValues(Amat,1,&r,1, &r, &col[0],INSERT_VALUES);    //An is scalar
+            }
+            //Solver.SetMatVal(&Amat,row+dim, row+dim, col[0],INSERT_VALUES);    //An is scalar
+            //MatSetValues(this->A,1,&row,1,&col,&value,INSERT_VALUES);
 
-		for (int dim=0;dim<numberofcomp;dim++)
-        {
-            //cout <<"Row "<< row+dim+1<<" length: "<<width<<endl;
-            //Q_SetLen(&K,row+dim+1,width);
-        }
-
-		vector <double> nullval;
-		nullval.assign(numberofcomp,0.);
-
-		//This id is relative to the cell, not the column
-		int fisrt_nonzero_col=TEqn.Eqn(e).MinNeigbourId();
-		int realcellid;
-
-        int vals=1;
 
 		//Look trough entire width for neighbours id
-		for (int width_cells=0;width_cells<TEqn.Eqn(e).Width();width_cells++)
+		//The main idea is to look through eqn width
+		//Real cell id is taken, and then are watched all neighbours to check if each real cell id belongs to neighbours vector
+		for (int nc=0;nc<TEqn.Eqn(e).Num_Neighbours();nc++)
 		{
-			realcellid=width_cells+fisrt_nonzero_col;
+			int realcellid=TEqn.Eqn(e).Neighbour(nc);   //Wich cell
 
-			vector <double> col;
-			int columnid;
-			//Found central
-			bool foundcell=false;
-			int localneighbourfound=FluxSol::SearchVal(realcellid,TEqn.Eqn(e).NeighboursIds());
-			if (TEqn.Eqn(e).Id()==realcellid)
-			{col=ap;columnid=row;foundcell=true;}//row is equal to
-			//Neighbours ids are not neccesarily ordered, then must search for cellid in all neighbours
-			//else if (TEqn.Eqn(e).Neighbour(neighb)==realcellid) //Found an
-			else if(localneighbourfound>-1)
-			{col=TEqn.Eqn(e).An(localneighbourfound).Comp();columnid=numberofcomp*realcellid;foundcell=true;}
-			else //column index is not a neighbour neither central cell
-			{columnid=numberofcomp*realcellid;}
+			col=TEqn.Eqn(e).An(nc).Comp();
+			int columnid=numberofcomp*realcellid;
 
-			//Write Matrix
-			if (foundcell)
-			{
-                //cout << "Found Cell " <<endl;
-				for (int dim=0;dim<numberofcomp;dim++)
-				{
-                    //INFO
-                    //cout << "(Indexes From 1)  K(" <<  row+dim+1<<","<<columnid+dim+1<<")"<<"=" << 0.0<<endl;
-                    //cout << "(From zero) Sparse col: " << numberofcomp*width_cells <<endl;
+            //cout << "Found Cell " <<endl;
+            for (int dim=0;dim<numberofcomp;dim++)
+            {
+                PetscInt r,c;
+                r=row+dim;c=columnid+dim;
+                MatSetValues(Amat,1,&r,1, &c, &col[0],INSERT_VALUES);    //An is scalar
+                //Solver.SetMatVal(row+dim, columnid+dim, col[0]);    //An is scalar
+            }
+
+		}//En of neighbours
 
 
-					//Solver.SetMatVal(row+dim, columnid+dim, col[0]);
-                    //ierr=MatSetValues(this->A,1,&row,1,&col,&value,INSERT_VALUES);
-                    if (row+dim>totrows)    cout << "out of range"<<endl;
-                    if (columnid+dim>totrows)   cout << "out of range"<<endl;
-                    if (vals>4) cout <<"vals out of range"<<endl;
-					ierr = MatSetValues(Amat,1,row+dim,1,columnid+dim,(const PetscScalar *)(&col[0]),INSERT_VALUES);CHKERRQ(ierr);
-                    vals++;
-				}
+	}//End of cells	for (int e=0;e<TEqn.Num_Eqn();e++)	//Aca voy con las filas de a 2
 
-			}
-
-
-		}//En of width
-
-
-	}//End of cells
 //
 //
 //    PetscReal coords[3*m];

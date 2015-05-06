@@ -29,7 +29,7 @@ Model::Model(const std::string filename)
             cout << "[I] Reading mesh file "<< meshfname <<endl;
             Fv_CC_Grid mesht(meshfname);
             this->mesh=mesht;
-            this->mesh.Log("MeshLog.txt");
+            //this->mesh.Log("MeshLog.txt");
         }
 
 
@@ -115,7 +115,7 @@ void CFDModel::InitFields()
 	Scalar wallvalue=0.;
 	Scalar topvalue=1.;
 
-    this->mesh.Log("MeshLog.txt");
+    //this->mesh.Log("MeshLog.txt");
 
 	//Construir aca con la malla
 	Scalar k(1.);	//Difusion, can be an scalar
