@@ -421,6 +421,10 @@ void CFDModel::InitFields()
             if (diff.Val()>maxphidiff.Val())  maxphidiff=diff;
         }
 
+        // THESE ASSIGS MUST BE INSIDE ITERATIONS!!!! THESE COPIES CVALUES
+        U.AssignBoundaryField(bf);
+        p.AssignBoundaryField(pbf);
+
         end = clock();
 
         ittime_spent = (double)(clock() - ittime_begin) / CLOCKS_PER_SEC;
@@ -440,14 +444,11 @@ void CFDModel::InitFields()
 
         if (maxudiff[0]<1.e-3 && maxudiff[1]<1.e-3 && maxudiff[2]<1.e-3  && maxpdiff<1.e-3 )   conv=true;
 
-        // THESE ASSIGS MUST BE INSIDE ITERATIONS!!!! THESE COPIES CVALUES
-        U.AssignBoundaryField(bf);
-        p.AssignBoundaryField(pbf);
 
         //TO MODIFY, Change
         //TO MODIFY, CHECKMESH
-        OutputFile("CellField-p.vtu",p);
-        OutputFile("CellField-U.vtu",U,0);
+        //OutputFile("CellField-p.vtu",p);
+        //OutputFile("CellField-U.vtu",U,0);
 
 	}
 

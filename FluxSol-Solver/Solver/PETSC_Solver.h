@@ -110,6 +110,8 @@ public Solver<number>
         //cout << "Destying  ksp, "<< KSPDestroy(&ksp);
         MatDestroy(&A);
         //MatDestroy(&SysMat);
+        KSPDestroy(&ksp);
+        //PCDestroy(&pc);
         VecDestroy(&b);
         VecDestroy(&x);
 	}
