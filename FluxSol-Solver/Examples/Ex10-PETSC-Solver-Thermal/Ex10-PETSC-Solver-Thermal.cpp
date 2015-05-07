@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 	for (int p=0;p<3;p++)
         T.Boundaryfield().PatchField(p).AssignValue(wallvalue);
 
-	T.Boundaryfield().PatchField(3).AssignValue(topvalue);
+	T.Boundaryfield().PatchField(1).AssignValue(topvalue);
 
 
 	// Materiales
