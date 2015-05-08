@@ -34,6 +34,7 @@ _PatchField<T>::_PatchField(const Patch &p)
 	Patch patch=p;
 
 	this->numberofvals=0;
+	this->type=FIXEDVALUE;      //If no specified
 
 	for (int nf=0;nf<patch.Num_Faces();nf++)
 	{

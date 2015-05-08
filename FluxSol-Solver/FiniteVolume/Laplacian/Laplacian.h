@@ -130,12 +130,15 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 
 	// BORDE - BOUNDARY
 	//cout << "Laplacian, look through boundary.."<<endl;
+	// TO MODIFY: THIS IF MUST BE ONCE PER PATCH, NOT FOR FACE!!!!!
+	// PATCH MUST BE A LIST OF NON NULL FLUX FACES
 	for (int p=0;p<VolField.Grid().vBoundary().Num_Patches();p++)
 	{
 		for (int f=0;f<VolField.Grid().vBoundary().vPatch(p).Num_Faces();f++)
 		{
 			int idface=VolField.Grid().vBoundary().vPatch(p).Id_Face(f);
 			_FvFace face=VolField.Grid().Face(idface);  //TO MODIFY idface or face pos??
+			//cout << "BOUNDARY"<<endl;
 
             if (!face.Is_Null_Flux_Face())
             {
@@ -143,7 +146,7 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
                 //Instead of if sentence it is convenient to use inheritance
                 if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
                 {
-                    //cout <<"source"<<endl;
+                    //cout <<"FIXED VAL"<<endl;
                     ap=-face.Norm_ad()/fabs(face.Dist_pf_LR(0))*fi;
                     source=VolField.Boundaryfield().PatchField(p).Val(f)*ap;
                     //cout <<"created" <<endl;
@@ -152,6 +155,7 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
                 }
                 else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
                 {
+                    //cout << "FIXED WIDTH"<<endl;
                     source=VolField.Boundaryfield().PatchField(p).Val(f)*fi;
                     eqnsys.Eqn(face.Cell(0)).Source()+=source;
                 }

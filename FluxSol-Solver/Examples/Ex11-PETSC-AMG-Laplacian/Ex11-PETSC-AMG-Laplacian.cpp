@@ -44,15 +44,15 @@ int main(int argc,char **args)
 	Fv_CC_Grid mesh(args[1]);
 	//malla.ReadCGNS();
 
-	mesh.Log("Log.txt");
+	//mesh.Log("Log.txt");
 
 	_CC_Fv_Field <Scalar> T(mesh);
 
 	//Boundary conditions
 	Scalar wallvalue=0.;
 	Scalar topvalue=1.;
-	for (int p=0;p<3;p++)
-        T.Boundaryfield().PatchField(p).AssignValue(wallvalue);
+	//for (int p=0;p<3;p++)
+     //   T.Boundaryfield().PatchField(p).AssignValue(wallvalue);
 
 	T.Boundaryfield().PatchField(1).AssignValue(topvalue);  //TOP
 
@@ -203,6 +203,8 @@ int main(int argc,char **args)
         {
             int row=e*numberofcomp+dim;
             //Solver.SetbValues(e*numberofcomp+dim, source[dim]);
+
+            if (source[dim]>0) cout << "<0 Found!!"<<endl;
             VecSetValues(bb,1,&row,&source[dim],INSERT_VALUES);
         }
         //cout << endl;
@@ -256,6 +258,8 @@ int main(int argc,char **args)
         for (int dim=0;dim<3;dim++) coords[3*n+dim]=mesh.Node_(n).Coords()[dim];
          //coords[2*ix] = x; coords[2*ix+1] = y;
     }
+
+    cout << "Coordinates created. "<<endl;
 
     ierr = MatAssemblyBegin(Amat,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
     ierr = MatAssemblyEnd(Amat,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
@@ -316,16 +320,22 @@ int main(int argc,char **args)
 
 cout << "Getting Solver Vals..."<<endl;
 
-//	int ix[1];
-//	double y[1];
-//
-//    ix[0]=i;
-//    VecGetValues(x,1,ix,y);
-//    number val;
-//    val=y[0];
-//    v[i]=val;
+
+    ofstream file;     //Previously this was inside each function
+    file.open("Out.3D");
+    file << " x y z val"<<endl;
+
+    for (int i=0;i<TEqn.Num_Eqn();i++)
+    {
+        PetscInt row=numberofcomp*i;
+        double val[1];
+        VecGetValues(xx,1,&row,&val[0]);
+        for (int c=0;c<3;c++)   file << mesh.Node_(i).comp[c]<<" ";
+        file << val[0] <<endl;
+    }
 
 
+    file.close();
 
   ierr = KSPGetIterationNumber(ksp,&its);CHKERRQ(ierr);
 

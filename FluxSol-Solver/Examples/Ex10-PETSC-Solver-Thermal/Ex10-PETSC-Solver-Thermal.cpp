@@ -45,8 +45,8 @@ int main(int argc, char *argv[])
 	//Boundary conditions
 	Scalar wallvalue=0.;
 	Scalar topvalue=1.;
-	for (int p=0;p<3;p++)
-        T.Boundaryfield().PatchField(p).AssignValue(wallvalue);
+	//for (int p=0;p<3;p++)
+    //    T.Boundaryfield().PatchField(p).AssignValue(wallvalue);
 
 	T.Boundaryfield().PatchField(1).AssignValue(topvalue);
 
