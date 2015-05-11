@@ -29,6 +29,21 @@
 namespace FluxSol
 {
 
+//Inner net flux faces
+template <typename T>
+void _CC_Fv_Field<T>::Create_IntNetFluxFaces()
+{
+	for (int f=0;f<this->Grid().Num_Faces();f++)
+	{
+	    //cout << "Face "<<f<<endl;
+		_FvFace face=this->Grid().Face(f);
+		if (!face.Is_Null_Flux_Face() && !this->Grid().Face(f).Boundaryface())
+            this->int_netflux_faces.insert(f);
+
+	}
+}
+
+
 template <typename T>
 _CC_Fv_Field<T>::_CC_Fv_Field(const Fv_CC_Grid &grid)
 {
@@ -46,6 +61,7 @@ _CC_Fv_Field<T>::_CC_Fv_Field(const Fv_CC_Grid &grid)
 	//Para igualar los boundaryfield debo ver el Scalar =
 	this->BoundaryField=bf;
     this->numberofvals=this->GridPtr->Num_Cells();
+    this->Create_IntNetFluxFaces();
 }
 
 
@@ -67,6 +83,7 @@ _CC_Fv_Field<T>::_CC_Fv_Field(const Fv_CC_Grid &grid, const _BoundaryField <T> &
 	//Para igualar los boundaryfield debo ver el Scalar =
 	this->BoundaryField=bf;
     this->numberofvals=this->GridPtr->Num_Cells();
+    this->Create_IntNetFluxFaces();
 }
 
 //

@@ -183,7 +183,7 @@ void CFDModel::InitFields()
 
     fitlog<< "BC_Appply U_LHS U_RHS U_Solve phi_calc phi_BC peqn_RLHS peqn_Solve phi_recorr Total"<<endl;
 
-    clock_t ittime_begin, ittime_end;
+    clock_t ittime_begin, ittime_end, ittime_temp;
     double ittime_spent;
 
     ittime_end = clock();
@@ -378,18 +378,30 @@ void CFDModel::InitFields()
         U=U-alpha_u*(AUr*FvExp::Grad(pEqn.Field()));                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
         p=p+alpha_p*pEqn.Field();
 
-
+        ittime_temp = clock();
         //Correct Flux: m = m* + m´
         //phi=phi-FvExp::SnGrad(AUr*p);   //Add deferred correction to this gradient
         //Correct WITH P CORRECTION
         _CC_Fv_Field<Scalar> pcorr(mesh);   //TO MODIFY; ASSIGN MESH AUTOMATICALLY
+
+         ittime_spent = (double)(clock() - ittime_temp ) / CLOCKS_PER_SEC;
+        ittime_temp = clock();
+        cout << "phi corr gen"<<ittime_spent<<endl;
+
         pcorr=pEqn.Field();
-        //phi= phi - alpha_u*FvExp::SnGrad(pcorr);
         phi= phi - alpha_u*AUrf_*FvExp::SnGrad(pcorr);
+
+        ittime_temp = clock();
+
+        FvExp::SnGrad(pcorr);
+
+        ittime_spent = (double)(clock() - ittime_temp ) / CLOCKS_PER_SEC;
+        ittime_temp = clock();
+        cout << "phi corr gen"<<ittime_spent<<endl;
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         ittime_end = clock();
-        fitlog << ittime_spent <<" " ;
+        fitlog << ittime_spent <<" " ;  //phi Corr
 
         //TO MODIFY, CORRECT THIS
         //phi=phi-alpha_u*(AUrf_*FvExp::SnGrad(prod));
@@ -431,7 +443,11 @@ void CFDModel::InitFields()
         ittime_end = clock();
         time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 
-        cout << "[I] Iter - Residuals u v w p - Time || " << it << " - " <<maxudiff.outstr()<<maxpdiff.outstr()<< " - " << time_spent<<endl;
+        //cout << "[I] Iter - Residuals u v w p - Time || " << it << " - " <<maxudiff.outstr()<<maxpdiff.outstr()<< " - " << time_spent<<endl;
+
+        vector <double> ures=UEqn.GlobalRes();
+
+        cout << "[I] Iter - Residuals u v w p - Time || " << it << " - " <<ures[0] << " " << ures[1] << " "<< ures[2] << " " <<maxpdiff.outstr()<< " - " << time_spent<<endl;
         fitlog << ittime_spent <<" "<<endl;
 
 
@@ -441,9 +457,8 @@ void CFDModel::InitFields()
             pant[nu]=p.Val(nu);
         }
         it++;
-
-        if (maxudiff[0]<1.e-3 && maxudiff[1]<1.e-3 && maxudiff[2]<1.e-3  && maxpdiff<1.e-3 )   conv=true;
-
+        //if (maxudiff[0]<1.e-3 && maxudiff[1]<1.e-3 && maxudiff[2]<1.e-3  && maxpdiff<1.e-3 )   conv=true;
+        if (ures[0]<1.e-3 && ures[1]<1.e-3 && maxudiff[2]<1.e-3  && maxpdiff<1.e-3 )   conv=true;
 
         //TO MODIFY, Change
         //TO MODIFY, CHECKMESH

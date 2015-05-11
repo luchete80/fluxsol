@@ -62,6 +62,7 @@ EqnSystem < T >
 FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
 {
 
+// TO MODIFY!! CONVECTION SCHEME
 //OpenFoam Style
 //00052     return fv::convectionScheme<Type>::New
 //00053     (
@@ -103,12 +104,15 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
     //RECORRO CELLS
     const int numcells = phi.Grid().Num_Cells();
 
-    for (int f=0;f<phi.ConstGrid().Num_Faces();f++)
+	for (std::set<int>::iterator it=phi.IntNetFluxFaces().begin(); it!=phi.IntNetFluxFaces().end(); ++it)
+
+//    for (int f=0;f<phi.ConstGrid().Num_Faces();f++)
     {
+        int f=*it;
         //cout << "Face: "<<f <<endl;
         _FvFace face=phi.ConstGrid().Face(f);
- 		if (!face.Is_Null_Flux_Face())
-		{
+// 		if (!face.Is_Null_Flux_Face())
+//		{
             //cout << "No null flux"<<endl;
             //Eqn eq[2];
             int cell[2];
@@ -150,8 +154,8 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
             //If face is internal, assign to cell 0 neighbour an coefficient
             eqnsys.Eqn(cell[0]).Ap()+=coeff_ap;
 
-            if (!face.Boundaryface())
-            {
+//            if (!face.Boundaryface())
+//            {
                 //Contribution of central coefficient, flux field if the flux is outwards from cell
                 //eqnsys.Eqn(cell[0]).Ap()+=coeff_ap;
 
@@ -175,8 +179,8 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
                     //eqnsys.Eqn(cell[1]).An(neigh2,coeff_ap);
                     //cout << "Cell 1 Neigh (Nrigh 2)" <<neigh2<<endl;
                     eqnsys.Eqn(cell[1]).An(neigh2)-=coeff_ap;
-            }
-		}//End if !NullFluxFace
+//            }//Boundary Face
+//		}//End if !NullFluxFace
     }
 //    ------------------
 //    Loop through faces

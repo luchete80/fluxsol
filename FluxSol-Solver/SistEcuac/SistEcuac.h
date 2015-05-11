@@ -128,6 +128,7 @@ public:
 	//Log
 	void Log(ofstream &f);
 
+
 };
 
 //Can derive a Class With Finite Volume information
@@ -310,7 +311,11 @@ class EqnSystem{   //Es un vector de ecuaciones
         return cad;
 
 	}
-};
+
+
+	const vector<double> GlobalRes()const;        //Globally Scaled Residual, like in Fluent
+
+};//EqnSYstem
 
 
 //Puedo generar una matriz a partir de un sistema de ecuaciones con un typedef

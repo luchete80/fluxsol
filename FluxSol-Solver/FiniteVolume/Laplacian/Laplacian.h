@@ -27,6 +27,8 @@
 #include "./Type/Scalar.h"
 #include "FvExp.h"
 
+#include <time.h>
+
 using namespace std;
 
 namespace FluxSol{
@@ -76,19 +78,32 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 	Scalar ap, an;  //IF FI IS A SCALAR THESE CAN BE SCALARS
 	vector <int> nbr_eqn;
 
-	//Internal field
+	//Internal field0
 	//cout << "Face Number"<<VolField.Grid().Num_Faces()<<endl;
 	//cout << "Cell Number"<<VolField.Grid().Num_Cells()<<endl;
-	for (int f=0;f<VolField.Grid().Num_Faces();f++)
-	{
+	cout << "Laplacian, sizeof intnetfluxface: "<<VolField.IntNetFluxFaces().size()<<endl;
+	set <int> intfaces=VolField.IntNetFluxFaces();
+	//for (std::set<int>::iterator it=VolField.IntNetFluxFaces().begin(); it!=VolField.IntNetFluxFaces().end(); ++it)
+
+    clock_t ittime_begin, ittime_end;
+    double ittime_spent;
+
+
+    ittime_end = clock();
+
+	for (std::set<int>::iterator it=intfaces.begin(); it!=intfaces.end(); ++it)
+    {
+
+//	for (int f=0;f<VolField.Grid().Num_Faces();f++)
+//	{
 	    //cout << "Face "<<f<<endl;
-		_FvFace face=VolField.Grid().Face(f);
-		if (!face.Is_Null_Flux_Face())
-		{
-
-
-			if (!VolField.Grid().Face(f).Boundaryface())
-			{
+		_FvFace face=VolField.Grid().Face(*it);
+//		if (!face.Is_Null_Flux_Face())
+//		{
+//
+//
+//			if (!VolField.Grid().Face(f).Boundaryface())
+//			{
 			    //cout << "Not boundary face"<<endl;
 				ap=-face.Norm_ad()/face.Dist_pn()*fi;
 				an=-ap;
@@ -122,11 +137,17 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 					}
 					eqnsys.Eqn(pcellid).An(localneighbourid)+=an;
 				}
-			}
+//			}
+//
+//		}//End if !NullFluxFace
 
-		}//End if !NullFluxFace
+	//}//End look trough faces
+    }
 
-	}//End look trough faces
+    ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+    ittime_end = clock();
+    cout << "laplacian interior faces loop "<<ittime_spent <<endl;
+
 
 	// BORDE - BOUNDARY
 	//cout << "Laplacian, look through boundary.."<<endl;

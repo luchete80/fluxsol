@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 	Fv_CC_Grid malla(argv[1]);
 	//malla.ReadCGNS();
 
-	malla.Log("Log.txt");
+	//malla.Log("Log.txt");
 
 	_CC_Fv_Field <Scalar> T(malla);
 

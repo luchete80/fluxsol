@@ -245,14 +245,18 @@ namespace FluxSol
 //        cout << "field values "<<r.Numberofvals()<<endl;
 
         T grad=0.;
-        for (int f=0;f<VolField.Grid().Num_Faces();f++)
+
+        set <int> intfaces=VolField.IntNetFluxFaces();
+        for (std::set<int>::iterator it=intfaces.begin(); it!=intfaces.end(); ++it)
+        //for (int f=0;f<VolField.Grid().Num_Faces();f++)
         {
+            int f=*it;
 //            //cout << "Face "<<f<<endl;
             _FvFace face=VolField.Grid().Face(f);
-            if (!face.Is_Null_Flux_Face())
-            {
-                if (!VolField.Grid().Face(f).Boundaryface())
-                {
+//            if (!face.Is_Null_Flux_Face())
+//            {
+//                if (!VolField.Grid().Face(f).Boundaryface())
+//                {
 //                    //cout << "Not boundary face"<<endl;
 //                    //nbr_eqn.push_back(VolField.Grid().Cell(c));
 //                    //eqnsys.Eqn(face.Cell(0)).Coeffs(ap,an);
@@ -267,8 +271,8 @@ namespace FluxSol
                    //cout << "Face "<<f<<endl;
                    //cout << "grad val " << grad.Val()<<endl;
                    r[f]=grad;
-                }
-            }//End if !NullFluxFace
+//                }
+//            }//End if !NullFluxFace
 
         }//End look trough faces
 //

@@ -66,4 +66,11 @@ EqnSystem <Vec3D> & EqnSystem<Vec3D>::operator==(const _CC_Fv_Field<Vec3D> &fiel
 
 template
 EqnSystem <Vec3D> EqnSystem<Vec3D>::operator- (const EqnSystem<Vec3D> &);
+
+template
+const vector<double> EqnSystem<Vec3D>::GlobalRes()const;
+
+template
+const vector<double> EqnSystem<Scalar>::GlobalRes()const;
+
 }

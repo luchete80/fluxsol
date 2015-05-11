@@ -180,7 +180,8 @@ namespace FluxSol
 
 	protected:
 
-
+	    set<int> int_netflux_faces;
+        void Create_IntNetFluxFaces();
 	public:
 
 		//EVALUATE IF IT IS CONST
@@ -199,7 +200,7 @@ namespace FluxSol
             this->BoundaryField=bfield;
         }
 
-
+        const set<int> & IntNetFluxFaces()const{return this->int_netflux_faces;}
 		//_CC_Fv_Field (InputFile &inputfile);
 
 		_CC_Fv_Field(){};
@@ -218,6 +219,8 @@ namespace FluxSol
             this->GridPtr=&field.Grid();
             for (int c=0;c<field.Numberofvals();c++)
                 this->value[c]=field.Val(c);
+
+
             //TO MODIFY
             //this->Boundaryfield()=field->BoundaryField
             return *this;

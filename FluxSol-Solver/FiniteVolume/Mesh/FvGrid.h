@@ -57,6 +57,8 @@ private:
 	 std::vector<Node>::iterator nodeit;
 	 std::vector<_FvFace>::iterator faceit;
 
+	 std::set<int> internal_faces;      //TO MODIFY; FOR INSERTIONS
+
     int np;     //Number of processors
 
     struct myclass myobject;        //Object usedd to sort, TO MODIFY

@@ -2,6 +2,15 @@
 
 using namespace FluxSol;
 
+// TO MODIFY!! CONVECTION SCHEME
+//OpenFoam Style
+//00052     return fv::convectionScheme<Type>::New
+//00053     (
+//00054         vf.mesh(),
+//00055         flux,
+//00056         vf.mesh().divScheme(name)
+//00057     )().fvmDiv(flux, vf);
+
 //Must be defined one function with a field and a flux
 //Since flux may be not related to the field
 template typename <T>
@@ -14,7 +23,7 @@ EqnSystem <T> FirstOrderUpwindScheme<T>::Div(const _CC_Fv_Field<T> &)
 	//EqnSystem <T> < typename innerProduct < Vec3D, T> ::type > eqnsys(VolField.Grid());
 	EqnSystem <typename innerProduct < Vec3D, T> ::type> eqnsys(VolField.ConstGrid());
 
-	//Interpolate face fluxes and then upwind 
+	//Interpolate face fluxes and then upwind
 	CenterToFaceInterpolation <T> interp(VolField);
 	//Flux, inner producto
 	//Can be a vector, or a scalar

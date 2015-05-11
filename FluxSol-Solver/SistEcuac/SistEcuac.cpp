@@ -213,6 +213,7 @@ Eqn<T> &Eqn<T>::operator-(const Eqn<T> &right)
 //	nbr_eqn=nbreq;
 //}
 
+
 // OPERATORS
 template <typename T>
 EqnSystem <T> & EqnSystem <T>::operator==(const double &d)
@@ -343,6 +344,33 @@ EqnSystem <T> & EqnSystem <T>::operator==(const _CC_Fv_Field<T> &field)
 //
 //}
 
+template <typename T>
+const vector<double> EqnSystem<T>::GlobalRes() const
+{
+    vector <double> ret;
+
+
+    int dim = (int)pow(3.0,pTraits<T>::rank);
+    vector <double> temp(dim), num(dim), den(dim);
+
+    for (int e=0;e<this->EqnV().size();e++)
+    {
+        for (int i=0;i<this->Eqn(e).NeighboursIds().size();i++)
+        {
+            //Converting to double
+            for (int d=0;d<dim;d++)
+            {
+                temp[d]= ( this->Eqn(e).An(i).Comp()[0]*this->Eqn(e).X().Comp()[d] ) + this->Eqn(e).Source().Comp()[d]-this->Eqn(e).Ap().Comp()[0]*this->Eqn(e).X().Comp()[d];
+                num[d]+=fabs(temp[d]);
+                den[d]+=fabs(this->Eqn(e).Ap().Comp()[0]*Eqn(e).X().Comp()[d]);
+            }
+        }
+
+    }
+
+    for (int d=0;d<dim;d++) ret.push_back(num[d]/den[d]);
+    return ret;
+}
 
 }
 
