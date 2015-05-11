@@ -35,6 +35,8 @@
 #include "FieldOperations.h"
 #include "GeometricField.h"
 
+#include <time.h>
+
 using namespace std;
 
 namespace FluxSol{
@@ -61,6 +63,9 @@ template <class T>
 EqnSystem < T >
 FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
 {
+        clock_t ittime_begin, ittime_end;
+    double ittime_spent;
+    ittime_end = clock();
 
 // TO MODIFY!! CONVECTION SCHEME
 //OpenFoam Style
@@ -102,7 +107,18 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
     //Esta forma de calculo es para cuando las partes de la cara no son iguales
     //--------------
     //RECORRO CELLS
+
+
+
     const int numcells = phi.Grid().Num_Cells();
+
+
+    ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+    ittime_end = clock();
+    cout << "div field gen "<<ittime_spent <<endl;
+
+
+    ittime_end = clock();
 
 	for (std::set<int>::iterator it=phi.IntNetFluxFaces().begin(); it!=phi.IntNetFluxFaces().end(); ++it)
 
@@ -187,6 +203,12 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
 //    ------------------
 //    TO MODIFY, CHAMGE ORDER BETWEEN IF AND FOR
     //cout <<"boundary"<<endl;
+
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+    ittime_end = clock();
+    cout << "divergence interior faces loop "<<ittime_spent <<endl;
+     ittime_end = clock();
+
     for (int p=0;p<phi.Grid().vBoundary().Num_Patches();p++)
     {
         for (int f=0;f<phi.Grid().vBoundary().vPatch(p).Num_Faces();f++)
@@ -218,6 +240,13 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
         }
 
     }
+
+    //cout << "Returning laplacian"<<endl;
+    ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+    ittime_end = clock();
+    cout << "div boundary faces loop "<<ittime_spent <<endl;
+
+
     //cout << "returning div"<<endl;
     return eqnsys;
 }

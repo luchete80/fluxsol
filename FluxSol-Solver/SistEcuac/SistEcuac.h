@@ -31,6 +31,8 @@
 #include "FvGrid.h"
 #include "FvField.h"
 
+#include <time.h>
+
 using namespace std;
 //EL SISTEMA DE ECUACIONES PODRIA TENER UNA MATRIZ Y UN VECTOR
 namespace FluxSol{
@@ -219,6 +221,10 @@ class EqnSystem{   //Es un vector de ecuaciones
 //MUST TO EQUAL ALL
 	EqnSystem <T> & operator=(const EqnSystem <T> &right)
 	{
+        clock_t ittime_begin, ittime_end;
+        double ittime_spent;
+        ittime_end = clock();
+
 	    this->eqn.clear();
 	    this->GridPtr=right.GridPtr;
         for (int e=0;e<right.EqnV().size();e++)
@@ -234,6 +240,10 @@ class EqnSystem{   //Es un vector de ecuaciones
 
         this->dimension=right.dimension;
 
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        ittime_end = clock();
+        cout << "eqnsys operator ="<<ittime_spent <<endl;
+
         return *this;
 	}
 
@@ -241,6 +251,11 @@ class EqnSystem{   //Es un vector de ecuaciones
 	EqnSystem <T> operator- (const EqnSystem <T> &right)
 	{
 
+    clock_t ittime_begin, ittime_end;
+    double ittime_spent;
+
+
+    ittime_end = clock();
 
     //cout << "Eqn sizes"<< this->Num_Eqn()<< " "<<right.EqnV().size()<<endl;
     int num_eqn=this->eqn.size();
@@ -262,6 +277,12 @@ class EqnSystem{   //Es un vector de ecuaciones
         }
 
         //cout << "Returning..."<<endl;
+
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        ittime_end = clock();
+        cout << "eqnsys operator -  "<<ittime_spent <<endl;
+
+
         return ret;
 
 	}

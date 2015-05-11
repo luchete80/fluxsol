@@ -60,6 +60,13 @@ template<typename T>
 EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 {
 
+
+    clock_t ittime_begin, ittime_end;
+    double ittime_spent;
+
+
+    ittime_end = clock();
+
     //cout << "Defining eqn..."<<endl;
 	EqnSystem <T> eqnsys(VolField.Grid());
 	//cout << "Eqn created."<<endl;
@@ -85,11 +92,13 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 	set <int> intfaces=VolField.IntNetFluxFaces();
 	//for (std::set<int>::iterator it=VolField.IntNetFluxFaces().begin(); it!=VolField.IntNetFluxFaces().end(); ++it)
 
-    clock_t ittime_begin, ittime_end;
-    double ittime_spent;
+    ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+    ittime_end = clock();
+    cout << "laplacian field gen "<<ittime_spent <<endl;
 
 
     ittime_end = clock();
+
 
 	for (std::set<int>::iterator it=intfaces.begin(); it!=intfaces.end(); ++it)
     {
@@ -149,6 +158,8 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
     cout << "laplacian interior faces loop "<<ittime_spent <<endl;
 
 
+    ittime_end = clock();
+
 	// BORDE - BOUNDARY
 	//cout << "Laplacian, look through boundary.."<<endl;
 	// TO MODIFY: THIS IF MUST BE ONCE PER PATCH, NOT FOR FACE!!!!!
@@ -185,6 +196,10 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 
 	}
     //cout << "Returning laplacian"<<endl;
+    ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+    ittime_end = clock();
+    cout << "laplacian boundary faces loop "<<ittime_spent <<endl;
+
     return eqnsys;
 }
 

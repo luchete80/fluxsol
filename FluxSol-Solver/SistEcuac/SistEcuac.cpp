@@ -23,6 +23,8 @@
 *************************************************************************/
 #include "SistEcuac.h"
 
+#include <time.h>
+
 //In templates definitions must be included namespace instead of..
 namespace FluxSol
 {
@@ -220,11 +222,23 @@ EqnSystem <T> & EqnSystem <T>::operator==(const double &d)
 {
 	Scalar source(d);
 
+    clock_t ittime_begin, ittime_end;
+    double ittime_spent;
+
+
+    ittime_end = clock();
+
+
 	//This value is added to each source term
 	for (int e=0;e<eqn.size();e++)
 	{
 		Eqn(e)+=d;	//Overloaded Eqn operator, add to source term
 	}
+
+
+    ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+    ittime_end = clock();
+    cout << "eqnsys operator == "<<ittime_spent <<endl;
 
 	return *this;
 }
