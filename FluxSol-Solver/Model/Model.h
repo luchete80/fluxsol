@@ -7,6 +7,7 @@
 //#include "Nastran.h"
 #include "Solver.h"
 #include "PETSC_Solver.h"
+#include "PETSC_GAMGSolver.h"
 #include "Input.h"
 #include "Materials/Materials.h"
 

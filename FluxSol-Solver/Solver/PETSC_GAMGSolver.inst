@@ -1,0 +1,13 @@
+
+namespace FluxSol {
+
+template<>
+PETSC_GAMGSolver<double>::PETSC_GAMGSolver();
+
+template
+void PETSC_GAMGSolver<double>::Solve(EqnSystem <Scalar> &);
+
+template
+void PETSC_GAMGSolver<double>::Solve(EqnSystem <Vec3D> &);
+
+}

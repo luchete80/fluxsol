@@ -363,7 +363,6 @@ const vector<double> EqnSystem<T>::GlobalRes() const
 {
     vector <double> ret;
 
-
     int dim = (int)pow(3.0,pTraits<T>::rank);
     vector <double> temp(dim), num(dim), den(dim);
 
@@ -371,17 +370,18 @@ const vector<double> EqnSystem<T>::GlobalRes() const
     {
         for (int i=0;i<this->Eqn(e).NeighboursIds().size();i++)
         {
+            int nid=this->GridPtr->Cell(e).Neighbour(i);
             //Converting to double
             for (int d=0;d<dim;d++)
             {
-                temp[d]= ( this->Eqn(e).An(i).Comp()[0]*this->Eqn(e).X().Comp()[d] ) + this->Eqn(e).Source().Comp()[d]-this->Eqn(e).Ap().Comp()[0]*this->Eqn(e).X().Comp()[d];
+                temp[d]= ( this->Eqn(e).An(i).Comp()[0]*this->Eqn(nid).X().Comp()[d] ) - this->Eqn(e).Source().Comp()[d]+ (this->Eqn(e).Ap().Comp()[0]*this->Eqn(e).X().Comp()[d]);
                 num[d]+=fabs(temp[d]);
                 den[d]+=fabs(this->Eqn(e).Ap().Comp()[0]*Eqn(e).X().Comp()[d]);
             }
         }
 
     }
-
+    for (int d=0;d<dim;d++) cout << "Den: "<<den[d]<<endl;
     for (int d=0;d<dim;d++) ret.push_back(num[d]/den[d]);
     return ret;
 }

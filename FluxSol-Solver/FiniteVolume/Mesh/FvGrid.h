@@ -66,6 +66,8 @@ private:
 	protected:
 	    std::vector <Cell_CC> cell;    //Celdas con nodos centrados en el cuerpo
 
+	    vector <vector <int> > face_local_cell_neighbour;  //Local cell neigbours
+
 	public:
 	std::vector<Cell_CC>::iterator cellit;
 	Boundary boundary;
@@ -205,6 +207,8 @@ private:
 
         this->boundary=right.vBoundary();
 
+        this->SetFaceLocalCellNeighbours(); //New
+
         return *this;
 	}
 
@@ -222,6 +226,10 @@ private:
 	}
 
 	int Partition();
+
+	void SetFaceLocalCellNeighbours();
+	const vector <int> & FaceLocalCellNeighbour(const int &f)const{return this->face_local_cell_neighbour[f];}
+
 };
 
 } //Fin FluxSol

@@ -1234,7 +1234,7 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 //            }
         }
 
-
+        this->SetFaceLocalCellNeighbours(); //New
 
         Boundary bound(vpatch);
         this->AddBoundary(bound);
@@ -1243,4 +1243,58 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 
 	}
 
-}
+
+    //This function sets local ids of cell neighbours for each cell face
+    void Fv_CC_Grid::SetFaceLocalCellNeighbours()
+    {
+
+        int ln[2]; ln[0]=1; ln[1]=0;
+        int numnb=1;        //Boundary faces
+        for (int f=0;f<this->Num_Faces();f++)
+        {
+
+            vector <int> temp;
+            _FvFace face=this->Face(f);
+            if (!this->Face(f).Boundaryface())    numnb=2;
+
+            //cout << "Not boundary face"<<endl;
+            //ap=-face.Norm_ad()/face.Dist_pn()*fi;
+            //an=-ap;
+            //nbr_eqn.push_back(VolField.Grid().Cell(c));
+            //eqnsys.Eqn(face.Cell(0)).Coeffs(ap,an);
+
+            //cout << "Look through neighbours"<<endl;
+            for (int nb=0;nb<numnb;nb++)    //Face cells
+            {
+                //cout << "Neighbour" <<endl;
+                int localnid;	//Id of local neigbour
+                localnid=ln[nb];
+                //p cell
+                int pcellid=face.Cell(nb);
+                int ncellid=face.Cell(localnid);
+                //cout << "Eqn size" << eqnsys.Num_Eqn()<<endl;
+                //cout << "Creating Eqn ... pcell id"<< pcellid<<endl;
+
+                //eqnsys.Eqn(pcellid).Ap()+=ap;
+
+                int neigbour_cell;
+                int localneighbourid;	//local cell neigbour
+                //Neighbours are
+                //Find the global cell
+                Cell_CC cell=this->Cell(face.Cell(nb));
+                for (int localncell=0;localncell<cell.Num_Neighbours();localncell++)
+                    if (cell.Neighbour(localncell)==ncellid)
+                    {
+                        localneighbourid=localncell;
+                        temp.push_back(localncell);
+                    }
+                //eqnsys.Eqn(pcellid).An(localneighbourid)+=an;
+            }//nb
+
+            this->face_local_cell_neighbour.push_back(temp);
+
+        }//Faces
+    }//Fv_CC_Grid::SetFaceLocalCellNeighbour()
+
+
+}// FluxSol

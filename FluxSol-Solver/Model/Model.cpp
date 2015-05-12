@@ -29,13 +29,14 @@ Model::Model(const std::string filename)
             cout << "[I] Reading mesh file "<< meshfname <<endl;
             Fv_CC_Grid mesht(meshfname);
             this->mesh=mesht;
+            this->mesh.SetFaceLocalCellNeighbours();
             //this->mesh.Log("MeshLog.txt");
         }
 
 
         inputfile.AssignGridPtr(this->mesh);                               //Assuming CGNS file
         //TO MODIFY, READED BY INPUT
-        this->maxiter=100;
+        this->maxiter=500;
 
             //std::vector<int> listi=inputfile.section("grid",0).subsection("patch",0).get_intList("list");
 //        std::cout << "Getting list"<<endl;
@@ -196,7 +197,7 @@ void CFDModel::InitFields()
 //    UEqn=FvImp::Div(phi, U);
 //    cout << "Eqn Log"<<endl<<UEqn.outstr()<<endl;
 //    cout << "End Log"<<endl;
-	while (!conv)
+	while (!conv && it < this->maxiter)
 	{
 	    ittime_begin = clock();
 
@@ -365,7 +366,10 @@ void CFDModel::InitFields()
 
         //pEqn.Eqn(36).SetValueCondition(0.);
         //Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
+
         FluxSol::Solve(pEqn);
+        //PETSC_GAMGSolver <double>pSolver;
+        //pSolver.Solve(pEqn);
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         ittime_end = clock();
