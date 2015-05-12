@@ -36,7 +36,7 @@ Model::Model(const std::string filename)
 
         inputfile.AssignGridPtr(this->mesh);                               //Assuming CGNS file
         //TO MODIFY, READED BY INPUT
-        this->maxiter=500;
+        this->maxiter=200;
 
             //std::vector<int> listi=inputfile.section("grid",0).subsection("patch",0).get_intList("list");
 //        std::cout << "Getting list"<<endl;
@@ -184,8 +184,6 @@ void CFDModel::InitFields()
 
     fitlog<< "BC_Appply U_LHS U_RHS U_Solve phi_calc phi_BC peqn_RLHS peqn_Solve phi_recorr Total"<<endl;
 
-    clock_t ittime_begin, ittime_end, ittime_temp;
-    double ittime_spent;
 
     ittime_end = clock();
 
@@ -197,7 +195,15 @@ void CFDModel::InitFields()
 //    UEqn=FvImp::Div(phi, U);
 //    cout << "Eqn Log"<<endl<<UEqn.outstr()<<endl;
 //    cout << "End Log"<<endl;
+
+
+
+    _CC_Fv_Field <Scalar> AUr(mesh);
+    //TO FIX: MAKE THIS WORK
+    _Surf_Fv_Field <Scalar> AUrf_;
+
 	while (!conv && it < this->maxiter)
+	//while (!conv && it < 38)
 	{
 	    ittime_begin = clock();
 
@@ -250,6 +256,7 @@ void CFDModel::InitFields()
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         ittime_end = clock();
+        ittime_temp=clock();
         fitlog << ittime_spent <<" " ;
 
                         //TO MODIFY
@@ -270,29 +277,26 @@ void CFDModel::InitFields()
 //
 //
 
-		U=UEqn.Field();
-
-        _CC_Fv_Field <Scalar> AUr(mesh);
+		U=UEqn.Field(); GetNShowTimeSpent("phi_calc: U Creation");
 
         //TO MODIFY
         //Mesh Volume
-        AUr=mesh.Vp()/UEqn.A();       // In OpenFoam these are scalar
+        AUr=mesh.Vp()/UEqn.A();       GetNShowTimeSpent("phi_calc: Aur=V/A");// In OpenFoam these are scalar
 
 //        //Assign to U Eqn Solved values
-        _Surf_Fv_Field <Vec3D> Uf_;
+        _Surf_Fv_Field <Vec3D> Uf_;GetNShowTimeSpent("phi_calc: Uf Creation");
 
         //What happens in Uf_ boundary?
-        Uf_=FvExp::Interpolate(U);  //Uf Overbar
+        Uf_=FvExp::Interpolate(U);  GetNShowTimeSpent("phi_calc: Uf interpolation");//Uf Overbar
         //cout << "Uf_ "<< Uf_.outstr()<<endl;
         //cout << "UEqn Ap"<< UEqn.A.outstr()<<endl;
 
-        //TO FIX: MAKE THIS WORK
-        _Surf_Fv_Field <Scalar> AUrf_;
-        AUrf_=FvExp::Interpolate(AUr);
+
+        AUrf_=FvExp::Interpolate(AUr);GetNShowTimeSpent("phi_calc: AUr interpolation");
 
 
         //INSTEAD OF
-        Gradpf_=FvExp::Interpolate(FvExp::Grad(p));
+        Gradpf_=FvExp::Interpolate(FvExp::Grad(p));GetNShowTimeSpent("phi_calc: Gradp Interpolate");
 
 //
 //        //Rhie-Chow Correction
@@ -301,10 +305,10 @@ void CFDModel::InitFields()
 //        //Is more simple to directly calculate fluxes
         //Obtaining m*, RhieChow Interpolated Flux
         //phi=phi - AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
-        phi=Uf_ & mesh.Sf();
-        phi= phi - alpha_u*AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
+        phi=Uf_ & mesh.Sf();GetNShowTimeSpent("phi_calc: InnerProd U . Sf");
+        phi= phi - alpha_u*AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) ); GetNShowTimeSpent("phi_calc: Rhie Chow");
 
-        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        ittime_spent = (double)(clock() - ittime_temp) / CLOCKS_PER_SEC;
         ittime_end = clock();
         fitlog << ittime_spent <<" " ;
 

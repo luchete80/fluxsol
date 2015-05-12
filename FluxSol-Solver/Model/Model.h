@@ -87,6 +87,13 @@ public:
 class CFDModel:public Model
 {
 
+
+    protected:
+
+
+    clock_t ittime_begin, ittime_end, ittime_temp;
+    double ittime_spent;
+
     //FIELDS FOR EACH TIME STEP
     _CC_Fv_Field <Vec3D> U; //
     _CC_Fv_Field <Scalar> p;
@@ -95,6 +102,13 @@ class CFDModel:public Model
 
     EqnSystem <Scalar> pEqn;
     EqnSystem <Vec3D> UEqn;     //To modify: associate Eqn System with field
+
+
+    void GetNShowTimeSpent(const string &str){
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        cout << str<< " Time Elapsed: " << ittime_spent<<endl;
+        ittime_end =clock();
+        }
 
 	public:
 

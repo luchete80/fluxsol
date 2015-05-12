@@ -35,6 +35,12 @@ template <typename T>
 void PETSC_GAMGSolver<number>::Solve(EqnSystem < T > &TEqn)
 {
 
+    clock_t ittime_begin, ittime_end, ittime_temp;
+    double ittime_spent;
+
+    ittime_end = clock();
+
+
     // //Setting MAT values
 	 int numberofcomp=pow(3.,TEqn.Dim());
 	 int totrows=numberofcomp*TEqn.Num_Eqn();
@@ -258,16 +264,15 @@ void PETSC_GAMGSolver<number>::Solve(EqnSystem < T > &TEqn)
 // #endif
    this->ierr = VecSet(this->x,.0);CHKERRQ(this->ierr);
 
+     ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
 
-     clock_t ittime_begin, ittime_end;
-     double ittime_spent;
-
-     ittime_begin = clock();
+     cout << "PETSC Assemblying elapsed time: "<<ittime_spent<<endl;
+     ittime_end = clock();
 
      this->ierr = KSPSolve(this->ksp,this->b,this->x);CHKERRQ(this->ierr);
 
 
-     ittime_spent = (double)(clock() - ittime_begin) / CLOCKS_PER_SEC;
+     ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
 
      cout << "PETSC Solving elapsed time: "<<ittime_spent<<endl;
 

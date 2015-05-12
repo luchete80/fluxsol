@@ -75,14 +75,17 @@ namespace FluxSol
 			this->GridPtr = &grid;
 			//LO HAGO PARA TODOS LOS FACES
 			this->numberofvals=grid.Num_Faces();
+			this->value=vector<T>(this->GridPtr->Num_Faces());
+            this->idgrid_domain=vector<int>(this->GridPtr->Num_Faces());
 			for (int f = 0; f<this->GridPtr->Num_Faces(); f++)
 			{
 			    //This is to consider, by now are created all
 				//if (grid.Face(f).Boundaryface() && !grid.Face(f).Is_Null_Flux_Face())
 				//{
-					T val;
-					this->value.push_back(val);
-					this->idgrid_domain.push_back(f);
+					//T val;
+					//this->value.push_back(val);
+					//this->idgrid_domain.push_back(f);
+					this->idgrid_domain[f]=f;
 				//}
 			}
 

@@ -73,123 +73,150 @@ void EqnSystem<T>::Insert (const FluxSol::Eqn <T> &ec)
 //If neighbours refer to differents id, neighbour ids will be added
 //THIS FUNCTION ASSUMES THAT COEFFS ON BOTH EQNS ARE NOT REPEATED
 //TO MODIFY!! CHANGE TO Reference Return, replacing ret for this->
+//template <typename T>
+//Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right)
+//{
+//	Eqn<T> ret=*this;    //To equal neighbour id
+//
+//	vector <int> tempright;
+//	//vector <T> temprval;
+//    vector <Scalar> temprval;
+//
+//	tempright = right.neighbour_id;
+//    temprval = right.an;
+//	vector<int> ids;	//checked neighbours ids
+//
+//
+//
+////    for (int nleft = 0; nleft < this->an.size(); nleft++)
+////    {
+////        bool found =false;
+////        for (int nr=0;nr<ret.neighbour_id.size();nr++)
+////            if(an[nleft]==ret.neighbour_id[nr])
+////                found==true;
+////
+////    }
+//
+//	//Che if both central coeff are the same
+//	if (id == right.id)
+//	{
+//	    //ret=Eqn<T>(pid,nids);
+//		//Must chek if both neighbour ids are the same and in that case
+//		ret.ap = this->ap - right.ap;
+//
+//		bool lfound;
+////        cout <<"left an size" <<this->an.size()<<endl;
+////        cout <<"right an size" <<right.an.size()<<endl;
+//		//left eqn could have a bigger stencil
+//		//At first assign left an size to ret eqn
+//		ret.an.assign(this->an.size(),0.);
+//		for (int nleft = 0; nleft < this->an.size(); nleft++)
+//		{
+//			lfound = false;
+//			int id;
+//			int nright = 0;
+//			while (!lfound && nright < tempright.size())
+//			{
+//
+//				if (this->neighbour_id[nleft] == tempright[nright])
+//				{
+//					lfound = true;
+//					ids.push_back(nleft);
+//				}
+//				nright++;
+//			}
+//			nright--;
+//
+//			//
+////			cout << "ret an size"<<ret.an.size()<<endl;
+//			if (!lfound)
+//				ret.an[nleft] = this->an[nleft];
+//			else
+//			{
+//				ret.an[nleft] = this->an[nleft] - temprval[nright];
+//				tempright.erase(tempright.begin() + nright);
+//				temprval.erase(temprval.begin() + nright);
+//			}
+//
+//		}//for nleft
+//
+//
+//		//Comparing right vectors
+//		bool rfound;
+//		for (int nright = 0; nright < tempright.size(); nright++)
+//		{
+//			//if ids[]
+//			rfound = false;
+//			int nleft = 0;
+//			while (!rfound && nleft < this->an.size())
+//			{
+//				if (this->neighbour_id[nleft] == tempright[nright])
+//				{
+//					rfound = true;
+//					ids.push_back(nleft);
+//				}
+//				nleft++;
+//			}
+//			nleft--;
+//
+//			if (!rfound)
+//            {
+//				ret.an.push_back(-(temprval[nright]));
+//                ret.neighbour_id.push_back(nright);
+//            }
+//			else
+//				ret.an.push_back( this->an[nleft] - temprval[nright]);
+//		}
+//
+//		//ret.An(this->Ap() - right.Ap());
+//		//for (int nid=0;nid<ids.size();nid++)
+//                //this->neighbour_id.push_back(ids[nid]);
+//
+//		ret.source = this->source - right.source;
+//
+//        //cout << "Left Source"<<endl;
+//		//cout << this->source.outstr()<<endl;
+//
+//        //cout << "Right Source"<<endl;
+//		//cout << right.source.outstr()<<endl;
+//
+//        //cout << "Return Source"<<endl;
+//		//cout << ret.source.outstr()<<endl;
+//
+//
+//		*this=ret;
+//		//return ret;
+//	}
+//
+//    //return *this;
+//    return ret;
+//
+//}
+
+//FAST EQN SYSTEM OPERATOR==, THIS SUPPOSE THAT ID's ARE THE SAME
+//
 template <typename T>
 Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right)
 {
-	Eqn<T> ret=*this;    //To equal neighbour id
-
-	vector <int> tempright;
-	//vector <T> temprval;
-    vector <Scalar> temprval;
-
-	tempright = right.neighbour_id;
-    temprval = right.an;
-	vector<int> ids;	//checked neighbours ids
 
 
+    //ret=Eqn<T>(pid,nids);
+    //Must chek if both neighbour ids are the same and in that case
+    this->ap -= right.ap;
 
-//    for (int nleft = 0; nleft < this->an.size(); nleft++)
-//    {
-//        bool found =false;
-//        for (int nr=0;nr<ret.neighbour_id.size();nr++)
-//            if(an[nleft]==ret.neighbour_id[nr])
-//                found==true;
-//
-//    }
-
-	//Che if both central coeff are the same
-	if (id == right.id)
-	{
-	    //ret=Eqn<T>(pid,nids);
-		//Must chek if both neighbour ids are the same and in that case
-		ret.ap = this->ap - right.ap;
-
-		bool lfound;
 //        cout <<"left an size" <<this->an.size()<<endl;
 //        cout <<"right an size" <<right.an.size()<<endl;
-		//left eqn could have a bigger stencil
-		//At first assign left an size to ret eqn
-		ret.an.assign(this->an.size(),0.);
-		for (int nleft = 0; nleft < this->an.size(); nleft++)
-		{
-			lfound = false;
-			int id;
-			int nright = 0;
-			while (!lfound && nright < tempright.size())
-			{
+    //left eqn could have a bigger stencil
+    //At first assign left an size to ret eqn
 
-				if (this->neighbour_id[nleft] == tempright[nright])
-				{
-					lfound = true;
-					ids.push_back(nleft);
-				}
-				nright++;
-			}
-			nright--;
+    for (int n=0;n<this->an.size();n++)
+    {
+        this->an[n]-=right.an[n];
+    }
 
-			//
-//			cout << "ret an size"<<ret.an.size()<<endl;
-			if (!lfound)
-				ret.an[nleft] = this->an[nleft];
-			else
-			{
-				ret.an[nleft] = this->an[nleft] - temprval[nright];
-				tempright.erase(tempright.begin() + nright);
-				temprval.erase(temprval.begin() + nright);
-			}
+    this->source -= right.source;
 
-		}//for nleft
-
-
-		//Comparing right vectors
-		bool rfound;
-		for (int nright = 0; nright < tempright.size(); nright++)
-		{
-			//if ids[]
-			rfound = false;
-			int nleft = 0;
-			while (!rfound && nleft < this->an.size())
-			{
-				if (this->neighbour_id[nleft] == tempright[nright])
-				{
-					rfound = true;
-					ids.push_back(nleft);
-				}
-				nleft++;
-			}
-			nleft--;
-
-			if (!rfound)
-            {
-				ret.an.push_back(-(temprval[nright]));
-                ret.neighbour_id.push_back(nright);
-            }
-			else
-				ret.an.push_back( this->an[nleft] - temprval[nright]);
-		}
-
-		//ret.An(this->Ap() - right.Ap());
-		//for (int nid=0;nid<ids.size();nid++)
-                //this->neighbour_id.push_back(ids[nid]);
-
-		ret.source = this->source - right.source;
-
-        //cout << "Left Source"<<endl;
-		//cout << this->source.outstr()<<endl;
-
-        //cout << "Right Source"<<endl;
-		//cout << right.source.outstr()<<endl;
-
-        //cout << "Return Source"<<endl;
-		//cout << ret.source.outstr()<<endl;
-
-
-		*this=ret;
-		//return ret;
-	}
-
-    //return *this;
-    return ret;
+    return *this;
 
 }
 

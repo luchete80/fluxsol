@@ -26,6 +26,7 @@
 #define _PETSC_AMG_SOLVER_H
 
 #include "PETSC_Solver.h"
+#include <time.h>
 
 namespace FluxSol
 {
