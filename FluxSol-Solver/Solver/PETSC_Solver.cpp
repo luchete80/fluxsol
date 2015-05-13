@@ -591,6 +591,11 @@ void Solve(EqnSystem <T> &TEqn)
 {
 
 
+    clock_t ittime_begin, ittime_end,ittime_start;
+    double ittime_spent;
+
+    ittime_begin = clock();
+    ittime_start = clock();
 
     ///// PETSC SOLVE MANUALLY ///////
 
@@ -613,8 +618,9 @@ void Solve(EqnSystem <T> &TEqn)
     cout << "Allocating Rows..."<<endl;
     Solver.PreAllocateRows(nonzerosperrow);
 
-    clock_t ittime_begin, ittime_end;
-    double ittime_spent;
+    ittime_spent = (double)(clock() - ittime_begin) / CLOCKS_PER_SEC;
+
+    cout << "PETSC Creating Solver and Preallocating time: "<<ittime_spent<<endl;
 
     ittime_begin = clock();
 
@@ -686,14 +692,15 @@ void Solve(EqnSystem <T> &TEqn)
 
     cout << "PETSC Solving elapsed time: "<<ittime_spent<<endl;
 
+    ittime_begin = clock();
     cout <<"Solver Results "<<endl;
+    vector <double> r(numberofcomp);
 	 for (int e=0;e<TEqn.Num_Eqn();e++)
 	 {
          //cout << "e= "<<e<<endl;
-         vector <double> r;
          for (int dim=0;dim<numberofcomp;dim++)
          {
-             r.push_back(Solver.X(numberofcomp*e+dim));
+             r[dim]=Solver.X(numberofcomp*e+dim);
              //cout << "xi= "<<numberofcomp*e+dim<<", ";
              //cout <<U.Cmp[numberofcomp*e+dim+1]<<" ";
          }
@@ -701,11 +708,26 @@ void Solve(EqnSystem <T> &TEqn)
 
      }
 
+    ittime_spent = (double)(clock() - ittime_begin) / CLOCKS_PER_SEC;
+	cout << "PETSC Allocating results time: "<<ittime_spent<<endl;
+
+    ittime_begin = clock();
+
+    //Solver.ShowInfo();
+
+
      cout << "Destroying "<<endl;
 
     Solver.Destroy();
 
+    ittime_spent = (double)(clock() - ittime_begin) / CLOCKS_PER_SEC;
+	cout << "PETSC Destroy time: "<<ittime_spent<<endl;
+
     cout << "Destroyed"<<endl;
+
+
+    ittime_spent = (double)(clock() - ittime_start) / CLOCKS_PER_SEC;
+	cout << "PETSC Total time: "<<ittime_spent<<endl;
 
 }
 

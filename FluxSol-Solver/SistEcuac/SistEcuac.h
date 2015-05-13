@@ -155,7 +155,7 @@ class EqnSystem{   //Es un vector de ecuaciones
     Fv_CC_Grid *GridPtr;    //OpenFOAM Style, TO MODIFY;
 	//_CC_Fv_Field <T> &field;										//Can be any tipe of field
 
-	Scalar alpha;                                       //Under Relaxation term
+	Scalar alpha,invalpha;                                       //Under Relaxation term
 
 	_CC_Fv_Field   <T> field;              //Field referring to Eqn System results
 
@@ -196,12 +196,13 @@ class EqnSystem{   //Es un vector de ecuaciones
 	vector< Eqn<T> > & EqnV(){ return eqn; }
 	Eqn<T> & Eqn(const int &i){return eqn[i];}
 
-    void SetRelaxCoeff(const Scalar &a){this->alpha=a;}
+    void SetRelaxCoeff(const Scalar &a){this->alpha=a;this->invalpha=1.-a;}
 	void Relax()
 	{
 	    for (int e=0;e<this->EqnV().size();e++)
         {
             this->eqn[e].Ap(this->eqn[e].Ap()/this->alpha);
+            //this->eqn[e].ap=this->eqn[e].ap*this->invalpha;
             //T xcorr;
             //xcorr=this->eqn[e].X()+(1.-this->alpha)*this->prevsol[e]/this->alpha;
             //this->eqn[e].X(xcorr);

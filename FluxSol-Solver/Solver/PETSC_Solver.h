@@ -63,6 +63,8 @@ public Solver<number>
 		PetscScalar neg_one = -1.0,one = 1.0;
 		PetscBool nonzeroguess = PETSC_FALSE;
 
+        MPI_Comm       comm;
+
         //TO MODIFY
 		//CAN HAVE A DOFHANDLER
 		//DoFHandler<dim> &dofhandler;
@@ -111,6 +113,7 @@ public Solver<number>
 	void Destroy()
 	{
         //cout << "Destying  ksp, "<< KSPDestroy(&ksp);
+
         MatDestroy(&A);
         //MatDestroy(&SysMat);
         KSPDestroy(&ksp);
@@ -121,6 +124,37 @@ public Solver<number>
 	~PETSC_KSP_Solver<number>()
 	{
 	    //this->Destroy();
+	}
+
+	void ShowInfo()
+	{
+     PetscReal   norm,norm2;
+     PetscViewer viewer;
+     Vec         res;
+     this->comm = PETSC_COMM_WORLD;
+     this->ierr = PetscViewerASCIIOpen(comm, "rhs.m", &viewer);CHKERRQ(this->ierr);
+     this->ierr = PetscViewerSetFormat(viewer, PETSC_VIEWER_ASCII_MATLAB);CHKERRQ(this->ierr);
+     this->ierr = VecView(this->b,viewer);CHKERRQ(this->ierr);
+     this->ierr = PetscViewerDestroy(&viewer);
+     this->ierr = VecNorm(this->b, NORM_2, &norm2);CHKERRQ(this->ierr);
+
+     this->ierr = PetscViewerASCIIOpen(comm, "solution.m", &viewer);CHKERRQ(this->ierr);
+     this->ierr = PetscViewerSetFormat(viewer, PETSC_VIEWER_ASCII_MATLAB);CHKERRQ(this->ierr);
+     this->ierr = VecView(this->x,viewer);CHKERRQ(this->ierr);
+     this->ierr = PetscViewerDestroy(&viewer);
+
+     this->ierr = VecDuplicate(this->x, &res);CHKERRQ(this->ierr);
+     this->ierr = MatMult(this->A, this->x, res);CHKERRQ(this->ierr);
+     this->ierr = VecAXPY(this->b, -1.0, res);CHKERRQ(this->ierr);
+     this->ierr = VecDestroy(&res);CHKERRQ(this->ierr);
+     this->ierr = VecNorm(this->b,NORM_2,&norm);CHKERRQ(this->ierr);
+     PetscPrintf(PETSC_COMM_WORLD,"[%d]%s |b-Ax|/|b|=%e, |b|=%e\n",0,__FUNCT__,norm/norm2,norm2);
+
+     this->ierr = PetscViewerASCIIOpen(comm, "residual.m", &viewer);CHKERRQ(this->ierr);
+     this->ierr = PetscViewerSetFormat(viewer, PETSC_VIEWER_ASCII_MATLAB);CHKERRQ(this->ierr);
+     this->ierr = VecView(this->b,viewer);CHKERRQ(this->ierr);
+     this->ierr = PetscViewerDestroy(&viewer);
+
 	}
 
 	// ierr = VecDestroy(&x);CHKERRQ(ierr); ierr = VecDestroy(&u);CHKERRQ(ierr);

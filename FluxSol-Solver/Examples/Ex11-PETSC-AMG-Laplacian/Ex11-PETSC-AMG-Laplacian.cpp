@@ -65,11 +65,31 @@ int main(int argc,char **args)
 	TEqn=(FvImp::Laplacian(kdiff,T)==0.);
 	cout<<"Solving system"<<endl;
 
+
     //Setting MAT values
 	int numberofcomp=pow(3.,TEqn.Dim());
 	int totrows=numberofcomp*TEqn.Num_Eqn();
 
     cout << "Number of comps: "<<numberofcomp<< ", Rows: "<< totrows<<endl;
+
+	  Solve(TEqn);
+
+      ofstream file2;     //Previously this was inside each function
+    file2.open("Out-standard.3D");
+    file2 << " x y z val"<<endl;
+
+    for (int i=0;i<TEqn.Num_Eqn();i++)
+    {
+        PetscInt row=numberofcomp*i;
+        double val[1];
+        //VecGetValues(xx,1,&row,&val[0]);
+        val[0]=TEqn.Eqn(i).X().Comp()[0];
+        for (int c=0;c<3;c++)   file2 << mesh.Node_(i).comp[c]<<" ";
+        file2 << val[0] <<endl;
+    }
+
+
+    //MULTIGRID
 
     // PETSC VALUES //
       Mat            Amat,Pmat;
@@ -373,6 +393,25 @@ cout << "Getting Solver Vals..."<<endl;
   ierr = VecDestroy(&bb);CHKERRQ(ierr);
   ierr = MatDestroy(&Amat);CHKERRQ(ierr);
   ierr = MatDestroy(&Pmat);CHKERRQ(ierr);
+
+
+
+  cout << "Solving by BICGs" <<endl;
+
+  Solve(TEqn);
+
+    //ofstream file2;     //Previously this was inside each function
+    file2.open("Out-standard.3D");
+    file2 << " x y z val"<<endl;
+
+    for (int i=0;i<TEqn.Num_Eqn();i++)
+    {
+        PetscInt row=numberofcomp*i;
+        double val[1];
+        VecGetValues(xx,1,&row,&val[0]);
+        for (int c=0;c<3;c++)   file2 << mesh.Node_(i).comp[c]<<" ";
+        file2 << val[0] <<endl;
+    }
 
   ierr = PetscFinalize();
   return 0;

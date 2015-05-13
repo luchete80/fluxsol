@@ -374,9 +374,9 @@ void CFDModel::InitFields()
         //pEqn.Eqn(36).SetValueCondition(0.);
         //Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
 
-        FluxSol::Solve(pEqn);
-        //PETSC_GAMGSolver <double>pSolver;
-        //pSolver.Solve(pEqn);
+        //FluxSol::Solve(pEqn);
+        PETSC_GAMGSolver <double>pSolver;
+        pSolver.Solve(pEqn);
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         ittime_end = clock();

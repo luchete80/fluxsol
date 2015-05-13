@@ -239,7 +239,7 @@ void PETSC_GAMGSolver<number>::Solve(EqnSystem < T > &TEqn)
      this->ierr = PCSetType(pc,PCGAMG);CHKERRQ(this->ierr);
      this->ierr = KSPSetFromOptions(this->ksp);CHKERRQ(this->ierr);
 
-     //this->ierr = KSPSetTolerances(this->ksp,1.e-7,PETSC_DEFAULT,PETSC_DEFAULT,PETSC_DEFAULT);CHKERRQ(this->ierr);
+     //this->ierr = KSPSetTolerances(this->ksp,1.e-5,PETSC_DEFAULT,PETSC_DEFAULT,PETSC_DEFAULT);CHKERRQ(this->ierr);
 
      /* ierr = PCGAMGSetType(pc,"agg");CHKERRQ(ierr); */
 
@@ -248,7 +248,7 @@ void PETSC_GAMGSolver<number>::Solve(EqnSystem < T > &TEqn)
      this->ierr = PCSetCoordinates(pc, 3, m, coords);CHKERRQ(this->ierr);
 
 
-   if (!PETSC_TRUE)
+   if (PETSC_TRUE)
      {
      PetscViewer viewer;
      this->ierr = PetscViewerASCIIOpen(this->comm, "Amat.m", &viewer);CHKERRQ(this->ierr);
@@ -328,7 +328,7 @@ void PETSC_GAMGSolver<number>::Solve(EqnSystem < T > &TEqn)
      cout << "PETSC Alloc Solution Time: "<<ittime_spent<<endl;
      ittime_end = clock();
 
-   if (!PETSC_TRUE) {
+   if (PETSC_TRUE) {
      PetscReal   norm,norm2;
      PetscViewer viewer;
      Vec         res;

@@ -42,7 +42,6 @@ namespace FluxSol
           PetscInt       i,m,M,its,Istart,Iend,j,Ii,bs,ix;
           // PetscReal      x,y,h;
           // PetscReal      soft_alpha = 1.e-3;
-          MPI_Comm       comm;
           PetscMPIInt    npe,rank;
           PC             pc;
 
