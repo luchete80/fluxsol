@@ -57,18 +57,35 @@ private:
 	 std::vector<Node>::iterator nodeit;
 	 std::vector<_FvFace>::iterator faceit;
 
-	 std::set<int> internal_faces;      //TO MODIFY; FOR INSERTIONS
 
     int np;     //Number of processors
 
     struct myclass myobject;        //Object usedd to sort, TO MODIFY
 
 	protected:
+
+        std::set<int> int_faces;      //TO MODIFY; FOR INSERTIONS
 	    std::vector <Cell_CC> cell;    //Celdas con nodos centrados en el cuerpo
 
 	    vector <vector <int> > face_local_cell_neighbour;  //Local cell neigbours
 
+
+    //To be replaces by sorting faces, allocating interior faces at first
+    void Create_IntFaces()//This was old and worng NetFlux Faces, which belongs to field
+    {
+        for (int f=0;f<this->num_faces;f++)
+        {
+            //cout << "Face "<<f<<endl;
+            _FvFace face=this->Face(f);
+            //if (!face.Is_Null_Flux_Face() && !this->Grid().Face(f).Boundaryface())
+            if (!this->Face(f).Boundaryface())
+                this->int_faces.insert(f);
+
+        }
+    }
+
 	public:
+    const set<int> IntFaces()const{return this->int_faces;}
 	std::vector<Cell_CC>::iterator cellit;
 	Boundary boundary;
 
@@ -208,6 +225,7 @@ private:
         this->boundary=right.vBoundary();
 
         this->SetFaceLocalCellNeighbours(); //New
+        this->Create_IntFaces();
 
         return *this;
 	}

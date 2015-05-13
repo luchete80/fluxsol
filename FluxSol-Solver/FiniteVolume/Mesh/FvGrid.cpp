@@ -1238,6 +1238,7 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 
         Boundary bound(vpatch);
         this->AddBoundary(bound);
+        this->Create_IntFaces();
 
         cout << "[I] Mesh created ..." << endl;
 

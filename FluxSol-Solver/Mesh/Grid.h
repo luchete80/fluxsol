@@ -97,6 +97,8 @@ class _Grid{
 
 	int num_boundary_faces;
 
+
+
     vector <int> temp_boundfaces;    //Used for mesh building, TO MODIFY, delete
 
 	//Para malla estructurada solamente
@@ -118,6 +120,7 @@ class _Grid{
 	num_verts_xyz.push_back(y);
 	num_verts_xyz.push_back(z);};
 	void Num_Cells(const int &nc){num_cells=nc;};
+
 
 	public:
 	_Grid(){};

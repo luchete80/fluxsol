@@ -111,10 +111,14 @@ namespace FluxSol
 		{
 			Boundary b = bound;
 			//Generate a _PatchField for every patch in boundary
+			//for (int np = 0; np<b.Num_Patches(); np++)
+			this->patchfield.resize(b.Num_Patches());
 			for (int np = 0; np<b.Num_Patches(); np++)
 			{
 				_PatchField < T > pf(b.vPatch(np));
-				patchfield.push_back(pf);
+				//this->patchfield.push_back(pf);
+				//this->patchfield.push_back(pf);
+				this->patchfield[np]=pf;
 			}
 
 		}
@@ -301,34 +305,39 @@ namespace FluxSol
             return ret;
         }
 
-
-        //~GeomField(){};
-
-	};
-
-	//Binary
-//    template <typename T>
-//    const GeomField <T>  operator/ (const T &left, const GeomField <T> &right)
+////FASter Operator/
+//
+//        friend const GeomField <T>  operator/ (const GeomField <T> &left, const GeomField <T> &right)
 //        {
-//            //GeomField<T> *ret=new GeomField<T>(this->Numberofvals());
+//                    //GeomField<T> *ret=new GeomField<T>(this->Numberofvals());
 //            //TO MODIFY: USE COPY CONSTRUCTOR OR OPERATOR=
 //            //POINTER MUST NOT BE PASSED HERE
 //            GeomField<T> ret(right.Numberofvals());
+//            vector <T> temp(right.Numberofvals());
 //            //THIS IS WRONG
-//            ret.GridPtr=right.GridPtr();
+//            ret.AssignGrid(&right.Grid());
 //
 //            //GeomField<T> ret(this->Grid());
 //            T val;
 //            //Sizes must be equal and rank must be large than zero?
 //            for (int c = 0; c < right.Numberofvals(); c++)
 //            {
-//                val = left / right.Val(c);
-//                ret.Val(c,val);
+//                //val = left.value[c] / right.value [c];
+//                temp[c]=left.value[c] / right.value [c];
+//                //cout << "val" << val.outstr()<<endl;
+//                //ret.Val(c,val);
 //            }
-//
+//            ret.AssignVecVal(temp);
 //            return ret;
 //        }
+//
+//
+//        //~GeomField(){};
+//
 
+//
+
+	};
 
 		template<typename T>
 	class GeomSurfaceField :

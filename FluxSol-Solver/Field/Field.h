@@ -58,6 +58,7 @@ class _Field{
 	std::string name;
 
 
+
     public:
     _Field(){};
     const int Order(){return order;};
@@ -75,6 +76,13 @@ class _Field{
 	void  Insert_Idgrid_domain(const int &i){idgrid_domain.push_back(i);}
 	int & Idgrid_domain(const int &i){return idgrid_domain[i];}
 	void Log();
+
+    void AssignVecVal(const vector <T> &val)
+    {
+        for (int c=0;c<this->numberofvals;c++)
+            this->value[c]=val[c];
+
+    }
 
 
 	//Operations

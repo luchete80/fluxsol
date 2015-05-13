@@ -190,7 +190,10 @@ namespace FluxSol
 		//EVALUATE IF IT IS CONST
 		//Fv_CC_Grid  *GridPtr;       //Se podria probar con un puntero general
 
+		_CC_Fv_Field(const Fv_CC_Grid *grid);
+		_CC_Fv_Field(const Fv_CC_Grid *grid, const vector <T*> vp);
 		_CC_Fv_Field(const Fv_CC_Grid &grid);
+		_CC_Fv_Field(const Fv_CC_Grid &grid, const vector<T *>);
 		_CC_Fv_Field(const Fv_CC_Grid &grid, const _BoundaryField <T> &bfield);
 
         //IS NECCESARY TO OVERRIDE THIS FUNCTION!?!!?!?

@@ -30,6 +30,7 @@ Model::Model(const std::string filename)
             Fv_CC_Grid mesht(meshfname);
             this->mesh=mesht;
             this->mesh.SetFaceLocalCellNeighbours();
+
             //this->mesh.Log("MeshLog.txt");
         }
 
@@ -276,7 +277,9 @@ void CFDModel::InitFields()
 		double time=(double) difftime(endtimec, starttimec);
 //
 //
+        ittime_temp=clock();
 
+        UEqn.Field(); GetNShowTimeSpent("phi_calc: test Field() function ");
 		U=UEqn.Field(); GetNShowTimeSpent("phi_calc: U Creation");
 
         //TO MODIFY
@@ -308,7 +311,7 @@ void CFDModel::InitFields()
         phi=Uf_ & mesh.Sf();GetNShowTimeSpent("phi_calc: InnerProd U . Sf");
         phi= phi - alpha_u*AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) ); GetNShowTimeSpent("phi_calc: Rhie Chow");
 
-        ittime_spent = (double)(clock() - ittime_temp) / CLOCKS_PER_SEC;
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         ittime_end = clock();
         fitlog << ittime_spent <<" " ;
 
@@ -398,10 +401,6 @@ void CFDModel::InitFields()
 
         pcorr=pEqn.Field();
         phi= phi - alpha_u*AUrf_*FvExp::SnGrad(pcorr);
-
-        ittime_temp = clock();
-
-        //FvExp::SnGrad(pcorr);
 
         ittime_spent = (double)(clock() - ittime_temp ) / CLOCKS_PER_SEC;
         ittime_temp = clock();

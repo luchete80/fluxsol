@@ -22,6 +22,14 @@
 
 #include "Div.h"
 
+#include <iostream>
+#include <iomanip>
+#include <vector>
+#include <numeric>
+//#include <chrono>
+#include <string>
+#include <cstring>
+
 namespace FluxSol{
 
 
@@ -105,9 +113,9 @@ class CFDModel:public Model
 
 
     void GetNShowTimeSpent(const string &str){
-        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        ittime_spent = (double)(clock() - ittime_temp) / CLOCKS_PER_SEC;
         cout << str<< " Time Elapsed: " << ittime_spent<<endl;
-        ittime_end =clock();
+        ittime_temp =clock();
         }
 
 	public:
@@ -151,6 +159,78 @@ class CFDThermalModel:public CFDModel, public ThermalModel
         CFDThermalModel(){}
         void Solve(){};
 };
+
+// ORIGINAL
+// PROFILER
+//#define PROFILE(BLOCK, ROUTNAME) ProfilerRun([&](){do {BLOCK;} while(0);}, \
+//        ROUTNAME, __FILE__, __LINE__);
+//
+//template <typename T>
+//void ProfilerRun (T&&  func, const std::string& routine_name = "unknown",
+//                  const char* file = "unknown", unsigned line = 0)
+//{
+//    using std::chrono::duration_cast;
+//    using std::chrono::microseconds;
+//    using std::chrono::steady_clock;
+//    using std::cerr;
+//    using std::endl;
+//
+//    steady_clock::time_point t_begin = steady_clock::now();
+//
+//    // Call the function
+//    func();
+//
+//    steady_clock::time_point t_end = steady_clock::now();
+//    cerr << "[" << std::setw (20)
+//         << (std::strrchr (file, '/') ?
+//             std::strrchr (file, '/') + 1 : file)
+//         << ":" << std::setw (5) << line << "]   "
+//         << std::setw (10) << std::setprecision (6) << std::fixed
+//         << static_cast<float> (duration_cast<microseconds>
+//                                (t_end - t_begin).count()) / 1e6
+//         << "s  --> " << routine_name << endl;
+//
+//    cerr.unsetf (std::ios_base::floatfield);
+//}
+
+
+// PROFILER
+#define PROFILE(BLOCK, ROUTNAME) ProfilerRun([&](){do {BLOCK;} while(0);}, \
+        ROUTNAME, __FILE__, __LINE__);
+
+template <typename T>
+void ProfilerRun (T  **func, const std::string& routine_name = "unknown",
+                  const char* file = "unknown", unsigned line = 0)
+{
+    using std::cerr;
+    using std::endl;
+
+    clock_t t_begin = clock();
+
+    // Call the function
+    func();
+
+    clock_t t_end = clock();
+    cerr << "[" << std::setw (20)
+         << (std::strrchr (file, '/') ?
+             std::strrchr (file, '/') + 1 : file)
+         << ":" << std::setw (5) << line << "]   "
+         << std::setw (10) << std::setprecision (6) << std::fixed
+//         << static_cast<float> (duration_cast<microseconds>
+         <<(double)(t_end - t_begin) / CLOCKS_PER_SEC
+         //<< (t_end - t_begin).count() / 1e6
+         << "s  --> " << routine_name << endl;
+
+    cerr.unsetf (std::ios_base::floatfield);
+}
+
+
+// USAGE
+//    PROFILE (
+//    {
+//        for (unsigned int k = 0; k < N; ++k)
+//            bigarray.push_back (k);
+//    }, "reserve + push_back");
 
 };//Fin de FluxSol
 #endif
