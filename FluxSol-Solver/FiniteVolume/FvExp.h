@@ -56,6 +56,7 @@ GeomSurfaceField <T> Interpolate(const _CC_Fv_Field <T> &field)
         r.AssignGrid(&field.ConstGrid());
 
         //Loop throug faces
+        Scalar fp[2];
         for (int f = 0; f<field.ConstGrid().Num_Faces(); f++)
         {
             _FvFace face = field.ConstGrid().Face(f);
@@ -66,10 +67,19 @@ GeomSurfaceField <T> Interpolate(const _CC_Fv_Field <T> &field)
             //if (!field.ConstGrid().Face(f).Boundaryface())
             //    cout <<" "<< field[face.Cell(1)].outstr() <<endl;
             //cout << "Fp "<< face.Fp().outstr()<<endl;
-            if (!field.ConstGrid().Face(f).Boundaryface())
-                prom = field[face.Cell(0)] * (1.0 - face.Fp()) + field[face.Cell(1)] * face.Fp();
-            else
-                prom = field[face.Cell(0)];
+
+
+            // MODIFICATION
+            //Original
+//            if (!field.ConstGrid().Face(f).Boundaryface())
+//                prom = field[face.Cell(0)] * (1.0 - face.Fp()) + field[face.Cell(1)] * face.Fp();
+//            else
+//                prom = field[face.Cell(0)];
+
+            //MODIFICATED
+            fp[0]=(1.0 - face.Fp());fp[1]=face.Fp();
+
+            for (int fc=0;fc<face.NumCells();fc++)prom += field[face.Cell(fc)]*fp[fc];
 
             r[f] = prom;
             //cout << "prom" << prom.outstr()<<endl;

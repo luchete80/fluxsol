@@ -227,9 +227,11 @@ class EqnSystem{   //Es un vector de ecuaciones
 
 	    this->eqn.clear();
 	    this->GridPtr=right.GridPtr;
+	    this->eqn.resize(right.EqnV().size());
         for (int e=0;e<right.EqnV().size();e++)
         {
-            this->eqn.push_back(right.Eqn(e));
+            //this->eqn.push_back(right.Eqn(e));
+            this->eqn[e]=right.Eqn(e);
         }
 
         for (int f=0;f<right.first_nonzero_column.size();f++)

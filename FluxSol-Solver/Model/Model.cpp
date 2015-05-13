@@ -401,7 +401,7 @@ void CFDModel::InitFields()
 
         ittime_temp = clock();
 
-        FvExp::SnGrad(pcorr);
+        //FvExp::SnGrad(pcorr);
 
         ittime_spent = (double)(clock() - ittime_temp ) / CLOCKS_PER_SEC;
         ittime_temp = clock();
