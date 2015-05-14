@@ -279,7 +279,7 @@ void CFDModel::InitFields()
 //
         ittime_temp=clock();
 
-        UEqn.Field(); GetNShowTimeSpent("phi_calc: test Field() function ");
+        //UEqn.Field(); GetNShowTimeSpent("phi_calc: test Field() function ");
 		U=UEqn.Field(); GetNShowTimeSpent("phi_calc: U Creation");
 
         //TO MODIFY

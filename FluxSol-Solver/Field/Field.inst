@@ -24,11 +24,11 @@ _Field<Scalar> _Field<Scalar>::operator=(const double &val);
 template
 _Field<Vec3D> _Field<Vec3D>::operator=(const double &val);
 
-template
-_Field<Scalar>::_Field(const int &numval, const double &number =0.);
+//template
+//_Field<Scalar>::_Field(const int &numval, const double &number =0.);
 
-template
-_Field<Vec3D>::_Field(const int &numval, const double &number =0.);
+//template
+//_Field<Vec3D>::_Field(const int &numval, const double &number =0.);
 
 template
 const Scalar MaxDiff(const _Field<Vec3D> &field1, const _Field<Vec3D> &field2);

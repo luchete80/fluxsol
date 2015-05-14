@@ -86,17 +86,6 @@ _Field<T> _Field<T>::operator=(const double &val)
 	return *this;
 }
 
-template <typename T>
-_Field<T>::_Field(const int &numval, const double &number =0.)
-{
-    this->numberofvals=numval;
-	for (int v=0;v<numval;v++)
-	{
-		T num(number);
-		value.push_back(num);
-	}
-}
-
 
 template <typename T>
 const Scalar MaxDiff(const _Field<T> &field1, const _Field<T> &field2)

@@ -62,12 +62,26 @@ class _Field{
     public:
     _Field(){};
     const int Order(){return order;};
-	explicit _Field(const int &numval, const double &value =0.);
+	_Field(const int &numval, const double &val =0.)
+    {
+ 	    this->value=vector<T>(numval);
+
+        this->numberofvals=numval;
+        for (int v=0;v<numval;v++)
+        {
+            //T num(number);
+            //value.push_back(num);
+            this->value[v]=val;
+        }
+    }
 
 	_Field(const vector<T> &val)
 	{
+	    this->value=vector<T>(val.size());
 	    for (int v=0;v<val.size();v++)
-            this->value.push_back(val[v]);
+            //this->value.push_back(val[v]);
+            this->value[v]=val[v];
+
         this->numberofvals=val.size();
 	}
 	const T & Val(const int &i)const{return value[i];};
