@@ -257,16 +257,16 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 //
 //    }
 
-	for (std::set<int>::iterator it=intfaces.begin(); it!=intfaces.end(); ++it)
+	for (std::set<int>::iterator it=VolField.IntNetFluxFaces().begin(); it!=VolField.IntNetFluxFaces().end(); ++it)
     {
         vector <int> local_nb_face_cell=VolField.Grid().FaceLocalCellNeighbour(*it);
 //	for (int f=0;f<VolField.Grid().Num_Faces();f++)
 //	{
 	    //cout << "Face "<<f<<endl;
-		_FvFace face=VolField.Grid().Face(*it);
+		//_FvFace face=VolField.Grid().Face(*it);
 
         //cout << "Not boundary face"<<endl;
-        ap=-face.Norm_ad()/face.Dist_pn()*fi;
+        ap=-VolField.Grid().Face(*it).Norm_ad()/VolField.Grid().Face(*it).Dist_pn()*fi;
         an=-ap;
         //nbr_eqn.push_back(VolField.Grid().Cell(c));
         //eqnsys.Eqn(face.Cell(0)).Coeffs(ap,an);
@@ -274,7 +274,7 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
         //cout << "Look through neighbours"<<endl;
         for (int nb=0;nb<2;nb++)    //Face cells
         {
-            int pcellid=face.Cell(nb);
+            int pcellid=VolField.Grid().Face(*it).Cell(nb);
 
             eqnsys.Eqn(pcellid).Ap()+=ap;
             eqnsys.Eqn(pcellid).An(VolField.Grid().FaceLocalCellNeighbour(*it)[nb])+=an;
@@ -299,27 +299,27 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 		for (int f=0;f<VolField.Grid().vBoundary().vPatch(p).Num_Faces();f++)
 		{
 			int idface=VolField.Grid().vBoundary().vPatch(p).Id_Face(f);
-			_FvFace face=VolField.Grid().Face(idface);  //TO MODIFY idface or face pos??
+			//_FvFace face=VolField.Grid().Face(idface);  //TO MODIFY idface or face pos??
 			//cout << "BOUNDARY"<<endl;
 
-            if (!face.Is_Null_Flux_Face())
+            if (!VolField.Grid().Face(idface).Is_Null_Flux_Face())
             {
                 //Boundary type
                 //Instead of if sentence it is convenient to use inheritance
                 if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
                 {
                     //cout <<"FIXED VAL"<<endl;
-                    ap=-face.Norm_ad()/fabs(face.Dist_pf_LR(0))*fi;
+                    ap=-VolField.Grid().Face(idface).Norm_ad()/fabs(VolField.Grid().Face(idface).Dist_pf_LR(0))*fi;
                     source=VolField.Boundaryfield().PatchField(p).Val(f)*ap;
                     //cout <<"created" <<endl;
-                    eqnsys.Eqn(face.Cell(0)).Ap()+=ap;
-                    eqnsys.Eqn(face.Cell(0)).Source()+=source;
+                    eqnsys.Eqn(VolField.Grid().Face(idface).Cell(0)).Ap()+=ap;
+                    eqnsys.Eqn(VolField.Grid().Face(idface).Cell(0)).Source()+=source;
                 }
                 else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
                 {
                     //cout << "FIXED WIDTH"<<endl;
                     source=VolField.Boundaryfield().PatchField(p).Val(f)*fi;
-                    eqnsys.Eqn(face.Cell(0)).Source()+=source;
+                    eqnsys.Eqn(VolField.Grid().Face(idface).Cell(0)).Source()+=source;
                 }
             }//If !NullFluxFace
 		}

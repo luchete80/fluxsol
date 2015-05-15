@@ -624,24 +624,32 @@ void Solve(EqnSystem <T> &TEqn)
 
     ittime_begin = clock();
 
+    vector <double> col;    //CREATING Col IS FasTER
 
     cout << "Assembying Eqns"<<endl;
+    PetscInt rowi,coli;
 	for (int e=0;e<TEqn.Num_Eqn();e++)	//Aca voy con las filas de a 2
 	{
 	    //Width Assign
 
         //cout << "Assemblying Eqn "<<e<<endl;
-		vector <double> ap=TEqn.Eqn(e).Ap().Comp();
-		Scalar ap_sc=TEqn.Eqn(e).Ap();
+		//vector <double> ap=TEqn.Eqn(e).Ap().Comp();
 		Scalar value;
 
+        col=TEqn.Eqn(e).Ap().Comp();
 		int row=e*numberofcomp;
 
-        vector <double> col;
+        //vector <double> col;
         //CENTRAL COEFFS
-        col=ap;
+        //col=ap;
         for (int dim=0;dim<numberofcomp;dim++)
-            Solver.SetMatVal(row+dim, row+dim, col[0]);    //An is scalar
+        {
+            //SetMatVal(const PetscInt &row, const PetscInt &col, const PetscScalar &value)
+            rowi=row+dim;
+            MatSetValues(Solver.Matrix(),1,&rowi,1,&rowi,&col[0],INSERT_VALUES);
+            //Solver.SetMatVal(row+dim, row+dim, col[0]);    //An is scalar
+        }
+
 
 
 		//Look trough entire width for neighbours id
@@ -651,12 +659,20 @@ void Solve(EqnSystem <T> &TEqn)
 		{
 			int realcellid=TEqn.Eqn(e).Neighbour(nc);   //Wich cell
 
-			col=TEqn.Eqn(e).An(nc).Comp();
+			//col=TEqn.Eqn(e).An(nc).Comp();
 			int columnid=numberofcomp*realcellid;
-
+            col=TEqn.Eqn(e).An(nc).Comp();
             //cout << "Found Cell " <<endl;
             for (int dim=0;dim<numberofcomp;dim++)
-                Solver.SetMatVal(row+dim, columnid+dim, col[0]);    //An is scalar
+            {
+                rowi=row+dim;
+                coli=columnid+dim;
+                MatSetValues(Solver.Matrix(),1,&rowi,1,&coli,&col[0],INSERT_VALUES);
+
+                //Original
+                //Solver.SetMatVal(row+dim, columnid+dim, col[0]);    //An is scalar
+            }
+
 
 		}//En of neighbours
 

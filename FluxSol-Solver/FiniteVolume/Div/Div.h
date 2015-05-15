@@ -126,7 +126,7 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
     {
         int f=*it;
         //cout << "Face: "<<f <<endl;
-        _FvFace face=phi.ConstGrid().Face(f);
+        //_FvFace face=phi.ConstGrid().Face(f);
 // 		if (!face.Is_Null_Flux_Face())
 //		{
             //cout << "No null flux"<<endl;
@@ -140,7 +140,7 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
             //Take the field norm
 
 
-            cell[0]=face.Cell(0);
+            cell[0]=phi.ConstGrid().Face(f).Cell(0);
             Scalar coeff_ap, coeff_an;
             //TO MODIFY-> CHANGE INNER FIELD AND BOUNDARY FIELD
             //Changed
@@ -175,7 +175,7 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
                 //Contribution of central coefficient, flux field if the flux is outwards from cell
                 //eqnsys.Eqn(cell[0]).Ap()+=coeff_ap;
 
-                cell[1]=face.Cell(1);
+                cell[1]=phi.ConstGrid().Face(f).Cell(1);
                 //cout << "Global Cell 1: "<< cell[1]<<endl;
                 //Search global neighbour cell
                 int neigh=phi.ConstGrid().Cell(cell[0]).SearchNeighbour(cell[1]);

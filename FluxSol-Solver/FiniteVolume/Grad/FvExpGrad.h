@@ -315,7 +315,7 @@ namespace FluxSol
         {
             int f=*it;
 //            //cout << "Face "<<f<<endl;
-            _FvFace face=VolField.Grid().Face(f);
+//            _FvFace face=VolField.Grid().Face(f);
 //            if (!face.Is_Null_Flux_Face())
 //            {
 //                if (!VolField.Grid().Face(f).Boundaryface())
@@ -323,13 +323,13 @@ namespace FluxSol
 //                    //cout << "Not boundary face"<<endl;
 //                    //nbr_eqn.push_back(VolField.Grid().Cell(c));
 //                    //eqnsys.Eqn(face.Cell(0)).Coeffs(ap,an);
-                    int pid=face.Cell(0);
-                    int nid=face.Cell(1);
+                    int pid=VolField.Grid().Face(f).Cell(0);
+                    int nid=VolField.Grid().Face(f).Cell(1);
 
 //                    cout << "pid nid" << pid << " " <<nid<<endl;
 
 
-                    T grad=(VolField.Val(nid).Val()-VolField.Val(pid).Val())*face.Norm_ad()/face.Dist_pn();
+                    T grad=(VolField.Val(nid).Val()-VolField.Val(pid).Val())*VolField.Grid().Face(f).Norm_ad()/VolField.Grid().Face(f).Dist_pn();
                    // r.Val(f, grad);
                    //cout << "Face "<<f<<endl;
                    //cout << "grad val " << grad.Val()<<endl;

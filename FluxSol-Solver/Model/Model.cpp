@@ -37,7 +37,7 @@ Model::Model(const std::string filename)
 
         inputfile.AssignGridPtr(this->mesh);                               //Assuming CGNS file
         //TO MODIFY, READED BY INPUT
-        this->maxiter=200;
+        this->maxiter=500;
 
             //std::vector<int> listi=inputfile.section("grid",0).subsection("patch",0).get_intList("list");
 //        std::cout << "Getting list"<<endl;
@@ -365,7 +365,9 @@ void CFDModel::InitFields()
         fitlog << ittime_spent <<" " ;
 
         pEqn=FvImp::Laplacian(rho*AUr,p);   //Solve Laplacian for p (by the way, is p´)
-        pEqn==FvExp::Div(phi);
+
+        //FvExp::Div(phi);GetNShowTimeSpent("Temp Ext div");
+        pEqn==FvExp::Div(phi);GetNShowTimeSpent("Ext div + operator==");
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         ittime_end = clock();

@@ -82,6 +82,8 @@ public Solver<number>
 	void PreAllocateRows(const vector<int> &nnz);
 	void PreAllocateRows(const PetscInt &cols);
 
+	Mat Matrix(){return this->A;}
+
 	void Solve();
 	template <typename T>
     void Solve(EqnSystem <T> &TEqn){};

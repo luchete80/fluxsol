@@ -37,6 +37,9 @@ using namespace std;
 //EL SISTEMA DE ECUACIONES PODRIA TENER UNA MATRIZ Y UN VECTOR
 namespace FluxSol{
 
+
+template <typename T>
+class Eqn;
 template <typename T>
 class EqnSystem;
 
@@ -235,17 +238,19 @@ class EqnSystem{   //Es un vector de ecuaciones
 	    this->eqn.clear();
 	    this->GridPtr=right.GridPtr;
 	    this->eqn.resize(right.EqnV().size());
+
+	    this->nbr_eqn.resize(right.nbr_eqn.size());
         for (int e=0;e<right.EqnV().size();e++)
         {
             //this->eqn.push_back(right.Eqn(e));
             this->eqn[e]=right.Eqn(e);
         }
 
-        for (int f=0;f<right.first_nonzero_column.size();f++)
-            this->first_nonzero_column.push_back(right.first_nonzero_column[f]);
-
-        for (int f=0;f<right.nbr_eqn.size();f++)
-            this->nbr_eqn.push_back(right.nbr_eqn[f]);
+//        for (int f=0;f<right.first_nonzero_column.size();f++)
+//            this->first_nonzero_column.push_back(right.first_nonzero_column[f]);
+//
+//        for (int f=0;f<right.nbr_eqn.size();f++)
+//            this->nbr_eqn.push_back(right.nbr_eqn[f]);
 
         this->dimension=right.dimension;
 

@@ -283,12 +283,47 @@ void EqnSystem<T>::Log(std::string str)
 		eqn[e].Log(file);
 	}
 }
+//
+//template <typename T>
+//EqnSystem<T>::EqnSystem(const Fv_CC_Grid &FvG)//:grid(Fv_CC_Grid(FvG))
+//{
+//    this->GridPtr=&FvG;
+//	dimension=int(pTraits<T>::rank);
+//
+//	for (int c=0;c<FvG.Num_Cells();c++)
+//    {
+//		vector <T> an;
+//		vector <Scalar> an;
+//		Scalar init_an;
+//        cout << "Cell "<<endl;
+//		//Insert empty Values
+//		T source;
+//		Scalar ap;
+//		vector <int> nbr_id;
+//		cout << "Neighbours number" <<endl;
+//		_Cell cc(FvGrid.Cell(c));
+//		cout << "Assigned"<<endl;
+//		cout << FvGrid.Cell(c).Num_Neighbours()<<endl;
+//		an.assign(FvG.Cell(c).Num_Neighbours(),init_an),
+//		nbr_id.assign(FvG.Cell(c).Num_Neighbours(),0);
+//
+//        cout << "Neighbours"<<endl;
+//		for (int n=0;n<FvG.Cell(c).Num_Neighbours();n++)
+//			nbr_id[n]=FvG.Cell(c).Neighbour(n);
+//
+//		FluxSol::Eqn <T> eq(c,ap,an,source,nbr_id);
+//		eqn.push_back(eq);
+//
+//	}//End for cells
+//
+//}
 
 template <typename T>
-EqnSystem<T>::EqnSystem(const Fv_CC_Grid &FvG)//:grid(Fv_CC_Grid(FvG))
+EqnSystem<T>::EqnSystem(const Fv_CC_Grid &FvG)
 {
     this->GridPtr=&FvG;
 	dimension=int(pTraits<T>::rank);
+    eqn=std::vector < FluxSol::Eqn <T> >(FvG.Num_Cells());
 
 	for (int c=0;c<FvG.Num_Cells();c++)
     {
@@ -304,15 +339,24 @@ EqnSystem<T>::EqnSystem(const Fv_CC_Grid &FvG)//:grid(Fv_CC_Grid(FvG))
 		//_Cell cc(FvGrid.Cell(c));
 		//cout << "Assigned"<<endl;
 		//cout << FvGrid.Cell(c).Num_Neighbours()<<endl;
-		an.assign(FvG.Cell(c).Num_Neighbours(),init_an),
-		nbr_id.assign(FvG.Cell(c).Num_Neighbours(),0);
+		eqn[c].id=c;
+		eqn[c].ap=ap;eqn[c].source=source;eqn[c].x=0.;
+		eqn[c].an=vector<Scalar>(FvG.Cell(c).Num_Neighbours());
+		eqn[c].neighbour_id=vector<int>(FvG.Cell(c).Num_Neighbours());
+		eqn[c].num_neighbours=FvG.Cell(c).Num_Neighbours();
+
+//		vector<int> nid(FvG.Cell(c).Num_Neighbours());
+//		vector<Scalar> van(FvG.Cell(c).Num_Neighbours());
+
 
         //cout << "Neighbours"<<endl;
 		for (int n=0;n<FvG.Cell(c).Num_Neighbours();n++)
-			nbr_id[n]=FvG.Cell(c).Neighbour(n);
-
-		FluxSol::Eqn <T> eq(c,ap,an,source,nbr_id);
-		eqn.push_back(eq);
+        {
+            eqn[c].an[n]=0.;eqn[c].neighbour_id[n]=FvG.Cell(c).Neighbour(n);
+            //nid[n]=FvG.Cell(c).Neighbour(n);
+        }
+		//FluxSol::Eqn<T>eq(c,ap,van,source,nid);
+		//eqn[c]=eq;
 
 	}//End for cells
 
