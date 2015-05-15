@@ -209,26 +209,63 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
     cout << "divergence interior faces loop "<<ittime_spent <<endl;
      ittime_end = clock();
 
+//    for (int p=0;p<phi.Grid().vBoundary().Num_Patches();p++)
+//    {
+//        for (int f=0;f<phi.Grid().vBoundary().vPatch(p).Num_Faces();f++)
+//        {
+//            int idface=phi.Grid().vBoundary().vPatch(p).Id_Face(f);
+//            _FvFace bface=phi.Grid().Face(idface);  //TO MODIFY idface or face pos??
+//            if (!bface.Is_Null_Flux_Face())
+//            {
+//                //Boundary typeº
+//                //Instead of if sentence it is convenient to use inheritance
+//                if (phi.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
+//                {
+//
+//                    //if(FluxField.Val(idface)<0.)
+//                        //If flux is inwards, source is positive (is RHS)
+//                        //cout << "Boundary Field Value"<<phi.Boundaryfield()._PatchField(p).Val(f).Val()<<endl;
+//                        //cout << "id_face" << idface<<endl;
+//                        //cout << "Value "<< phi.Boundaryfield().PatchField(p).Val(f).outstr()<<endl;
+//
+//                    eqnsys.Eqn(bface.Cell(0)).Source()-=phi.Boundaryfield().PatchField(p).Val(f)*FluxField.Val(idface);
+//                }
+//                else if (phi.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
+//                {
+//                    //TO MODIFY
+//                    //source=VolField.Boundaryfield()._PatchField(p).Val(f)*fi;
+//                    //eqnsys.Eqn(face.Cell(0)).Source()+=source;
+//                }
+//            }
+//        }
+//
+//    }
+
     for (int p=0;p<phi.Grid().vBoundary().Num_Patches();p++)
     {
-        for (int f=0;f<phi.Grid().vBoundary().vPatch(p).Num_Faces();f++)
-        {
-            int idface=phi.Grid().vBoundary().vPatch(p).Id_Face(f);
-            _FvFace bface=phi.Grid().Face(idface);  //TO MODIFY idface or face pos??
-            if (!bface.Is_Null_Flux_Face())
-            {
+        //for (int f=0;f<phi.Grid().vBoundary().vPatch(p).Num_Faces();f++)
+        //{
+            //int idface=phi.Grid().vBoundary().vPatch(p).Id_Face(f);
+            //_FvFace bface=phi.Grid().Face(idface);  //TO MODIFY idface or face pos??
+            //if (!bface.Is_Null_Flux_Face())
+            //{
                 //Boundary typeº
                 //Instead of if sentence it is convenient to use inheritance
                 if (phi.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
                 {
+                    for (int f=0;f<phi.Grid().vBoundary().vPatch(p).Num_Faces();f++)
+                    {
+                        int idface=phi.Grid().vBoundary().vPatch(p).Id_Face(f);
+                        //_FvFace bface=phi.Grid().Face(idface);  //TO MODIFY idface or face pos??
 
-                    //if(FluxField.Val(idface)<0.)
+                        //if(FluxField.Val(idface)<0.)
                         //If flux is inwards, source is positive (is RHS)
                         //cout << "Boundary Field Value"<<phi.Boundaryfield()._PatchField(p).Val(f).Val()<<endl;
                         //cout << "id_face" << idface<<endl;
                         //cout << "Value "<< phi.Boundaryfield().PatchField(p).Val(f).outstr()<<endl;
 
-                    eqnsys.Eqn(bface.Cell(0)).Source()-=phi.Boundaryfield().PatchField(p).Val(f)*FluxField.Val(idface);
+                        eqnsys.Eqn(phi.Grid().Face(idface).Cell(0)).Source()-=phi.Boundaryfield().PatchField(p).Val(f)*FluxField.Val(idface);
+                    }
                 }
                 else if (phi.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
                 {
@@ -236,11 +273,14 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
                     //source=VolField.Boundaryfield()._PatchField(p).Val(f)*fi;
                     //eqnsys.Eqn(face.Cell(0)).Source()+=source;
                 }
-            }
-        }
+//                else
+//                {
+//                    cout << "Patch passed"<<endl;
+//                }
+            //}
+        //}
 
     }
-
     //cout << "Returning laplacian"<<endl;
     ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
     ittime_end = clock();

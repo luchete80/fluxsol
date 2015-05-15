@@ -391,22 +391,14 @@ void CFDModel::InitFields()
         U=U-alpha_u*(AUr*FvExp::Grad(pEqn.Field()));                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
         p=p+alpha_p*pEqn.Field();
 
-        ittime_temp = clock();
         //Correct Flux: m = m* + m´
         //phi=phi-FvExp::SnGrad(AUr*p);   //Add deferred correction to this gradient
         //Correct WITH P CORRECTION
-        _CC_Fv_Field<Scalar> pcorr(mesh);   //TO MODIFY; ASSIGN MESH AUTOMATICALLY
+        //_CC_Fv_Field<Scalar> pcorr(mesh);   //TO MODIFY; ASSIGN MESH AUTOMATICALLY
 
-         ittime_spent = (double)(clock() - ittime_temp ) / CLOCKS_PER_SEC;
-        ittime_temp = clock();
-        cout << "phi corr gen"<<ittime_spent<<endl;
-
-        pcorr=pEqn.Field();
-        phi= phi - alpha_u*AUrf_*FvExp::SnGrad(pcorr);
-
-        ittime_spent = (double)(clock() - ittime_temp ) / CLOCKS_PER_SEC;
-        ittime_temp = clock();
-        cout << "phi corr gen"<<ittime_spent<<endl;
+        //pcorr=pEqn.Field();
+        //phi= phi - alpha_u*AUrf_*FvExp::SnGrad(pcorr);
+        phi= phi - alpha_u*AUrf_*FvExp::SnGrad(pEqn.Field());
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         ittime_end = clock();

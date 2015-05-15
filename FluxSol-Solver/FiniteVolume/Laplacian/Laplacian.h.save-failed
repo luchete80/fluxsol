@@ -290,51 +290,7 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 
     ittime_end = clock();
 
-
-//	// BORDE - BOUNDARY
-//	//cout << "Laplacian, look through boundary.."<<endl;
-//	// TO MODIFY: THIS IF MUST BE ONCE PER PATCH, NOT FOR FACE!!!!!
-//	// PATCH MUST BE A LIST OF NON NULL FLUX FACES
-//	for (int p=0;p<VolField.Grid().vBoundary().Num_Patches();p++)
-//	{
-//		for (int f=0;f<VolField.Grid().vBoundary().vPatch(p).Num_Faces();f++)
-//		{
-//			int idface=VolField.Grid().vBoundary().vPatch(p).Id_Face(f);
-//			//_FvFace face=VolField.Grid().Face(idface);  //TO MODIFY idface or face pos??
-//			//cout << "BOUNDARY"<<endl;
-//
-//            if (!VolField.Grid().Face(idface).Is_Null_Flux_Face())
-//            {
-//                //Boundary type
-//                //Instead of if sentence it is convenient to use inheritance
-//                //TO MODIFY!!! CHANGE TO INHERITED PATCHFIELD ACTION!!!!!
-//                if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDVALUE)
-//                {
-//                        //cout <<"FIXED VAL"<<endl;
-//                        ap=-VolField.Grid().Face(idface).Norm_ad()/fabs(VolField.Grid().Face(idface).Dist_pf_LR(0))*fi;
-//                        source=VolField.Boundaryfield().PatchField(p).Val(f)*ap;
-//                        //cout <<"created" <<endl;
-//                        eqnsys.Eqn(VolField.Grid().Face(idface).Cell(0)).Ap()+=ap;
-//                        eqnsys.Eqn(VolField.Grid().Face(idface).Cell(0)).Source()+=source;
-//
-//                }
-//                else if (VolField.Boundaryfield().PatchField(p).Type()==FIXEDGRADIENT)
-//                {
-//
-//                        //cout << "FIXED WIDTH"<<endl;
-//                        source=VolField.Boundaryfield().PatchField(p).Val(f)*fi;
-//                        eqnsys.Eqn(VolField.Grid().Face(idface).Cell(0)).Source()+=source;
-//
-//                }
-//            }//If !NullFluxFace
-//		}
-//
-//	}
-
-
-
 	// BORDE - BOUNDARY
-  // FASTER
 	//cout << "Laplacian, look through boundary.."<<endl;
 	// TO MODIFY: THIS IF MUST BE ONCE PER PATCH, NOT FOR FACE!!!!!
 	// PATCH MUST BE A LIST OF NON NULL FLUX FACES
@@ -374,10 +330,10 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
                         eqnsys.Eqn(VolField.Grid().Face(idface).Cell(0)).Source()+=source;
                     }
                 }
-//                else if (VolField.Boundaryfield().PatchField(p).Type()==NULL_FLUX)
-//                {
-//                    cout << "Patch passed"<<endl;
-//                }
+                else if (VolField.Boundaryfield().PatchField(p).Type()==NULL_FLUX)
+                {
+
+                }
             //}//If !NullFluxFace
 		//}
 

@@ -292,7 +292,7 @@ namespace FluxSol
     //< typename outerProduct<Vec3D, T>::type >
     //TILL NOW IS NOT PASSED BY REF
     < T >
-	SnGrad (_CC_Fv_Field <T> &VolField)
+	SnGrad (const _CC_Fv_Field <T> &VolField)
 	{
 	    _Surf_Fv_Field <T> r(VolField.ConstGrid());
 

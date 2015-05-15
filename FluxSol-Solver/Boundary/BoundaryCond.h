@@ -195,6 +195,9 @@ class NullFluxBC:
             {
                 int idface=this->patchptr->Id_Face(f);
                 this->grid->Face(idface).Null_Flux_Face(true);
+
+                this->ufieldptr->AssignType(NULL_FLUX);
+                this->pfieldptr->AssignType(NULL_FLUX);
             }
         }
 };
