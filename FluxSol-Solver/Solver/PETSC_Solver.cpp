@@ -155,6 +155,9 @@ void PETSC_KSP_Solver<number>::PETSC_Init()
 	*/
 
 	ierr = KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);CHKERRQ(ierr);
+	//ierr = KSPSetOperators(ksp,A,A);CHKERRQ(ierr);
+	//KSPSetFromOptions(ksp);
+
 	/*
 	Set linear solver defaults for this problem (optional).
 	- By extracting the KSP and PC contexts from the KSP context,
@@ -199,9 +202,18 @@ void PETSC_KSP_Solver<number>::PETSC_Init()
 		ierr = KSPSetInitialGuessNonzero(ksp,PETSC_TRUE);CHKERRQ(ierr);
 	}
 
+
 	ierr=VecSet(this->b,0.);
 	ierr=VecSet(this->x,0.);
+
+	//REORDErING VARS
+    permute=PETSC_FALSE;     //Matrix reordering
+    mat_ord_type=MATORDERINGRCM;
+    rowperm = NULL,colperm = NULL;
+
 	cout << "Solver Initialized." <<endl;
+
+
 }
 //
 template <typename number>
@@ -234,15 +246,6 @@ void PETSC_KSP_Solver<number>::PreAllocateRows(const PetscInt &cols)
 template <typename number>
 void PETSC_KSP_Solver<number>::Solve()
 {
-
-    //For matrix Reordering
-
-    MatOrderingType mat_ord_type;       //For Matrix reordering (See PETSC example 1 and 18)
-    IS rowperm,colperm;
-
-    PetscBool permute=PETSC_FALSE;     //Matrix reordering
-    mat_ord_type=MATORDERINGRCM;
-    rowperm = NULL,colperm = NULL;
 
 	ierr = MatAssemblyBegin(this->A,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
 	ierr = MatAssemblyEnd(this->A,MAT_FINAL_ASSEMBLY);CHKERRQ(ierr);
@@ -628,6 +631,12 @@ void Solve(EqnSystem <T> &TEqn)
 
     cout << "Assembying Eqns"<<endl;
     PetscInt rowi,coli;
+
+    //Max Neighbours
+    PetscScalar vals [1][10];      //block
+    PetscInt idxm[3],idxn[3][10];   //rows and cols index
+
+
 	for (int e=0;e<TEqn.Num_Eqn();e++)	//Aca voy con las filas de a 2
 	{
 	    //Width Assign
@@ -642,6 +651,8 @@ void Solve(EqnSystem <T> &TEqn)
         //vector <double> col;
         //CENTRAL COEFFS
         //col=ap;
+
+
         for (int dim=0;dim<numberofcomp;dim++)
         {
             //SetMatVal(const PetscInt &row, const PetscInt &col, const PetscScalar &value)
@@ -651,7 +662,9 @@ void Solve(EqnSystem <T> &TEqn)
         }
 
 
-
+        //vals=vector<PetscScalar>(TEqn.Eqn(e).Neighbour(nc));
+        //vector < vector <> >
+        PetscScalar vals [TEqn.Eqn(e).Num_Neighbours()][TEqn.Eqn(e).Num_Neighbours()];
 		//Look trough entire width for neighbours id
 		//The main idea is to look through eqn width
 		//Real cell id is taken, and then are watched all neighbours to check if each real cell id belongs to neighbours vector
@@ -663,18 +676,26 @@ void Solve(EqnSystem <T> &TEqn)
 			int columnid=numberofcomp*realcellid;
             col=TEqn.Eqn(e).An(nc).Comp();
             //cout << "Found Cell " <<endl;
+            vals[0][nc]=TEqn.Eqn(e).An(nc).Comp()[0];
+
+
             for (int dim=0;dim<numberofcomp;dim++)
             {
                 rowi=row+dim;
                 coli=columnid+dim;
-                MatSetValues(Solver.Matrix(),1,&rowi,1,&coli,&col[0],INSERT_VALUES);
+                //MatSetValues(Solver.Matrix(),1,&rowi,1,&coli,&col[0],INSERT_VALUES);
 
+                idxm[dim]=row+dim;
+                idxn[dim][nc]=columnid+dim;
                 //Original
                 //Solver.SetMatVal(row+dim, columnid+dim, col[0]);    //An is scalar
             }
 
-
 		}//En of neighbours
+
+        //New, block
+        for (int dim=0;dim<numberofcomp;dim++)
+            MatSetValues(Solver.Matrix(),1,&idxm[dim],TEqn.Eqn(e).Num_Neighbours(),idxn[dim],vals[0],INSERT_VALUES);
 
 
 	}//End of cells	for (int e=0;e<TEqn.Num_Eqn();e++)	//Aca voy con las filas de a 2

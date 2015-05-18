@@ -51,6 +51,7 @@ public Solver<number>
 		Vec x; // solution, residual vectors
 		Mat SysMat;
 
+        PetscBool permute;
 		MatOrderingType mat_ord_type;       //For Matrix reordering (See PETSC example 1 and 18)
 		IS rowperm,colperm;
 
@@ -89,6 +90,8 @@ public Solver<number>
     void Solve(EqnSystem <T> &TEqn){};
 
 	void InsertRow(const int &row, const std::vector<int> &cols, const std::vector <double> &vals);
+
+	void SetPermute(const PetscBool & b) {permute=b;}
 
 
 	inline void SetMatVal(const PetscInt &row, const PetscInt &col, const PetscScalar &value);
