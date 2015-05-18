@@ -377,6 +377,17 @@ EqnSystem <T> & EqnSystem <T>::operator==(const EqnSystem <T> &right)
 //			cout << "operator =="<< this-> eqn[e].NeighboursIds().size()<<endl;
 			this->eqn[e] = (this->eqn[e] == right.Eqn(e));
 //			cout << "operator =="<< this-> eqn[e].NeighboursIds().size()<<endl;
+
+//
+//            this->eqn[e].ap -= right.eqn[e].ap;
+//
+//            for (int n=0;n<this->eqn[e].an.size();n++)
+//            {
+//                this->eqn[e].an[n]-=right.eqn[e].an[n];
+//            }
+//
+//            this->eqn[e].source -= right.eqn[e].source;
+
 		}
 	}
 	else

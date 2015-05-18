@@ -97,8 +97,12 @@ public Solver<number>
 	inline void SetMatVal(const PetscInt &row, const PetscInt &col, const PetscScalar &value);
 	inline void AddMatVal(const PetscInt &row, const PetscInt &col, const PetscScalar &value);
 	void SetbValues(const PetscInt &row, const PetscScalar &value);	//TO MODIFY, TEMPLATIZE TO VALUE
+	void SetbValues(const vector<int> &row, const vector<number> &val);
+	void SetxValues(const vector<int> &row, const vector<number> &val);
 	void AddbValues(const PetscInt &row, const PetscScalar &value);	//TO MODIFY, TEMPLATIZE TO VALUE
 	void SetbValues(const PetscScalar &value);
+
+	void SetxValues(const PetscInt &row, const PetscScalar &value);	//TO MODIFY, TEMPLATIZE TO VALUE
 
 
 	const std::vector <number> X() const;	//Returns X Solution

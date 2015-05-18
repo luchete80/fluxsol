@@ -203,6 +203,9 @@ void CFDModel::InitFields()
     //TO FIX: MAKE THIS WORK
     _Surf_Fv_Field <Scalar> AUrf_;
 
+    UEqn.InitField(U);
+    pEqn.InitField(p);
+
 	while (!conv && it < this->maxiter)
 	//while (!conv && it < 38)
 	{
@@ -270,13 +273,6 @@ void CFDModel::InitFields()
         ittime_end = clock();
         fitlog << ittime_spent <<" " ;
 
-        endtimec= time(0);
-
-
-		//double timec=(double) (endtime-starttime) / CLOCKS_PER_SEC * 1000.0;
-		double time=(double) difftime(endtimec, starttimec);
-//
-//
         ittime_temp=clock();
 
         //UEqn.Field(); GetNShowTimeSpent("phi_calc: test Field() function ");
@@ -365,6 +361,7 @@ void CFDModel::InitFields()
         fitlog << ittime_spent <<" " ;
 
         pEqn=FvImp::Laplacian(rho*AUr,p);   //Solve Laplacian for p (by the way, is p´)
+        GetNShowTimeSpent("peqn Laplacian (LHS)==");
 
         //FvExp::Div(phi);GetNShowTimeSpent("Temp Ext div");
         pEqn==FvExp::Div(phi);GetNShowTimeSpent("Ext div + operator==");
@@ -376,9 +373,9 @@ void CFDModel::InitFields()
         //pEqn.Eqn(36).SetValueCondition(0.);
         //Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
 
-        FluxSol::Solve(pEqn);
-        //PETSC_GAMGSolver <double>pSolver;
-        //pSolver.Solve(pEqn);
+        //FluxSol::Solve(pEqn);
+        PETSC_GAMGSolver <double>pSolver;
+        pSolver.Solve(pEqn);
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         ittime_end = clock();

@@ -259,7 +259,7 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 
 	for (std::set<int>::iterator it=VolField.IntNetFluxFaces().begin(); it!=VolField.IntNetFluxFaces().end(); ++it)
     {
-        vector <int> local_nb_face_cell=VolField.Grid().FaceLocalCellNeighbour(*it);
+        //vector <int> local_nb_face_cell=VolField.Grid().FaceLocalCellNeighbour(*it);
 //	for (int f=0;f<VolField.Grid().Num_Faces();f++)
 //	{
 	    //cout << "Face "<<f<<endl;

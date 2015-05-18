@@ -57,12 +57,12 @@ GeomSurfaceField <T> Interpolate(const _CC_Fv_Field <T> &field)
 
         //Loop throug faces
         Scalar fp[2];
+        T prom;
         for (int f = 0; f<field.ConstGrid().Num_Faces(); f++)
         {
             //_FvFace face = field.ConstGrid().Face(f);
-            T prom;
             //Scalar fp
-
+            prom=0.;
             //cout <<"Face "<< f<< " cell 0 Field Value: "<< field[face.Cell(0)].outstr() << endl;
             //if (!field.ConstGrid().Face(f).Boundaryface())
             //    cout <<" "<< field[face.Cell(1)].outstr() <<endl;

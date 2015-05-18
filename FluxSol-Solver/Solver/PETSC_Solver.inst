@@ -35,6 +35,9 @@ template
 void PETSC_KSP_Solver<double>::SetbValues(const PetscInt &row, const PetscScalar &value);
 
 template
+void PETSC_KSP_Solver<double>::SetxValues(const PetscInt &row, const PetscScalar &value);
+
+template
 void PETSC_KSP_Solver<double>::AddbValues(const PetscInt &row, const PetscScalar &value);
 
 template

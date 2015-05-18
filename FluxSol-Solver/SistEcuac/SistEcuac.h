@@ -162,6 +162,8 @@ class EqnSystem{   //Es un vector de ecuaciones
 
 	_CC_Fv_Field   <T> field;              //Field referring to Eqn System results
 
+	_CC_Fv_Field <T> *initfield;             //Initial field val
+
     public:
 
 	EqnSystem(const int &n, Eqn<T> &eqq)
@@ -188,6 +190,7 @@ class EqnSystem{   //Es un vector de ecuaciones
 	EqnSystem(const Fv_CC_Grid &);
 
 	//EqnSystem(_CC_Fv_Field <T> &fvfield);
+
 
     //Ensamble
     void Ensamblar(const int &pos, const Eqn<T> ec);
@@ -308,7 +311,7 @@ class EqnSystem{   //Es un vector de ecuaciones
     const _CC_Fv_Field<T> Field()const
     {
         _CC_Fv_Field<T> field(this->Grid());
-        vector <T*> temp(this->Num_Eqn());
+        //vector <T*> temp(this->Num_Eqn());
         //Can compare number of cells vs number of eqn
         for (int e=0;e<this->Num_Eqn();e++)
         {
@@ -337,6 +340,14 @@ class EqnSystem{   //Es un vector de ecuaciones
 //        _CC_Fv_Field<Scalar> field(this->Grid(),temp);
         return field;
 	}
+
+	//_CC_Fv_Field <T> InitialField(){}
+	void InitField(const _CC_Fv_Field <T> &field)
+	{
+        initfield=&field;
+	}
+
+	const _CC_Fv_Field <T> & InitField()const{return *initfield;}
 
     const string outstr()const
 	{
