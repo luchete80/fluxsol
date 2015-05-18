@@ -24,7 +24,7 @@
 #include "FluxSol.h"
 
 // LAPLACIAN MESH REORDER FOR
-
+//SIMILAR TO EXAMPLE 18
 
 
 int main(int argc,char **args)
@@ -35,47 +35,25 @@ int main(int argc,char **args)
    KSP            ksp;     /* linear solver context */
    PetscRandom    rctx;     /* random number generator context */
    PetscReal      norm;     /* norm of solution error */
-   PetscInt       i,j,Ii,J,Istart,Iend,m,n,its;
-   PetscBool      random_exact_sol,view_exact_sol,permute;
+   PetscInt       i,j,Ii,J,Istart,Iend,its;
+   PetscBool      random_exact_sol,view_exact_sol,permute,amgsolver;
    char           ordering[256] = MATORDERINGRCM;
    IS             rowperm       = NULL,colperm = NULL;
    PetscScalar    v;
+   PC pc; // preconditioner context
+
+
      #if defined(PETSC_USE_LOG)
        PetscLogStage stage;
      #endif
 
-    permute=PETSC_TRUE;
+    MPI_Comm       comm;
 
-    cout << "Input file: "<< args[1]<<endl;
+    PetscErrorCode ierr;
 
-    cout << "Reading square.cgns ..."<<endl;
-	Fv_CC_Grid malla(args[1]);
-	//malla.ReadCGNS();
+    clock_t ittime_begin, ittime_end;
+    double ittime_spent;
 
-	//malla.Log("Log.txt");
-
-	_CC_Fv_Field <Scalar> T(malla);
-
-	//Boundary conditions
-	Scalar wallvalue=0.;
-	Scalar topvalue=1.;
-
-	T.Boundaryfield().PatchField(1).AssignValue(topvalue);
-
-
-	// Materiales
-	//vector<Materials> material=SetMaterials();
-
-	EqnSystem <Scalar> TEqn;
-	//Construir aca con la malla
-	//Scalar k(1.);	//Difusion, puede ser un escalar
-	//Scalar kdiff=material[0].k;
-	Scalar kdiff=1.;
-	cout<<"Generating system"<<endl;
-	TEqn=(FvImp::Laplacian(kdiff,T)==0.);
-
-
-    int numberofcomp=pow(3.,TEqn.Dim());
 
     /////////////////////////////////// SOLVER CREATION ///////////////////////////////////////////
 
@@ -96,8 +74,48 @@ int main(int argc,char **args)
 
    char help[100];
    PetscInitialize(&argc,&args,(char *)0,help);
+   char           opstring[256];
 
-   int totrows=TEqn.Num_Eqn()*TEqn.Num_Eqn();
+    PetscOptionsBegin(PETSC_COMM_WORLD,NULL,"Poisson example options","");
+    {
+        //PetscOptionsBool("-random_exact_sol","Choose a random exact solution","",random_exact_sol,&random_exact_sol,NULL);
+        //PetscOptionsString("-test_op","Designate which MPI_Op to use","",opstring,opstring,256,NULL);
+      PetscOptionsString("-file","Grid File","",opstring,opstring,256,NULL);
+     permute          = PETSC_FALSE;
+     //PetscOptionsBool(const char opt[],const char text[],const char man[],PetscBool deflt,PetscBool  *flg,PetscBool  *set)
+     PetscOptionsBool("-permute","Ordering","",permute,&permute,NULL);
+     //PetscOptionsFList("-permute","Permute matrix and vector to solving in new ordering","",MatOrderingList,ordering,ordering,sizeof(ordering),&permute);
+    amgsolver=PETSC_FALSE;
+     PetscOptionsBool("-amg","solver AMG","",amgsolver,&amgsolver,NULL);
+}
+  PetscOptionsEnd();
+
+    //cout << "Input file: "<< args[1]<<endl;
+    cout << "Input file: "<< opstring<<endl;
+
+    if (permute)    cout << "Matrix Permutation is enabled..."<<endl;
+    else            cout << "Matrix Permutation is disabled..."<<endl;
+
+	//Fv_CC_Grid malla(args[1]);
+	Fv_CC_Grid malla(opstring);
+	_CC_Fv_Field <Scalar> T(malla);
+
+	//Boundary conditions
+	Scalar wallvalue=0.;
+	Scalar topvalue=1.;
+
+	T.Boundaryfield().PatchField(1).AssignValue(topvalue);
+
+	EqnSystem <Scalar> TEqn;
+	Scalar kdiff=1.;
+	cout<<"Generating system"<<endl;
+	TEqn=(FvImp::Laplacian(kdiff,T)==0.);
+
+    int numberofcomp=pow(3.,TEqn.Dim());
+
+
+   int totrows=TEqn.Num_Eqn();
+   comm = PETSC_COMM_WORLD;
    MatCreate(PETSC_COMM_WORLD,&A);
    MatSetSizes(A,PETSC_DECIDE,PETSC_DECIDE,totrows,totrows);
    MatSetFromOptions(A);
@@ -105,11 +123,19 @@ int main(int argc,char **args)
    MatSeqAIJSetPreallocation(A,5,NULL);
    MatSetUp(A);
 
-   /*
-      Currently, all PETSc parallel matrix formats are partitioned by
-      contiguous chunks of rows across the processors.  Determine which
-      rows of the matrix are locally owned.
-   */
+   VecCreate(PETSC_COMM_WORLD,&u);
+   VecSetSizes(u,PETSC_DECIDE,totrows);
+   VecSetFromOptions(u);
+   VecDuplicate(u,&b);
+   VecDuplicate(b,&x);
+
+
+//
+//   /*
+//      Currently, all PETSc parallel matrix formats are partitioned by
+//      contiguous chunks of rows across the processors.  Determine which
+//      rows of the matrix are locally owned.
+//   */
    MatGetOwnershipRange(A,&Istart,&Iend);
 
    /*
@@ -144,7 +170,7 @@ int main(int argc,char **args)
 	for (int e=0;e<TEqn.Num_Eqn();e++)	//Aca voy con las filas de a 2
 	{
 	    //Width Assign
-        cout << "Eqn "<<e<<endl;
+        //cout << "Eqn "<<e<<endl;
         //cout << "Assemblying Eqn "<<e<<endl;
 		//vector <double> ap=TEqn.Eqn(e).Ap().Comp();
 		Scalar value;
@@ -206,7 +232,7 @@ int main(int argc,char **args)
 
 
 
-
+    cout << "Assembly RHS vector"<<endl;
     //cout << "R vector (from zero)"<<endl;
 	//V_SetAllCmp(&R,0.0);
 	for (int e=0;e<TEqn.Num_Eqn();e++)
@@ -236,8 +262,18 @@ int main(int argc,char **args)
    MatAssemblyEnd(A,MAT_FINAL_ASSEMBLY);
    PetscLogStagePop();
 
+
+     if (PETSC_TRUE)
+    {
+    PetscViewer viewer;
+    ierr = PetscViewerASCIIOpen(comm, "Amat.m", &viewer);CHKERRQ(ierr);
+    ierr = PetscViewerSetFormat(viewer, PETSC_VIEWER_ASCII_MATLAB);CHKERRQ(ierr);
+    ierr = MatView(A,viewer);CHKERRQ(ierr);
+    ierr = PetscViewerDestroy(&viewer);
+  }
+
    /* A is symmetric. Set symmetric flag to enable ICC/Cholesky preconditioner */
-   MatSetOption(A,MAT_SYMMETRIC,PETSC_TRUE);
+   //MatSetOption(A,MAT_SYMMETRIC,PETSC_TRUE);
 
    /*
       Create parallel vectors.
@@ -255,11 +291,7 @@ int main(int argc,char **args)
          (replacing the PETSC_DECIDE argument in the VecSetSizes() statement
          below).
    */
-   VecCreate(PETSC_COMM_WORLD,&u);
-   VecSetSizes(u,PETSC_DECIDE,m*n);
-   VecSetFromOptions(u);
-   VecDuplicate(u,&b);
-   VecDuplicate(b,&x);
+
 
    /*
       Set exact solution; then compute right-hand-side vector.
@@ -282,14 +314,14 @@ int main(int argc,char **args)
 //   */
 //   if (view_exact_sol) {VecView(u,PETSC_VIEWER_STDOUT_WORLD);}
 //
-//   if (permute) {
-//     Mat Aperm;
-//     MatGetOrdering(A,ordering,&rowperm,&colperm);
-//     MatPermute(A,rowperm,colperm,&Aperm);
-//     VecPermute(b,colperm,PETSC_FALSE);
-//     MatDestroy(&A);
-//     A    = Aperm;               /* Replace original operator with permuted version */
-//   }
+   if (permute) {
+     Mat Aperm;
+     MatGetOrdering(A,ordering,&rowperm,&colperm);
+     MatPermute(A,rowperm,colperm,&Aperm);
+     VecPermute(b,colperm,PETSC_FALSE);
+     MatDestroy(&A);
+     A    = Aperm;               /* Replace original operator with permuted version */
+   }
 
    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
                  Create the linear solver and set various options
@@ -304,6 +336,35 @@ int main(int argc,char **args)
       Set operators. Here the matrix that defines the linear system
       also serves as the preconditioning matrix.
    */
+
+
+	if (amgsolver)
+    {
+        PetscReal coords[3*totrows];
+     for (int n=0;n<TEqn.Grid().Num_Cells();n++)
+         for (int dim=0;dim<3;dim++) coords[3*totrows+dim]=TEqn.Grid().Node_(n).Coords()[dim];
+
+     ierr = KSPSetType(ksp, KSPCG);CHKERRQ(ierr);
+     ierr = KSPGetPC(ksp,&pc);CHKERRQ(ierr);
+     ierr = PCSetType(pc,PCGAMG);CHKERRQ(ierr);
+
+
+     /* ierr = PCGAMGSetType(pc,"agg");CHKERRQ(ierr); */
+
+     /* finish KSP/PC setup */
+     ierr = KSPSetOperators(ksp, A, A, SAME_NONZERO_PATTERN);CHKERRQ(ierr);
+     ierr = PCSetCoordinates(pc, 3, totrows, coords);CHKERRQ(ierr);
+
+    }
+    else
+    {
+        ierr = KSPGetPC(ksp,&pc);CHKERRQ(ierr);
+        //ierr = PCSetType(pc,PCJACOBI);CHKERRQ(ierr);
+        //ierr = PCSetType(pc,PCGAMG);CHKERRQ(ierr);
+        //ierr = PCSetType(pc,PCICC);CHKERRQ(ierr);
+        //ierr = PCSetType(pc,PCICC);CHKERRQ(ierr);
+        ierr = PCSetType(pc,PCILU);CHKERRQ(ierr);
+    }
    KSPSetOperators(ksp,A,A,DIFFERENT_NONZERO_PATTERN);
 
    /*
@@ -316,8 +377,11 @@ int main(int argc,char **args)
         KSPSetFromOptions().  All of these defaults can be
         overridden at runtime, as indicated below.
    */
-   KSPSetTolerances(ksp,1.e-2/((m+1)*(n+1)),1.e-50,PETSC_DEFAULT,
-                           PETSC_DEFAULT);
+//   KSPSetTolerances(ksp,1.e-5,1.e-50,PETSC_DEFAULT,
+//                       PETSC_DEFAULT);
+
+   KSPSetTolerances(ksp,1.e-2,PETSC_DEFAULT,PETSC_DEFAULT,
+                       PETSC_DEFAULT);
 
    /*
      Set runtime options, e.g.,
@@ -327,12 +391,20 @@ int main(int argc,char **args)
      routines.
    */
    KSPSetFromOptions(ksp);
+//   KSPSetType(ksp,KSPBCGS);    //BiCGSTAB
+   KSPSetType(ksp,KSPGMRES);    //GMRES
 
    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
                        Solve the linear system
       - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-   KSPSolve(ksp,b,x);
+    ittime_begin = clock();
+
+    KSPSolve(ksp,b,x);
+
+    ittime_spent = (double)(clock() - ittime_begin) / CLOCKS_PER_SEC;
+
+    cout << "PETSC Solving elapsed time: "<<ittime_spent<<endl;
 
    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
                        Check solution and clean up
@@ -347,6 +419,50 @@ int main(int argc,char **args)
    VecNorm(x,NORM_2,&norm);
    KSPGetIterationNumber(ksp,&its);
 
+  if (PETSC_TRUE) {
+    PetscReal   norm,norm2;
+    PetscViewer viewer;
+    Vec         res;
+    ierr = PetscViewerASCIIOpen(comm, "rhs.m", &viewer);CHKERRQ(ierr);
+    ierr = PetscViewerSetFormat(viewer, PETSC_VIEWER_ASCII_MATLAB);CHKERRQ(ierr);
+    ierr = VecView(b,viewer);CHKERRQ(ierr);
+    ierr = PetscViewerDestroy(&viewer);
+    ierr = VecNorm(b, NORM_2, &norm2);CHKERRQ(ierr);
+
+    ierr = PetscViewerASCIIOpen(comm, "solution.m", &viewer);CHKERRQ(ierr);
+    ierr = PetscViewerSetFormat(viewer, PETSC_VIEWER_ASCII_MATLAB);CHKERRQ(ierr);
+    ierr = VecView(x,viewer);CHKERRQ(ierr);
+    ierr = PetscViewerDestroy(&viewer);
+
+    ierr = VecDuplicate(x, &res);CHKERRQ(ierr);
+    ierr = MatMult(A, x, res);CHKERRQ(ierr);
+    ierr = VecAXPY(b, -1.0, res);CHKERRQ(ierr);
+    ierr = VecDestroy(&res);CHKERRQ(ierr);
+    ierr = VecNorm(b,NORM_2,&norm);CHKERRQ(ierr);
+    PetscPrintf(PETSC_COMM_WORLD,"[%d]%s |b-Ax|/|b|=%e, |b|=%e\n",0,__FUNCT__,norm/norm2,norm2);
+
+    ierr = PetscViewerASCIIOpen(comm, "residual.m", &viewer);CHKERRQ(ierr);
+    ierr = PetscViewerSetFormat(viewer, PETSC_VIEWER_ASCII_MATLAB);CHKERRQ(ierr);
+    ierr = VecView(b,viewer);CHKERRQ(ierr);
+    ierr = PetscViewerDestroy(&viewer);
+  }
+
+
+       ofstream file;
+    file.open("Out-Permuted.3D");
+    file << " x y z val"<<endl;
+    //sol=Solver.X();
+    double sol;
+    for (int i=0;i<totrows;i++)
+    {
+        //cout <<i<<endl;
+        VecGetValues(x,1,&i,&sol);;
+        for (int c=0;c<3;c++)   file << malla.Node_(i).comp[c]<<" ";
+        file << sol<<endl;
+    }
+
+
+
    /*
       Print convergence information.  PetscPrintf() produces a single
       print statement from all processes that share a communicator.
@@ -358,10 +474,6 @@ int main(int argc,char **args)
       Free work space.  All PETSc objects should be destroyed when they
       are no longer needed.
    */
-   KSPDestroy(&ksp);
-   VecDestroy(&u);  VecDestroy(&x);
-   VecDestroy(&b);  MatDestroy(&A);
-   ISDestroy(&rowperm);  ISDestroy(&colperm);
 
    /*
       Always call PetscFinalize() before exiting a program.  This routine
@@ -372,26 +484,8 @@ int main(int argc,char **args)
 
 
 
-///
-
-
-
-
-//	Solver.Solve();
-    ofstream file;
-    file.open("Out-Permuted.3D");
-    file << " x y z val"<<endl;
-    //sol=Solver.X();
-    double sol;
-    for (int i=0;i<totrows;i++)
-    {
-        VecGetValues(x,1,&i,&sol);;
-        for (int c=0;c<3;c++)   file << malla.Node_(i).comp[c]<<" ";
-        file << sol<<endl;
-    }
-
     file.close();
-
+    PetscFinalize();
 
 	return 0;
 }

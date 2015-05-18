@@ -239,7 +239,7 @@ void PETSC_GAMGSolver<number>::Solve(EqnSystem < T > &TEqn)
      this->ierr = PCSetType(pc,PCGAMG);CHKERRQ(this->ierr);
      this->ierr = KSPSetFromOptions(this->ksp);CHKERRQ(this->ierr);
 
-     //this->ierr = KSPSetTolerances(this->ksp,1.e-7,PETSC_DEFAULT,PETSC_DEFAULT,PETSC_DEFAULT);CHKERRQ(this->ierr);
+     this->ierr = KSPSetTolerances(this->ksp,1.e-2,PETSC_DEFAULT,PETSC_DEFAULT,PETSC_DEFAULT);CHKERRQ(this->ierr);
 
      /* ierr = PCGAMGSetType(pc,"agg");CHKERRQ(ierr); */
 

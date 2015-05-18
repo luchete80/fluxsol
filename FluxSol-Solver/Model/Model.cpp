@@ -37,7 +37,7 @@ Model::Model(const std::string filename)
 
         inputfile.AssignGridPtr(this->mesh);                               //Assuming CGNS file
         //TO MODIFY, READED BY INPUT
-        this->maxiter=1;
+        this->maxiter=500;
 
             //std::vector<int> listi=inputfile.section("grid",0).subsection("patch",0).get_intList("list");
 //        std::cout << "Getting list"<<endl;
@@ -376,9 +376,9 @@ void CFDModel::InitFields()
         //pEqn.Eqn(36).SetValueCondition(0.);
         //Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
 
-        //FluxSol::Solve(pEqn);
-        PETSC_GAMGSolver <double>pSolver;
-        pSolver.Solve(pEqn);
+        FluxSol::Solve(pEqn);
+        //PETSC_GAMGSolver <double>pSolver;
+        //pSolver.Solve(pEqn);
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         ittime_end = clock();
