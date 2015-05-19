@@ -388,6 +388,8 @@ void CFDModel::InitFields()
         U=U-alpha_u*(AUr*FvExp::Grad(pEqn.Field()));                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
         p=p+alpha_p*pEqn.Field();
 
+        ittime_end=clock();pEqn.Field();GetNShowTimeSpent("Temp pEqn::Field()");
+
         //Correct Flux: m = m* + m´
         //phi=phi-FvExp::SnGrad(AUr*p);   //Add deferred correction to this gradient
         //Correct WITH P CORRECTION

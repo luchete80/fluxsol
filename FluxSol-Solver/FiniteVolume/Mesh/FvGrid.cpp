@@ -1234,7 +1234,7 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 //            }
         }
 
-        this->SetFaceLocalCellNeighbours(); //New
+        this->SetFaceLocalCellNeighbours(); //New, 20150518
 
         Boundary bound(vpatch);
         this->AddBoundary(bound);
