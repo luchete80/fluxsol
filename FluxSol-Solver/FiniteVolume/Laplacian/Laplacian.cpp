@@ -191,7 +191,7 @@ EqnSystem <T> FvImp::Laplacian(_CC_Fv_Field<Scalar> fi,_CC_Fv_Field <T> &VolFiel
             {
                 int idface=VolField.Grid().vBoundary().vPatch(p).Id_Face(f);
                 //_FvFace face=VolField.Grid().Face(idface);  //TO MODIFY idface or face pos??
-                face=&VolField.Grid().Face(idface);
+                //face=&VolField.Grid().Face(idface);
                 //Boundary type
                 //Instead of if sentence it is convenient to use inheritance
                 //cout <<"source"<<endl;
@@ -200,8 +200,8 @@ EqnSystem <T> FvImp::Laplacian(_CC_Fv_Field<Scalar> fi,_CC_Fv_Field <T> &VolFiel
 
                 source=VolField.Boundaryfield().PatchField(p).Val(f)*ap;    //THIS IS RHS, WITH SAME SIGN
                 //cout <<"created" <<endl;
-                eqnsys.Eqn(face->Cell(0)).Ap()+=ap;
-                eqnsys.Eqn(face->Cell(0)).Source()+=source;
+                eqnsys.Eqn(VolField.Grid().Face(idface).Cell(0)).Ap()+=ap;
+                eqnsys.Eqn(VolField.Grid().Face(idface).Cell(0)).Source()+=source;
             }
         }
 			//Formerly according to SEZAI
@@ -211,7 +211,7 @@ EqnSystem <T> FvImp::Laplacian(_CC_Fv_Field<Scalar> fi,_CC_Fv_Field <T> &VolFiel
             {
                 int idface=VolField.Grid().vBoundary().vPatch(p).Id_Face(f);
                 //_FvFace face=VolField.Grid().Face(idface);  //TO MODIFY idface or face pos??
-                face=&VolField.Grid().Face(idface);
+                //face=&VolField.Grid().Face(idface);
                 //Boundary type
                 //Instead of if sentence it is convenient to use inheritance
                 //cout <<"source"<<endl;
@@ -222,7 +222,7 @@ EqnSystem <T> FvImp::Laplacian(_CC_Fv_Field<Scalar> fi,_CC_Fv_Field <T> &VolFiel
 
                 //Formerly the BC was THIS
                 source=VolField.Boundaryfield().PatchField(p).Val(f)*fisurf.Val(idface);
-                eqnsys.Eqn(face->Cell(0)).Source()+=source;
+                eqnsys.Eqn(VolField.Grid().Face(idface).Cell(0)).Source()+=source;
             }
         }
 
