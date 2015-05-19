@@ -273,7 +273,7 @@ void PETSC_KSP_Solver<number>::Solve()
 	View solver info; we could instead use the option -ksp_view to
 	print this info to the screen at the coknclusion of KSPSolve().
 	*/
-	ierr = KSPView(ksp,PETSC_VIEWER_STDOUT_WORLD);CHKERRQ(ierr);
+	//ierr = KSPView(ksp,PETSC_VIEWER_STDOUT_WORLD);CHKERRQ(ierr);
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	Check solution and clean up
 	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
@@ -738,24 +738,25 @@ void Solve(EqnSystem <T> &TEqn)
     //cout << "Assemblying vector"<<endl;
     //Initial values
     //vector <double> r(TEqn.Num_Eqn()*numberofcomp);
-    double val;
-    int row;
-         for (int e=0;e<TEqn.Num_Eqn();e++)
-         {
-         //cout << "e= "<<e<<endl;
-         for (int dim=0;dim<numberofcomp;dim++)
-         {
-             row=numberofcomp*e+dim;
-             val=0.5*TEqn.InitField().Val(e).Comp()[dim];
-             Solver.SetxValues(row,val);
-             //r[numberofcomp*e+dim]=TEqn.InitField().Val().Comp[dim];
-             //r[dim]=Solver.SetxValues(numberofcomp*e+dim);
-             //cout << "xi= "<<numberofcomp*e+dim<<", ";
-             //cout <<U.Cmp[numberofcomp*e+dim+1]<<" ";
-         }
-       // TEqn.Eqn(e).X()=r;
-
-     }
+//    double val;
+//    int row;
+//         for (int e=0;e<TEqn.Num_Eqn();e++)
+//         {
+//         //cout << "e= "<<e<<endl;
+//         for (int dim=0;dim<numberofcomp;dim++)
+//         {
+//             row=numberofcomp*e+dim;
+//             //val=0.5*TEqn.InitField().Val(e).Comp()[dim];
+//             val=0.;
+//             Solver.SetxValues(row,val);
+//             //r[numberofcomp*e+dim]=TEqn.InitField().Val().Comp[dim];
+//             //r[dim]=Solver.SetxValues(numberofcomp*e+dim);
+//             //cout << "xi= "<<numberofcomp*e+dim<<", ";
+//             //cout <<U.Cmp[numberofcomp*e+dim+1]<<" ";
+//         }
+//       // TEqn.Eqn(e).X()=r;
+//
+//     }
 
      cout << "Assembled"<<endl;
 

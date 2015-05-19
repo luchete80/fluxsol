@@ -174,25 +174,25 @@ void PETSC_GAMGSolver<number>::Solve(EqnSystem < T > &TEqn)
          //cout << endl;
 	 }
 
-    double val;
-    int row;
-         for (int e=0;e<TEqn.Num_Eqn();e++)
-         {
-         //cout << "e= "<<e<<endl;
-         for (int dim=0;dim<numberofcomp;dim++)
-         {
-             row=numberofcomp*e+dim;
-             //val=0.5*TEqn.InitField().Val(e).Comp()[dim];
-             val=0.;
-             SetxValues(row,val);
-             //r[numberofcomp*e+dim]=TEqn.InitField().Val().Comp[dim];
-             //r[dim]=Solver.SetxValues(numberofcomp*e+dim);
-             //cout << "xi= "<<numberofcomp*e+dim<<", ";
-             //cout <<U.Cmp[numberofcomp*e+dim+1]<<" ";
-         }
-       // TEqn.Eqn(e).X()=r;
-
-     }
+//    double val;
+//    int row;
+//         for (int e=0;e<TEqn.Num_Eqn();e++)
+//         {
+//         cout << "e= "<<e<<endl;
+//         for (int dim=0;dim<numberofcomp;dim++)
+//         {
+//             row=numberofcomp*e+dim;
+//             val=0.5*TEqn.InitField().Val(e).Comp()[dim];
+//             val=0.;
+//             SetxValues(row,val);
+//             r[numberofcomp*e+dim]=TEqn.InitField().Val().Comp[dim];
+//             r[dim]=Solver.SetxValues(numberofcomp*e+dim);
+//             cout << "xi= "<<numberofcomp*e+dim<<", ";
+//             cout <<U.Cmp[numberofcomp*e+dim+1]<<" ";
+//         }
+//        TEqn.Eqn(e).X()=r;
+//
+//     }
 
 
 // //

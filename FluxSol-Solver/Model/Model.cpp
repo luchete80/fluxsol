@@ -202,9 +202,13 @@ void CFDModel::InitFields()
     _CC_Fv_Field <Scalar> AUr(mesh);
     //TO FIX: MAKE THIS WORK
     _Surf_Fv_Field <Scalar> AUrf_;
+    _CC_Fv_Field<Scalar> pcorr;
 
     UEqn.InitField(U);
     pEqn.InitField(p);
+
+    //Test
+    GeomSurfaceField <Vec3D> meshSf=this->mesh.Sf();
 
 	while (!conv && it < this->maxiter)
 	//while (!conv && it < 38)
@@ -276,26 +280,23 @@ void CFDModel::InitFields()
         ittime_temp=clock();
 
         //UEqn.Field(); GetNShowTimeSpent("phi_calc: test Field() function ");
-		U=UEqn.Field(); GetNShowTimeSpent("phi_calc: U Creation");
+		U=UEqn.Field(); //GetNShowTimeSpent("phi_calc: U Creation");
 
         //TO MODIFY
         //Mesh Volume
-        AUr=mesh.Vp()/UEqn.A();       GetNShowTimeSpent("phi_calc: Aur=V/A");// In OpenFoam these are scalar
+        AUr=mesh.Vp()/UEqn.A();       //GetNShowTimeSpent("phi_calc: Aur=V/A");// In OpenFoam these are scalar
 
 //        //Assign to U Eqn Solved values
-        _Surf_Fv_Field <Vec3D> Uf_;GetNShowTimeSpent("phi_calc: Uf Creation");
-
-        //What happens in Uf_ boundary?
-        Uf_=FvExp::Interpolate(U);  GetNShowTimeSpent("phi_calc: Uf interpolation");//Uf Overbar
-        //cout << "Uf_ "<< Uf_.outstr()<<endl;
-        //cout << "UEqn Ap"<< UEqn.A.outstr()<<endl;
+        //_Surf_Fv_Field <Vec3D> Uf_;//GetNShowTimeSpent("phi_calc: Uf Creation");
+        //Uf_=FvExp::Interpolate(U);  //GetNShowTimeSpent("phi_calc: Uf interpolation");//Uf Overbar
 
 
-        AUrf_=FvExp::Interpolate(AUr);GetNShowTimeSpent("phi_calc: AUr interpolation");
+
+        AUrf_=FvExp::Interpolate(AUr);//GetNShowTimeSpent("phi_calc: AUr interpolation");
 
 
         //INSTEAD OF
-        Gradpf_=FvExp::Interpolate(FvExp::Grad(p));GetNShowTimeSpent("phi_calc: Gradp Interpolate");
+        Gradpf_=FvExp::Interpolate(FvExp::Grad(p));//GetNShowTimeSpent("phi_calc: Gradp Interpolate");
 
 //
 //        //Rhie-Chow Correction
@@ -304,8 +305,10 @@ void CFDModel::InitFields()
 //        //Is more simple to directly calculate fluxes
         //Obtaining m*, RhieChow Interpolated Flux
         //phi=phi - AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
-        phi=Uf_ & mesh.Sf();GetNShowTimeSpent("phi_calc: InnerProd U . Sf");
-        phi= phi - alpha_u*AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) ); GetNShowTimeSpent("phi_calc: Rhie Chow");
+        //phi=Uf_ & mesh.Sf();//GetNShowTimeSpent("phi_calc: InnerProd U . Sf");
+        //phi=FvExp::Interpolate(U) & meshSf;
+        //phi= phi - alpha_u*AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) ); //GetNShowTimeSpent("phi_calc: Rhie Chow");
+        phi= (FvExp::Interpolate(U) & meshSf) - alpha_u*AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & meshSf ) );
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         ittime_end = clock();
@@ -361,7 +364,7 @@ void CFDModel::InitFields()
         fitlog << ittime_spent <<" " ;
 
         pEqn=FvImp::Laplacian(rho*AUr,p);   //Solve Laplacian for p (by the way, is p´)
-        GetNShowTimeSpent("peqn Laplacian (LHS)==");
+        //GetNShowTimeSpent("peqn Laplacian (LHS)==");
 
         //FvExp::Div(phi);GetNShowTimeSpent("Temp Ext div");
         pEqn==FvExp::Div(phi);GetNShowTimeSpent("Ext div + operator==");
@@ -385,10 +388,11 @@ void CFDModel::InitFields()
         //we must not to compute inner product another time
         //BEING BUILT
         //Nodal are corrected with Gauss grad and central coeffs
-        U=U-alpha_u*(AUr*FvExp::Grad(pEqn.Field()));                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
-        p=p+alpha_p*pEqn.Field();
-
-        ittime_end=clock();pEqn.Field();GetNShowTimeSpent("Temp pEqn::Field()");
+        pcorr=pEqn.Field();
+        //U=U-alpha_u*(AUr*FvExp::Grad(pEqn.Field()));                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
+        //p=p+alpha_p*pEqn.Field();
+        U=U-alpha_u*( AUr*FvExp::Grad(pcorr) );
+        p=p+alpha_p*pcorr;
 
         //Correct Flux: m = m* + m´
         //phi=phi-FvExp::SnGrad(AUr*p);   //Add deferred correction to this gradient
@@ -396,8 +400,8 @@ void CFDModel::InitFields()
         //_CC_Fv_Field<Scalar> pcorr(mesh);   //TO MODIFY; ASSIGN MESH AUTOMATICALLY
 
         //pcorr=pEqn.Field();
-        //phi= phi - alpha_u*AUrf_*FvExp::SnGrad(pcorr);
-        phi= phi - alpha_u*AUrf_*FvExp::SnGrad(pEqn.Field());
+        phi= phi - alpha_u*AUrf_*FvExp::SnGrad(pcorr);
+        //phi= phi - alpha_u*AUrf_*FvExp::SnGrad(pEqn.Field());
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         ittime_end = clock();
