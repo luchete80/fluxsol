@@ -287,16 +287,17 @@ void CFDModel::InitFields()
         AUr=mesh.Vp()/UEqn.A();       //GetNShowTimeSpent("phi_calc: Aur=V/A");// In OpenFoam these are scalar
 
 //        //Assign to U Eqn Solved values
-        //_Surf_Fv_Field <Vec3D> Uf_;//GetNShowTimeSpent("phi_calc: Uf Creation");
-        //Uf_=FvExp::Interpolate(U);  //GetNShowTimeSpent("phi_calc: Uf interpolation");//Uf Overbar
+        //_Surf_Fv_Field <Vec3D> Uf_;   GetNShowTimeSpent("phi_calc: Uf Creation");
+        //Uf_=FvExp::Interpolate(U);    GetNShowTimeSpent("phi_calc: Uf interpolation");//Uf Overbar
 
 
 
-        AUrf_=FvExp::Interpolate(AUr);//GetNShowTimeSpent("phi_calc: AUr interpolation");
+        AUrf_=FvExp::Interpolate(AUr);  //GetNShowTimeSpent("phi_calc: AUr interpolation");
 
 
         //INSTEAD OF
-        Gradpf_=FvExp::Interpolate(FvExp::Grad(p));//GetNShowTimeSpent("phi_calc: Gradp Interpolate");
+        //FvExp::Grad(p);GetNShowTimeSpent("grad test");
+        Gradpf_=FvExp::Interpolate(FvExp::Grad(p)); //GetNShowTimeSpent("phi_calc: Gradp Interpolate");
 
 //
 //        //Rhie-Chow Correction
@@ -307,8 +308,9 @@ void CFDModel::InitFields()
         //phi=phi - AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
         //phi=Uf_ & mesh.Sf();//GetNShowTimeSpent("phi_calc: InnerProd U . Sf");
         //phi=FvExp::Interpolate(U) & meshSf;
-        //phi= phi - alpha_u*AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) ); //GetNShowTimeSpent("phi_calc: Rhie Chow");
+        //phi= phi - alpha_u*AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) ); GetNShowTimeSpent("phi_calc: Rhie Chow");
         phi= (FvExp::Interpolate(U) & meshSf) - alpha_u*AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & meshSf ) );
+        //GetNShowTimeSpent("phi_calc: Rhie Chow");
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         ittime_end = clock();
