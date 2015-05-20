@@ -249,38 +249,22 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 
     ittime_end = clock();
 
-//	for (std::set<int>::iterator it=intfaces.begin(); it!=intfaces.end(); ++it)
-//    {
-//        _FvFace face=VolField.Grid().Face(*it);
-//        ap=-face.Norm_ad()/face.Dist_pn()*fi;
-//		an=-ap;
-//
-//    }
-
+    int pcellid;
 	for (std::set<int>::iterator it=VolField.IntNetFluxFaces().begin(); it!=VolField.IntNetFluxFaces().end(); ++it)
     {
-        //vector <int> local_nb_face_cell=VolField.Grid().FaceLocalCellNeighbour(*it);
-//	for (int f=0;f<VolField.Grid().Num_Faces();f++)
-//	{
-	    //cout << "Face "<<f<<endl;
 		//_FvFace face=VolField.Grid().Face(*it);
 
-        //cout << "Not boundary face"<<endl;
         ap=-VolField.Grid().Face(*it).Norm_ad()/VolField.Grid().Face(*it).Dist_pn()*fi;
-        an=-ap;
-        //nbr_eqn.push_back(VolField.Grid().Cell(c));
-        //eqnsys.Eqn(face.Cell(0)).Coeffs(ap,an);
 
         //cout << "Look through neighbours"<<endl;
         for (int nb=0;nb<2;nb++)    //Face cells
         {
-            int pcellid=VolField.Grid().Face(*it).Cell(nb);
+            pcellid=VolField.Grid().Face(*it).Cell(nb);
 
             eqnsys.Eqn(pcellid).Ap()+=ap;
-            eqnsys.Eqn(pcellid).An(VolField.Grid().FaceLocalCellNeighbour(*it)[nb])+=an;
+            eqnsys.Eqn(pcellid).An(VolField.Grid().FaceLocalCellNeighbour(*it)[nb])-=ap;
         }
 
-	//}//End look trough faces
     }
 
     ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
