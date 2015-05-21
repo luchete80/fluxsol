@@ -56,6 +56,14 @@ include_directories("${FLUXSOL_SOLVER_DIR}/Tests")
 include_directories("${FLUXSOL_SOLVER_DIR}/Type")
 include_directories("${FLUXSOL_SOLVER_DIR}/Utils")
 
+set (MY_PETSC_DIR "$ENV{PETSC_DIR}")
+set (MY_PETSC_ARCH "$ENV{PETSC_ARCH}")
+set (MPI_LIB_DIR "$ENV{MPI_LIB_DIR}")
+set (MPI_INC_DIR "$ENV{MPI_INC_DIR}")
+
+set (PARMETIS_DIR "$ENV{PARMETIS_DIR}")
+
+
 set (LASPACK_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/laspack/src)
 set (CGNS_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src)
 set (ALGLIB_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/src)
@@ -138,6 +146,19 @@ link_directories (${ALGLIB_LIBRARY_DIRS})
 set (FLUXSOL_LIB fluxsollib)
 set (EXTRA_LIBS opengl32 glu32 gdi32)
 
+if (USE_PETSC)
+	find_package (PETSc REQUIRED HINTS "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/conf")
+	include_directories (..)
+	include_directories ("${MY_PETSC_DIR}/include" "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/include" ${PETSC_INCLUDE_PATH})
+	
+	set (MODULE_LIST ${MODULE_LIST} "PETSc")
+	set (USE_MPI ON)
+	add_definitions (-D__PETSC_MODULE)
+
+
+	link_directories(${MPI_LIB_DIR})
+	include_directories(${MPI_INC_DIR})
+endif()
 
 
 # Instruct CMake to run moc automatically when needed.

@@ -99,7 +99,7 @@ void InputFile::readSection(string sectionName, int number) {
 	// Exit if the section is required but couldn't be found
 	if (section(sectionName,number).is_required && !section(sectionName,number).is_found) {
 		if (Rank==0) cerr << "[E] Required input section " << fullName << " could not be found!!" << endl;
-		exit(1);    //this-> readerror=true;
+//		exit(1);    //this-> readerror=true;
 		cout << "Warning! section " << fullName << " could not be found!!" << endl;
 	}
 
@@ -147,7 +147,7 @@ void InputFile::readSubsection(Subsection &sub) {
 		string path=sub.parentName;
 		if (sub.parentIndex!=-1) path+="_"+int2str(sub.parentIndex);
 		if (Rank==0) cerr << "[E] Required input subsection " << path << " -> " << sub.name << " could not be found!!" << endl;
-		exit(1);
+//		exit(1);
 		cout << "Warning! subsection " << path << " -> " << sub.name << " could not be found!!" << endl;
 	}
 	sub.readEntries();

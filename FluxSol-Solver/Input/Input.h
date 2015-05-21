@@ -129,7 +129,7 @@ public:
 		if (name!="") path=name+" -> ";
 		if (parentName!="") path=parentName+" -> ";
 		if (Rank==0) cerr << "[E] Required input entry " << path  <<  varName << " could not be found!!" << endl;
-		exit(1);
+//		exit(1);
 	}
 
 	entry<int> get_int(string varName) {return ints[varName];}

@@ -156,6 +156,14 @@ const Vec3D Vec3D::operator/ (const double &right) const {
 	return temp;
 }
 
+const Vec3D Vec3D::operator/ (const Vec3D &right) const{
+	Vec3D temp;
+	temp.comp[0]=comp[0]/right.comp[0];
+	temp.comp[1]=comp[1]/right.comp[1];
+	temp.comp[2]=comp[2]/right.comp[2];
+	return temp;
+}
+
 //le sumo un valor constante
 Vec3D &Vec3D::operator+= (const double &right) {
 	comp[0]+=right;
@@ -372,6 +380,14 @@ const Vec3D operator* (const double &left, const Vec3D &right)
 	Vec3D r;
 	for (int c=0;c<3;c++)
 		r.comp[c]=left*right.comp[c];
+	return r;
+}
+
+const Vec3D Sum_Mag(const Vec3D &left, const Vec3D &right)
+{
+	Vec3D r;
+	for (int c=0;c<3;c++)
+		r.comp[c]=fabs(left.comp[c])+fabs(right.comp[c]);
 	return r;
 }
 

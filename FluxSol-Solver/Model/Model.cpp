@@ -37,7 +37,7 @@ Model::Model(const std::string filename)
 
         inputfile.AssignGridPtr(this->mesh);                               //Assuming CGNS file
         //TO MODIFY, READED BY INPUT
-        this->maxiter=200;
+        this->maxiter=500;
 
             //std::vector<int> listi=inputfile.section("grid",0).subsection("patch",0).get_intList("list");
 //        std::cout << "Getting list"<<endl;
@@ -373,6 +373,12 @@ void CFDModel::InitFields()
         ittime_end = clock();
         fitlog << ittime_spent <<" " ;
 
+        Scalar sum;
+        for (int c=0;c<p.Numberofvals();c++)
+        {
+            sum+=pEqn.Eqn(c).Source().Norm();
+        }
+
         //pEqn.Eqn(36).SetValueCondition(0.);
         //Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
 
@@ -451,7 +457,7 @@ void CFDModel::InitFields()
 
         vector <double> ures=UEqn.GlobalRes();
 
-        cout << "[I] Iter - Residuals u v w p - Time || " << it << " - " <<ures[0] << " " << ures[1] << " "<< ures[2] << " " <<maxpdiff.outstr()<< " - " << time_spent<<endl;
+        cout << "[I] Iter - Residuals u v w p - Time || " << it << " - " <<ures[0] << " " << ures[1] << " "<< ures[2] << " " <<sum.outstr()<< " - " << time_spent<<endl;
         fitlog << ittime_spent <<" "<<endl;
 
 
@@ -462,7 +468,7 @@ void CFDModel::InitFields()
         }
         it++;
         //if (maxudiff[0]<1.e-3 && maxudiff[1]<1.e-3 && maxudiff[2]<1.e-3  && maxpdiff<1.e-3 )   conv=true;
-        if (ures[0]<1.e-3 && ures[1]<1.e-3 && maxudiff[2]<1.e-3  && maxpdiff<1.e-3 )   conv=true;
+        if (ures[0]<1.e-6 && ures[1]<1.e-6 && maxudiff[2]<1.e-6  && maxpdiff<1.e-6 )   conv=true;
 
         //TO MODIFY, Change
         //TO MODIFY, CHECKMESH

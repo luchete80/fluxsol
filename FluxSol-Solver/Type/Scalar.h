@@ -135,6 +135,13 @@ public:
 		return r;
 	}
 
+    friend const Scalar Sum_Mag(const Scalar &left, const Scalar &right)
+	{
+		Scalar r;
+		r.val=fabs(left.Val())+fabs(right.Val());
+		return r;
+	}
+
 	void Log(ofstream &f){f<<val;}
 
     const string outstr()const

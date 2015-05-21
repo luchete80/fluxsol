@@ -1147,6 +1147,49 @@ void SimpleView::slotImportIn()
         ///// MODEL VISUALIZATION ///
         /////////////////////////////
 
+                    vtkSmartPointer<vtkGeometryFilter> geometryFilter =
+            vtkSmartPointer<vtkGeometryFilter>::New();
+//
+            #if VTK_MAJOR_VERSION <= 5
+              geometryFilter->SetInput(model.UGrid());
+              //surfaceFilter->SetInput(ugrid);
+            #else
+              geometryFilter->SetInputData(model.UGrid());
+//              //surfaceFilter->SetInputData(ugrid);
+            #endif
+              geometryFilter->Update();
+//              //surfaceFilter->Update();
+//
+            vtkSmartPointer<vtkPolyData>
+            polydata= geometryFilter ->GetOutput ();
+
+
+
+             vtkSmartPointer<vtkPolyDataMapper> pdmapper =
+            vtkSmartPointer<vtkPolyDataMapper>::New();
+        //
+        //    //pdmapper->ScalarVisibilityOff();
+        //
+            #if VTK_MAJOR_VERSION <= 5
+              pdmapper->SetInputConnection(polydata->GetProducerPort());
+            #else
+             pdmapper->SetInputData(polydata);
+            #endif
+
+            /////// END OF CONTOUR
+
+          ///////////////////////// RENDERING ////
+      vtkSmartPointer<vtkActor> actor =
+        vtkSmartPointer<vtkActor>::New();
+
+            actor->SetMapper(pdmapper);
+
+          actor->GetProperty()->SetEdgeColor(0, 0, 0);
+          actor->GetProperty()->EdgeVisibilityOn();
+
+      this->ren->AddActor( actor);
+
+//
 //      reader->SetFileName(fileName.toStdString().c_str());
 //      reader->Update();
 //
@@ -1156,40 +1199,40 @@ void SimpleView::slotImportIn()
 //
 //      double scalarRange[2];
 
-
-      //int components =
-        //this->PointData->GetScalars()->GetNumberOfComponents();
-        double tuple[3];
-        //double* tuple = pd->GetArray(0)->GetTuple( 1 );
-        //pd->GetArray(0)->GetTuple( 1 ,tuple);
-        //pd->GetArray(0)->GetRange(scalarRange);
-
-
-
-      //std::cout << pd->GetArrayName(0)<<std::endl;
-
-//    //GeometryFilter
+//
+//      int components =
+//        this->PointData->GetScalars()->GetNumberOfComponents();
+//        double tuple[3];
+//        double* tuple = pd->GetArray(0)->GetTuple( 1 );
+//        pd->GetArray(0)->GetTuple( 1 ,tuple);
+//        pd->GetArray(0)->GetRange(scalarRange);
 
 
-      vtkSmartPointer<vtkGeometryFilter> geometryFilter =
-        vtkSmartPointer<vtkGeometryFilter>::New();
 
-        vtkSmartPointer<vtkDataSetSurfaceFilter> surfaceFilter =
-        vtkSmartPointer<vtkDataSetSurfaceFilter>::New();
+//      std::cout << pd->GetArrayName(0)<<std::endl;
 
-      surfaceFilter->SetInputData(model.UGrid());
+    //GeometryFilter
 
-    #if VTK_MAJOR_VERSION <= 5
-      geometryFilter->SetInput(model.UGrid());
-      surfaceFilter->SetInput(model.UGrid());
-    #else
-      geometryFilter->SetInputData(model.UGrid());
-      surfaceFilter->SetInputData(model.UGrid());
-    #endif
-      geometryFilter->Update();
-      surfaceFilter->Update();
 
-    vtkPolyData *polydata= geometryFilter ->GetOutput ();
+//      vtkSmartPointer<vtkGeometryFilter> geometryFilter =
+//        vtkSmartPointer<vtkGeometryFilter>::New();
+//
+//        vtkSmartPointer<vtkDataSetSurfaceFilter> surfaceFilter =
+//        vtkSmartPointer<vtkDataSetSurfaceFilter>::New();
+//
+//      surfaceFilter->SetInputData(model.UGrid());
+//
+//    #if VTK_MAJOR_VERSION <= 5
+//      geometryFilter->SetInput(model.UGrid());
+//      surfaceFilter->SetInput(model.UGrid());
+//    #else
+//      geometryFilter->SetInputData(model.UGrid());
+//      surfaceFilter->SetInputData(model.UGrid());
+//    #endif
+//      geometryFilter->Update();
+//      surfaceFilter->Update();
+//
+//    vtkPolyData *polydata= geometryFilter ->GetOutput ();
 
 
 
@@ -1213,16 +1256,16 @@ void SimpleView::slotImportIn()
 //
 ////    //************************************* MAPPER
 //
-     vtkSmartPointer<vtkPolyDataMapper> pdmapper =
-    vtkSmartPointer<vtkPolyDataMapper>::New();
-//
-//    //pdmapper->ScalarVisibilityOff();
-//
-    #if VTK_MAJOR_VERSION <= 5
-      pdmapper->SetInputConnection(polydata->GetProducerPort());
-    #else
-     pdmapper->SetInputData(polydata);
-    #endif
+//     vtkSmartPointer<vtkPolyDataMapper> pdmapper =
+//    vtkSmartPointer<vtkPolyDataMapper>::New();
+////
+////    //pdmapper->ScalarVisibilityOff();
+////
+//    #if VTK_MAJOR_VERSION <= 5
+//      pdmapper->SetInputConnection(polydata->GetProducerPort());
+//    #else
+//     pdmapper->SetInputData(polydata);
+//    #endif
 //
 //
 //
@@ -1232,12 +1275,12 @@ void SimpleView::slotImportIn()
 //
 //  ///////////////////////// RENDERING ////
 //
-        VTK_CREATE(vtkActor, actor);
-        actor->SetMapper(pdmapper);
-        actor->GetProperty()->EdgeVisibilityOn();
-        this->ren->AddActor(actor);
-
-        this->ren->AddActor(this->_vtkOriginAxes);
+//        VTK_CREATE(vtkActor, actor);
+//        actor->SetMapper(pdmapper);
+//        actor->GetProperty()->EdgeVisibilityOn();
+//        this->ren->AddActor(actor);
+//
+//        this->ren->AddActor(this->_vtkOriginAxes);
 
     }//If not filename Empty
 		//loadFile(fileName);

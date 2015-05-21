@@ -145,6 +145,7 @@ public:
 
     virtual ~Vec3D(){/*cout << "destructing" <<endl;*/}; //Destructor virtual
 	void Log(ofstream &f){f<<comp[0]<<";"<<comp[1]<<";"<<comp[2]<<";";}
+	//const Vec3D Sum_Mag(const Vec3D &right)const;
 
 };
 
@@ -194,12 +195,14 @@ public:
 typedef Vec3D type;
 };
 
+//TO MODIFY: MUST BE TEMPLATE TENSOR FRIEND VIRTUAL FUNCTIONS
 const Vec3D operator* (const double &left, const Vec3D &right);
 //Inner Prod
 
 //Pending for allocating in Operations.h/cpp
 const Vec3D operator* (const Scalar &sc, const Vec3D &vector);
 const Vec3D operator* (const Vec3D &vector, const Scalar &sc);
+const Vec3D Sum_Mag(const Vec3D &left,const Vec3D &right);
 
 Vec3D operator/ (const Vec3D &vector, const Scalar &sc);
 

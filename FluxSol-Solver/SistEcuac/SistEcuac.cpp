@@ -448,8 +448,8 @@ const vector<double> EqnSystem<T>::GlobalRes() const
      vector <double> ret(dim);
     vector <double> temp(dim), num(dim), den(dim);
 
-    T temps;
-    Scalar dens, nums;
+    T tempv, numv, denv,apx;
+    T retv;
 
 //    for (int e=0;e<this->EqnV().size();e++)
 //    {
@@ -481,10 +481,12 @@ const vector<double> EqnSystem<T>::GlobalRes() const
 
     for (int e=0;e<this->EqnV().size();e++)
     {
-
-            temps= ( this->Eqn(e).Ap()*this->Eqn(e).X() )  - this->Eqn(e).Source();
+            tempv=0.;
+            apx=( this->Eqn(e).Ap()*this->Eqn(e).X() );
+            tempv= apx  - this->Eqn(e).Source();
 
             //temp[d]= (this->Eqn(e).Ap().Comp()[0]*this->Eqn(e).X().Comp()[d]) - this->Eqn(e).Source().Comp()[d];
+        denv=Sum_Mag(denv,apx);
 
         for (int i=0;i<this->Eqn(e).NeighboursIds().size();i++)
         {
@@ -494,21 +496,24 @@ const vector<double> EqnSystem<T>::GlobalRes() const
             //{
                 //temp[d]+= ( this->Eqn(e).An(i).Comp()[0]*this->Eqn(nid).X().Comp()[d] );
             //}
-            temps+=( this->Eqn(e).An(i)*this->Eqn(nid).X() );
+            tempv+=( this->Eqn(e).An(i)*this->Eqn(nid).X() );
         }
 
-        for (int d=0;d<dim;d++)
-        {
-            //num[d]+=fabs(temp[d]);
-            nums+=temps.Norm();
-            //den[d]+=fabs(this->Eqn(e).Ap().Comp()[0]*Eqn(e).X().Comp()[d]);
-        }
+//        for (int d=0;d<dim;d++)
+//        {
+//            //num[d]+=fabs(temp[d]);
+//            //nums+=temps.Norm();
+//            //den[d]+=fabs(this->Eqn(e).Ap().Comp()[0]*Eqn(e).X().Comp()[d]);
+//        }
+        //cout <<"residuals cell "<< e << ": "<< numv.outstr()<<endl;
+        numv=Sum_Mag(numv,tempv);
         //cout << "Cell residual: "<<temp[0]<< " "<<temp[1]<<" "<<temp[2]<<endl;
 
     }
-
+    retv=numv;
+    //retv=numv/denv;
         for (int d=0;d<dim;d++)
-            ret[d]=nums.Comp()[d];
+            ret[d]=retv.Comp()[d];
 
     return ret;
 }

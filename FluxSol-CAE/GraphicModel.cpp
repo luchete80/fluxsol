@@ -19,7 +19,7 @@ GraphicCFDModel::GraphicCFDModel(const std::string s):CFDModel(s)
         for (int i=0;i<3;i++)
             p[i]=this->mesh.Vertex(v).Comp()[i];
 
-        cout << "X: " << p[0] << ", X: " << p[1] << ", Z: "<< p[3]<<endl;
+        //cout << "X: " << p[0] << ", X: " << p[1] << ", Z: "<< p[3]<<endl;
 
         points->InsertNextPoint(p);
     }
