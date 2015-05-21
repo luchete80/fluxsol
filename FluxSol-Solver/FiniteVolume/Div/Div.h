@@ -105,7 +105,9 @@ FvImp::Div(GeomSurfaceField<Scalar> FluxField,_CC_Fv_Field <T> phi)
     int cell[2];
     int neigh,neigh2;
 
-	for (std::set<int>::iterator it=phi.IntNetFluxFaces().begin(); it!=phi.IntNetFluxFaces().end(); ++it)
+    std::set<int>::iterator it;
+    std::set<int> *nff=&phi.IntNetFluxFaces();
+	for (it=nff->begin(); it!=nff->end(); ++it)
     {
         int f=*it;
 

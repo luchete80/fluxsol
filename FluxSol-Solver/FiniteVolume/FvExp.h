@@ -69,13 +69,20 @@ GeomSurfaceField <T> Interpolate(const _CC_Fv_Field <T> &field)
             //cout << "Fp "<< face.Fp().outstr()<<endl;
 
 
+            // MODIFICATION
+            //Original
+//            if (!field.ConstGrid().Face(f).Boundaryface())
+//                prom = field[face.Cell(0)] * (1.0 - face.Fp()) + field[face.Cell(1)] * face.Fp();
+//            else
+//                prom = field[face.Cell(0)];
+
             //MODIFICATED
             fp[0]=(1.0 - field.ConstGrid().Face(f).Fp());fp[1]=field.ConstGrid().Face(f).Fp();
 
             for (int fc=0;fc<field.ConstGrid().Face(f).NumCells();fc++)prom += field[field.ConstGrid().Face(f).Cell(fc)]*fp[fc];
 
             r[f] = prom;
-
+            //cout << "prom" << prom.outstr()<<endl;
         }
 
         return r;

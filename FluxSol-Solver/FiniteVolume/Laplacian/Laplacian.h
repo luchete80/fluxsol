@@ -250,7 +250,8 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
     ittime_end = clock();
 
     int pcellid;
-	for (std::set<int>::iterator it=VolField.IntNetFluxFaces().begin(); it!=VolField.IntNetFluxFaces().end(); ++it)
+    std::set<int>::iterator it;
+	for (it=VolField.IntNetFluxFaces().begin(); it!=VolField.IntNetFluxFaces().end(); ++it)
     {
 		//_FvFace face=VolField.Grid().Face(*it);
 

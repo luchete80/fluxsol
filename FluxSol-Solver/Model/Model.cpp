@@ -37,7 +37,7 @@ Model::Model(const std::string filename)
 
         inputfile.AssignGridPtr(this->mesh);                               //Assuming CGNS file
         //TO MODIFY, READED BY INPUT
-        this->maxiter=500;
+        this->maxiter=200;
 
             //std::vector<int> listi=inputfile.section("grid",0).subsection("patch",0).get_intList("list");
 //        std::cout << "Getting list"<<endl;
@@ -59,12 +59,12 @@ void CFDModel::InitFields()
 {
      //Converts all mesh to one
 
-	//Fields
-	_CC_Fv_Field <Scalar> pt(this->mesh);
-	//_CC_Fv_Field <Vec3D>  Ut(this->mesh);
+        //Fields
+        _CC_Fv_Field <Scalar> pt(this->mesh);
+        //_CC_Fv_Field <Vec3D>  Ut(this->mesh);
 
-	//this->p=_CC_Fv_Field<Scalar>(this->mesh);
-	//this->U=_CC_Fv_Field<Vec3D>(this->mesh);
+        //this->p=_CC_Fv_Field<Scalar>(this->mesh);
+        //this->U=_CC_Fv_Field<Vec3D>(this->mesh);
     this->U=inputfile.UField();     //Read Field Boundary Values
     this->p=inputfile.pField();
 
@@ -78,23 +78,23 @@ void CFDModel::InitFields()
 //        cout << "patch cvalue Pressure" << p.Boundaryfield().PatchField(i).ConstValue().outstr()<<endl;
 
 
-	//ReadVelocityFieldFromInput(this->inputfile,this->U,this->mesh);
+        //ReadVelocityFieldFromInput(this->inputfile,this->U,this->mesh);
 
-	_Surf_Fv_Field <Scalar>  phi(this->mesh); //Mass Flux
+        _Surf_Fv_Field <Scalar>  phi(this->mesh); //Mass Flux
 
-	//_CC_Fv_Field <Vec3D> UDiff,pDiff;
+        //_CC_Fv_Field <Vec3D> UDiff,pDiff;
 
-	//To be Passed to input reader
+        //To be Passed to input reader
     cout << "[I] Assigning Flux Fields ..." <<endl;
-	//p.AssignPatchFieldTypes(FIXEDGRADIENT);
-	//U.AssignPatchFieldTypes(FIXEDVALUE);
+        //p.AssignPatchFieldTypes(FIXEDGRADIENT);
+        //U.AssignPatchFieldTypes(FIXEDVALUE);
 
     cout << "[I] Reading Boundary Conditions"<<endl;
-	inputfile.AssignFieldPtrs(&this->U,&this->p);
+        inputfile.AssignFieldPtrs(&this->U,&this->p);
     this->bcs=inputfile.ReadBCs();
 
     cout << "[I] Assigning Patch Field Types"<<endl;
-	for (int p=0;p<this->mesh.vBoundary().Num_Patches();p++)
+        for (int p=0;p<this->mesh.vBoundary().Num_Patches();p++)
     {
         //U.Boundaryfield().PatchField(i)
         cout << "[I] Patch "<<p<<endl;
@@ -113,17 +113,17 @@ void CFDModel::InitFields()
 
 
     cout << "[I] Solving system ..." <<endl;
-	//Boundary conditions
-	Scalar wallvalue=0.;
-	Scalar topvalue=1.;
+        //Boundary conditions
+        Scalar wallvalue=0.;
+        Scalar topvalue=1.;
 
     //this->mesh.Log("MeshLog.txt");
 
-	//Construir aca con la malla
-	Scalar k(1.);	//Difusion, can be an scalar
-	Scalar rho(1.0);
-	Scalar alpha_p=0.3;
-	Scalar alpha_u=0.7;
+        //Construir aca con la malla
+        Scalar k(1.);   //Difusion, can be an scalar
+        Scalar rho(1.0);
+        Scalar alpha_p=0.3;
+        Scalar alpha_u=0.7;
 
     cout << "[I] Initializing Fields ..."<<endl;
     //U=Vec3D(0.0,0.,0.0);
@@ -134,7 +134,7 @@ void CFDModel::InitFields()
     //cout << phi.outstr()<<endl;
 
     p=0.;
-	bool conv=true;
+        bool conv=true;
 
 
     _Surf_Fv_Field <Vec3D> Gradpf_;
@@ -157,12 +157,12 @@ void CFDModel::InitFields()
     UEqn.SetRelaxCoeff(alpha_u);
     pEqn.SetRelaxCoeff(alpha_p);
 
-	//ITERATION BEGINS
-//	clock_t starttime,endtime;
+        //ITERATION BEGINS
+//      clock_t starttime,endtime;
     cout << "[I] Iterations"<<endl;
     cout << "-----------------------------------------------------------------------------------------------"<<endl;
-	time_t starttimec,endtimec;
-	int it=0;
+        time_t starttimec,endtimec;
+        int it=0;
 
         //TO MODIFY
     _BoundaryField<Vec3D>  bf =U.Boundaryfield();
@@ -178,9 +178,9 @@ void CFDModel::InitFields()
     /* here, do your time-consuming job */
 
     //Iteration Log
-	ofstream fitlog;
+        ofstream fitlog;
     bool found=false;
-	fitlog.open("Iteration-Log.txt");
+        fitlog.open("Iteration-Log.txt");
 
 
     fitlog<< "BC_Appply U_LHS U_RHS U_Solve phi_calc phi_BC peqn_RLHS peqn_Solve phi_recorr Total"<<endl;
@@ -210,14 +210,14 @@ void CFDModel::InitFields()
     //Test
     GeomSurfaceField <Vec3D> meshSf=this->mesh.Sf();
 
-	while (!conv && it < this->maxiter)
-	//while (!conv && it < 38)
-	{
-	    ittime_begin = clock();
+        while (!conv && it < this->maxiter)
+        //while (!conv && it < 38)
+        {
+            ittime_begin = clock();
 
 
-//	    cout << "Iteration: "<<it+1<< endl;
-		//1.Restore Iteration
+//          cout << "Iteration: "<<it+1<< endl;
+                //1.Restore Iteration
 
 
         //To modify, correct in all faces
@@ -238,10 +238,10 @@ void CFDModel::InitFields()
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         fitlog << scientific <<ittime_spent <<" " ;
-		//2. U Calculation
-		//UEqn=FvImp::Div_CDS(phi, U)-FvImp::Laplacian(k,U);//TO MODIFY WITH CONVECTION SCHEME
+                //2. U Calculation
+                //UEqn=FvImp::Div_CDS(phi, U)-FvImp::Laplacian(k,U);//TO MODIFY WITH CONVECTION SCHEME
 
-		UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
+        UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
 
         //cout << "Eqn Log"<<endl<<UEqn.outstr()<<endl;
         //cout << "End Log"<<endl;
@@ -250,17 +250,17 @@ void CFDModel::InitFields()
         ittime_end = clock();
         fitlog << std::setprecision(6)<<ittime_spent <<" " ;
 //
-//		//4. Solve Momentum predictor (UEqn)
-		//Solve(UEqn==-FvExp::Grad(p));
-		//_CC_Fv_Field<Vec3D> pru2(-FvExp::Grad(p));
+//              //4. Solve Momentum predictor (UEqn)
+                //Solve(UEqn==-FvExp::Grad(p));
+                //_CC_Fv_Field<Vec3D> pru2(-FvExp::Grad(p));
         //TO MODIFY: IF MESH IS NOT ASSIGNED PREVIOUSLY TO EQUAL, ERROR
-		_CC_Fv_Field <Vec3D> gradpV(mesh);
-		gradpV=-FvExp::GradV(p);
-		//Correct boundary conditions, by imposing zero pressure gradient at wall
+                _CC_Fv_Field <Vec3D> gradpV(mesh);
+                gradpV=-FvExp::GradV(p);
+                //Correct boundary conditions, by imposing zero pressure gradient at wall
 
 
-		//UEqn==gradpV;
-		UEqn==(1.-alpha_u)/alpha_u*(UEqn.A()*U)+gradpV;
+                //UEqn==gradpV;
+                UEqn==(1.-alpha_u)/alpha_u*(UEqn.A()*U)+gradpV;
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         ittime_end = clock();
@@ -268,10 +268,10 @@ void CFDModel::InitFields()
         fitlog << ittime_spent <<" " ;
 
                         //TO MODIFY
-		UEqn.Relax();   //This MUST INCLUDE R VECTOR
+                UEqn.Relax();   //This MUST INCLUDE R VECTOR
 
         starttimec= time(0);
-		FluxSol::Solve(UEqn);
+                FluxSol::Solve(UEqn);
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         ittime_end = clock();
@@ -280,24 +280,23 @@ void CFDModel::InitFields()
         ittime_temp=clock();
 
         //UEqn.Field(); GetNShowTimeSpent("phi_calc: test Field() function ");
-		U=UEqn.Field(); //GetNShowTimeSpent("phi_calc: U Creation");
+                U=UEqn.Field(); //GetNShowTimeSpent("phi_calc: U Creation");
 
         //TO MODIFY
         //Mesh Volume
         AUr=mesh.Vp()/UEqn.A();       //GetNShowTimeSpent("phi_calc: Aur=V/A");// In OpenFoam these are scalar
 
 //        //Assign to U Eqn Solved values
-        //_Surf_Fv_Field <Vec3D> Uf_;   GetNShowTimeSpent("phi_calc: Uf Creation");
-        //Uf_=FvExp::Interpolate(U);    GetNShowTimeSpent("phi_calc: Uf interpolation");//Uf Overbar
+        //_Surf_Fv_Field <Vec3D> Uf_;//GetNShowTimeSpent("phi_calc: Uf Creation");
+        //Uf_=FvExp::Interpolate(U);  //GetNShowTimeSpent("phi_calc: Uf interpolation");//Uf Overbar
 
 
 
-        AUrf_=FvExp::Interpolate(AUr);  //GetNShowTimeSpent("phi_calc: AUr interpolation");
+        AUrf_=FvExp::Interpolate(AUr);//GetNShowTimeSpent("phi_calc: AUr interpolation");
 
 
         //INSTEAD OF
-        //FvExp::Grad(p);GetNShowTimeSpent("grad test");
-        Gradpf_=FvExp::Interpolate(FvExp::Grad(p)); //GetNShowTimeSpent("phi_calc: Gradp Interpolate");
+        Gradpf_=FvExp::Interpolate(FvExp::Grad(p));//GetNShowTimeSpent("phi_calc: Gradp Interpolate");
 
 //
 //        //Rhie-Chow Correction
@@ -308,9 +307,8 @@ void CFDModel::InitFields()
         //phi=phi - AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
         //phi=Uf_ & mesh.Sf();//GetNShowTimeSpent("phi_calc: InnerProd U . Sf");
         //phi=FvExp::Interpolate(U) & meshSf;
-        //phi= phi - alpha_u*AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) ); GetNShowTimeSpent("phi_calc: Rhie Chow");
+        //phi= phi - alpha_u*AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) ); //GetNShowTimeSpent("phi_calc: Rhie Chow");
         phi= (FvExp::Interpolate(U) & meshSf) - alpha_u*AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & meshSf ) );
-        //GetNShowTimeSpent("phi_calc: Rhie Chow");
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         ittime_end = clock();
@@ -328,14 +326,14 @@ void CFDModel::InitFields()
             for (int f=0;f<mesh.vBoundary().vPatch(pa).Num_Faces();f++)
             {
                 int idface=mesh.vBoundary().vPatch(pa).Id_Face(f);
-                _FvFace face=mesh.Face(idface);  //TO MODIFY idface or face pos??
+                //_FvFace face=mesh.Face(idface);  //TO MODIFY idface or face pos??
 
                 Scalar val;
                 //if (!face.Is_Null_Flux_Face())
                 if (bf.PatchField(pa).Type()==FIXEDVALUE)
                 {
                     //If constant value
-                    val=bf.PatchField(pa).ConstValue() & face.Af();
+                    val=bf.PatchField(pa).ConstValue() & mesh.Face(idface).Af();
                     //cout << "boundary val"<<val.outstr()<<endl;
                     phi.Val(idface,val);
                 }
@@ -355,11 +353,11 @@ void CFDModel::InitFields()
 
 //        cout << "Corrected phi"<<phi.outstr()<< endl;
 //
-//		//8. Define and Solve Pressure Correction And Repeat
-//		//Div(mf)=Div(m큗+m*f)=0 ==> Div(m*f)+Div(-rho(DfGrad(p큗)Af)=0
+//              //8. Define and Solve Pressure Correction And Repeat
+//              //Div(mf)=Div(m큗+m*f)=0 ==> Div(m*f)+Div(-rho(DfGrad(p큗)Af)=0
 //        //We solve pressure correction in cell centers but eqn is indeed for cell faces
-//		//THIS IS INSIDE DIV ALGORITHM Sum(-rhof (Df) Grad(p큗)Af + Sum (m*f) = 0
-//		//for the prescribed for the non orth steps
+//              //THIS IS INSIDE DIV ALGORITHM Sum(-rhof (Df) Grad(p큗)Af + Sum (m*f) = 0
+//              //for the prescribed for the non orth steps
 
         ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
         ittime_end = clock();
@@ -471,7 +469,7 @@ void CFDModel::InitFields()
         //OutputFile("CellField-p.vtu",p);
         //OutputFile("CellField-U.vtu",U,0);
 
-	}
+        }
 
         cout << "[I] Process Terminated ..." <<endl;
 
@@ -499,10 +497,10 @@ void CFDModel::InitFields()
 
 
 
-	fitlog.close();
+        fitlog.close();
 
-//	OutputFile("CellField-U.vtu",U);
-//	OutputFile("CellField-Uy.vtu",U,1);
+//      OutputFile("CellField-U.vtu",U);
+//      OutputFile("CellField-Uy.vtu",U,1);
 //    OutputFile("CellField-Uz.vtu",U,2);
 
     //OutputFile of("Fields.vtu",this->mesh);
@@ -522,70 +520,68 @@ void CFDModel::WriteOutput()
 
 void CFDModel::Extract_Cells_and_BoundaryFromNastran()
 {
-	vector <int> patchnum;	//Numero de la propiedad
-	int nump=0;
-	int numboundcells=0,numboundfaces=0,numintcells=0;
-	vector <Cell_CC> vc;
-	vector <Patch> vp;
+        vector <int> patchnum;  //Numero de la propiedad
+        int nump=0;
+        int numboundcells=0,numboundfaces=0,numintcells=0;
+        vector <Cell_CC> vc;
+        vector <Patch> vp;
 
 
-	//Recorro todos los elementos
-	//Aca tambien estan las condiciones de borde
-	//for (int e=0;e<NasFile().;e++)
-	//{
-	//	if (bidim_model)
-	//	{
-	//		//Discrimino los CQUAD4 y CQUADR
-	//		if (this->Elementos[e].Tipo()=="CQUAD4" || this->Elementos[e].Tipo()=="CQUADR" ||
-	//			this->Elementos[e].Tipo()=="CTRIA3" || this->Elementos[e].Tipo()=="CTRIAR" )
-	//		//Es un elemento del interior
-	//		{
-	//			//Este lo paso al vector
-	//			Cell_CC cell(this->Elementos[e].VerId(),this->Elementos[e].Conect());
-	//			vc.push_back(cell);
-	//			numintcells++;
-	//		}
-	//		else //Elemento de Boundary
-	//		{
-	//			int currpatch;
+        //Recorro todos los elementos
+        //Aca tambien estan las condiciones de borde
+        //for (int e=0;e<NasFile().;e++)
+        //{
+        //      if (bidim_model)
+        //      {
+        //              //Discrimino los CQUAD4 y CQUADR
+        //              if (this->Elementos[e].Tipo()=="CQUAD4" || this->Elementos[e].Tipo()=="CQUADR" ||
+        //                      this->Elementos[e].Tipo()=="CTRIA3" || this->Elementos[e].Tipo()=="CTRIAR" )
+        //              //Es un elemento del interior
+        //              {
+        //                      //Este lo paso al vector
+        //                      Cell_CC cell(this->Elementos[e].VerId(),this->Elementos[e].Conect());
+        //                      vc.push_back(cell);
+        //                      numintcells++;
+        //              }
+        //              else //Elemento de Boundary
+        //              {
+        //                      int currpatch;
 
-	//			//Si las propiedades cambian son distintos patches
-	//			bool enc=false;	//Una propiedad existente
-	//			int p=0;
-	//
-	//			while (!enc && p<patchnum.size())
-	//			{
-	//				if(patchnum[p]==this->Elementos[e].VerPid())
-	//				{
-	//					enc=true;
-	//					currpatch=p;
-	//				}
-	//				p++;
-	//			}
+        //                      //Si las propiedades cambian son distintos patches
+        //                      bool enc=false; //Una propiedad existente
+        //                      int p=0;
+        //
+        //                      while (!enc && p<patchnum.size())
+        //                      {
+        //                              if(patchnum[p]==this->Elementos[e].VerPid())
+        //                              {
+        //                                      enc=true;
+        //                                      currpatch=p;
+        //                              }
+        //                              p++;
+        //                      }
 
-	//			if (!enc ||nump==0)//Si ese patch no esta
-	//			{
-	//				//patchnum.push_back(this->Elementos[e].VerPid());
-	//				currpatch=patchnum.size()-1;
-	//				nump++;
-	//				//Inserto el patch en el vector
-	//				//Patch patch(this->Elementos[e].VerPid());
-	//				//vp.push_back(patch);
-	//				//bound.AddPatch(patch);
-	//			}
-	//
-	//			//Agrego el face al patch que corresponda
-	//			vp[currpatch].AddFace(numboundfaces);
-	//			numboundfaces++;
-	//		}
+        //                      if (!enc ||nump==0)//Si ese patch no esta
+        //                      {
+        //                              //patchnum.push_back(this->Elementos[e].VerPid());
+        //                              currpatch=patchnum.size()-1;
+        //                              nump++;
+        //                              //Inserto el patch en el vector
+        //                              //Patch patch(this->Elementos[e].VerPid());
+        //                              //vp.push_back(patch);
+        //                              //bound.AddPatch(patch);
+        //                      }
+        //
+        //                      //Agrego el face al patch que corresponda
+        //                      vp[currpatch].AddFace(numboundfaces);
+        //                      numboundfaces++;
+        //              }
 
-	//	}
-	//	else	//Modelo tridimensional
-	//	{}
-	//}//Fin del numero de elementos
+        //      }
+        //      else    //Modelo tridimensional
+        //      {}
+        //}//Fin del numero de elementos
 
-	//Incluyo el numero de patches al modelo
+        //Incluyo el numero de patches al modelo
 
 }
-
-
