@@ -35,6 +35,8 @@ template <typename T>
 void PETSC_GAMGSolver<number>::Solve(EqnSystem < T > &TEqn)
 {
 
+    PetscBool permute=PETSC_FALSE;
+
     clock_t ittime_begin, ittime_end, ittime_temp;
     double ittime_spent;
 
@@ -83,11 +85,49 @@ void PETSC_GAMGSolver<number>::Solve(EqnSystem < T > &TEqn)
         // //int nz=(TEqn.Eqn(e).An().size()-1)*numberofcomp+1;
         // for (int dim=0;dim<numberofcomp;dim++)  nonzerosperrow.push_back(5);
     // }
+// From http://www.mcs.anl.gov/petsc/petsc-current/docs/manualpages/Mat/MatCreateAIJ.html
+
+//            1  2  0  |  0  3  0  |  0  4
+//    Proc0   0  5  6  |  7  0  0  |  8  0
+//            9  0 10  | 11  0  0  | 12  0
+//    -------------------------------------
+//           13  0 14  | 15 16 17  |  0  0
+//    Proc1   0 18  0  | 19 20 21  |  0  0
+//            0  0  0  | 22 23  0  | 24  0
+//    -------------------------------------
+//    Proc2  25 26 27  |  0  0 28  | 29  0
+//           30  0  0  | 31 32 33  |  0 34
+
+//      A B C
+//      D E F
+//      G H I
+
+//The 'm' parameters for proc0,proc1,proc2 are 3,3,2 respectively. The 'n' parameters for proc0,proc1,proc2 are 3,3,2 respectively.
+//The 'M','N' parameters are 8,8, and have the same values on all procs.
+
+//     proc0 : dnz = 2, o_nz = 2
+//     proc1 : dnz = 3, o_nz = 2
+//     proc2 : dnz = 1, o_nz = 4
+
+//    proc0: d_nnz = [2,2,2] and o_nnz = [2,2,2]
+//     proc1: d_nnz = [3,3,2] and o_nnz = [2,1,1]
+//     proc2: d_nnz = [1,1]   and o_nnz = [4,4]
+//The DIAGONAL submatrices corresponding to proc0,proc1,proc2 are submatrices [A], [E], [I] respectively.
+//The OFF-DIAGONAL submatrices corresponding to proc0,proc1,proc2 are [BC], [DF], [GH] respectively
 
    this->ierr = MatCreateAIJ(this->comm,PETSC_DECIDE,PETSC_DECIDE,M,M,
-                       18,NULL,6,NULL,&this->A);CHKERRQ(this->ierr);
+                       5,NULL,5,NULL,&this->A);CHKERRQ(this->ierr);
+
    this->ierr = MatCreateAIJ(this->comm,PETSC_DECIDE,PETSC_DECIDE,M,M,
-                       18,NULL,6,NULL,&this->Pmat);CHKERRQ(this->ierr);
+                       5,NULL,5,NULL,&this->Pmat);CHKERRQ(this->ierr);
+
+//    MatCreate(PETSC_COMM_WORLD,&this->A);
+//    MatSetSizes(this->A,PETSC_DECIDE,PETSC_DECIDE,M,M);
+//    MatSetFromOptions(this->A);
+//    MatMPIAIJSetPreallocation(this->A,5,NULL,5,NULL);
+//    MatSeqAIJSetPreallocation(this->A,5,NULL);
+//    MatSetUp(this->A);
+
    this->ierr = MatGetOwnershipRange(this->A,&Istart,&Iend);CHKERRQ(this->ierr);
    m    = Iend-Istart;
    bs   = 1;
@@ -243,6 +283,20 @@ void PETSC_GAMGSolver<number>::Solve(EqnSystem < T > &TEqn)
 
      }
 
+    if (permute)
+    {
+        this->mat_ord_type=MATORDERINGRCM;
+        this->rowperm = NULL,this->colperm = NULL;
+        cout << "performing matrix permutation..."<<endl;
+        Mat Aperm;
+        MatGetOrdering(this->A,this->mat_ord_type,&this->rowperm,&this->colperm);
+        MatPermute(this->A,this->rowperm,this->colperm,&Aperm);
+        VecPermute(this->b,this->colperm,PETSC_FALSE);
+        MatDestroy(&this->A);
+        this->A    = Aperm;               /* Replace original operator with permuted version */
+    }
+
+
     // cout << "Coordinates created. "<<endl;
 
      this->ierr = MatAssemblyBegin(this->A,MAT_FINAL_ASSEMBLY);CHKERRQ(this->ierr);
@@ -290,6 +344,9 @@ void PETSC_GAMGSolver<number>::Solve(EqnSystem < T > &TEqn)
      ittime_end = clock();
 
      this->ierr = KSPSolve(this->ksp,this->b,this->x);CHKERRQ(this->ierr);
+
+
+    if (permute) {VecPermute(this->x,this->rowperm,PETSC_TRUE);}
 
 
      ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;

@@ -1,0 +1,27 @@
+class TestModel : public QStandardItemModel
+{
+public:
+    TestModel() {}
+
+    bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole)
+    {
+        QStandardItem *item = itemFromIndex(index);
+        for( int i = 0; i < item->rowCount() ; i++ )
+        {
+            QStandardItem *childItem = item->child(i);
+            setData(childItem->index(), value, role);
+        }
+        return QStandardItemModel::setData(index, value, role);
+    }
+};
+
+QStandardItemModel* tableModel = new TestModel();
+QStandardItem* parentItem = tableModel->invisibleRootItem();
+for (int i = 0; i < 4; ++i)
+{
+     QStandardItem *item = new QStandardItem(QString("item %0").arg(i));
+     item->setCheckable(true);
+     parentItem->appendRow(item);
+     parentItem = item;
+}
+treeView->setModel(tableModel);

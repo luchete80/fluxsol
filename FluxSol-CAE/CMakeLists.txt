@@ -72,7 +72,7 @@ set (LASPACK_LIBRARY_DIR ${FLUXSOL_DIR}/Libs/laspack/bin)
 set (ALGLIB_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/bin)
 
 
-set (FLUXSOL_LIB_DIR ${FLUXSOL_DIR}/Bin_CodeBlocks/FluxSol)
+set (FLUXSOL_LIB_DIR ${FLUXSOL_DIR}/Bin/FluxSol)
 
 
 include_directories(${LASPACK_INCLUDE_DIRS})

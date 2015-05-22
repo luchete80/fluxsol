@@ -174,7 +174,7 @@ void PETSC_KSP_Solver<number>::PETSC_Init()
 	//ierr = PCSetType(pc,PCICC);CHKERRQ(ierr);
 	ierr = PCSetType(pc,PCILU);CHKERRQ(ierr);
 	//ierr = KSPSetTolerances(ksp,1.e-3,1.e-2,PETSC_DEFAULT,PETSC_DEFAULT);CHKERRQ(ierr);
-	ierr = KSPSetTolerances(ksp,1.e-5,PETSC_DEFAULT,PETSC_DEFAULT,PETSC_DEFAULT);CHKERRQ(ierr);
+	ierr = KSPSetTolerances(ksp,1.e-7,PETSC_DEFAULT,PETSC_DEFAULT,PETSC_DEFAULT);CHKERRQ(ierr);
 	//PetscErrorCode  KSPSetTolerances(KSP ksp,PetscReal rtol,PetscReal abstol,PetscReal dtol,PetscInt maxits)
 
     //ksp	- the Krylov subspace context
@@ -208,6 +208,7 @@ void PETSC_KSP_Solver<number>::PETSC_Init()
 	ierr=VecSet(this->x,0.);
 
 	//REORDErING VARS
+	http://www.mcs.anl.gov/petsc/petsc-current/src/ksp/ksp/examples/tutorials/ex18.c.html
     permute=PETSC_FALSE;     //Matrix reordering
     mat_ord_type=MATORDERINGRCM;
     rowperm = NULL,colperm = NULL;
@@ -256,6 +257,7 @@ void PETSC_KSP_Solver<number>::Solve()
 
     if (permute)
     {
+        cout << "performing matrix permutation..."<<endl;
         Mat Aperm;
         MatGetOrdering(this->A,mat_ord_type,&rowperm,&colperm);
         MatPermute(this->A,rowperm,colperm,&Aperm);

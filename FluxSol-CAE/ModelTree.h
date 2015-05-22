@@ -13,6 +13,7 @@ public:
     ModelTreeWidget(QWidget *parent = 0);
 
 private slots:
-    void showContextMenu(const QPoint &pos);
+    void showContextMenu(const QPoint &pos);    //right click
+    void DoubleClickItem(QTreeWidgetItem *item, int column);
 };
 #endif // _MODELTREE_H_

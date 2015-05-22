@@ -751,6 +751,53 @@ void SimpleView::slotImportMesh()
 
       this->ren->AddActor( actor);
 
+
+      // ADD MESH TO TREE
+        QList<QTreeWidgetItem*> items = this->ui->ModelTree->findItems("Models",Qt::MatchContains|Qt::MatchRecursive);
+        int num = items.count();
+        //cout <<"Items found"<<num;
+
+        //addTreeChild(items[0], fileName, "Desc");
+
+        //this->ui->ModelTree->update();
+        //items[0]->addChild(itm);
+
+        items = this->ui->ModelTree->findItems("Parts",Qt::MatchExactly);
+
+        QList<QTreeWidgetItem*> clist = this->ui->ModelTree->findItems("Parts", Qt::MatchContains|Qt::MatchRecursive, 0);
+        if (clist.count()>0)
+        addTreeChild(clist[0], fileName, "Desc");
+
+        foreach(QTreeWidgetItem* item, clist)
+        {
+             //cout << item->text(0);
+        }
+
+
+        if (items.count()>0)
+        addTreeChild(items[0],
+                  "Hola2", "Desc");
+        else
+        {
+            cout << "Parts does not found..."<<endl;
+        }
+
+        //items[0]->insertChild(0,itm);
+        //items[0]->setText(0,"Changed");
+
+        QTreeView modtreeview(this->ui->ModelTree);
+
+
+        modtreeview.expandAll();
+        modtreeview.show();
+
+        //this->ui->ModelTree->expandAll();
+
+        this->ui->ModelTree->update();
+        this->ui->ModelTree->show();
+
+      //ADD PATCHES
+
 	}
 
 }
@@ -1126,8 +1173,9 @@ void SimpleView::slotImportIn()
         if (items.count()>0)
         addTreeChild(items[0],
                   "Hola2", "Desc");
+        //items[0]->addChild(itm);
 
-        //items[0]->insertChild(0,itm);
+        //sitems[0]->insertChild(0,itm);
         //items[0]->setText(0,"Changed");
 
         QTreeView modtreeview(this->ui->ModelTree);
