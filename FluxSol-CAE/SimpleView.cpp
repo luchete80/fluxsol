@@ -579,6 +579,7 @@ void SimpleView::slotImportMesh()
 	   "CGNS Mesh files (*.cgns)\n"
 	   "VTK Generic Mesh files (*.vtk)"));
 
+    Fv_CC_Grid mesh;
 
 	//Another option is to separate with commas
 	if (!fileName.isEmpty())
@@ -606,7 +607,8 @@ void SimpleView::slotImportMesh()
             // GraphicCFDModel model(fileName.toStdString());
             cout << "Importing CGNS Mesh: " << fileName.toStdString() <<" ... "<<endl;
 
-         	Fv_CC_Grid mesh(fileName.toStdString());
+         	//Fv_CC_Grid mesh(fileName.toStdString());
+         	mesh=Fv_CC_Grid(fileName.toStdString());
          	cout << "Mesh successfully imported ..."<<endl;
          	GraphicCFDModel model(mesh);
             mesh.Log("Log.txt");
@@ -764,9 +766,8 @@ void SimpleView::slotImportMesh()
 
         items = this->ui->ModelTree->findItems("Parts",Qt::MatchExactly);
 
+        //Must be finded as MatchRecursive to find a child item
         QList<QTreeWidgetItem*> clist = this->ui->ModelTree->findItems("Parts", Qt::MatchContains|Qt::MatchRecursive, 0);
-        if (clist.count()>0)
-        addTreeChild(clist[0], fileName, "Desc");
 
         foreach(QTreeWidgetItem* item, clist)
         {
@@ -774,13 +775,49 @@ void SimpleView::slotImportMesh()
         }
 
 
-        if (items.count()>0)
-        addTreeChild(items[0],
-                  "Hola2", "Desc");
+        //TO MODIFY, THIS MUST BE DONE IN TREE MEMBER
+        if (clist.count()>0)
+        {
+            QTreeWidgetItem *partitem ;
+            //item = new QTreeWidgetItem(this->ui->ModelTree);
+            partitem = new QTreeWidgetItem;
+            QIcon meshicon;
+            meshicon.addFile(QStringLiteral(":/Icons/GridSelectVertex.png"), QSize(), QIcon::Normal, QIcon::Off);
+            partitem->setText( 0, "Part-1" );
+            partitem->setIcon(0,meshicon);
+            clist[0]->addChild(partitem);
+
+            //Add Mesh Child
+            QTreeWidgetItem *partmeshit ;
+            partmeshit = new QTreeWidgetItem;
+            QIcon meshparticon;
+            meshparticon.addFile(QStringLiteral(":/Icons/GridSelectVertex.png"), QSize(), QIcon::Normal, QIcon::Off);
+            partmeshit->setText( 0, "Mesh" );
+            partmeshit->setIcon(0,meshparticon);
+            partitem->addChild(partmeshit);
+
+            for (int p=0;p<mesh.vBoundary().Num_Patches();p++)
+            {
+                //Add Mesh Child
+                QTreeWidgetItem *patchit ;
+                patchit = new QTreeWidgetItem;
+                //QIcon meshparticon;
+                //meshparticon.addFile(QStringLiteral(":/Icons/GridSelectVertex.png"), QSize(), QIcon::Normal, QIcon::Off);
+                patchit->setText( 0, QString::fromStdString(mesh.vBoundary().vPatch(p).Name()) );
+                //patchit->setIcon(0,meshparticon);
+                partmeshit->addChild(patchit);
+                //cout << "Found Patch: "<<mesh.vBoundary().vPatch(p).Name()<<endl;
+            }
+            partitem->setExpanded( true );
+            partmeshit->setExpanded( true );
+        }
         else
         {
             cout << "Parts does not found..."<<endl;
         }
+
+
+        //clist[0]->setExpanded( true );
 
         //items[0]->insertChild(0,itm);
         //items[0]->setText(0,"Changed");
