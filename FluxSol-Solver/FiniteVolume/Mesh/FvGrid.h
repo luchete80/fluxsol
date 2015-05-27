@@ -194,7 +194,7 @@ private:
     //      LOG         //
     //////////////////////
 
-	virtual void Read_CGNS();
+	virtual const std::string Read_CGNS();
 
     void Log_Conect();
 

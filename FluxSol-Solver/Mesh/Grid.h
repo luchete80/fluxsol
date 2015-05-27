@@ -69,6 +69,8 @@ class _Grid{
 	//std::ostringstream hola;
     std::ofstream meshlog;
 
+    std::stringstream slog;
+
     std::vector <string> imported_patchnames;  //Imported
 	bool escribir_log;				//Si escribir o no el log de creacion de malla
 														//Podria hacerlo por niveles. En principio es todo o nada
@@ -162,7 +164,10 @@ class _Grid{
     void Log_Verts();
 
 	void Read_InitialCGNS();
-	virtual void Read_CGNS();
+	virtual const std::string Read_CGNS();
+
+	//std::ofstream meshlog;
+	const std::string StrLog(){return slog.str();}
 
 };
 

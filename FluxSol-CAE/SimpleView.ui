@@ -258,7 +258,7 @@
        <bool>true</bool>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="usesScrollButtons">
        <bool>false</bool>
@@ -652,6 +652,7 @@
             <string>Results</string>
            </attribute>
           </widget>
+          <zorder>MsgWin</zorder>
          </widget>
          <widget class="QVTKWidget" name="qvtkWidget" native="true">
           <property name="sizePolicy">
@@ -671,6 +672,9 @@
        </item>
       </layout>
      </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="MsgWindow" name="MsgWin"/>
     </item>
    </layout>
   </widget>

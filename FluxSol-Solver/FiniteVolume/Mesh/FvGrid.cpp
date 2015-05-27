@@ -1018,12 +1018,12 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 	return ret;
 }
 
-	void Fv_CC_Grid::Read_CGNS()
+	const std::string  Fv_CC_Grid::Read_CGNS()
 	{
-
+        std::stringstream out;
         //raw data - vertices
         //base class function
-        cout << "[I] Reading Initial CGNS ..."<<endl;
+        out << "[I] Reading Initial CGNS ...\n"<<endl;
         Read_InitialCGNS();
 
         //Read boundary cells - Assuming boundary cell entry
@@ -1031,7 +1031,7 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 
         int boundnode =0;
 
-        cout << "[I] Creating boundary Elements ..."<<endl;
+        out << "[I] Creating boundary Elements ..."<<endl;
         //--------------------------------
         //IF INPUT IS WITH BOUNDARY CELLS
         //--------------------------------
@@ -1059,7 +1059,7 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
             }
             bpelem.push_back(temp);
         }
-        cout << "[I] Boundary Elements Count: "<<boundelem<<endl;
+        out << "[I] Boundary Elements Count: "<<boundelem<<endl;
 
         //vector<vector<int>> idbcellasoc(boundelem,vector<int>(2,-1)); //Id cells
         vector<int> idbcell(boundelem,-1);
@@ -1121,34 +1121,34 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 //            this->cell.push_back(scell);
 //
 //        }
-        cout << "[I] Created " << this->cell.size() << " cells. "<<endl;
+        out << "[I] Created " << this->cell.size() << " cells. "<<endl;
         //Updating cell number
         this->num_cells=cell.size();
 
         // Nodes
-        cout << "[I] Creating Central Nodes ..."<<endl;
+        out << "[I] Creating Central Nodes ..."<<endl;
         CreateNodesFromCellVerts();
 
         this->inicie_nodes=true;
         this->inicie_cells=true;
-        cout << "[I] Assigning Faces ..."<<endl;
+        out << "[I] Assigning Faces ..."<<endl;
         //Iniciar_Caras();
         Init_Faces();
-        cout << "[I] Assigning Neighbours ..."<<endl;
+        out << "[I] Assigning Neighbours ..."<<endl;
         AssignNeigboursCells();
-        cout << "[I] Calculating Volumes ..."<<endl;
+        out << "[I] Calculating Volumes ..."<<endl;
         CalcCellVolumes();
         //CreateNodesFromCellVerts();
 
         vector <Patch> vpatch;
 
-        cout << "[I] Boundary Faces count: " <<temp_boundfaces.size()<<endl;
+        out << "[I] Boundary Faces count: " <<temp_boundfaces.size()<<endl;
         std::vector<std::list <int> >bpfaces;
 
 //        cout << "Boundary zone nodes" << bpnode[0][node]<<endl;
-        cout << "[I] Number of Patches: " << this->raw.bc_elem_list.size() <<endl;
+        out << "[I] Number of Patches: " << this->raw.bc_elem_list.size() <<endl;
         int nBocos=raw.bocoNameMap.size();  //Extrcted from freecfd
-        cout << "[I] Creating Patches ..."<<endl;
+        out << "[I] Creating Patches ..."<<endl;
 
         string pname;
         int totalboundfaces=temp_boundfaces.size();
@@ -1157,7 +1157,7 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
             pname=this->imported_patchnames[bp];
             list <int> temp;
 
-            cout << "[I] Searching patch " << bp << ", named "<< pname<<", remaining boundary faces count: "<<temp_boundfaces.size()<<endl;
+            out << "[I] Searching patch " << bp << ", named "<< pname<<", remaining boundary faces count: "<<temp_boundfaces.size()<<endl;
 
             int nfoundfaces=0;
             if (raw.bocoNodes[bp].size()>0)
@@ -1209,7 +1209,7 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
                 }//End element
             }
             else
-            cout << "[I] WARNING: No Boundary defined. "<<endl;
+            out << "[I] WARNING: No Boundary defined. "<<endl;
 
 //
 //            bool badpatch=false;
@@ -1218,7 +1218,7 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 
 
             bpfaces.push_back(temp);
-            cout << "[I] Created Patch "<<pname<<", Face Count: " <<temp.size()<<endl;
+            out << "[I] Created Patch "<<pname<<", Face Count: " <<temp.size()<<endl;
             Patch p(pname,bpfaces[bp]);
             vpatch.push_back(p);
 
@@ -1240,8 +1240,9 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
         this->AddBoundary(bound);
         this->Create_IntFaces();
 
-        cout << "[I] Mesh created ..." << endl;
-
+        out << "[I] Mesh created ..." << endl;
+        slog << out;
+        return out.str();
 	}
 
 

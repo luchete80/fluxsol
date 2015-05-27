@@ -122,6 +122,7 @@ include_directories(
 set( Srcs main.cpp 
 		  MainWindow.cpp 
 		  ModelTree.cpp
+		  MsgWindow.cpp
 		  ParamDialog.cpp 
 		  sortdialog.cpp 
 		  SimpleView.cpp 
@@ -130,7 +131,7 @@ set( Srcs main.cpp
 		  GraphicResults.cpp
 		  GridSelection.cpp)
 
-set( Hdrs ModelTree.h SimpleView.h Param.h ParamDialog.h sortdialog.h Tetrahedron.h GraphicModel.h GraphicResults.h GridSelection.h)
+set( Hdrs ModelTree.h MsgWindow.h SimpleView.h Param.h ParamDialog.h sortdialog.h Tetrahedron.h GraphicModel.h GraphicResults.h GridSelection.h)
 
 set( MOC_Hdrs SimpleView.h )
 

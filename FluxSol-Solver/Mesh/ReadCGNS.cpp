@@ -363,7 +363,7 @@ void _Grid::Read_InitialCGNS() {
 
 } // end Grid::ReadCGNS
 
-void _Grid::Read_CGNS()
+const std::string _Grid::Read_CGNS()
 {
 
 }

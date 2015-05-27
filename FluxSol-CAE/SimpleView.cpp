@@ -609,6 +609,9 @@ void SimpleView::slotImportMesh()
 
          	//Fv_CC_Grid mesh(fileName.toStdString());
          	mesh=Fv_CC_Grid(fileName.toStdString());
+         	this->ui->MsgWin->AddString(std::string("Importing file " + fileName.toStdString() + "\n") );
+         	this->ui->MsgWin->AddString(mesh.StrLog());
+         	this->ui->MsgWin->AddString("Mesh has been succesfully imported.\n");
          	cout << "Mesh successfully imported ..."<<endl;
          	GraphicCFDModel model(mesh);
             mesh.Log("Log.txt");

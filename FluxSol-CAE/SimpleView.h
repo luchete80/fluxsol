@@ -136,6 +136,7 @@
 #include "GraphicModel.h"
 
 #include "ModelTree.h"
+#include "MsgWindow.h"
 
 #include "GridSelection.h"
 
