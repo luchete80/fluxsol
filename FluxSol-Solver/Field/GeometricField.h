@@ -82,14 +82,18 @@ namespace FluxSol
 
 		const T & ConstValue()const{return cvalue;}
 
-		void AssignBCValues()
-		{
-            //if (distr==CONSTVALUE)
-            //{
-//                cout << "Assigning value "<<cvalue<<endl;
-                this->AssignValue(this->cvalue);
-            //}
-		}
+//		void AssignBCValues()
+//		{
+//            //if (distr==CONSTVALUE)
+//            //{
+////                cout << "Assigning value "<<cvalue<<endl;
+//                this->AssignValue(this->cvalue);
+//            //}
+//		}
+        virtual void Calculate()   //For User Defined Objects, inherited from field
+        {
+            this->AssignValue(this->cvalue);
+        }
 
 
 	};
@@ -146,7 +150,9 @@ namespace FluxSol
 		void ApplyBC()
 		{
             for (int pf=0;pf<this->patchfield.size();pf++)
-                this->patchfield[pf].AssignBCValues();
+                this->patchfield[pf].Calculate();               //FOR UDO
+
+                //this->patchfield[pf].AssignBCValues();        OLD
 		}
         ~_BoundaryField(){}
 	};

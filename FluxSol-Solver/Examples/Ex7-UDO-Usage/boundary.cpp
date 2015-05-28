@@ -2,10 +2,17 @@
 
 using namespace FluxSol;
 
-class Patch:public _PatchField<Scalar>
-{
+UD_VelocityPatchField ufield;
 
-};
+void ufield::Calculate()
+{
+	for (int i=0;i<)
+	{
+		Vec3D xyz=this->;
+		this->val[i]=;
+	}
+}
+
 
 //void Patch::Calculate()
 //{

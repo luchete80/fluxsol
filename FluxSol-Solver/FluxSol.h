@@ -142,4 +142,23 @@
 //////////
 #include "UDO/FileSearch.h"
 
+template <typename T>
+class UD_PatchField:
+    public _PatchField <T>
+    {
+
+        public:
+            UD_PatchField(){};
+
+    };
+
+class UD_VelocityPatchField:
+    public _PatchField <Vec3D>
+    {
+
+        public:
+            UD_VelocityPatchField(){};
+
+    };
+
 #endif

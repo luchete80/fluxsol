@@ -439,6 +439,7 @@ void InputFile::read_inputs(void) {
 	section("grid",0).subsection("BC",0).register_string("patch",required);
 	section("grid",0).subsection("BC",0).register_string("type",required);
 	section("grid",0).subsection("BC",0).register_string("kind",optional,"none");
+	section("grid",0).subsection("BC",0).register_string("def",optional,"none");            //How field is defined
 	section("grid",0).subsection("BC",0).register_string("region",optional,"gridfile");
 	section("grid",0).subsection("BC",0).register_string("interface",optional,"none");
 	section("grid",0).subsection("BC",0).register_Vec3D("corner_1",optional);
@@ -449,6 +450,7 @@ void InputFile::read_inputs(void) {
 	section("grid",0).subsection("BC",0).register_double("mdot",optional);
 	section("grid",0).subsection("BC",0).register_double("qdot",optional);
 	section("grid",0).subsection("BC",0).register_Vec3D("U",optional);
+	section("grid",0).subsection("BC",0).register_string("U_UDO",optional);
 	section("grid",0).subsection("BC",0).register_double("T",optional);
 	section("grid",0).subsection("BC",0).register_double("T_total",optional);
 	section("grid",0).subsection("BC",0).register_double("rho",optional);
@@ -604,17 +606,28 @@ InputFile::UField()
     }
 
     //Assign values
+    //_BoundaryField<Vec3D> bf;
     for (int meshp=0;meshp<numpatches;meshp++)
     {
         //cout << "meshp: "<<meshp<<endl;
         int validpfid=asoc[meshp];
         //cout << "validpfid: "<<validpfid<<endl;
         int pf=validpf_id[validpfid];
-        //cout << "global pf: "<<pf<<endl;
-        cvalues[meshp]=section("grid",0).subsection("BC",pf).get_Vec3D("U");
- //       cvalues[meshp]=section("grid",0).subsection("BC",pf).get_string("U");
 
-        //cout << "Applied "<<cvalues[meshp].outstr()<<"to patch "<<meshp<<endl;
+        string def=section("grid",0).subsection("BC",pf).get_string("def");
+        cout << "[I] Patch definition type is "<<def<<endl;
+
+        if (def=="constant" || def=="none")
+        {
+            cvalues[meshp]=section("grid",0).subsection("BC",pf).get_Vec3D("U");
+        }
+        else if (def=="UDO"||def=="udo")
+        {
+            string udoname=section("grid",0).subsection("BC",pf).get_string("U_UDO");
+
+            //UD_VelocityPatchField *udoUpf=new UD_VelocityPatchField;
+        }
+
     }
 
     _BoundaryField<Vec3D> bf(GridPtr->vBoundary(),cvalues);

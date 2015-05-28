@@ -57,8 +57,6 @@ class _Field{
 
 	std::string name;
 
-
-
     public:
     _Field(){};
     const int Order(){return order;};
@@ -98,7 +96,6 @@ class _Field{
 
     }
 
-
 	//Operations
 
 	_Field<T> & operator=(const T &val);
@@ -128,6 +125,8 @@ class _Field{
 
         return cad;
 	}
+
+    virtual void Calculate(){}   //For User Defined Objects
 
     //~_Field(){}
 

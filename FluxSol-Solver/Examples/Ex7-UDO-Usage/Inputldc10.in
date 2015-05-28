@@ -24,14 +24,20 @@
 
 // Example of Input file.
 
-grid {
-	file = square.cgns;
-	dimension = 2;
-		
-	solution_scheme = diffusion;
+grid_1 {
+	file = Mesh_Dens_10.cgns;
+	solution_scheme = navier-stokes;
 	
-	BC_1 (type=fixedvalue;T=0.0;); 
-	BC_2 (type=fixedvalue;T=0.0;);
-	BC_3 (type=fixedvalue;T=0.0;); 
-	BC_4 (type=fixedvalue;T=1.0;);
+	patch_1(type=face;);
+	
+	material 	(
+				k=1.;
+				rho=1.;);
+	
+	
+	//Definition default is by constant value 
+	BC_1 (patch=BC-2;type=wall;def=UDO;U_UDO=[10.,0.,0.];); 
+	BC_2 (patch=BC-1;type=wall;U=0.0;);
+	BC_3 (patch=BC-3;type=wall;U=0.0;); 
+	BC_4 (patch=BC-4;type=wall;U=[0.,0.,0.];);
 }
