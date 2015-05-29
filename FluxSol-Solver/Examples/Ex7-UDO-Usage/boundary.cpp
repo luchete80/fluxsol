@@ -13,9 +13,3 @@ void ufield::Calculate()
 	}
 }
 
-
-//void Patch::Calculate()
-//{
-//	cout << "Hi.."<<endl;
-
-//}

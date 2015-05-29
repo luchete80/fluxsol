@@ -34,6 +34,7 @@
 //#include "../Input/Input.h"
 
 #include <list>
+#include <UDO.h>
 
 namespace FluxSol{
 //Los campos no dependen de la discretizacion
@@ -44,7 +45,9 @@ namespace FluxSol{
 //Este campo no tiene asociada una malla
 //Siempre en los campos internos
 template<typename T>
-class _Field{
+class _Field:
+    public UDO
+    {
 
 
     protected:
