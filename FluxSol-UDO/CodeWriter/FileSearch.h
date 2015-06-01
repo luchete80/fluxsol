@@ -24,8 +24,10 @@
 #ifndef _FILESEARCH_H_
 #define _FILESEARCH_H_
 
-#include "Input.h" //InputBaseContainer
-#include "FluxSol.h"
+#include "Input.h"          //InputBaseContainer
+#include "FluxSol.h"        //UDO
+#include <fstream>
+
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -38,24 +40,45 @@
 #include <set>
 #include <map>
 #include <vector>
+#include <string>
 //#include <pair>
 
 using namespace std;
 
 namespace FluxSol
 {
-class FileSearcher:public InputBaseContainer
+//TO MODIFY: move to UDO
+class UDOIds
+{
+    protected:
+        string classname,basename;      //class name is inherited class type
+
+    public:
+        UDOIds(const string &n, const string &ct)
+        {classname=n;basename=ct;}
+        const string & ClassName()const {return classname;}
+        const string & BaseName()const{return basename;}
+
+
+};
+class FileSearcher:
+    public InputBaseContainer
 {
 
     protected:
     //std::map <set <string> , >classnames;
     //OR VOID OR TEMPLATE POINTER!!!!!!
-    std::map< std::pair <string, string>, void *> class_and_name;//class
-    std::map< std::pair <string, string>, UDO *> udo_and_name;//class
-    UDO *udo;
+    //std::map< std::vector <string, string>, void *> class_and_name;//class
+    string dirpath;                 //filenames dir
+    set < string > filenames;       //Without file
+
+    vector < UDOIds> udoids;//class
 
     public:
     FileSearcher(string path);
+    void GetUDOMapsFromFile(const string &str); //PROTECTED!
+    void WriteUDOLibFile();
+
 
 };
 

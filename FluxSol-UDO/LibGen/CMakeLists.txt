@@ -106,8 +106,7 @@ endif ()
 
 set (NAME UDO)
 set (SOURCES 
-FileSearch.cpp
-main.cpp
+UDOCreator.cpp
 )
 
 
@@ -117,5 +116,5 @@ FILE(GLOB _header
   )
 install (FILES ${NAME}.h DESTINATION include)
 
-add_executable(${NAME} ${SOURCES})
-target_link_libraries (${NAME} ${FLUXSOL_LIB} ${EXT_LIBS})
+add_library(${NAME} ${SOURCES})
+target_link_libraries (${NAME})
