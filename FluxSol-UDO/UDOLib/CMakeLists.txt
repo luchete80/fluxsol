@@ -5,7 +5,7 @@ include (CheckIncludeFiles)
 include (CheckIncludeFileCXX)
 include (CheckCXXSourceCompiles)
 
-set (NAME UDOLibGen)
+set (NAME UDOLib)
 project(${NAME})
 
 set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
@@ -106,7 +106,7 @@ endif ()
 
 set (NAME UDO)
 set (SOURCES 
-UDOCreator.cpp
+UDOLib.cpp
 )
 
 
@@ -116,5 +116,7 @@ FILE(GLOB _header
   )
 install (FILES ${NAME}.h DESTINATION include)
 
-add_library(${NAME} ${SOURCES})
+set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all-symbols")
+
+add_library(${NAME} SHARED ${SOURCES})
 target_link_libraries (${NAME})

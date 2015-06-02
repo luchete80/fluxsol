@@ -102,9 +102,6 @@ if (USE_PETSC)
 
 endif ()
 
-
-
-set (NAME UDO)
 set (SOURCES 
 FileSearch.cpp
 main.cpp

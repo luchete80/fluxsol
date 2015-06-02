@@ -21,12 +21,19 @@
     see <http://www.gnu.org/licenses/>.
 
 *************************************************************************/
-#ifndef _UDOLIBGEN_H_
-#define _UDOLIBGEN_H_
+#include "UDOLib.h"
 
-#include "Input.h"          //InputBaseContainer
-#include "FluxSol.h"
-UDO* CreateUDO(const string &basename);
 
-#endif // _FILESEARCH_H_
+UDOLib::UDOLib(set <string> &files) //
+{
 
+}
+UDOLib::UDOLib(string &file) //
+{
+
+}
+
+void UDOLib::AddFile(string file)
+{
+
+}

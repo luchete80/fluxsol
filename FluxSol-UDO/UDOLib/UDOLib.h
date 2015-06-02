@@ -21,54 +21,12 @@
     see <http://www.gnu.org/licenses/>.
 
 *************************************************************************/
-#ifndef _FILESEARCH_H_
-#define _FILESEARCH_H_
+#ifndef _UDOLIB_H_
+#define _UDOLIB_H_
 
-#include "Input.h"          //InputBaseContainer
-#include "UDO.h"        //UDO
-#include <fstream>
-
-#include <fstream>
-#include <iostream>
-#include <string>
-
-#include <dirent.h>
-#include <unistd.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-
-#include <set>
-#include <map>
-#include <vector>
-#include <string>
-//#include <pair>
+#include "UDO.h"          //InputBaseContainer
 
 using namespace std;
-
-namespace FluxSol
-{
-class FileSearcher:
-    public InputBaseContainer
-{
-
-    protected:
-    //std::map <set <string> , >classnames;
-    //OR VOID OR TEMPLATE POINTER!!!!!!
-    //std::map< std::vector <string, string>, void *> class_and_name;//class
-    string dirpath;                 //filenames dir
-    set < string > filenames;       //Without file
-
-    vector < UDOIds> udoids;//class
-
-    public:
-    FileSearcher(string path);
-    void GetUDOMapsFromFile(const string &str); //PROTECTED!
-    void WriteUDOLibFile();
-
-
-};
-
-}//Namespace FluxSol
 
 #endif // _FILESEARCH_H_
 

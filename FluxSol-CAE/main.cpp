@@ -38,15 +38,17 @@ int main(int argc, char *argv[])
 	SimpleView mySimpleView;
 	mySimpleView.show();
 
+	system("setvars.bat");
+
 	//Tetrahedron tetrahedron;
 	//tetrahedron.setWindowTitle(QObject::tr("Tetrahedron"));
 	//tetrahedron.resize(300, 300);
 	//tetrahedron.show();
 	//QTextEdit textEdit;
 	//textEdit.show();
-	
+
 	//return EXIT_SUCCESS;
-	
+
 	return app.exec();
 
 

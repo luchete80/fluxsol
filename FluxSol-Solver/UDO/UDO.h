@@ -24,6 +24,13 @@
 #ifndef _UDO_H_
 #define _UDO_H_
 
+#include <string>
+#include <set>
+#include <vector>
+#include <map>
+
+using namespace std;
+
 class UDO
 {
 
@@ -33,6 +40,39 @@ class UDO
 
 	UDO(){}
 	virtual void Calculate(){};
+
+};
+
+class UDOIds
+{
+    protected:
+        string classname,basename;      //class name is inherited class type
+
+    public:
+        UDOIds(const string &n, const string &ct)
+        {classname=n;basename=ct;}
+        const string & ClassName()const {return classname;}
+        const string & BaseName()const{return basename;}
+
+
+};
+
+
+class UDOLib
+{
+
+	protected:
+
+    map <UDO* , UDOIds > udomap;   //map to the sorted face vertex set
+	public:
+
+    UDOLib(){}  //This must be linked externally
+	UDOLib(set <string> &files); //
+	UDOLib(string &file); //
+
+	void AddFile(string file);
+
+	//UDO* UDO (const int &i) {return udo[i]};
 
 };
 
