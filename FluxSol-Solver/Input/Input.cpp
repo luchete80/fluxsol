@@ -23,7 +23,6 @@
 *************************************************************************/
 
 #include "Input.h"
-#include "UDO.h"
 
 using namespace std;
 
@@ -578,6 +577,8 @@ EqnSystem <Scalar> InputFile::ReadEqnSys(const Fv_CC_Grid &mesh) {
 _CC_Fv_Field <Vec3D>
 InputFile::UField()
 {
+
+    udolib=UDOLib(".");
     //Reading BC
     int patchfieldnumber;   //number of boundary field patches
     patchfieldnumber=section("grid",0).numberedSubsections["BC"].size();
@@ -605,8 +606,9 @@ InputFile::UField()
         }
     }
 
-    //Assign values
     //_BoundaryField<Vec3D> bf;
+    //Assign values
+    _BoundaryField<Vec3D> bf;
     for (int meshp=0;meshp<numpatches;meshp++)
     {
         //cout << "meshp: "<<meshp<<endl;
@@ -620,19 +622,34 @@ InputFile::UField()
         if (def=="constant" || def=="none")
         {
             cvalues[meshp]=section("grid",0).subsection("BC",pf).get_Vec3D("U");
+
+            _PatchField <Vec3D> _pf(GridPtr->vBoundary().vPatch(meshp),cvalues[meshp]);
+            //PatchField Constructor from facenumber is not working
+
+            cout << "[I] Adding Patch Field ..."<<endl;
+            bf.Add_PatchField(_pf);
         }
         else if (def=="UDO"||def=="udo")
         {
-            UDOLib udolib;  //Default constructor
+            //Default constructor
 
             string udoname=section("grid",0).subsection("BC",pf).get_string("UDO_name");
 
             cout << "[I] Inserting Patch from UDO " << udoname <<endl;
-            UD_PatchField <Vec3D> * udo=udolib.UdoFromName(udoname);
+            UD_VelocityPatchField * udo=udolib.UdoFromName(udoname);    //DOWNCASTING!
+            //UD_PatchField<Vec3D> * udo=udolib.UdoFromName(udoname);
+//            bf.Add_PatchField(udo);
 
+            int numfaces=GridPtr->vBoundary().vPatch(meshp).Num_Faces();
+            //UD_PatchField<Vec3D> *udo2=new _PatchField<Vec3D>(numfaces);
+
+            cout << "Resizing to " << GridPtr->vBoundary().vPatch(meshp).Num_Faces() << "faces" << endl;
             udo->Resize(GridPtr->vBoundary().vPatch(meshp).Num_Faces());
+            udo->Calculate();
 
+            bf.Add_UDOAddr(udo);
 
+            cout << "Exiting"<<endl;
 
             //if ()
             //udo.
@@ -647,7 +664,9 @@ InputFile::UField()
 
     }
 
-    _BoundaryField<Vec3D> bf(GridPtr->vBoundary(),cvalues);
+    cout << "[I] Patch Loop End."<<endl;
+
+    //_BoundaryField<Vec3D> bf(GridPtr->vBoundary(),cvalues);
     cout << "Creating ret field"<<endl;
     _CC_Fv_Field <Vec3D> ret(*GridPtr, bf);
 

@@ -9,6 +9,7 @@ GeometricField.h
 )
 
 set (SOURCES 
+BoundaryField.cpp
 PatchField.cpp
 Field.cpp
 )	

@@ -159,6 +159,7 @@ void CFDModel::InitFields()
 
         //ITERATION BEGINS
 //      clock_t starttime,endtime;
+
     cout << "[I] Iterations"<<endl;
     cout << "-----------------------------------------------------------------------------------------------"<<endl;
         time_t starttimec,endtimec;

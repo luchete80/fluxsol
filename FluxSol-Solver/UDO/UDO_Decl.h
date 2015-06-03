@@ -21,48 +21,32 @@
     see <http://www.gnu.org/licenses/>.
 
 *************************************************************************/
-#include "UDOLib.h"
-#include "FileSearch.h"
+#ifndef _UDO_DECL_H_
+#define _UDO_DECL_H_
 
-using namespace std;
+#include <string>
+#include <set>
+#include <vector>
+#include <map>
+
+
+
 namespace FluxSol
 {
 
-UDOLib::UDOLib(const string &str)
-{
-    cout << "[I] Creating UDOLib 2..."<<endl;
+class UDO;
+template <typename T>
+class UD_Field;
 
-    FileSearcher fs(str);
-    std::vector<UDOIds>::iterator it;
-    cout << "UDO number: " << fs.UDO_Ids().size()<<endl;
-    int count =0;
-    for (it=fs.UDO_Ids().begin();it!=fs.UDO_Ids().end();it++)
-    {
-        //UDOLib::AddFile(*sit);
-        std::string classname=it->ClassName();
-        //cout << "Inserting classname: " << classname<<endl;
-        //UDO* udo=CreateUDO(classname);
-        udomap.insert(std::pair<string, UDO*>(classname,CreateUDO(classname)) );
-        cout << "inserted "<<endl;
-//        udomap[classname]->Calculate();
-        //udo->Calculate();
-        //delete udo;
-        count ++;
+class UDOIds;
+class UDOLib;
 
-    }
-    cout << "Created map"<<endl;
-}
+template <typename T>
+class UD_PatchField;
 
-UDOLib::UDOLib(set <string> &files) //
-{
+class UD_VelocityPatchField;
 
 }
 
-//Ads maps from file
-void UDOLib::AddFile(string file)
-{
 
-}
-
-}
-
+#endif

@@ -36,7 +36,7 @@ grid_1 {
 	
 	
 	//Definition default is by constant value 
-	BC_1 (patch=BC-2;type=wall;def=UDO;U_UDO=[10.,0.,0.];); 
+	BC_1 (patch=BC-2;type=wall;def=UDO;udo=ufield;); 
 	BC_2 (patch=BC-1;type=wall;U=0.0;);
 	BC_3 (patch=BC-3;type=wall;U=0.0;); 
 	BC_4 (patch=BC-4;type=wall;U=[0.,0.,0.];);

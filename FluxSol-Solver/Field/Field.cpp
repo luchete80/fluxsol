@@ -38,6 +38,20 @@ namespace FluxSol {
 //}
 
 template <typename T>
+void _Field<T>::Resize(const int &i)
+{
+
+    //if (value.size()!=0)value.clear();
+    cout << "Inside Resizing "<<endl;
+    vector <T> temp(i,0.);
+    T t(0.);
+    value=temp;
+
+    //value.push_back(t);
+    numberofvals=i;
+}
+
+template <typename T>
 Vertex_Fv_Field<T>::Vertex_Fv_Field(const Fv_CC_Grid &grid)
 {
 	GridPtr=&grid;

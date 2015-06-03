@@ -29,6 +29,7 @@
 #include "Grid.h"
 #include "Boundary.h"
 //A general FvField can inherit fields below
+//#include "UDO_Decl.h"   //BUT NOT UDO
 
 namespace FluxSol
 {
@@ -92,6 +93,7 @@ namespace FluxSol
 //		}
         virtual void Calculate()   //For User Defined Objects, inherited from field
         {
+            cout << "Base PatchField Calculate"<<endl;
             this->AssignValue(this->cvalue);
         }
 
@@ -106,7 +108,7 @@ namespace FluxSol
 	{
 	protected:
 		//Can be Fixed Value and Fixed Gradient
-		std::vector < _PatchField < T > > patchfield;
+		std::vector < _PatchField < T > * > patchfield; //THIS IS NEW, ACCORDING TO ALLOW UDFs
 
 	public:
 		//_BoundaryField(const _CC_Fv_Field < T > &);
@@ -122,7 +124,8 @@ namespace FluxSol
 				_PatchField < T > pf(b.vPatch(np));
 				//this->patchfield.push_back(pf);
 				//this->patchfield.push_back(pf);
-				this->patchfield[np]=pf;
+				//this->patchfield[np]=pf;
+				this->patchfield[np]=new _PatchField < T >(b.vPatch(np));
 			}
 
 		}
@@ -133,24 +136,34 @@ namespace FluxSol
 			//Generate a _PatchField for every patch in boundary
 			for (int np = 0; np<b.Num_Patches(); np++)
 			{
-				_PatchField < T > pf(b.vPatch(np),cvals[np]);
-				patchfield.push_back(pf);
+				//_PatchField < T > *pf=new _PatchField(b.vPatch(np),cvals[np]);
+				patchfield.push_back(new _PatchField<T>(b.vPatch(np),cvals[np]));
 			}
 
 		}
 
-		_PatchField < T > & PatchField(const int &i){ return this->patchfield[i]; }
+		_PatchField < T > & PatchField(const int &i){ return *this->patchfield[i]; }
         void AssignPatchFieldTypes(const _PatchFieldType &t)
 		{
 		    for (int pf=0;pf<this->patchfield.size();pf++)
                 this->PatchField(pf).AssignType(t);
 		}
-		void Add_PatchField(_PatchField<T> &field)  { patchfield.push_back(field); }
+		void Add_PatchField(_PatchField<T> &field)
+		{
+		    patchfield.push_back(new _PatchField<T>(field));
+        }
+
+        void Add_AddField(UD_PatchField<T> *field)
+		{
+		    patchfield.push_back(new _PatchField<T>(field));
+        }
+
+        void Add_UDOAddr(UDO *udo);
 
 		void ApplyBC()
 		{
             for (int pf=0;pf<this->patchfield.size();pf++)
-                this->patchfield[pf].Calculate();               //FOR UDO
+                this->patchfield[pf]->Calculate();               //FOR UDO
 
                 //this->patchfield[pf].AssignBCValues();        OLD
 		}
@@ -537,6 +550,14 @@ namespace FluxSol
 //            return *ret;
 //        }
 
+class UD_VelocityPatchField:
+    public _PatchField <Vec3D>
+    {
+
+        public:
+            UD_VelocityPatchField(){};
+
+    };
 
 
 }//FluxSol

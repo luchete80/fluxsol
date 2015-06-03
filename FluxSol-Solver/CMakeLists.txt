@@ -198,7 +198,7 @@ FluxSol.cpp
 if (USE_SHARED_LIB)
 #Before creating library
 set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all-symbols")
-
+add_library(Type_ SHARED $<TARGET_OBJECTS:Type>)
 add_library(${NAME}lib SHARED FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 												$<TARGET_OBJECTS:Boundary>
 												$<TARGET_OBJECTS:Field>

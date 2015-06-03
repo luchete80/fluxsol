@@ -1,6 +1,12 @@
 namespace FluxSol {
 
 template
+void _Field<Scalar>::Resize(const int &i);
+template
+void _Field<Vec3D>::Resize(const int &i);
+
+
+template
 Vertex_Fv_Field<Scalar>::Vertex_Fv_Field(const Fv_CC_Grid &grid);
 
 template

@@ -47,6 +47,8 @@
 #include "Laplacian.h"
 #include "_CC_Fv_field_Def.h"
 
+#include "UDO.h"
+
 #include "FvGrid.h"
 //#include <mpi.h>
 
@@ -185,6 +187,7 @@ protected:
 
 
 public:
+    UDOLib udolib;
 	string fileName;
 	map<string,Section> sections;
 	map<string,vector<Section> > numberedSections;

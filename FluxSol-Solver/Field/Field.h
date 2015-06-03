@@ -30,6 +30,8 @@
 
 #include <string>
 #include <fstream>
+#include "UDO.h"
+
 
 //#include "../Input/Input.h"
 
@@ -44,7 +46,8 @@ namespace FluxSol{
 //Este campo no tiene asociada una malla
 //Siempre en los campos internos
 template<typename T>
-class _Field
+class _Field:
+    public UDO
     {
 
 
@@ -60,11 +63,8 @@ class _Field
 
     public:
     _Field(){};
-    void Resize(const int &i)
-    {
-        value.clear();
-        value=vector<T>(i, T(0.));
-    }
+    void Resize(const int &i);
+
     const int Order(){return order;};
 	_Field(const int &numval, const double &val =0.)
     {

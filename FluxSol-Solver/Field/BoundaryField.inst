@@ -1,0 +1,9 @@
+namespace FluxSol
+{
+template
+void _BoundaryField<Scalar>:: Add_UDOAddr(UDO *udo);
+
+template 
+void _BoundaryField<Vec3D>:: Add_UDOAddr(UDO *udo);
+
+}
