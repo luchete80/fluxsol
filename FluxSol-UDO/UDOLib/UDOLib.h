@@ -24,6 +24,7 @@
 #ifndef _UDOLIB_H_
 #define _UDOLIB_H_
 
+#include <iostream>
 #include "UDO.h"          //InputBaseContainer
 
 using namespace std;

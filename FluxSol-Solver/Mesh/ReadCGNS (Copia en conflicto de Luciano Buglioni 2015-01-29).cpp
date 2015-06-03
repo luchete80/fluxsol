@@ -215,7 +215,7 @@ void _Grid::Read_InitialCGNS() {
 				bc_method[bcIndex]=ELEMENT_LIST;
 				for (int i=list[0];i<=list[1];++i) bc_element_list[bcIndex].insert(i);
 			} else {
-				if (Rank==0) cerr << "[E] Boundary condition specification is not recognized" << endl;
+				if (Rank==0) cout << "[E] Boundary condition specification is not recognized" << endl;
 //				exit(1);
 			}
 

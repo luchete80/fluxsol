@@ -22,7 +22,36 @@
 
 *************************************************************************/
 #include "UDOLib.h"
+#include "FileSearch.h"
 
+using namespace std;
+namespace FluxSol
+{
+
+UDOLib::UDOLib()
+{
+    cout << "[I] Creating UDOLib 2..."<<endl;
+
+    FileSearcher fs(".");
+    std::vector<UDOIds>::iterator it;
+    cout << "UDO number: " << fs.UDO_Ids().size()<<endl;
+    int count =0;
+    for (it=fs.UDO_Ids().begin();it!=fs.UDO_Ids().end();it++)
+    {
+        //UDOLib::AddFile(*sit);
+        std::string classname=it->ClassName();
+        //cout << "Inserting classname: " << classname<<endl;
+        //UDO* udo=CreateUDO(classname);
+        udomap.insert(std::pair<string, UDO*>(classname,CreateUDO(classname)) );
+        cout << "inserted "<<endl;
+        udomap[classname]->Calculate();
+        //udo->Calculate();
+        //delete udo;
+        count ++;
+
+    }
+    cout << "Created map"<<endl;
+}
 
 UDOLib::UDOLib(set <string> &files) //
 {
@@ -33,7 +62,11 @@ UDOLib::UDOLib(string &file) //
 
 }
 
+//Ads maps from file
 void UDOLib::AddFile(string file)
 {
 
 }
+
+}
+

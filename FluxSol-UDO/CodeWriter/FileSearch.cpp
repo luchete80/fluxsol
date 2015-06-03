@@ -23,6 +23,7 @@
 *************************************************************************/
 
 #include "FileSearch.h"
+#include "UDO.h"
 using namespace FluxSol;
 
 //Reads files from a directory
@@ -38,8 +39,10 @@ FileSearcher::FileSearcher(string dir)
   struct dirent *dirp;
   struct stat filestat;
 
-  cout << "dir to get files of: " << flush;
-  getline( cin, dir );  // gets everything the user ENTERs
+  //cout << "dir to get files of: " << flush;
+  //getline( cin, dir );  // gets everything the user ENTERs
+
+  cout << "dir is "<<dir<<endl;
 
   dp = opendir( dir.c_str() );
   if (dp == NULL)
@@ -52,22 +55,27 @@ FileSearcher::FileSearcher(string dir)
   while ((dirp = readdir( dp )))
     {
     filepath = dir + "/" + dirp->d_name;
-    cout << "filepath: " <<filepath<<endl;
+    //cout << "filepath: " <<filepath<<endl;
 
     // If the file is a directory (or is in some way invalid) we'll skip it
     if (stat( filepath.c_str(), &filestat )) continue;
     if (S_ISDIR( filestat.st_mode ))         continue;
 
     // Endeavor to read a single number from the file and display it
-    fin.open( filepath.c_str() );
-    GetUDOMapsFromFile(filepath);
-//    if (fin >> num)
-//    {
-//
-//    }
-    cout << filepath << ": " << num << endl;
-    this->filenames.insert(dirp->d_name);
-    fin.close();
+    //fin.open( filepath.c_str() );
+    //This is double checked
+    if(filepath.substr(filepath.find_last_of(".") + 1) == "h")
+    {
+        GetUDOMapsFromFile(filepath);
+    //    if (fin >> num)
+    //    {
+    //
+    //    }
+        cout << filepath << ": " << num << endl;
+        this->filenames.insert(filepath.c_str());
+        fin.close();
+    }
+
     }
 
   closedir( dp );
@@ -77,8 +85,7 @@ FileSearcher::FileSearcher(string dir)
 void
 FileSearcher::GetUDOMapsFromFile(const string &fname)
 {
-
-    if(fname.substr(fname.find_last_of(".") + 1) == "cpp")
+    if(fname.substr(fname.find_last_of(".") + 1) == "h")
     {
         cout << "Reading file "<<fname<<endl;
         //extract file extension
@@ -91,7 +98,7 @@ FileSearcher::GetUDOMapsFromFile(const string &fname)
         string sname,basename;
         while(!classend)
         {
-            cout << "Raw Data" << input.rawData<<endl;
+            //cout << "Raw Data" << input.rawData<<endl;
             //Get UDO TYPE
             //bool extract_in_between(string &data, string begin, string end,
                                       //string &result,bool check_char_before=false, string acceptList="");
@@ -128,9 +135,16 @@ void FileSearcher::WriteUDOLibFile()
 {
 
     std::ofstream ofs ("UDOCreator.cpp", std::ofstream::out);
-    ofs << "#include \"UDOLibGen.h\" "<<endl;
+    ofs << "#include \"UDOLib.h\" "<<endl;
 
-    ofs << "UDO* CreateUDO(const string &basename){"<<endl;
+    std::set<string>::iterator sit;
+    for (sit=filenames.begin();sit!=filenames.end();sit++)
+    {
+        ofs << "#include \""<<*sit <<"\" "<<endl;
+        cout << "Including" << *sit<<endl;
+    }
+
+    ofs << "UDO* UDOLib::CreateUDO(const string &udoname){"<<endl;
 
     ofs << "    UDO *udo;"<<endl;
 
@@ -139,7 +153,7 @@ void FileSearcher::WriteUDOLibFile()
     ofs << "// UDOs Can be built by default constructor and then assigned. <<" << endl;
     for (it=udoids.begin();it!=udoids.end();it++)
     {
-        ofs << "    if (basename==\"" << it->ClassName() <<"\""<<")" <<endl;
+        ofs << "    if (udoname==\"" << it->ClassName() <<"\""<<")" <<endl;
         ofs << "        udo=new "<<it->ClassName()<<";"<<endl;
     }
     ofs << "return udo;}//UDO Creator"<<endl;

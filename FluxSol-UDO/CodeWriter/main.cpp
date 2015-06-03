@@ -28,9 +28,11 @@
 // GIVEN A .CPP CONTAINING User Definitions
 // this program writes an "UDOCreator.cpp"
 // which must be then linked to libgen library to build UDOLibrary
-// Then UDOLib must be created with the user .cpp file
+// Then UDOLib is created in FLuxSol with the user .cpp file
 // UDOLib("userfile.cpp")
 // Each model has an UDOLib
+
+using namespace FluxSol;
 
 int main()
 {

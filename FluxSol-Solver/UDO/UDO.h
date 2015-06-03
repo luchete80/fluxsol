@@ -29,7 +29,12 @@
 #include <vector>
 #include <map>
 
+#include "Field.h"
+
 using namespace std;
+
+namespace FluxSol
+{
 
 class UDO
 {
@@ -38,10 +43,21 @@ class UDO
 
 	public:
 
-	UDO(){}
-	virtual void Calculate(){};
-
+	UDO(){};
+	virtual void Calculate(){cout << "[I] Base UDO Calculate ..."<<endl;};
 };
+
+template <typename T>
+class UD_Field:
+    public _Field<T>,
+    public UDO
+{
+
+
+    public:
+        UD_Field(){};
+
+    };
 
 class UDOIds
 {
@@ -62,19 +78,43 @@ class UDOLib
 {
 
 	protected:
-
-    map <UDO* , UDOIds > udomap;   //map to the sorted face vertex set
+    map <string, UDO*> udomap;   //Relates UDO names with objects
 	public:
 
-    UDOLib(){}  //This must be linked externally
+    //These must be linked externally
+    UDOLib();
 	UDOLib(set <string> &files); //
 	UDOLib(string &file); //
 
 	void AddFile(string file);
 
 	//UDO* UDO (const int &i) {return udo[i]};
+	UDO* UdoFromName(const string &name){return udomap[name];}
+	UDO* CreateUDO(const string &);
 
 };
 
 
+template <typename T>
+class UD_PatchField:
+    public _PatchField<T>,
+    public UDO
+    {
+
+        public:
+            UD_PatchField(){};
+
+    };
+
+class UD_VelocityPatchField:
+    public UD_PatchField <Vec3D>,
+    public UDO
+    {
+
+        public:
+            UD_VelocityPatchField(){};
+
+    };
+
+}
 #endif

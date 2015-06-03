@@ -118,6 +118,8 @@
 #include "SIMPLE.h"
 #include "PETSC_Solver.h"
 
+#include "UDO.h"
+
 
 //#include "./Tmp/Tmp.h"
 //#include "./Tmp/TmpI.h"
@@ -137,28 +139,5 @@
 
 #include "./Variables/Variable.h"
 
-//////////
-// UDOs //
-//////////
-
-
-template <typename T>
-class UD_PatchField:
-    public _PatchField <T>
-    {
-
-        public:
-            UD_PatchField(){};
-
-    };
-
-class UD_VelocityPatchField:
-    public _PatchField <Vec3D>
-    {
-
-        public:
-            UD_VelocityPatchField(){};
-
-    };
 
 #endif

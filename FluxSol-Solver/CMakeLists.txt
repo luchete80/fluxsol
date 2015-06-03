@@ -153,6 +153,8 @@ include_directories("${PARMETIS_DIR}/metis/include")
 link_directories(${CGNS_LIBRARY_DIRS})
 link_directories(${ALGLIB_LIBRARY_DIRS})
 link_directories(${LASPACK_LIBRARY_DIRS})
+
+link_directories(${FLUXSOL_DIR}/Libs)
 #link_directories(${PARMETIS_LIBRARY_DIRS})
 #link_directories(${PETSC_LIBRARY_DIRS})
 
@@ -211,11 +213,10 @@ add_library(${NAME}lib SHARED FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 												$<TARGET_OBJECTS:Solver>	
 												$<TARGET_OBJECTS:Tests>
 												$<TARGET_OBJECTS:Type>
-												$<TARGET_OBJECTS:UDO>
 												$<TARGET_OBJECTS:Utils>
 											)
 #target_link_libraries (${NAME} ${EXTRA_LIBS} ${EXT_LIBS})
-target_link_libraries (${NAME}lib ${EXTRA_LIBS} ${EXT_LIBS})
+target_link_libraries (${NAME}lib libUDO ${EXTRA_LIBS} ${EXT_LIBS} )
 else ()
     set (USE_STATIC_LIB ON)
 endif ()
@@ -235,7 +236,6 @@ add_library(${NAME}lib_static STATIC FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 														$<TARGET_OBJECTS:Solver>	
 														$<TARGET_OBJECTS:Tests>
 														$<TARGET_OBJECTS:Type>
-														$<TARGET_OBJECTS:UDO>
 														$<TARGET_OBJECTS:Utils>
 											)
 
@@ -254,5 +254,5 @@ install (FILES ${NAME}.h DESTINATION include)
 
 #FLUXSOL EXECUTABLE
 
-add_executable(${NAME} ${SOURCES})
-target_link_libraries (${NAME} ${NAME}lib)
+add_executable(${NAME} ${SOURCES} UDO)
+target_link_libraries (${NAME} libUDO ${NAME}lib)

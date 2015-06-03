@@ -62,6 +62,8 @@ class FileSearcher:
 
     public:
     FileSearcher(string path);
+    const set <string> & FileNames()const {return filenames;}
+    vector <UDOIds> & UDO_Ids(){return udoids;}
     void GetUDOMapsFromFile(const string &str); //PROTECTED!
     void WriteUDOLibFile();
 

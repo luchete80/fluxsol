@@ -1,8 +1,6 @@
-#include "FluxSol.h"
+#include "udf_boundary.h"
 
 using namespace FluxSol;
-
-UD_VelocityPatchField ufield;
 
 void ufield::Calculate()
 {

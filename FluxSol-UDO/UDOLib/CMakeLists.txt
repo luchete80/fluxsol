@@ -68,6 +68,7 @@ include_directories("${FLUXSOL_SRC_DIR}/Tests")
 include_directories("${FLUXSOL_SRC_DIR}/Type")
 include_directories("${FLUXSOL_SRC_DIR}/UDO")
 include_directories("${FLUXSOL_SRC_DIR}/Utils")
+include_directories("${FLUXSOL_DIR}/Src/FluxSol-UDO/CodeWriter")
 
 if (USE_PETSC)
 	find_package (PETSc REQUIRED HINTS "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/conf")
@@ -107,6 +108,9 @@ endif ()
 set (NAME UDO)
 set (SOURCES 
 UDOLib.cpp
+UDOCreator.cpp
+udf_boundary.cpp
+${FLUXSOL_DIR}/Src/FluxSol-UDO/CodeWriter/FileSearch.cpp
 )
 
 
@@ -119,4 +123,4 @@ install (FILES ${NAME}.h DESTINATION include)
 set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all-symbols")
 
 add_library(${NAME} SHARED ${SOURCES})
-target_link_libraries (${NAME})
+target_link_libraries (${NAME} fluxsollib)

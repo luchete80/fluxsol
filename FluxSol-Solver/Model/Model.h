@@ -21,6 +21,7 @@
 #include "OutputFile.h"
 
 #include "Div.h"
+#include "UDO.h"
 
 #include <iostream>
 #include <iomanip>
@@ -70,6 +71,7 @@ protected:
 
     //solution info
     int maxiter;    //Override by input file info
+    UDOLib udolib;
 
 	//Devolucion de Miembros
 	//Archivo & NasFile(){return (*nasfile);}
