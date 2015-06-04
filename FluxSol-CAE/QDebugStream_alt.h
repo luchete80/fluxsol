@@ -7,16 +7,16 @@
 
 #include "qtextedit.h"
 
-class QDebugStream : public std::basic_streambuf<char>
+class QDebugStream_Alt : public std::basic_streambuf<char>
 {
 public:
- QDebugStream(std::ostream &stream, QTextEdit* text_edit) : m_stream(stream)
+ QDebugStream_Alt(std::ostream &stream, QTextEdit* text_edit) : m_stream(stream)
  {
   log_window = text_edit;
   m_old_buf = stream.rdbuf();
   stream.rdbuf(this);
  }
- ~QDebugStream()
+ ~QDebugStream_Alt()
  {
   // output anything that is left
   if (!m_string.empty())

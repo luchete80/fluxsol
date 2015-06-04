@@ -19,10 +19,13 @@ class GraphicModel:public FluxSol::Model
 
 };
 
+//CAN HAVE A VIEW WHERE IS POINTING
+
 class GraphicCFDModel:public FluxSol::CFDModel
 {
 
     protected:
+
 
     vtkSmartPointer<vtkUnstructuredGrid> uGrid;
 

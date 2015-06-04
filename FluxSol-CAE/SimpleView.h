@@ -140,6 +140,8 @@
 
 #include "GridSelection.h"
 
+#include "ui_SimpleView.h"
+
 // Forward Qt class declarations
 class Ui_SimpleView;
 
@@ -171,6 +173,8 @@ public slots:
 
 
 	protected:
+	    virtual void ImportMesh(const string &filename);
+	    virtual void AddMeshToTree(const Fv_CC_Grid &mesh); //To Modify, specify which model and mesh
 
 protected slots:
 

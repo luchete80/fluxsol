@@ -57,7 +57,7 @@ GraphicCFDModel::GraphicCFDModel(const Fv_CC_Grid &im)
 
     //cout << "Vertex Count: " << this->mesh.<<endl;
 
-    cout << "Creating points ..." <<endl;
+    //cout << "Creating points ..." <<endl;
 
     for (int v=0;v<this->mesh.Num_Verts();v++)
     {
@@ -66,7 +66,7 @@ GraphicCFDModel::GraphicCFDModel(const Fv_CC_Grid &im)
         for (int i=0;i<3;i++)
             p[i]=this->mesh.Vertex(v).Comp()[i];
 
-        cout << "X: " << p[0] << ", X: " << p[1] << ", Z: "<< p[3]<<endl;
+        //cout << "X: " << p[0] << ", X: " << p[1] << ", Z: "<< p[3]<<endl;
 
         points->InsertNextPoint(p);
     }

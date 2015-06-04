@@ -30,6 +30,7 @@ find_package(OpenGL)
 
 include_directories(.)
 include_directories("${PROJECT_SOURCE_DIR}")
+include_directories("${PROJECT_SOURCE_DIR}/Mesh")
 include_directories("${PROJECT_SOURCE_DIR}/Qt")
 
 #including FluxSol Library
@@ -56,6 +57,7 @@ include_directories("${FLUXSOL_SOLVER_DIR}/UDO")
 include_directories("${FLUXSOL_SOLVER_DIR}/Tests")
 include_directories("${FLUXSOL_SOLVER_DIR}/Type")
 include_directories("${FLUXSOL_SOLVER_DIR}/Utils")
+
 
 set (MY_PETSC_DIR "$ENV{PETSC_DIR}")
 set (MY_PETSC_ARCH "$ENV{PETSC_ARCH}")
@@ -118,6 +120,8 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
+#add_subdirectory(Mesh)
+
 # Set your files and resources here
 #set( Srcs main.cpp SimpleView.cpp )
 set( Srcs main.cpp 
@@ -132,7 +136,9 @@ set( Srcs main.cpp
 		  GraphicResults.cpp
 		  GridSelection.cpp)
 
-set( Hdrs ModelTree.h MsgWindow.h SimpleView.h Param.h ParamDialog.h sortdialog.h Tetrahedron.h GraphicModel.h GraphicResults.h GridSelection.h QDebugStream.h)
+set (Meshlib_Srcs "${PROJECT_SOURCE_DIR}/Mesh/ImportMesh.cpp") 
+		  
+set( Hdrs ModelTree.h MsgWindow.h SimpleView.h Param.h ParamDialog.h sortdialog.h Tetrahedron.h GraphicModel.h GraphicResults.h GridSelection.h QDebugStream.h QDebugStream_Alt.h)
 
 set( MOC_Hdrs SimpleView.h )
 
@@ -144,6 +150,7 @@ set( QRCs Icons/icons.qrc )
 link_directories (${FLUXSOL_LIB_DIR})
 link_directories (${LASPACK_LIBRARY_DIR})
 link_directories (${ALGLIB_LIBRARY_DIRS})
+
 
 set (FLUXSOL_LIB fluxsollib)
 set (EXTRA_LIBS opengl32 glu32 gdi32)
@@ -187,12 +194,16 @@ if(VTK_QT_VERSION VERSION_GREATER "4")
   )
 
   add_executable(${NAME} MACOSX_BUNDLE
-    ${Srcs} 
+    ${Srcs}
+	#$<TARGET_OBJECTS:Mesh>
+	${Meshlib_Srcs}
 	${Hdrs} 
 	${UI_Srcs} 	#GENERA el ui_SimpleView.h
 	${MOC_Hdrs} 
 	${QRC_Srcs}
 	)
+
+  #qt5_use_modules($<TARGET_OBJECTS:Mesh> Core Gui Widgets)
   qt5_use_modules(${NAME} Core Gui Widgets)
   target_link_libraries(${NAME} ${VTK_LIBRARIES} ${FLUXSOL_LIB} laspack alglib ${EXTRA_LIBS})
 else()
@@ -222,6 +233,7 @@ else()
 
   add_executable(${NAME} MACOSX_BUNDLE
     ${Srcs} 
+	$<TARGET_OBJECTS:Mesh>
 	${Hdrs} 
 	${UI_Srcs} 
 	${MOC_Hdrs} 

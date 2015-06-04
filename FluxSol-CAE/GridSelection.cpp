@@ -60,7 +60,7 @@ void MouseInteractorStyle::OnLeftButtonDown()
 
     for (int c=0;c<selected->GetNumberOfCells();c++)
     {
-        std:: cout << "Cell " << c << "points: " <<selected->GetCell (c)-> GetNumberOfPoints()<<std::endl;
+//        std:: cout << "Cell " << c << "points: " <<selected->GetCell (c)-> GetNumberOfPoints()<<std::endl;
         // virtual vtkIdType* vtkCell::GetFaces	(		)
 
     }
@@ -127,8 +127,8 @@ void PickCallbackFunction(vtkObject* caller,
       glyphFilter->Update();
 
       vtkPolyData* selected = glyphFilter->GetOutput();
-      std::cout << "Selected " << selected->GetNumberOfPoints() << " points." << std::endl;
-      std::cout << "Selected " << selected->GetNumberOfCells() << " cells." << std::endl;
+//      std::cout << "Selected " << selected->GetNumberOfPoints() << " points." << std::endl;
+//      std::cout << "Selected " << selected->GetNumberOfCells() << " cells." << std::endl;
 #if VTK_MAJOR_VERSION <= 5
       this->SelectedMapper->SetInput(selected);
 #else
@@ -146,15 +146,15 @@ void PickCallbackFunction(vtkObject* caller,
     //}
 
     //cout << "Number of Point arrays: "<< this->idFilter->GetOutput()->GetPointData()->GetNumberOfArrays() <<endl;
-    cout << "Number of Point arrays: "<< selected->GetPointData()->GetNumberOfArrays() <<endl;
+//    cout << "Number of Point arrays: "<< selected->GetPointData()->GetNumberOfArrays() <<endl;
 
 
     vtkIdTypeArray* pointIds = vtkIdTypeArray::SafeDownCast(this->idFilter->GetOutput()->GetPointData()->GetArray("ids"));
-    std::cout << "There are " << pointIds->GetNumberOfTuples() << " point ids" << std::endl;
-    for(vtkIdType i = 0; i < pointIds->GetNumberOfTuples(); i++)
-    {
-        std::cout << "Id " << i << " : " << pointIds->GetValue(i) << std::endl;
-    }
+//    std::cout << "There are " << pointIds->GetNumberOfTuples() << " point ids" << std::endl;
+//    for(vtkIdType i = 0; i < pointIds->GetNumberOfTuples(); i++)
+//    {
+//        std::cout << "Id " << i << " : " << pointIds->GetValue(i) << std::endl;
+//    }
 
 
       this->SelectedActor->GetProperty()->SetColor(1.0, 0.0, 0.0); //(R,G,B)
