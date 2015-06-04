@@ -5,6 +5,7 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
 #include <QString>
+#include "QDebugStream.h"
 
 class MsgWindow: public QTextEdit
 {
@@ -22,6 +23,7 @@ public:
 
 protected:
     QString allmsg;
+    Q_DebugStream *qout;
 
 //private slots:
 //    void showContextMenu(const QPoint &pos);    //right click

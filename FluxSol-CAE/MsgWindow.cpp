@@ -29,4 +29,7 @@ MsgWindow::MsgWindow(QWidget *parent)
 
     //this->setText(welcome);
     this->setText(welcome);
+
+    //redirect cout
+    //qout=new Q_DebugStream(std::cout, this);
 }
