@@ -65,6 +65,8 @@ protected:
 
 	std::vector <BoundaryCond*> bcs;
 
+	stringstream itlog,reslog;
+
     Fv_CC_Grid mesh;// COMPLETE MESH
 
 	InputFile inputfile;
@@ -75,6 +77,7 @@ protected:
 
 	//Devolucion de Miembros
 	//Archivo & NasFile(){return (*nasfile);}
+    int iternumber;
 
 public:
 
@@ -88,8 +91,11 @@ public:
     const Materials & Materials(const int &i)const{return this->mat[i];}
 
     const Fv_CC_Grid & Mesh() const{return this->mesh;}     //Complete Mesh in part?
+    virtual void SolveIter(){}
 
     virtual void Solve(){};
+
+    const string ItLog()const {return reslog.str();}
 
 
 };
@@ -102,16 +108,38 @@ class CFDModel:public Model
 
 
     clock_t ittime_begin, ittime_end, ittime_temp;
+    clock_t begin, end;
+
+    double time_spent;
     double ittime_spent;
 
     //FIELDS FOR EACH TIME STEP
     _CC_Fv_Field <Vec3D> U; //
     _CC_Fv_Field <Scalar> p;
 
-    _Surf_Fv_Field <Scalar>  phi; //Mass Flux
+    GeomSurfaceField <Vec3D> meshSf;
 
     EqnSystem <Scalar> pEqn;
     EqnSystem <Vec3D> UEqn;     //To modify: associate Eqn System with field
+    _Surf_Fv_Field <Scalar>  phi;
+
+
+    //TEMPORARY FIELDS, TO MODIFY
+    _BoundaryField<Vec3D>  bf =U.Boundaryfield();   //Temp pbf
+    _BoundaryField<Scalar>pbf =p.Boundaryfield();   //Temp bf
+    _CC_Fv_Field <Scalar> AUr;
+    //TO FIX: MAKE THIS WORK
+    _Surf_Fv_Field <Scalar> AUrf_;
+    _CC_Fv_Field<Scalar> pcorr;
+    _Surf_Fv_Field <Vec3D> Gradpf_;
+
+
+
+    Scalar alpha_p,alpha_u;
+
+    Scalar k,rho;
+
+    vector <double> ures;
 
 
     void GetNShowTimeSpent(const string &str){
@@ -123,6 +151,7 @@ class CFDModel:public Model
 	public:
 
 	void Extract_Cells_and_BoundaryFromNastran();
+	void SolveIter();
     void InitFields();
 
 	//Constructores

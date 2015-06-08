@@ -25,6 +25,7 @@
 #include "Ex13-ResultsToCGNS.h"
 
 // Solves a Laplacian and output Results in a CGNS file
+// This example uses some functions of CGNSlib file write_test.c
 
 int main(int argc, char *argv[])
 //int main ()
@@ -34,10 +35,196 @@ int main(int argc, char *argv[])
 
     Fv_CC_Grid mesh(argv[1]);
 
+
+    char outfile[32];
+
+    strcpy (outfile, "test.cgns");
+
+
+    init_data();
+    unlink(outfile);
+
+    if (cg_open(outfile, CG_MODE_WRITE, &cgfile)) error_exit("cg_open");
     write_unstructured();
+    if (cg_close(cgfile)) error_exit("cg_close");
+
+
+
+
 
     return 0;
 
+}
+
+void init_data()
+{
+    int n, i, j, k, nn, nf, np;
+
+    /* compute coordinates - make it twice as big for use with cylindrical */
+
+    num_coord = NUM_SIDE * NUM_SIDE * NUM_SIDE;
+    xcoord = (float *) malloc (6 * num_coord * sizeof(float));
+    if (NULL == xcoord) {
+        fprintf(stderr, "malloc failed for coordinates\n");
+        exit(1);
+    }
+    ycoord = xcoord + 2 * num_coord;
+    zcoord = ycoord + 2 * num_coord;
+    for (n = 0, k = 0; k < NUM_SIDE; k++) {
+        for (j = 0; j < NUM_SIDE; j++) {
+            for (i = 0; i < NUM_SIDE; i++, n++) {
+                xcoord[n] = (float)i;
+                ycoord[n] = (float)j;
+                zcoord[n] = (float)k;
+            }
+        }
+    }
+
+    /* create solution vector large enough for grid + 1 rind plane */
+
+    max_sol = (NUM_SIDE + 2) * (NUM_SIDE + 2) * (NUM_SIDE + 2);
+    solution = (float *) malloc (max_sol * sizeof(float));
+    if (NULL == solution) {
+        fprintf(stderr, "malloc failed for solution\n");
+        exit(1);
+    }
+    for (n = 0; n < max_sol; n++)
+        solution[n] = (float)(n + 1);
+
+    /* compute elements */
+
+    num_element = (NUM_SIDE - 1) * (NUM_SIDE - 1) * (NUM_SIDE - 1);
+    elements = (cgsize_t *) malloc (8 * num_element * sizeof(cgsize_t));
+    if (NULL == elements) {
+        fprintf(stderr, "malloc failed for elements");
+        exit(1);
+    }
+    for (n = 0, k = 1; k < NUM_SIDE; k++) {
+        for (j = 1; j < NUM_SIDE; j++) {
+            for (i = 1; i < NUM_SIDE; i++) {
+                nn = NODE_INDEX(i, j, k);
+                elements[n++] = nn;
+                elements[n++] = nn + 1;
+                elements[n++] = nn + 1 + NUM_SIDE;
+                elements[n++] = nn + NUM_SIDE;
+                nn += NUM_SIDE * NUM_SIDE;
+                elements[n++] = nn;
+                elements[n++] = nn + 1;
+                elements[n++] = nn + 1 + NUM_SIDE;
+                elements[n++] = nn + NUM_SIDE;
+            }
+        }
+    }
+
+    /* compute outside face elements */
+
+    num_face = 6 * (NUM_SIDE - 1) * (NUM_SIDE - 1);
+    faces = (cgsize_t *) malloc (4 * num_face * sizeof(cgsize_t));
+    parent = (cgsize_t *) malloc (4 * num_face * sizeof(cgsize_t));
+    if (NULL == faces || NULL == parent) {
+        fprintf(stderr, "malloc failed for elements");
+        exit(1);
+    }
+    for (n = 0; n < 4*num_face; n++)
+        parent[n] = 0;
+    nf = np = 0;
+    n = 2 * num_face;
+    i = 1;
+    for (k = 1; k < NUM_SIDE; k++) {
+        for (j = 1; j < NUM_SIDE; j++) {
+            nn = NODE_INDEX(i, j, k);
+            faces[nf++]  = nn;
+            faces[nf++]  = nn + NUM_SIDE * NUM_SIDE;
+            faces[nf++]  = nn + NUM_SIDE * (NUM_SIDE + 1);
+            faces[nf++]  = nn + NUM_SIDE;
+            parent[np]   = CELL_INDEX(i, j, k);
+            parent[np+n] = 5;
+            np++;
+        }
+    }
+    i = NUM_SIDE;
+    for (k = 1; k < NUM_SIDE; k++) {
+        for (j = 1; j < NUM_SIDE; j++) {
+            nn = NODE_INDEX(i, j, k);
+            faces[nf++]  = nn;
+            faces[nf++]  = nn + NUM_SIDE;
+            faces[nf++]  = nn + NUM_SIDE * (NUM_SIDE + 1);
+            faces[nf++]  = nn + NUM_SIDE * NUM_SIDE;
+            parent[np]   = CELL_INDEX(i-1, j, k);
+            parent[np+n] = 3;
+            np++;
+        }
+    }
+    j = 1;
+    for (k = 1; k < NUM_SIDE; k++) {
+        for (i = 1; i < NUM_SIDE; i++) {
+            nn = NODE_INDEX(i, j, k);
+            faces[nf++]  = nn;
+            faces[nf++]  = nn + 1;
+            faces[nf++]  = nn + 1 + NUM_SIDE * NUM_SIDE;
+            faces[nf++]  = nn + NUM_SIDE * NUM_SIDE;
+            parent[np]   = CELL_INDEX(i, j, k);
+            parent[np+n] = 2;
+            np++;
+        }
+    }
+    j = NUM_SIDE;
+    for (k = 1; k < NUM_SIDE; k++) {
+        for (i = 1; i < NUM_SIDE; i++) {
+            nn = NODE_INDEX(i, j, k);
+            faces[nf++]  = nn;
+            faces[nf++]  = nn + NUM_SIDE * NUM_SIDE;
+            faces[nf++]  = nn + 1 + NUM_SIDE * NUM_SIDE;
+            faces[nf++]  = nn + 1;
+            parent[np]   = CELL_INDEX(i, j-1, k);
+            parent[np+n] = 4;
+            np++;
+        }
+    }
+    k = 1;
+    for (j = 1; j < NUM_SIDE; j++) {
+        for (i = 1; i < NUM_SIDE; i++) {
+            nn = NODE_INDEX(i, j, k);
+            faces[nf++]  = nn;
+            faces[nf++]  = nn + NUM_SIDE;
+            faces[nf++]  = nn + NUM_SIDE + 1;
+            faces[nf++]  = nn + 1;
+            parent[np]   = CELL_INDEX(i, j, k);
+            parent[np+n] = 1;
+            np++;
+        }
+    }
+    k = NUM_SIDE;
+    for (j = 1; j < NUM_SIDE; j++) {
+        for (i = 1; i < NUM_SIDE; i++) {
+            nn = NODE_INDEX(i, j, k);
+            faces[nf++]  = nn;
+            faces[nf++]  = nn + 1;
+            faces[nf++]  = nn + NUM_SIDE + 1;
+            faces[nf++]  = nn + NUM_SIDE;
+            parent[np]   = CELL_INDEX(i, j, k-1);
+            parent[np+n] = 6;
+            np++;
+        }
+    }
+
+    /* connectivity points - make it big enough to hold 4 surfaces */
+
+    npts = NUM_SIDE * NUM_SIDE;
+    pts = (cgsize_t *) malloc (12 * npts * sizeof(cgsize_t));
+    if (NULL == pts) {
+        fprintf(stderr, "malloc failed for connectivity points");
+        exit(1);
+    }
+    d_pts = pts + 6 * npts;
+
+    /* create interpolate data array */
+
+    interp = (float *) malloc (6 * npts * sizeof(float));
+    if (NULL == interp) {
+        fprintf(stderr, "malloc failed for interpolate array");
+        exit(1);
+    }
 }
 
 

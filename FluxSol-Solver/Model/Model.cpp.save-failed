@@ -256,6 +256,7 @@ void CFDModel::Solve()
                 uant[nu]=U.Val(nu);
                 pant[nu]=p.Val(nu);
             }
+            iternumber++;
             //if (maxudiff[0]<1.e-3 && maxudiff[1]<1.e-3 && maxudiff[2]<1.e-3  && maxpdiff<1.e-3 )   conv=true;
             if (ures[0]<1.e-6 && ures[1]<1.e-6  && it >maxiter/*maxudiff[2]<1.e-6  && maxpdiff<1.e-6 */)   conv=true;
 //

@@ -137,6 +137,8 @@ set( Srcs main.cpp
 		  GridSelection.cpp)
 
 set (Meshlib_Srcs "${PROJECT_SOURCE_DIR}/Mesh/ImportMesh.cpp") 
+
+set (Joblib_Srcs "${PROJECT_SOURCE_DIR}/Job/Job.cpp") 
 		  
 set( Hdrs ModelTree.h MsgWindow.h SimpleView.h Param.h ParamDialog.h sortdialog.h Tetrahedron.h GraphicModel.h GraphicResults.h GridSelection.h QDebugStream.h QDebugStream_Alt.h)
 
@@ -197,6 +199,7 @@ if(VTK_QT_VERSION VERSION_GREATER "4")
     ${Srcs}
 	#$<TARGET_OBJECTS:Mesh>
 	${Meshlib_Srcs}
+	${Joblib_Srcs}
 	${Hdrs} 
 	${UI_Srcs} 	#GENERA el ui_SimpleView.h
 	${MOC_Hdrs} 

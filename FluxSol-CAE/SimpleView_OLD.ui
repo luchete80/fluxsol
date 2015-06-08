@@ -577,12 +577,6 @@
        </property>
        <item>
         <widget class="QSplitter" name="splitter">
-         <property name="baseSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
          <property name="layoutDirection">
           <enum>Qt::LeftToRight</enum>
          </property>
@@ -590,18 +584,6 @@
           <enum>Qt::Horizontal</enum>
          </property>
          <widget class="QTabWidget" name="tabWidget">
-          <property name="maximumSize">
-           <size>
-            <width>300</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="baseSize">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
           <property name="currentIndex">
            <number>0</number>
           </property>
@@ -670,21 +652,21 @@
             <string>Results</string>
            </attribute>
           </widget>
+          <zorder>MsgWin</zorder>
          </widget>
-         <widget class="QTabWidget" name="MainTab">
-          <property name="currentIndex">
-           <number>0</number>
+         <widget class="QVTKWidget" name="qvtkWidget" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>1</horstretch>
+            <verstretch>1</verstretch>
+           </sizepolicy>
           </property>
-          <widget class="QVTKWidget" name="qvtkWidget">
-           <attribute name="title">
-            <string>Tab 1</string>
-           </attribute>
-          </widget>
-          <widget class="QWidget" name="MainTab_2">
-           <attribute name="title">
-            <string>Tab 2</string>
-           </attribute>
-          </widget>
+          <property name="minimumSize">
+           <size>
+            <width>300</width>
+            <height>300</height>
+           </size>
+          </property>
          </widget>
         </widget>
        </item>
@@ -692,7 +674,7 @@
      </widget>
     </item>
     <item row="3" column="0">
-     <widget class="MsgWindow" name="MsgWin" native="true"/>
+     <widget class="MsgWindow" name="MsgWin"/>
     </item>
    </layout>
   </widget>
@@ -1091,11 +1073,6 @@
    <class>ModelTreeWidget</class>
    <extends>QTreeWidget</extends>
    <header>ModelTree.h</header>
-  </customwidget>
-  <customwidget>
-   <class>MsgWindow</class>
-   <extends>QWidget</extends>
-   <header>msgwindow.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
