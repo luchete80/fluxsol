@@ -1,3 +1,6 @@
+#ifndef _GRAPHICMODEL_H_
+#define _GRAPHICMODEL_H_
+
 #include "FluxSol.h"
 #include <vtkVersion.h>
 #include <vtkCellArray.h>
@@ -48,4 +51,10 @@ class GraphicCFDModel:public FluxSol::CFDModel
         GraphicCFDModel(const Fv_CC_Grid &im);  //TO MODIFY, INHERIT FROM MODEL
         vtkSmartPointer<vtkUnstructuredGrid> UGrid () const {return this->uGrid;}
 
+        //If we need in a vector:
+        GraphicCFDModel(const GraphicCFDModel &gm){}
+        operator=(const GraphicCFDModel &gm){}
+
 };
+
+#endif // _GRAPHICMODEL_H_

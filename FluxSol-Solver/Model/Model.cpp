@@ -51,18 +51,20 @@ Model::Model(const std::string filename)
 CFDModel::CFDModel(const std::string s):Model(s)
 {
     cout << "[I] Initializing fields ..."<<endl;
-    this->InitFields();
     alpha_p=0.3;
     alpha_u=0.7;
     k=1.;
     rho=1.;
+
+    this->InitFields();
 }
 
 
 
 void CFDModel::InitFields()
 {
-     //Converts all mesh to one
+        //Converts all mesh to one
+        cout << "[I] Initializing Fields ..."<<endl;
 
         //Fields
         _CC_Fv_Field <Scalar> pt(this->mesh);
@@ -114,9 +116,24 @@ void CFDModel::InitFields()
     AUrf_=_Surf_Fv_Field <Scalar> (mesh);
     //_CC_Fv_Field<Scalar> pcorr;
 
+    p=0.;
+    UEqn.SetRelaxCoeff(alpha_u);
+    pEqn.SetRelaxCoeff(alpha_p);
+
+    //TO MODIFY
+    bf =U.Boundaryfield();
+    pbf =p.Boundaryfield();
+
+
+    UEqn.InitField(U);
+    pEqn.InitField(p);
+
+    //Test
+    //GeomSurfaceField <Vec3D> meshSf=this->mesh.Sf();
+    meshSf=this->mesh.Sf();
 
     cout << "[I] Field initialized"<<endl;
-    //this->p=inputfile.UField();     //Read Field Boundary Values
+
 
 }
 
@@ -126,13 +143,6 @@ void CFDModel::InitFields()
 void CFDModel::Solve()
 {
     //Begins with SIMPLE method
-
-    cout << "[I] Initializing Fields ..."<<endl;
-    //U=Vec3D(0.0,0.,0.0);
-    //cout << "Initial Flux Info"<<endl;
-    //cout << phi.outstr()<<endl;
-
-    p=0.;
     bool conv;
 
 
@@ -149,10 +159,6 @@ void CFDModel::Solve()
     vector<Scalar> phiant;
     phiant.assign(mesh.Num_Faces(),Scalar(0.));
 
-
-    UEqn.SetRelaxCoeff(alpha_u);
-    pEqn.SetRelaxCoeff(alpha_p);
-
         //ITERATION BEGINS
 //      clock_t starttime,endtime;
 
@@ -161,9 +167,7 @@ void CFDModel::Solve()
         time_t starttimec,endtimec;
         int it=0;
 
-        //TO MODIFY
-    bf =U.Boundaryfield();
-    pbf =p.Boundaryfield();
+
 
 //    for (int i=0;i<4;i++)
 //        cout << "patch " << i << "cvalue phi" << phi.Boundaryfield().PatchField(i).ConstValue().outstr()<<endl;
@@ -198,12 +202,6 @@ void CFDModel::Solve()
 //    _Surf_Fv_Field <Scalar> AUrf_;
 //    _CC_Fv_Field<Scalar> pcorr;
 
-    UEqn.InitField(U);
-    pEqn.InitField(p);
-
-    //Test
-    //GeomSurfaceField <Vec3D> meshSf=this->mesh.Sf();
-    meshSf=this->mesh.Sf();
 
         while (!conv && iternumber < this->maxiter)
         //while (!conv && it < 38)

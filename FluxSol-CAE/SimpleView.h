@@ -141,6 +141,11 @@
 #include "GridSelection.h"
 
 #include "ui_SimpleView.h"
+#include "GraphicModel.h"
+
+#include <vector>
+
+using namespace std;
 
 // Forward Qt class declarations
 class Ui_SimpleView;
@@ -207,8 +212,17 @@ private:
     vtkSmartPointer<vtkRenderWindowInteractor> renderWindowInteractor;
     vtkSmartPointer<vtkAreaPicker> areaPicker;
 
+
+
+    //TO MODIFY
+    // OBJECTS TO BE MOVED TO IDE
     CFDModel *activemodel;
 
+
+    //MODEL CAN BE OR NOT TO BE A GRAPHIC MODEL
+    //SINCE IT CAn BE LOADED OR RUN FROM AN ArCHIVE (IF IDE IS NOT READY)
+    std::vector< CFDModel* > vmodel;    //All models: TO MODIFY, MUST BE INSIDE IDE
+    int modelcount;
 
 };
 

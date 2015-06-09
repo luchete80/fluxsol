@@ -144,7 +144,9 @@ set( Hdrs ModelTree.h MsgWindow.h SimpleView.h Param.h ParamDialog.h sortdialog.
 
 set( MOC_Hdrs SimpleView.h )
 
-set( UIs SimpleView.ui Param.ui) #THIS IS THE SAME TO uic -o Param.h Param.ui
+set( UIs 	SimpleView.ui 
+			Param.ui 
+			JobSubmitDialog.ui) #THIS IS THE SAME TO uic -o Param.h Param.ui
 
 set( QRCs Icons/icons.qrc )
 

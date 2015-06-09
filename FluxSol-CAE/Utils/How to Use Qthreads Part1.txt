@@ -1,0 +1,344 @@
+http://blog.debao.me/2013/08/how-to-use-qthread-in-the-right-way-part-1/
+
+"How to use QThread in the right way (Part 1)"
+MON, 05 AUG 2013
+A short history
+
+Long long ago, subclass QThread and reimplement its run() function is the only recommended way of using QThread. This is rather intuitive and easy to used. But when SLOTS and Qt event loop are used in the worker thread, some users do it wrong. So Bradley T. Hughes, one of the Qt core developers, recommend that use worker objects by moving them to the thread using QObject::moveToThread . Unfortunately, some users went on a crusade against the former usage. So Olivier Goffart, one of the former Qt core developers, tell the subclass users: You were not doing so wrong. Finally, we can find both usages in the documentation of QThread.
+
+QThread::run() is the thread entry point
+
+From the Qt Documentation, we can see that
+
+A QThread instance represents a thread and provides the means to start() a thread, which will then execute the reimplementation of QThread::run(). The run() implementation is for a thread what the main() entry point is for the application.
+
+As QThread::run() is the thread entry point, it is rather intuitive to use the Usage 1.
+
+Usage 1-0
+
+To run some code in a new thread, subclass QThread and reimplement its run() function.
+
+For example
+
+#include <QtCore>
+
+class Thread : public QThread
+{
+private:
+    void run()
+    {
+        qDebug()<<"From worker thread: "<<currentThreadId();
+    }
+};
+
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+    qDebug()<<"From main thread: "<<QThread::currentThreadId();
+
+    Thread t;
+    QObject::connect(&t, SIGNAL(finished()), &a, SLOT(quit()));
+
+    t.start();
+    return a.exec();
+}
+The output more or less look like:
+
+From main thread:  0x15a8 
+From worker thread:  0x128c
+Usage 1-1
+
+As QThread::run() is the thread entry point, so it easy to undersand that, all the codes that are not get called in the run() function directly won't be executed in the worker thread.
+
+In the following example, the member variable m_stop will be accessed by both stop() and run(). Consider that the former will be executed in main thread while the latter is executed in worker thread, mutex or other facility is needed.
+
+#if QT_VERSION>=0x050000
+#include <QtWidgets>
+#else
+#include <QtGui>
+#endif
+
+class Thread : public QThread
+{
+    Q_OBJECT
+
+public:
+    Thread():m_stop(false)
+    {}
+
+public slots:
+    void stop()
+    {
+        qDebug()<<"Thread::stop called from main thread: "<<currentThreadId();
+        QMutexLocker locker(&m_mutex);
+        m_stop=true;
+    }
+
+private:
+    QMutex m_mutex;
+    bool m_stop;
+
+    void run()
+    {
+        qDebug()<<"From worker thread: "<<currentThreadId();
+        while (1) {
+            {
+            QMutexLocker locker(&m_mutex);
+            if (m_stop) break;
+            }
+            msleep(10);
+        }
+    }
+};
+
+#include "main.moc"
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    qDebug()<<"From main thread: "<<QThread::currentThreadId();
+    QPushButton btn("Stop Thread");
+    Thread t;
+
+    QObject::connect(&btn, SIGNAL(clicked()), &t, SLOT(stop()));
+    QObject::connect(&t, SIGNAL(finished()), &a, SLOT(quit()));
+
+    t.start();
+    btn.show();
+    return a.exec();
+}
+The output is more or less like
+
+From main thread:  0x13a8 
+From worker thread:  0xab8 
+Thread::stop called from main thread:  0x13a8
+You can see that the Thread::stop() is executed in the main thread.
+
+Usage 1-2 (Wrong Usage)
+
+Though above examples are easy to understand, but it's not so intuitive when event system(or queued-connection) is introduced in worker thread.
+
+For example, what should we do if we want to do something periodly in the worker thread?
+
+Create a QTimer in the Thread::run()
+Connect the timeout signal to the slot of Thread
+#include <QtCore>
+
+class Thread : public QThread
+{
+    Q_OBJECT
+private slots:
+    void onTimeout()
+    {
+        qDebug()<<"Thread::onTimeout get called from? : "<<QThread::currentThreadId();
+    }
+
+private:
+    void run()
+    {
+        qDebug()<<"From worker thread: "<<currentThreadId();
+        QTimer timer;
+        connect(&timer, SIGNAL(timeout()), this, SLOT(onTimeout()));
+        timer.start(1000);
+
+        exec();
+    }
+};
+
+#include "main.moc"
+
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+    qDebug()<<"From main thread: "<<QThread::currentThreadId();
+
+    Thread t;
+    t.start();
+
+    return a.exec();
+}
+At first glance, the code seems fine. When the thread starts executing, we setup a QTimer thats going to run in the current thread's event queue. We connect the onTimeout() to the timeout signal. Then we except it works in the worker thread?
+
+But, the result of the example is
+
+From main thread:  0x13a4 
+From worker thread:  0x1330 
+Thread::onTimeout get called from?:  0x13a4 
+Thread::onTimeout get called from?:  0x13a4 
+Thread::onTimeout get called from?:  0x13a4
+Oh, No!!! They get called in the main thread instead of the work thread.
+
+Very interesting, isn't it? (We will discuss what happened behined this in next blog)
+
+How to solve this problem
+
+In order to make the this SLOT works in the worker thread, some one pass the Qt::DirectConnection to the connect() function,
+
+        connect(&timer, SIGNAL(timeout()), this, SLOT(onTimeout()), Qt::DirectConnection);
+and some other add following line to the thread constructor.
+
+        moveToThread(this)
+Both of them work as expected. But ...
+
+The second usage is wrong,
+
+Even though this seems to work, it’s confusing, and not how QThread was designed to be used(all of the functions in QThread were written and intended to be called from the creating thread, not the thread that QThread starts)
+
+In fact, according to above statements, the first workaround is wrong too. As onTimeout() which is a member of our Thread object, get called from the creating thread too.
+
+Both of them are bad uasge?! what should we do?
+
+Usage 1-3
+
+As none of the member of QThread object are designed to be called from the worker thread. So we must create an independent worker object if we want to use SLOTS.
+
+#include <QtCore>
+
+class Worker : public QObject
+{
+    Q_OBJECT
+private slots:
+    void onTimeout()
+    {
+        qDebug()<<"Worker::onTimeout get called from?: "<<QThread::currentThreadId();
+    }
+};
+
+class Thread : public QThread
+{
+    Q_OBJECT
+
+private:
+    void run()
+    {
+        qDebug()<<"From work thread: "<<currentThreadId();
+        QTimer timer;
+        Worker worker;
+        connect(&timer, SIGNAL(timeout()), &worker, SLOT(onTimeout()));
+        timer.start(1000);
+
+        exec();
+    }
+};
+
+#include "main.moc"
+
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+    qDebug()<<"From main thread: "<<QThread::currentThreadId();
+
+    Thread t;
+    t.start();
+
+    return a.exec();
+}
+The result of the application is
+
+From main thread:  0x810 
+From work thread:  0xfac 
+Worker::onTimeout get called from?:  0xfac 
+Worker::onTimeout get called from?:  0xfac 
+Worker::onTimeout get called from?:  0xfac
+Problem solved now!
+
+Though this works perfect, but you may have notice that, when event loop QThread::exec() is used in the worker thread, the code in the QThread::run() seems has nothing to do with QThread itself.
+
+So can we move the object creation out of the QThread::run(), and at the same time, the slots of they will still be called by the QThread::run()?
+
+Usage 2-0
+
+If we only want to make use of QThread::exec(), which has been called by QThread::run() by default, there will be no need to subclass the QThread any more.
+
+Create a Worker object
+Do signal and slot connections
+Move the Worker object to a sub-thread
+Start thread
+#include <QtCore>
+
+class Worker : public QObject
+{
+    Q_OBJECT
+private slots:
+    void onTimeout()
+    {
+        qDebug()<<"Worker::onTimeout get called from?: "<<QThread::currentThreadId();
+    }
+};
+
+#include "main.moc"
+
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+    qDebug()<<"From main thread: "<<QThread::currentThreadId();
+
+    QThread t;
+    QTimer timer;
+    Worker worker;
+
+    QObject::connect(&timer, SIGNAL(timeout()), &worker, SLOT(onTimeout()));
+    timer.start(1000);
+
+    timer.moveToThread(&t);
+    worker.moveToThread(&t);
+
+    t.start();
+
+    return a.exec();
+}
+The result is:
+
+From main thread:  0x1310 
+Worker::onTimeout get called from?:  0x121c 
+Worker::onTimeout get called from?:  0x121c 
+Worker::onTimeout get called from?:  0x121c
+As expected, the slot doesn't run in the main thread.
+
+In this example, both of the QTimer and Worker are moved to the sub-thread. In fact, moving QTimer to sub-thread is not required.
+
+Usage 2-1
+
+Simply remove the line timer.moveToThread(&t); from above example will work as expected too.
+
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+    qDebug()<<"From main thread: "<<QThread::currentThreadId();
+
+    QThread t;
+    QTimer timer;
+    Worker worker;
+
+    QObject::connect(&timer, SIGNAL(timeout()), &worker, SLOT(onTimeout()));
+    timer.start(1000);
+
+//    timer.moveToThread(&t);
+    worker.moveToThread(&t);
+
+    t.start();
+
+    return a.exec();
+}
+The difference is that:
+
+In last example,
+
+The signal timeout() is emitted from sub-thread
+As timer and worker live in the same thread, their connection type is direct connection.
+The slot get called in the same thead in which signal get emitted.
+While in this example,
+
+The signal timeout() emitted from main thread,
+As timer and worker live in different threads, their connection type is queued connection.
+The slot get called in its living thread, which is the sub-thread.
+Thanks to a mechanism called queued connections, it is safe to connect signals and slots across different threads. If all the across threads communication are done though queued connections, the usual multithreading precautions such as QMutex will no longer need to be taken.
+
+In short
+
+Subclass QThread and reimplement its run() function is intuitive and there are still many perfectly valid reasons to subclass QThread, but when event loop is used in worker thread, it's not easy to do it in the right way.
+Use worker objects by moving them to the thread is easy to use when event loop exists, as it has hidden the details of event loop and queued connection.
+Reference
+
+http://blog.qt.digia.com/blog/2010/06/17/youre-doing-it-wrong/
+http://woboq.com/blog/qthread-you-were-not-doing-so-wrong.html
+http://ilearnstuff.blogspot.com/2012/08/when-qthread-isnt-thread.html

@@ -21,6 +21,11 @@ using namespace std;
 
 #include <vtkCallbackCommand.h>
 
+
+
+
+#include "./Job/Job.h"
+
 static void CameraModifiedCallback(vtkObject* caller,
                                    long unsigned int vtkNotUsed(eventId),
                                    void* vtkNotUsed(clientData),
@@ -551,6 +556,9 @@ SimpleView::SimpleView()
 
 	//renderWindowInteractor->Start();
 
+	//TO MODIFY
+	modelcount=0;
+
 };
 
 SimpleView::~SimpleView()
@@ -934,6 +942,7 @@ void SimpleView::slotImportIn()
         //TO Modify, at first is only a CFD Model
         GraphicCFDModel model(fileName.toStdString());
 
+
         cout << "Input file has been successfully imported."<<endl;
 
         //QTreeWidgetItem *itm = new QTreeWidgetItem(this->ui->ModelTree); //WITH THIS ARGS DOES NOT WORK
@@ -1025,6 +1034,18 @@ void SimpleView::slotImportIn()
 
       //Add Mesh to Tree
       AddMeshToTree(model.Mesh());
+
+      model.SolveIter();
+      ui->MsgWin->AddString(model.ItLog());
+
+
+      //this->vmodel.push_back(new GraphicCFDModel(model));
+      this->vmodel.push_back(new GraphicCFDModel(fileName.toStdString()));
+      this->vmodel[0]->SolveIter();
+      ui->MsgWin->AddString(this->vmodel[0]->ItLog());
+
+      Job job;
+
 
 
 //
@@ -1119,6 +1140,8 @@ void SimpleView::slotImportIn()
 //        this->ren->AddActor(actor);
 //
 //        this->ren->AddActor(this->_vtkOriginAxes);
+
+        //this->models.push_back(GraphicCFDModel(model));
 
     }//If not filename Empty
 		//loadFile(fileName);

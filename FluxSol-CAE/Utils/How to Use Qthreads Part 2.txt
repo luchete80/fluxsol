@@ -1,0 +1,181 @@
+TUE, 06 AUG 2013
+There are two way to use QThread:
+
+Subclass QThread and reimplement its run() function
+Use worker objects by moving them to the thread
+As the QThread::run() is the entry point of worker thread, so the former usage is rather easy to understand.
+
+In this article, we will try to figure out in which way the latter usage works.
+
+Event Loop
+
+As a event direvn programming framework, Qt make use of event loop widely. For example, following functions are used in nearly every Qt program.
+
+QCoreApplication::exec()
+QDialog::exec()
+QDrag::exec()
+QMenu::exec()
+QThread::exec()
+...
+Each of them will create a QEventLoop object, and run it. Take QCoreApplication as an example,
+
+int QCoreApplication::exec()
+{
+//...
+    QEventLoop eventLoop;
+    int returnCode = eventLoop.exec();
+//...
+    return returnCode;
+}
+Conceptually, the event loop looks like this:
+
+int QEventLoop::exec(ProcessEventsFlags flags)
+{
+//...
+    while (!d->exit) {
+        while (!posted_event_queue_is_empty) {
+            process_next_posted_event();
+        }
+    }
+//...
+}
+Each thread has its own event queue, note that, event queue is belong to thread instead of event loop, and it's shared by all the event loops running in this thread.
+
+When the event loop find that its event queue is not empty, it will process the events one by one. Eventually, the QObject::event() member of the target object get called.
+
+Seems it's really not easy to understand how the event system works without a example. So we create a demo
+
+Example
+
+In this example,
+
+First, we
+
+Create a custom Event new QEvent(QEvent::User)
+Post the Event to a queue QCoreApplication::postEvent()
+Then,
+
+The Event is discovered by the event loop in the queue QApplication::exec()
+The Test::event() get called by the event loop.
+#if QT_VERSION>=0x050000
+#include <QtWidgets>
+#else
+#include <QtGui>
+#endif
+
+class Test : public QObject
+{
+    Q_OBJECT
+protected:
+    bool event(QEvent *evt)
+    {
+        if (evt->type() == QEvent::User) {
+            qDebug()<<"Event received in thread"<<QThread::currentThread();
+            return true;
+        }
+        return QObject::event(evt);
+    }
+};
+
+class Button : public QPushButton
+{
+    Q_OBJECT
+    Test *m_test;
+public:
+    Button(Test *test):QPushButton("Send Event"), m_test(test)
+    {
+        connect(this, SIGNAL(clicked()), SLOT(onClicked()));
+    }
+
+private slots:
+    void onClicked()
+    {
+        QCoreApplication::postEvent(m_test, new QEvent(QEvent::User));
+    }
+};
+
+#include "main.moc"
+
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    qDebug()<<"From main thread: "<<QThread::currentThread();
+
+    Test test;
+    Button btn(&test);
+    btn.show();
+
+    return a.exec();
+}
+In this example, the Test::event() get called in the main thread. What should we do if want to run it in a work thread??
+
+Thread Affinity
+
+As each thread have its own event queue, so there will be more than one event queues exists in one multi-thread program. So which event queue will be used when we post a event?
+
+Let's have a look at the code of postEvent().
+
+void QCoreApplication::postEvent(QObject *receiver, QEvent *event)
+{
+    QThreadData * volatile * pdata = &receiver->d_func()->threadData;
+    QThreadData *data = *pdata;
+    QMutexLocker locker(&data->postEventList.mutex);
+    data->postEventList.addEvent(QPostEvent(receiver, event));
+}
+As you can see, the event queue is found through the receiver's thread property. This thread is called the thread affinity - what thread the QObject "lives" in. Normally, it's the thread in which the object was created, but it can be changed using QObject::moveToThread().
+
+Please note that, QCoreApplication::postEvent() is thread safe, as QMutex has been used here.
+
+Now, it's easy to run the event process it worker thread instead of main thread.
+
+Example
+
+Add three lines to the main() function of last example.
+
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    qDebug()<<"From main thread: "<<QThread::currentThread();
+
+    Test test;
+    QThread thread;               //new line
+    test.moveToThread(&thread);   //new line
+    thread.start();               //new line
+
+    Button btn(&test);
+    btn.show();
+
+    return a.exec();
+}
+The output of application will be
+
+From main thread:  QThread(0x9e8100) 
+Event received in thread QThread(0x13fed4) 
+Event received in thread QThread(0x13fed4)
+while the output of last example was
+
+From main thread:  QThread(0x9e8100) 
+Event received in thread QThread(0x9e8100) 
+Event received in thread QThread(0x9e8100)
+Queued Connection
+
+For queued connection, when the signal is emitted, a event will be post to the event queue.
+
+    QMetaCallEvent *ev = c->isSlotObject ?
+        new QMetaCallEvent(c->slotObj, sender, signal, nargs, types, args) :
+        new QMetaCallEvent(c->method_offset, c->method_relative, c->callFunction, sender, signal, nargs, types, args);
+    QCoreApplication::postEvent(c->receiver, ev);
+Then, this event will be found by the event queued, and finally, QObject::event() will be called in the thread.
+
+bool QObject::event(QEvent *e)
+{
+    switch (e->type()) {
+    case QEvent::MetaCall:
+        {
+            QMetaCallEvent *mce = static_cast<QMetaCallEvent*>(e);
+As QCoreApplication::postEvent() is thread safe, so if you interact with an object only using queued signal/slot connections, then the usual multithreading precautions need not to be taken any more.
+
+Reference
+
+Another Look at Events
+Posted by Debao Zhang Tue, 06 Aug 2013   Qt   QThread

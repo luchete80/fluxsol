@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>JobSubmitDialog</class>
+ <widget class="QDialog" name="JobSubmitDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>621</width>
+    <height>421</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>JobDialog</string>
+  </property>
+  <widget class="QTabWidget" name="tabWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>601</width>
+     <height>401</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>1</number>
+   </property>
+   <widget class="QWidget" name="LogTab">
+    <attribute name="title">
+     <string>Log</string>
+    </attribute>
+   </widget>
+   <widget class="QWidget" name="ResTab">
+    <attribute name="title">
+     <string>Residuals</string>
+    </attribute>
+    <widget class="MsgWindow" name="ResidualMsg" native="true">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>230</y>
+       <width>571</width>
+       <height>131</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QVTKWidget" name="qvtkResChart" native="true">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>571</width>
+       <height>201</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>QVTKWidget</class>
+   <extends>QWidget</extends>
+   <header>QVTKWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MsgWindow</class>
+   <extends>QWidget</extends>
+   <header>msgwindow.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
