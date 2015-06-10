@@ -17,7 +17,7 @@ Job::Job()
   renderWindow =
     vtkSmartPointer<vtkRenderWindow>::New();
 
-  renderWindow->AddRenderer(ren);
+  //renderWindow->AddRenderer(ren);
 
 
   ren->SetBackground(.2, .3, .4);
@@ -32,10 +32,12 @@ DrawResChart();
     renderWindow->Render();	//If i want to obtain coordinates must to activate renderwindows with Render()
 
     // VTK/Qt wedded
-    this->uisubmitdialog.qvtkResChart->GetRenderWindow()->AddRenderer(ren);	//Add
+    //this->uisubmitdialog.qvtkResChart->GetRenderWindow()->AddRenderer(ren);	//Add
 
     //This is like the example Four Pane Viewer
-    //renderWindowInteractor = submitdialog.qvtkResChart->GetInteractor();
+    renderWindowInteractor = uisubmitdialog.qvtkResChart->GetInteractor();
+
+    DrawResChart();
 
     submitdialog->show();
 }
@@ -94,7 +96,7 @@ void Job::DrawResChart()
     vtkSmartPointer<vtkContextView>::New();
 
 //      TEST; THIS IS NOT ART OF THE EXAMPLE
-//    view->SetRenderer(ren);
+    //view->SetRenderer(ren);
 
   view->GetRenderer()->SetBackground(1.0, 1.0, 1.0);
 
@@ -132,11 +134,24 @@ void Job::DrawResChart()
 
 
   //view->GetRenderWindow()->Render();
+  //view->GetInteractor()->GetRenderWindow()->Render();
+
+ //   uisubmitdialog.qvtkResChart->GetRenderWindow()->AddRenderer(view->GetRenderer());
+
+  //This in tjeory works
+    //THIS LINE IS OK FOR SHOW ONLY WITHOUR INTERACTION
+    uisubmitdialog.qvtkResChart->GetRenderWindow()->AddRenderer(view->GetRenderer());
+
+    //This is EXPLAINED
+    //view->SetInteractor(renderWindowInteractor);
+    //uisubmitdialog.qvtkResChart->SetRenderWindow(view->GetRenderWindow());
+
+
 
     //THIS WAS THE ORIGINAL VTK EXAMPLE FILE
   // Start interactor
 //  view->GetInteractor()->Initialize();
 //  view->GetInteractor()->Start();
 
-  return EXIT_SUCCESS;
+  //return EXIT_SUCCESS;
 }

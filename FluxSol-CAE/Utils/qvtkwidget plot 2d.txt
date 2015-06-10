@@ -1,0 +1,39 @@
+http://vtk.1045678.n5.nabble.com/vtkChart-in-QVTKWidget-td4692735.html
+
+CON ESTO ANDA EL RENDER
+Now, I have managed to get it rendered in QVTKWidget, but the interaction doesn't work.
+
+How should I start the interactor? I tried the commented line in the below code
+
+// Add multiple line plots, setting the colors etc
+           vtkSmartPointer<vtkChartXY> chart =
+              vtkSmartPointer<vtkChartXY>::New();
+            chart->GetAxis(vtkAxis::LEFT)->SetTitle("yyy");
+            chart->GetAxis(vtkAxis::BOTTOM)->SetTitle("xxx");
+           this->view->GetScene()->AddItem(chart);
+            vtkPlot *line = chart->AddPlot(vtkChart::LINE);
+            line->SetInput(table, 0, 1);
+            line->SetColor(0, 255, 0, 255);
+            line->SetWidth(1.0);
+ //           this->view->GetRenderWindow()->SetMultiSamples(0);
+            this->ui->chartWidget->GetRenderWindow()->AddRenderer(this->view->GetRenderer());
+ //           vtkRenderWindowInteractor *chartItr=vtkRenderWindowInteractor::New();
+ //           this->ui->chartWidget->GetRenderWindow()->SetInteractor(chartItr);
+ //           this->ui->chartWidget->GetInteractor()->Initialize();
+ //           this->ui->chartWidget->GetInteractor()->Start();
+             this->ui->chartWidget->show();
+
+
+
+CON ESTO QUE SIGUE ANDA EL INTERACTOR
+
+
+Works with this
+
+this->view->SetInteractor(this->ui->chartWidget->GetInteractor());
+           this->ui->chartWidget->SetRenderWindow(this->view->GetRenderWindow());
+           this->view->GetInteractor()->Initialize();
+           this->view->GetInteractor()->Start();
+
+
+Jothy
