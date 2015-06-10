@@ -11,6 +11,8 @@
 #include "ui_SimpleView.h"
 #include "SimpleView.h"
 
+#include "./Job/JobSubmitDialog.h"
+
 
 using namespace FluxSol;
 using namespace std;
@@ -1044,7 +1046,13 @@ void SimpleView::slotImportIn()
       this->vmodel[0]->SolveIter();
       ui->MsgWin->AddString(this->vmodel[0]->ItLog());
 
-      Job job(model);
+      vjob.push_back(new Job(*vmodel[0]) );
+      vjobsubmitdialog.push_back(new JobSubmitDialog (*vjob[0],this) );
+
+      vjobsubmitdialog[0]->show();
+
+        vjob[0]->MsgWinAddress(vjobsubmitdialog[0]->ResMsgWindow());
+      //vjob[0]->start();
 
 
 

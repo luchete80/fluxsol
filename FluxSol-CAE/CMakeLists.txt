@@ -46,6 +46,7 @@ include_directories("${FLUXSOL_SOLVER_DIR}/FiniteVolume/Laplacian")
 include_directories("${FLUXSOL_SOLVER_DIR}/FiniteVolume/Mesh")
 include_directories("${FLUXSOL_SOLVER_DIR}/Input")
 include_directories("${FLUXSOL_SOLVER_DIR}/Interpolation")
+include_directories("${FLUXSOL_SOLVER_DIR}/Job")
 include_directories("${FLUXSOL_SOLVER_DIR}/Libs/Laspack")
 include_directories("${FLUXSOL_SOLVER_DIR}/Materials")
 include_directories("${FLUXSOL_SOLVER_DIR}/Mesh")
@@ -138,9 +139,22 @@ set( Srcs main.cpp
 
 set (Meshlib_Srcs "${PROJECT_SOURCE_DIR}/Mesh/ImportMesh.cpp") 
 
-set (Joblib_Srcs "${PROJECT_SOURCE_DIR}/Job/Job.cpp") 
+set (Joblib_Srcs 	"${PROJECT_SOURCE_DIR}/Job/Job.cpp"
+					"${PROJECT_SOURCE_DIR}/Job/JobSubmitDialog.cpp") 
 		  
-set( Hdrs ModelTree.h MsgWindow.h SimpleView.h Param.h ParamDialog.h sortdialog.h Tetrahedron.h GraphicModel.h GraphicResults.h GridSelection.h QDebugStream.h QDebugStream_Alt.h)
+set( Hdrs 	${PROJECT_SOURCE_DIR}/Job/JobSubmitDialog.h
+			ModelTree.h 
+			MsgWindow.h 
+			SimpleView.h 
+			Param.h 
+			ParamDialog.h 
+			sortdialog.h 
+			Tetrahedron.h 
+			GraphicModel.h 
+			GraphicResults.h 
+			GridSelection.h 
+			QDebugStream.h 
+			QDebugStream_Alt.h)
 
 set( MOC_Hdrs SimpleView.h )
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>621</width>
-    <height>421</height>
+    <height>455</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>10</x>
      <y>10</y>
      <width>601</width>
-     <height>401</height>
+     <height>351</height>
     </rect>
    </property>
    <property name="currentIndex">
@@ -40,7 +40,7 @@
        <x>10</x>
        <y>230</y>
        <width>571</width>
-       <height>131</height>
+       <height>91</height>
       </rect>
      </property>
     </widget>
@@ -48,13 +48,26 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>20</y>
+       <y>10</y>
        <width>571</width>
        <height>201</height>
       </rect>
      </property>
     </widget>
    </widget>
+  </widget>
+  <widget class="QPushButton" name="StartStopButton">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>400</y>
+     <width>91</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Start</string>
+   </property>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
