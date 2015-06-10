@@ -3,6 +3,7 @@
 
 //#include "Model.h"
 #include <QtCore>
+#include "Model.h"
 #include "ui_JobSubmitDialog.h"
 
 // TO DRAW VTK CHART
@@ -18,7 +19,7 @@
 #include <vtkContextView.h>
 #include <vtkContextScene.h>
 #include <vtkPen.h>
-
+#include <vtkAxesActor.h>
 
 #include <vtkRenderWindowInteractor.h>
 //NEW!! Extracted from Shadows test project
@@ -55,8 +56,24 @@ class Job
 
     protected:
 
-	//CFDModel *model;	//INCLUDES INHERITED CFDMODELS, SIMPLE, THERMAL, AND SO ON
+    vtkSmartPointer<vtkContextView> view;       //Chart View
+
+
+      // Create a table with some points in it
+  vtkSmartPointer<vtkTable> table;
+  vtkSmartPointer<vtkFloatArray> arrX;
+  vtkSmartPointer<vtkFloatArray> arrC;
+  vtkSmartPointer<vtkFloatArray> arrS;
+
+  vtkPlot *line;
+
+    // Add multiple line plots, setting the colors etc
+  vtkSmartPointer<vtkChartXY> chart;
+
+	CFDModel *model;	//INCLUDES INHERITED CFDMODELS, SIMPLE, THERMAL, AND SO ON
     void run();         //REIMPLEMENTED
+
+    void InitResChart();
 
     void DrawResChart();
 
@@ -68,6 +85,7 @@ class Job
 
 	public:
 		Job();
+		Job(const CFDModel &cfdmodel);
 		void setMessage(const QString &message);
         void stop();
 		//Model * Model(){return model;}

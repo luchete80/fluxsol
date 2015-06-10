@@ -1,0 +1,289 @@
+https://echnotstechno.wordpress.com/2014/08/13/interactive-2d-plots-with-vtk-the-visualization-toolkit/
+
+The complete code
+
+The custom ChartMouseInteractionStyle is used to disable the actions of mouse pressbuttons.
+
+#include <vtkRenderer.h>
+#include <vtkInteractorStyleTrackballCamera.h>
+#include <vtkProperty.h>
+#include <vtkCommand.h>
+#include <vtkAxesActor.h>
+#include <vtkOrientationMarkerWidget.h>
+#include <vtkTextProperty.h>
+#include <vtkCaptionActor2D.h>
+#include <vtkObjectFactory.h>
+#include <vtkContextActor.h>
+#include <vtkContextScene.h>
+#include <vtkAxis.h>
+#include <vtkPoints.h>
+#include <vtkCubeAxesActor.h>
+#include <vtkCamera.h>
+#include <vtkPen.h>
+#include <vtkRenderWindow.h>
+#include <vtkRenderWindowInteractor.h>
+#include <vtkSplineWidget.h>
+#include <vtkChartXY.h>
+#include <vtkSmartPointer.h>
+#include <vtkPolyData.h>
+
+
+/*
+Custom Splinewidget class
+*/
+class myVtkSplineWidget : public vtkSplineWidget
+{
+public:
+	static myVtkSplineWidget *New()
+	{ 
+		return new myVtkSplineWidget; 
+	}
+	int GetCurrentIndex() { return this->CurrentHandleIndex; } //returns currently picked handle index
+
+	void setDraggableOff() {		
+		this->LineActor->SetPickable(0);//disable dragging the widget
+	}	
+};
+
+/*
+Custom mouse interactor class to disable rotation and right button zooming
+*/
+class ChartMouseInteractionStyle : public vtkInteractorStyleTrackballCamera
+{
+public:
+	vtkSmartPointer Interactor;
+	vtkSmartPointer renderer;
+	static ChartMouseInteractionStyle* New();
+	vtkTypeMacro(ChartMouseInteractionStyle, vtkInteractorStyleTrackballCamera);
+
+	ChartMouseInteractionStyle(){
+	}
+	virtual void OnRightButtonUp()
+	{	
+	}
+
+	virtual void OnRightButtonDown()
+	{	
+	}
+
+	virtual void OnLeftButtonUp() 
+	{
+	}
+
+	virtual void OnLeftButtonDown() 
+	{
+	}
+
+};
+
+vtkStandardNewMacro(ChartMouseInteractionStyle);
+
+/*
+Custom vtkCommand class to filter interactions on the spline widget
+*/
+class vtkContourCallback : public vtkCommand
+{
+
+public:
+
+	static vtkContourCallback *New()
+	{ 
+		return new vtkContourCallback; 
+	}
+
+	vtkContourCallback() {}
+
+	virtual void Execute(vtkObject*, unsigned long event, void *calldata)
+	{
+		//If on button press or drag of spline widget
+		if(event == vtkCommand::InteractionEvent|| event == vtkCommand::StartInteractionEvent)
+		{
+			int activeHandle = this->Widget->GetCurrentIndex();
+
+			//active handle can be -1 in right button click
+			if(activeHandle != -1){
+
+				//double maxBound = 10000.00;
+				this->Widget->SetHandleSize(0.005);
+				double 	pos[3] = {0,0,0};
+
+				if(event == vtkCommand::StartInteractionEvent){
+					this->Widget->GetHandlePosition(activeHandle, startPos);//Get start position of handle
+				}
+
+ 				this->Widget->GetHandlePosition(activeHandle,pos);//Get current position
+				int noOfHandles = this->Widget->GetNumberOfHandles();
+				double pos2[3] = {0,0,0};
+				double pos3[3] = {0,0,0};
+				this->Widget->GetHandlePosition(0,pos2);//Get position of first handle
+				this->Widget->GetHandlePosition((noOfHandles-1),pos3);//Get position of last handle
+
+				this->Widget->GetHandlePosition(activeHandle,pos);//Get modified position values
+				char xlabel[50]; 
+				double xval = pos[0] / xOffSet;//original point values are deducted
+				sprintf(xlabel , "%lf" , xval);
+				this->axes2->SetXAxisLabelText(xlabel);
+
+				char ylabel[50]; 
+				double yval = pos[1] / yOffSet;//original point values are deducted
+				sprintf(ylabel , "%lf" , yval);
+				this->axes2->SetYAxisLabelText(ylabel);
+				this->axes2->SetZAxisLabelText("0");
+
+				X[activeHandle] = xval;
+				Y[activeHandle] = yval;
+			}
+		}
+	}
+
+        void SetWidget(vtkSmartPointer widget) {this->Widget = widget;}
+        void SetAxes(vtkSmartPointer axes) {this->axes2 = axes; }
+        void SetXYVals(float Xvals[], float Yvals[]) {
+               X = Xvals; 
+               Y = Yvals; 
+        }
+        void SetOffSet(double xOffSet,double yOffSet) { 
+	       this->xOffSet = xOffSet; 
+	       this->yOffSet = yOffSet;
+	}
+
+private:
+	vtkSmartPointer Widget;
+	vtkSmartPointer axes2;
+ 	float *X, *Y;
+	double startPos[3];
+	double xOffSet, yOffSet;
+};
+
+void main(){
+
+ 	float Xvals[] ={0,1,2,3,4,5,6,7,8,9};
+	float Yvals[] = {12,24,44,5,3,6,7,2,4,88};
+
+	vtkSmartPointer renderWindowInteractor = vtkSmartPointer::New();
+	vtkSmartPointer renderer = vtkSmartPointer::New();
+	vtkSmartPointer  renderWindow = vtkSmartPointer::New();
+ 	vtkSmartPointer chart = vtkSmartPointer::New();
+	vtkSmartPointer< ChartMouseInteractionStyle> style = vtkSmartPointer< ChartMouseInteractionStyle> ::New(); 
+
+ 	renderWindow->AddRenderer(renderer);
+ 	renderWindowInteractor->SetRenderWindow(renderWindow);
+ 	renderWindowInteractor->SetInteractorStyle(style);
+
+	// Create text property
+	vtkSmartPointer textProperty= vtkSmartPointer::New();
+ 	textProperty->SetFontSize(35);
+	textProperty->SetColor(255,255,255);
+ 	textProperty->SetFontFamilyToTimes();
+ 	textProperty->BoldOn();
+
+ 	vtkSmartPointer axes = vtkAxesActor::New();
+	axes->GetXAxisCaptionActor2D()->SetCaptionTextProperty(textProperty);
+	axes->GetYAxisCaptionActor2D()->SetCaptionTextProperty(textProperty);
+        axes->GetZAxisCaptionActor2D()->SetCaptionTextProperty(textProperty);
+
+	vtkProperty* prop = vtkProperty::New();
+        prop->SetColor(0,0,0 );
+
+	 //Create spline widget
+	vtkSmartPointer splineWidget = vtkSmartPointer::New();
+	splineWidget->SetHandleSize( 0.01 );
+	splineWidget->SetInteractor( renderWindowInteractor );
+	splineWidget->SetLineProperty( prop );
+	splineWidget->setDraggableOff();		
+	splineWidget->GetHandleProperty()->SetColor(0,1,0);
+
+ 	//Create vtkCommand object
+ 	vtkSmartPointer contourCallback = vtkSmartPointer::New();
+
+	contourCallback->SetAxes(axes);
+ 	contourCallback->SetWidget(splineWidget);
+ 	contourCallback->SetXYVals(Xvals,Yvals);
+ 	splineWidget->AddObserver(vtkCommand::InteractionEvent,contourCallback);//add observers 
+ 	splineWidget->AddObserver(vtkCommand::StartInteractionEvent,contourCallback);
+
+
+	vtkSmartPointer points = vtkSmartPointer::New();
+	for (int i = 0; i < 10; i++) 	{ 	
+        	points->InsertPoint(static_cast(i),Xvals[i], Yvals[i],0.0);
+
+	}
+
+	//points are transformed to make the x axis more elongnated
+	vtkSmartPointer newPoints = vtkSmartPointer::New();
+	double maxBound = 10000;
+	double bnds[6];
+	double xBndsDiff, yBndsDiff;
+	points->GetBounds( bnds );
+
+	xBndsDiff = bnds[1]-bnds[0];
+	yBndsDiff = bnds[3]-bnds[2];
+
+	if(xBndsDiff == 0)
+		xBndsDiff = 1;
+	if(yBndsDiff == 0)
+		yBndsDiff = 1;
+
+	double xOffSet, yOffSet;
+	xOffSet = (maxBound*2/xBndsDiff);//the x-axis will be double the size of the y axis
+	yOffSet = (maxBound/yBndsDiff);
+	for (int i = 0; i < 10; i++){
+ 		double x = Xvals[i] * xOffSet; 
+		double y = Yvals[i] * yOffSet; 
+		newPoints->InsertPoint(static_cast(i),x, y,0.0);
+	}
+	contourCallback->SetOffSet(xOffSet, yOffSet);
+
+	double newBnds[6];
+	newPoints->GetBounds( newBnds );
+	splineWidget->PlaceWidget( newBnds );
+	splineWidget->SetNumberOfHandles(newPoints->GetNumberOfPoints()); //not needed
+	splineWidget->InitializeHandles(newPoints);
+	splineWidget->SetCurrentRenderer( renderer );
+	splineWidget->SetDefaultRenderer( renderer );
+	splineWidget->On();
+
+	vtkSmartPointer cubeAxes = vtkSmartPointer::New();
+	cubeAxes->SetBounds(newBnds);
+	cubeAxes->SetXAxisRange(bnds[0],bnds[1]);//x axis and y axis legends will show original point positions
+	cubeAxes->SetYAxisRange(bnds[2],bnds[3]);
+	cubeAxes->SetFlyModeToOuterEdges();
+	cubeAxes->XAxisMinorTickVisibilityOff();
+	cubeAxes->YAxisMinorTickVisibilityOff();
+	cubeAxes->DrawXGridlinesOn();
+	cubeAxes->DrawYGridlinesOn();
+	cubeAxes->SetYTitle("");
+	cubeAxes->SetXTitle("");
+	cubeAxes->GetProperty()->SetColor(84/225.0,84/225.0,84/225.0);//dark grey
+
+	renderer->AddViewProp(cubeAxes);
+	cubeAxes->SetCamera(renderer->GetActiveCamera());
+	renderer->ResetCamera(cubeAxes->GetBounds());
+	renderer->GetActiveCamera()->Zoom(1.5);//zoom plot to fit the window
+
+	vtkSmartPointer widget = vtkOrientationMarkerWidget::New();
+	widget->SetOrientationMarker(axes);
+	widget->SetInteractor(renderWindowInteractor);
+	widget->SetEnabled(1);
+	widget->InteractiveOn();
+	widget->SetOutlineColor(0.0, 0.0, 0.0);
+
+	//Chart is needed to set XY axis label (both interactive and non-interactive graphs will have similar label styles)
+	vtkSmartPointer actor_grid = vtkSmartPointer::New();
+
+	chart->GetAxis(0)->SetLabelsVisible(0);//hide labels in chart
+	chart->GetAxis(1)->SetLabelsVisible(0);
+	chart->GetAxis(0)->SetGridVisible(0);//Hide grid
+	chart->GetAxis(1)->SetGridVisible(0);
+	chart->GetAxis(0)->GetPen()->SetColor(255,255,255);//white
+	chart->GetAxis(1)->GetPen()->SetColor(255,255,255);
+
+	vtkPlot *line = chart->AddPlot(vtkChart::LINE);
+	actor_grid->GetScene()->AddItem(chart);
+	renderer->AddActor(actor_grid);
+
+	renderWindow->Render();
+ 	renderer->SetBackground(1,1,1);
+	renderWindowInteractor->Start();
+
+}

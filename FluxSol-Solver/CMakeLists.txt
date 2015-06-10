@@ -42,13 +42,13 @@ project(${NAME})
 set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
 #set (FLUXSOL_DIR ${PROJECT_SOURCE_DIR}/../)
 
-set (LASPACK_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/laspack/src)
+#set (LASPACK_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/laspack/src)
 set (CGNS_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src)
 set (ALGLIB_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/src)
 
 set (CGNS_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src/lib)
 set (ALGLIB_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/bin)
-set (LASPACK_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/laspack/bin)
+#set (LASPACK_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/laspack/bin)
 
 
 
@@ -128,7 +128,7 @@ include_directories("${PROJECT_SOURCE_DIR}/FiniteVolume/Laplacian")
 include_directories("${PROJECT_SOURCE_DIR}/FiniteVolume/Mesh")
 include_directories("${PROJECT_SOURCE_DIR}/Input")
 include_directories("${PROJECT_SOURCE_DIR}/Interpolation")
-include_directories("${PROJECT_SOURCE_DIR}/Libs/Laspack")
+#include_directories("${PROJECT_SOURCE_DIR}/Libs/Laspack")
 include_directories("${PROJECT_SOURCE_DIR}/Materials")
 include_directories("${PROJECT_SOURCE_DIR}/Mesh")
 include_directories("${PROJECT_SOURCE_DIR}/Model")
@@ -142,7 +142,7 @@ include_directories("${PROJECT_SOURCE_DIR}/Utils")
 
 #Temporalmente no lo incluyo (librerias)
 include_directories(${CGNS_INCLUDE_DIRS})
-include_directories(${LASPACK_INCLUDE_DIRS})
+#include_directories(${LASPACK_INCLUDE_DIRS})
 include_directories(${ALGLIB_INCLUDE_DIRS})
 
 include_directories("${PARMETIS_DIR}/include")
@@ -181,7 +181,9 @@ add_subdirectory(Utils)
 
 set (FSOL_LIBS Analysis Boundary Mesh Field FvMesh Input Tests Type Utils Output)
 
-set (EXTRA_LIBS cgns alglib laspack)
+#set (EXTRA_LIBS cgns alglib laspack)
+
+set (EXTRA_LIBS cgns alglib)
 
 #add the executable
 set (SOURCES

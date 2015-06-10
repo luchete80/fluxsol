@@ -27,7 +27,8 @@ Job::Job()
   ren->SetBackground(1.,1.,1.);
   ren->SetBackground2(0,0,1);
 
-DrawResChart();
+    InitResChart();
+    DrawResChart();
 
     renderWindow->Render();	//If i want to obtain coordinates must to activate renderwindows with Render()
 
@@ -42,11 +43,21 @@ DrawResChart();
     submitdialog->show();
 }
 
+Job::Job(const CFDModel &cfdmodel)
+:Job()
+{
+    model=&cfdmodel;    //TO MODIFY, CAN INCLUDE NEW MODEL?
+
+    //run();
+}
 
 void Job::run()
 {
     while (!stopped)
     {
+        model->SolveIter();
+        DrawResChart();
+        //submitdialog->show();
 
     }
     stopped=false;
@@ -58,27 +69,84 @@ void Job::stop()
 }
 
 
-// EXTRACTED FROM VTK CHART 2D EXAMPLE
-void Job::DrawResChart()
+void Job::InitResChart()
 {
+
   // Create a table with some points in it
-  vtkSmartPointer<vtkTable> table =
+  table =
     vtkSmartPointer<vtkTable>::New();
 
-  vtkSmartPointer<vtkFloatArray> arrX =
+  arrX =
     vtkSmartPointer<vtkFloatArray>::New();
   arrX->SetName("X Axis");
   table->AddColumn(arrX);
 
-  vtkSmartPointer<vtkFloatArray> arrC =
+  arrC =
     vtkSmartPointer<vtkFloatArray>::New();
   arrC->SetName("Cosine");
   table->AddColumn(arrC);
 
-  vtkSmartPointer<vtkFloatArray> arrS =
+  arrS =
     vtkSmartPointer<vtkFloatArray>::New();
   arrS->SetName("Sine");
   table->AddColumn(arrS);
+
+  // Set up the view
+  view =
+    vtkSmartPointer<vtkContextView>::New();
+
+  // Add multiple line plots, setting the colors etc
+ chart =
+    vtkSmartPointer<vtkChartXY>::New();
+
+    view->GetScene()->AddItem(chart);
+
+    line = chart->AddPlot(vtkChart::LINE);
+
+
+    //      TEST; THIS IS NOT ART OF THE EXAMPLE
+    //view->SetRenderer(ren);
+
+  view->GetRenderer()->SetBackground(1.0, 1.0, 1.0);
+
+
+  //view->GetRenderWindow()->SetMultiSamples(0);
+
+
+
+  //view->GetRenderWindow()->Render();
+  //view->GetInteractor()->GetRenderWindow()->Render();
+
+ //   uisubmitdialog.qvtkResChart->GetRenderWindow()->AddRenderer(view->GetRenderer());
+
+  //This in tjeory works
+    //THIS LINE IS OK FOR SHOW ONLY WITHOUR INTERACTION
+    //uisubmitdialog.qvtkResChart->GetRenderWindow()->AddRenderer(view->GetRenderer());
+
+    //This is EXPLAINED
+    //view->SetInteractor(renderWindowInteractor);
+    //uisubmitdialog.qvtkResChart->SetRenderWindow(view->GetRenderWindow());
+
+
+
+    //THIS WAS THE ORIGINAL VTK EXAMPLE FILE
+    //DOES NOT WORK IN QVTKWIDGET
+    // Start interactor
+    //  view->GetInteractor()->Initialize();
+    //  view->GetInteractor()->Start();
+
+
+
+  //Mode with actor
+    //vtkSmartPointer <vtkAxesActor> actor_grid = vtkSmartPointer::New();
+    VTK_CREATE(vtkActor, actor_grid);
+	actor_grid->GetScene()->AddItem(chart);
+	ren->AddActor(actor_grid);
+}
+
+// EXTRACTED FROM VTK CHART 2D EXAMPLE
+void Job::DrawResChart()
+{
 
   // Fill in the table with some example values
   int numPoints = 69;
@@ -91,20 +159,10 @@ void Job::DrawResChart()
     table->SetValue(i, 2, sin(i * inc));
   }
 
-  // Set up the view
-  vtkSmartPointer<vtkContextView> view =
-    vtkSmartPointer<vtkContextView>::New();
 
-//      TEST; THIS IS NOT ART OF THE EXAMPLE
-    //view->SetRenderer(ren);
 
-  view->GetRenderer()->SetBackground(1.0, 1.0, 1.0);
 
-  // Add multiple line plots, setting the colors etc
-  vtkSmartPointer<vtkChartXY> chart =
-    vtkSmartPointer<vtkChartXY>::New();
-  view->GetScene()->AddItem(chart);
-  vtkPlot *line = chart->AddPlot(vtkChart::LINE);
+
 #if VTK_MAJOR_VERSION <= 5
   line->SetInput(table, 0, 1);
 #else
@@ -129,29 +187,4 @@ void Job::DrawResChart()
   // (ifdef-ed out on Windows because DASH_LINE does not work on Windows
   //  machines with built-in Intel HD graphics card...)
 
-  //view->GetRenderWindow()->SetMultiSamples(0);
-
-
-
-  //view->GetRenderWindow()->Render();
-  //view->GetInteractor()->GetRenderWindow()->Render();
-
- //   uisubmitdialog.qvtkResChart->GetRenderWindow()->AddRenderer(view->GetRenderer());
-
-  //This in tjeory works
-    //THIS LINE IS OK FOR SHOW ONLY WITHOUR INTERACTION
-    uisubmitdialog.qvtkResChart->GetRenderWindow()->AddRenderer(view->GetRenderer());
-
-    //This is EXPLAINED
-    //view->SetInteractor(renderWindowInteractor);
-    //uisubmitdialog.qvtkResChart->SetRenderWindow(view->GetRenderWindow());
-
-
-
-    //THIS WAS THE ORIGINAL VTK EXAMPLE FILE
-  // Start interactor
-//  view->GetInteractor()->Initialize();
-//  view->GetInteractor()->Start();
-
-  //return EXIT_SUCCESS;
 }

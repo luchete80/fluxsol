@@ -1044,7 +1044,7 @@ void SimpleView::slotImportIn()
       this->vmodel[0]->SolveIter();
       ui->MsgWin->AddString(this->vmodel[0]->ItLog());
 
-      Job job;
+      Job job(model);
 
 
 

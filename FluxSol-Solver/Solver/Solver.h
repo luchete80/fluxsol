@@ -29,7 +29,7 @@
 #include "SistEcuac.h"
 
 //Sparse libraries
-#include "laspack.h"
+//#include "laspack.h"
 //#include "./Nastran/Varios.h"
 #include "Utils.h"
 
@@ -75,8 +75,8 @@ class Solver{
 
 	template <typename T>
     void Solve(EqnSystem <T> &);
-	
-	
+
+
 // //TO MODIFY: CALL CONSTRUCTOR FROM CLAS ACORDING TO SCHEME
 // template <typename T>
 // void Solve (EqnSystem <T> &eq)
