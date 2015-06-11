@@ -47,13 +47,13 @@ void JobSubmitDialog::StartStopJob()
 {
     if (job->isRunning())
     {
-//        job->stop();
-//        ui->StartStopButton->setText(tr("Start"));
+        job->stop();
+        ui->StartStopButton->setText(tr("Start"));
     }
     else
     {
         ui->ResidualMsg->AddString("Job Submitted...\n");
-//      job->start();
+        job->start();
         ui->StartStopButton->setText(tr("Stop"));
     }
 

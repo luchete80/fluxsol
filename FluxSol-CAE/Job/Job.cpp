@@ -15,14 +15,19 @@ Job::Job(const CFDModel &cfdmodel)
 
 void Job::run()
 {
-    while (!stopped && iter<20)
+    while (!stopped)
     {
         model->SolveIter();
-        msgwin->AddString(model->ItLog());
+        //msgwin->AddString(model->ItLog());
+        //msgwin->AddString("Hola\n");
+        //cout << "iter: " <<iter<<endl;
+        cout << model->ItLog()<<endl;
         msleep(10);
         iter++;
+        if (iter>500)
+            stopped=true;
     }
-    stopped=false;
+    //stopped=false;
 }
 
 void Job::stop()
