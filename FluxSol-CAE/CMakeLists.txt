@@ -140,9 +140,11 @@ set( Srcs main.cpp
 set (Meshlib_Srcs "${PROJECT_SOURCE_DIR}/Mesh/ImportMesh.cpp") 
 
 set (Joblib_Srcs 	"${PROJECT_SOURCE_DIR}/Job/Job.cpp"
-					"${PROJECT_SOURCE_DIR}/Job/JobSubmitDialog.cpp") 
+					"${PROJECT_SOURCE_DIR}/Job/JobSubmitDialog.cpp"
+					"${PROJECT_SOURCE_DIR}/Job/JobWorker.cpp") 
 		  
 set( Hdrs 	${PROJECT_SOURCE_DIR}/Job/JobSubmitDialog.h
+			${PROJECT_SOURCE_DIR}/Job/JobWorker.h
 			ModelTree.h 
 			MsgWindow.h 
 			SimpleView.h 
@@ -211,6 +213,8 @@ if(VTK_QT_VERSION VERSION_GREATER "4")
     ${QRC_Srcs}
   )
 
+  #add_library(CAE_Mesh ${Meshlib_Srcs})
+  
   add_executable(${NAME} MACOSX_BUNDLE
     ${Srcs}
 	#$<TARGET_OBJECTS:Mesh>
@@ -224,7 +228,8 @@ if(VTK_QT_VERSION VERSION_GREATER "4")
 
   #qt5_use_modules($<TARGET_OBJECTS:Mesh> Core Gui Widgets)
   qt5_use_modules(${NAME} Core Gui Widgets)
-  target_link_libraries(${NAME} ${VTK_LIBRARIES} ${FLUXSOL_LIB} laspack alglib ${EXTRA_LIBS})
+  target_link_libraries(${NAME} ${VTK_LIBRARIES} ${FLUXSOL_LIB} laspack alglib ${EXTRA_LIBS} )
+								
 else()
   find_package(Qt4 REQUIRED)
   include(${QT_USE_FILE})

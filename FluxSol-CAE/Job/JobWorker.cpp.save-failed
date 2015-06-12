@@ -1,0 +1,9 @@
+#include "JobWorker.h"
+
+
+void JobController::HandleResults()
+{
+
+}
+
+

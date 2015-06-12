@@ -1051,7 +1051,7 @@ void SimpleView::slotImportIn()
 
 
         jobthread.push_back(new JobThread(*vmodel[0]) );
-        jobthread[0]->AddMsgWin(*vjobsubmitdialog[0]->ui->ResidualMsg);
+        jobthread[0]->AddMswWin(vjobsubmitdialog[0]->)
       vjobsubmitdialog[0]->AddThread(*jobthread[0]);
 
 

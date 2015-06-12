@@ -45,17 +45,19 @@ JobSubmitDialog::JobSubmitDialog(Job &job_, QWidget *parent)
 
 void JobSubmitDialog::StartStopJob()
 {
-    if (job->isRunning())
-    {
-        job->stop();
-        ui->StartStopButton->setText(tr("Start"));
-    }
-    else
-    {
+//    if (job->isRunning())
+//    {
+//        //job->stop();
+//        //thread->Thread()->stop();
+//        ui->StartStopButton->setText(tr("Start"));
+//    }
+//    else
+//    {
         ui->ResidualMsg->AddString("Job Submitted...\n");
-        job->start();
+        thread->Thread()->start();
+        //job->start();
         ui->StartStopButton->setText(tr("Stop"));
-    }
+//    }
 
 }
 
@@ -113,13 +115,13 @@ void JobSubmitDialog::InitResChart()
   //This in tjeory works
     //THIS LINE IS OK FOR SHOW ONLY WITHOUR INTERACTION
 
-    ui->qvtkResChart->GetRenderWindow()->AddRenderer(view->GetRenderer());
+    //ui->qvtkResChart->GetRenderWindow()->AddRenderer(view->GetRenderer());
 
 
 
     //This is EXPLAINED
-    //view->SetInteractor(renderWindowInteractor);
-    //uisubmitdialog.qvtkResChart->SetRenderWindow(view->GetRenderWindow());
+    view->SetInteractor(renderWindowInteractor);
+    ui->qvtkResChart->SetRenderWindow(view->GetRenderWindow());
 
 
 

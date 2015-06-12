@@ -1,40 +1,25 @@
-#include "Job.h"
+#include "JobWorker.h"
 
-Job::Job()
+void Worker::Solve()
 {
-    iter=0;
-    stopped=false;
 
-}
-
-Job::Job(const CFDModel &cfdmodel)
-:Job()
-{
-    model=&cfdmodel;    //TO MODIFY, CAN INCLUDE NEW MODEL?
-}
-
-void Job::run()
-{
+    //cout << "Before while..."<<endl;
     while (!stopped)
     {
+        //cout << "inside while"<<endl;
         model->SolveIter();
         //msgwin->AddString(model->ItLog());
         //msgwin->AddString("Hola\n");
         //cout << "iter: " <<iter<<endl;
-        cout << model->ItLog()<<endl;
+        //cout << model->ItLog()<<endl;
         //msgwin->append(QString::fromStdString(model->ItLog()));
         //line->SetColor(0, 0, 0, 255);
-        msleep(10);
+        //workerThread.msleep(10);
+        //emit DrawChart();
+        emit AddMsg(model->ItLog());
+        //emit statusChanged( model->ItLog());
         iter++;
         if (iter>500)
             stopped=true;
     }
-    //stopped=false;
 }
-
-void Job::stop()
-{
-    stopped=true;
-}
-
-

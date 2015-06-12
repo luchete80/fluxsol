@@ -28,9 +28,8 @@
 #include <vtkOpenGLRenderer.h>
 #endif
 
+#include "./Job/JobWorker.h"
 #include "./Job/JobSubmitDialog.h"
-#include "./Job/Job.h"
-
 
 
 #include "vtkSmartPointer.h"    // Required for smart pointer internal ivars.
@@ -227,6 +226,9 @@ private:
     std::vector < CFDModel* > vmodel;    //All models: TO MODIFY, MUST BE INSIDE IDE
     std::vector <JobSubmitDialog *> vjobsubmitdialog;
     std::vector <Job *> vjob;
+
+    std::vector <JobThread *> jobthread;
+
     int modelcount;
 
 };

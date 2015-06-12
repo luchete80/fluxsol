@@ -30,6 +30,8 @@
 #include "ui_JobSubmitDialog.h"
 #include "Job.h"
 
+#include "JobWorker.h"
+
 
 //This is repeated on ui_JobSubmitDialog
 class JobSubmitDialog:
@@ -40,17 +42,22 @@ public QDialog
     public:
         JobSubmitDialog(Job &job_, QWidget *parent = 0);
         MsgWindow& ResMsgWindow() {return *ui->ResidualMsg;}
+        vtkPlot & LinePlot(){return *line;}
+        AddThread(JobThread &tr){thread=&tr;}
+        Ui_JobSubmitDialog *ui;
 
     private slots:
         void StartStopJob();
+
 
     private:
 
     protected:
 
-        Ui_JobSubmitDialog *ui;
+
 
         Job *job;
+        JobThread *thread;
         // Create a table with some points in it
       vtkSmartPointer<vtkTable> table;
       vtkSmartPointer<vtkFloatArray> arrX;

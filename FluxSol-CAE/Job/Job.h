@@ -10,6 +10,7 @@
 //Job main architecture
 //See from C++Gui Programming with Qt Page 381
 
+#include <vtkPlot.h>
 
 
 
@@ -29,6 +30,8 @@ class Job
 
     protected:
 
+    vtkPlot *line;
+
     int iter;
 
 	CFDModel *model;	//INCLUDES INHERITED CFDMODELS, SIMPLE, THERMAL, AND SO ON
@@ -45,6 +48,8 @@ class Job
 		//SolveIter(){model->SolveIter();}
 
 		MsgWinAddress(MsgWindow &msgwin_){msgwin=&msgwin_;}
+		LinePlotAddress(vtkPlot &line_){line=&line_;}
+
 
 
 };

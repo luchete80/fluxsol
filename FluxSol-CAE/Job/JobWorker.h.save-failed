@@ -1,0 +1,121 @@
+#ifndef _JOBWORKER_H
+#define _JOBWORKER_H
+
+#include <QtCore>
+//#include "Job.h"
+#include "JobSubmitDialog.h"
+#include "Model.h"
+
+//From http://doc.qt.io/qt-4.8/qthread.html
+
+class Worker : public QObject
+{
+    Q_OBJECT
+    QThread workerThread;
+    CFDModel *model;
+
+    bool stopped;
+    int iter;
+
+public slots:
+    void doWork(const QString &parameter) {
+        // ...
+        QString result="Hi...";
+        emit resultReady(result);
+    }
+
+    void Solve()
+    {
+        while (!stopped)
+        {
+            model->SolveIter();
+            //msgwin->AddString(model->ItLog());
+            //msgwin->AddString("Hola\n");
+            //cout << "iter: " <<iter<<endl;
+            //cout << model->ItLog()<<endl;
+            //msgwin->append(QString::fromStdString(model->ItLog()));
+            //line->SetColor(0, 0, 0, 255);
+            //workerThread.msleep(10);
+            emit DrawChart();
+            iter++;
+            if (iter>500)
+                stopped=true;
+        }
+    }
+    void AddText(const QString &line)
+    {
+        //emit statusChanged( line.str().c_str() );
+    }
+
+    public:
+
+    Worker(const CFDModel &mod)
+    {
+        iter=0;
+        model=&mod;
+    }
+
+    signals:
+    void resultReady(const QString &result);
+    void DrawChart();
+};
+
+
+class JobThread : public QObject
+{
+    Q_OBJECT
+    QThread workerThread;
+    //Job *job;
+    Worker *worker;
+
+    //JobSubmitDialog *jobdialog;
+    bool stopped;
+    int iter;
+public:
+    JobThread() {
+        iter=0;
+        stopped=false;
+        //Worker *worker = new JobWorker;    //Originally, now is not static
+        worker = new Worker;
+        worker->moveToThread(&workerThread);
+        connect(&workerThread, SIGNAL(started()), worker, SLOT(deleteLater()));
+        connect(&workerThread, SIGNAL(finished()), worker, SLOT(deleteLater()));
+        connect(this, SIGNAL(operate(QString)), worker, SLOT(doWork(QString)));
+        //connect(worker, SIGNAL(resultReady(QString)), this, SLOT(handleResults(QString)));
+        //connect(worker, SIGNAL(started()), Worker, SLOT(Solve()));
+
+        //connect( worker, SIGNAL(start()), Worker, jobdialog->StartStopJob() );
+
+        //make sure you use Qt::QueuedConnection connection
+    }
+
+    JobThread(const CFDModel &cfdmodel)
+    :JobThread()
+    {
+        //job=new Job(cfdmodel);
+        //model=&cfdmodel;
+
+        worker=new Worker(cfdmodel);
+
+        worker->moveToThread(&workerThread);
+        connect(&workerThread, SIGNAL(started()), worker, SLOT(deleteLater()));
+        connect(&workerThread, SIGNAL(finished()), worker, SLOT(deleteLater()));
+        connect(this, SIGNAL(operate(QString)), worker, SLOT(doWork(QString)));
+    }
+
+    ~JobThread() {
+        workerThread.quit();
+        workerThread.wait();
+    }
+
+public slots:
+    void handleResults(const QString &){};
+
+
+signals:
+    void operate(const QString &);
+
+    //void Solve(){worker->Solve()}
+};
+
+#endif
