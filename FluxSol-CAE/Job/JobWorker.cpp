@@ -17,9 +17,16 @@ void Worker::Solve()
         //workerThread.msleep(10);
         //emit DrawChart();
         emit AddMsg(model->ItLog());
+        emit AddMsg("Hi...\n");
         //emit statusChanged( model->ItLog());
         iter++;
         if (iter>500)
             stopped=true;
     }
+}
+
+void Worker::Stop()
+{
+    if (!stopped)
+        stopped=true;
 }

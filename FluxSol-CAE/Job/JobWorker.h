@@ -25,6 +25,7 @@ public slots:
     }
 
     void Solve();
+    void Stop();
     void AddText(const QString &line)
     {
         //emit statusChanged( line.str().c_str() );
@@ -70,7 +71,7 @@ public:
         connect(&workerThread, SIGNAL(started()), worker, SLOT(Solve()));
         connect(&workerThread, SIGNAL(finished()), worker, SLOT(deleteLater()));
         connect(this, SIGNAL(operate(QString)), worker, SLOT(doWork(QString)));
-        connect(worker, SIGNAL(AddMsg(string)), worker, SLOT(msgwin->AddString(string)));
+        connect(worker, SIGNAL(AddMsg(string)), &workerThread, SLOT(msgwin->AddString(string)));
         //connect(worker, SIGNAL(resultReady(QString)), this, SLOT(handleResults(QString)));
         //connect(worker, SIGNAL(started()), Worker, SLOT(Solve()));
 
@@ -87,18 +88,29 @@ public:
 
         worker=new Worker(cfdmodel);
 
-        worker->moveToThread(&workerThread);
+
         connect(&workerThread, SIGNAL(started()), worker, SLOT(Solve()));
         connect(&workerThread, SIGNAL(finished()), worker, SLOT(deleteLater()));
         connect(this, SIGNAL(operate(QString)), worker, SLOT(doWork(QString)));
+        connect(worker, SIGNAL(AddMsg(string)), &workerThread, SLOT(msgwin->AddString(string)));
+        worker->moveToThread(&workerThread);
     }
-    AddMsgWin(const MsgWindow &mw){msgwin=&mw;}
+
+    AddMsgWin(MsgWindow &mw){msgwin=&mw;}
 
     QThread* Thread(){return &workerThread;}
 
     ~JobThread() {
         workerThread.quit();
         workerThread.wait();
+    }
+
+    //void AddString(){msgwin->AddString(string);}
+
+    void Stop()
+    {
+        worker->Stop(); //Stops Worker Iter while loop
+        workerThread.exit();    //Or exit
     }
 
 public slots:

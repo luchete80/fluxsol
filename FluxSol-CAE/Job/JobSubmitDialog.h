@@ -56,7 +56,7 @@ public QDialog
 
 
 
-        Job *job;
+        //Job *job;     //WHIS IS OLD
         JobThread *thread;
         // Create a table with some points in it
       vtkSmartPointer<vtkTable> table;

@@ -8,7 +8,7 @@ JobSubmitDialog::JobSubmitDialog(Job &job_, QWidget *parent)
   this->ui = new Ui_JobSubmitDialog;
   this->ui->setupUi(this);
 
-  job=&job_;
+    //job=&job_;
 
     ren =
     vtkSmartPointer<vtkOpenGLRenderer>::New();
@@ -45,19 +45,21 @@ JobSubmitDialog::JobSubmitDialog(Job &job_, QWidget *parent)
 
 void JobSubmitDialog::StartStopJob()
 {
-//    if (job->isRunning())
-//    {
-//        //job->stop();
-//        //thread->Thread()->stop();
-//        ui->StartStopButton->setText(tr("Start"));
-//    }
-//    else
-//    {
+    //Or if job->IsStopped()
+    if (thread->Thread()->isRunning())
+    {
+        //job->stop();
+        thread->Stop(); //This not only sopt thread but also finishes loop
+        ui->StartStopButton->setText(tr("Start"));
+    }
+    else
+    {
         ui->ResidualMsg->AddString("Job Submitted...\n");
         thread->Thread()->start();
         //job->start();
         ui->StartStopButton->setText(tr("Stop"));
-//    }
+        cout << "Stop Cout"<<endl;
+    }
 
 }
 
