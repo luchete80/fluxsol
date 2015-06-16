@@ -140,11 +140,12 @@ set( Srcs main.cpp
 set (Meshlib_Srcs "${PROJECT_SOURCE_DIR}/Mesh/ImportMesh.cpp") 
 
 set (Joblib_Srcs 	"${PROJECT_SOURCE_DIR}/Job/JobSubmitDialog.cpp"
-					"${PROJECT_SOURCE_DIR}/Job/JobWorker.cpp") 
+					"${PROJECT_SOURCE_DIR}/Job/JobWorker.cpp"
+					"${PROJECT_SOURCE_DIR}/Job/JobThread.cpp") 
 		  
 set( Hdrs 	${PROJECT_SOURCE_DIR}/Job/JobSubmitDialog.h
-			${PROJECT_SOURCE_DIR}/Job/JobThread.h
 			${PROJECT_SOURCE_DIR}/Job/JobWorker.h
+			${PROJECT_SOURCE_DIR}/Job/JobThread.h
 			ModelTree.h 
 			MsgWindow.h 
 			SimpleView.h 

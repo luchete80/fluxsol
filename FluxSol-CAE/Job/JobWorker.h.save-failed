@@ -5,6 +5,8 @@
 //#include "Job.h"
 //#include "JobClasses.h"
 #include "Model.h"
+#include "MsgWindow.h"
+#include "ui_JobSubmitDialog.h"
 
 //#include "JobSubmitDialog.h"
 
@@ -17,8 +19,12 @@ class Worker : public QObject
     QThread workerThread;
     CFDModel *model;
 
+    Ui_JobSubmitDialog *ui;
+
     bool stopped;
     int iter;
+    MsgWindow *msgwin;
+    string model_itlog;
 
 public slots:
     void doWork(const QString &parameter) {
@@ -26,6 +32,9 @@ public slots:
         QString result="Hi...";
         emit resultReady(result);
     }
+
+
+    void AddString(const string &str){msgwin->AddString(str);}
 
     void Solve();
     void Stop();
@@ -36,6 +45,9 @@ public slots:
 
     public:
 
+    void AddMsgWin(MsgWindow &mw){msgwin=&mw;}
+    void AddUi(Ui_JobSubmitDialog &ui_){ui=&ui_;}
+
     Worker()
     {
 
@@ -45,11 +57,13 @@ public slots:
         iter=0;
         model=&mod;
         stopped=false;
+        model_itlog="";
     }
 
     signals:
     void resultReady(const QString &result);
     void DrawChart();
+    void ChgButton();
     void AddMsg(const string &str);
     void statusChanged( const string &str);
 };

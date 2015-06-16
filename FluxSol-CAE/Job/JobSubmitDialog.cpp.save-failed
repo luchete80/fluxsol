@@ -52,7 +52,7 @@ JobSubmitDialog::JobSubmitDialog(const CFDModel &model_,QWidget *parent)
 //
 //
 //    //connect(worker, SIGNAL(AddMsg(string)), this, SLOT(AddString(string)),Qt::QueuedConnection);
-    connect(worker, SIGNAL(&Worker::AddMsg(string)), this, SLOT(&JobSubmitDialog::AddString(string)));
+    connect(worker, SIGNAL(AddMsg(string)), this, SLOT(AddString(string)));
     connect(worker, SIGNAL(DrawChart()), this, SLOT(DrawResChartAlt()));
 
     worker->moveToThread(thread);
@@ -61,14 +61,8 @@ JobSubmitDialog::JobSubmitDialog(const CFDModel &model_,QWidget *parent)
     //QObject::connect (worker, SIGNAL(AddMsg(string)), this, SLOT(AddString(string)));
 
     QObject::connect (this->thread, SIGNAL(started()), this->worker, SLOT(Solve()));
-    QObject::connect (this->worker, SIGNAL(ChgButton(string)), this, SLOT(ChangeStartStopButton(string)),Qt::QueuedConnection);
-    QObject::connect (this->jobthread, SIGNAL(ChgButton(string)), this, SLOT(ChangeStartStopButton(string)));
-    QObject::connect (this->jobthread, SIGNAL(AddMsg(string)), this, SLOT(&JobSubmitDialog::AddString(string)));
-
-    connect(worker, SIGNAL(finished()), thread, SLOT(quit()));
-
-    connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+    QObject::connect (this->worker, SIGNAL(ChgButton(string)), this, SLOT(ChangeStartStopButton(string)));
+    QObject::connect (this->jobthread, SIGNAL(AddMsg(string)), this, SLOT(AddString(string)));
 }
 
 void JobSubmitDialog::StartStopJob()
@@ -91,19 +85,15 @@ void JobSubmitDialog::StartStopJob()
         emit worker->AddMsg("Worker Msg...\n");
         emit jobthread->AddMsg("jobthread Msg...\n");
 
-        emit jobthread->ChgButton("TEST\n");
-
         //connect(&thread->WorkerT(), SIGNAL(AddMsg(string)), this, SLOT(AddString(string)),Qt::QueuedConnection);
 
         //connect(&thread->WorkerT(), SIGNAL(AddMsg(string)), this, SLOT(AddString(string)));
 
         //emit thread->WorkerT().AddMsg("Test\n");
-        //thread->start();
-        jobthread->start();
+        thread->start();
+        //jobthread->start();
         //thread->WorkerT().Solve();
         cout << "COUT"<<endl;
-
-        //QApplication::processEvents();
 
 
     }
