@@ -24,6 +24,7 @@ void Worker::Solve()
         //emit AddMsg(model->ItLog());
         string str="test\n";
         emit ChgButton(str);
+        QCoreApplication::processEvents();
         model_itlog+="Iter \n";
         //cout << "Test"<<endl;
         //cout << model->ItLog() <<endl;

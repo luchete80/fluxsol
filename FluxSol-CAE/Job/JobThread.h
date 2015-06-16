@@ -3,6 +3,7 @@
 
 #include "Model.h"
 #include <QThread>
+#include <QtCore>
 
 class JobThread : public QThread
 {

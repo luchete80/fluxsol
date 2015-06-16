@@ -15,6 +15,7 @@ void JobThread::run()
         //emit statusChanged( model->ItLog());
         string test="test\n";
         emit ChgButton(test);
+        QCoreApplication::processEvents();
         iter++;
         if (iter>500)
             {   stopped=true;
