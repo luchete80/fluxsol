@@ -32,6 +32,6 @@ MsgWindow::MsgWindow(QWidget *parent)
 
     //redirect cout
 
-    qout_alt=new QDebugStream_Alt(std::cout, this);
+    //qout_alt=new QDebugStream_Alt(std::cout, this);
 
 }

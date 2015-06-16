@@ -4,6 +4,7 @@ void Worker::Solve()
 {
 
     //cout << "Before while..."<<endl;
+    emit AddMsg("Hi...\n");
     while (!stopped)
     {
         //cout << "inside while"<<endl;
@@ -12,17 +13,27 @@ void Worker::Solve()
         //msgwin->AddString("Hola\n");
         //cout << "iter: " <<iter<<endl;
         //cout << model->ItLog()<<endl;
+        //model_itlog+=model->ItLog();
         //msgwin->append(QString::fromStdString(model->ItLog()));
+        //msgwin->append(QString::fromStdString( model_itlog ) );
         //line->SetColor(0, 0, 0, 255);
         //workerThread.msleep(10);
         //emit DrawChart();
-        emit AddMsg(model->ItLog());
-        emit AddMsg("Hi...\n");
+        //emit AddMsg(model->ItLog());
+        model_itlog+="Iter \n";
+        //emit AddMsg(model->ItLog());
+        emit AddMsg(model_itlog);
+        //QCoreApplication::processEvents();
         //emit statusChanged( model->ItLog());
         iter++;
         if (iter>500)
-            stopped=true;
+            {   stopped=true;
+                emit AddMsg("Process terminated.\n");
+            }
     }
+
+    emit this->AddMsg("Job Stopped...\n");
+
 }
 
 void Worker::Stop()

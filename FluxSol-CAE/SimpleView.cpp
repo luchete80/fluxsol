@@ -24,10 +24,6 @@ using namespace std;
 #include <vtkCallbackCommand.h>
 
 
-
-
-#include "./Job/Job.h"
-
 static void CameraModifiedCallback(vtkObject* caller,
                                    long unsigned int vtkNotUsed(eventId),
                                    void* vtkNotUsed(clientData),
@@ -1046,17 +1042,23 @@ void SimpleView::slotImportIn()
       this->vmodel[0]->SolveIter();
       ui->MsgWin->AddString(this->vmodel[0]->ItLog());
 
-      vjob.push_back(new Job(*vmodel[0]) );
-      vjobsubmitdialog.push_back(new JobSubmitDialog (*vjob[0],this) );
+      //vjob.push_back(new Job(*vmodel[0]) );
+      vjobsubmitdialog.push_back(new JobSubmitDialog (this) );
 
 
         jobthread.push_back(new JobThread(*vmodel[0]) );
-        jobthread[0]->AddMsgWin(*vjobsubmitdialog[0]->ui->ResidualMsg);
+        //jobthread[0]->AddMsgWin(*vjobsubmitdialog[0]->ui->ResidualMsg);
+
+        jobthread[0]->WorkerT().AddMsgWin(*vjobsubmitdialog[0]->ui->ResidualMsg);
       vjobsubmitdialog[0]->AddThread(*jobthread[0]);
 
 
       vjobsubmitdialog[0]->show();
 
+    connect(jobthread[0]->Thread(), SIGNAL(started()), vjobsubmitdialog[0], SLOT(AddString("Hi  ")));
+    connect(&jobthread[0]->WorkerT(), SIGNAL(AddMsg(string)), vjobsubmitdialog[0], SLOT(AddString(string)),Qt::QueuedConnection);
+    emit jobthread[0]->WorkerT().AddMsg("TEST...");
+    QCoreApplication::processEvents();
         //vjob[0]->MsgWinAddress(vjobsubmitdialog[0]->ResMsgWindow());
         //vjob[0]->LinePlotAddress(vjobsubmitdialog[0]->LinePlot());
       //vjob[0]->start();

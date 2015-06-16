@@ -28,9 +28,8 @@
 #endif
 
 #include "ui_JobSubmitDialog.h"
-#include "Job.h"
 
-#include "JobWorker.h"
+#include "JobThread.h"
 
 
 //This is repeated on ui_JobSubmitDialog
@@ -40,7 +39,7 @@ public QDialog
 	Q_OBJECT
 
     public:
-        JobSubmitDialog(Job &job_, QWidget *parent = 0);
+        JobSubmitDialog(QWidget *parent = 0);
         MsgWindow& ResMsgWindow() {return *ui->ResidualMsg;}
         vtkPlot & LinePlot(){return *line;}
         AddThread(JobThread &tr){thread=&tr;}
@@ -49,6 +48,11 @@ public QDialog
     private slots:
         void StartStopJob();
 
+    public slots:
+        void AddString(const string &str){
+            ui->ResidualMsg->AddString(str);
+            //cout << str<<endl;
+            this->update();}
 
     private:
 

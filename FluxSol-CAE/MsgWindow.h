@@ -14,7 +14,7 @@ class MsgWindow: public QTextEdit
 public:
     MsgWindow(){};
     MsgWindow(QWidget *parent = 0);
-    AddString(const std::string str)
+    AddString(const std::string &str)
     {
         QString temp(QString::fromStdString(str));
         //QString temp("hola");

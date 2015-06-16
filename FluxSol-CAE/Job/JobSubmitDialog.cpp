@@ -1,7 +1,7 @@
 #include "JobSubmitDialog.h"
 
 
-JobSubmitDialog::JobSubmitDialog(Job &job_, QWidget *parent)
+JobSubmitDialog::JobSubmitDialog(QWidget *parent)
 :QDialog(parent)
 {
 
@@ -55,8 +55,18 @@ void JobSubmitDialog::StartStopJob()
     else
     {
         ui->ResidualMsg->AddString("Job Submitted...\n");
+        //connect(&thread->WorkerT(), SIGNAL(AddMsg(string)), this, SLOT(AddString(string)),Qt::QueuedConnection);
+
+        //connect(&thread->WorkerT(), SIGNAL(AddMsg(string)), this, SLOT(AddString(string)));
+
+        emit thread->WorkerT().AddMsg("Test\n");
+        //thread->Thread()->start();
+        //thread->WorkerT().Solve();
+
+        emit thread->WorkerT().AddMsg("Solving Model\n");
+
+        thread->WorkerT().moveToThread(thread->Thread());
         thread->Thread()->start();
-        //job->start();
         ui->StartStopButton->setText(tr("Stop"));
         cout << "Stop Cout"<<endl;
     }
