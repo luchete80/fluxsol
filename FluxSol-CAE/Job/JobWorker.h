@@ -63,6 +63,7 @@ public slots:
     signals:
     void resultReady(const QString &result);
     void DrawChart();
+    void ChgButton(const string &str);
     void AddMsg(const string &str);
     void statusChanged( const string &str);
 };

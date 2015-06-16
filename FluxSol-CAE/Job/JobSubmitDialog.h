@@ -29,39 +29,42 @@
 
 #include "ui_JobSubmitDialog.h"
 
+#include "JobWorker.h"
+#include "Model.h"
 #include "JobThread.h"
 
 
 //This is repeated on ui_JobSubmitDialog
 class JobSubmitDialog:
-public QDialog
+public QDialog,
+private Ui::JobSubmitDialog
 {
 	Q_OBJECT
 
     public:
-        JobSubmitDialog(QWidget *parent = 0);
-        MsgWindow& ResMsgWindow() {return *ui->ResidualMsg;}
+        JobSubmitDialog(const CFDModel &model_,QWidget *parent = 0 );
+        MsgWindow& ResMsgWindow() {return *ResidualMsg;}
         vtkPlot & LinePlot(){return *line;}
-        AddThread(JobThread &tr){thread=&tr;}
-        Ui_JobSubmitDialog *ui;
+        //Ui_JobSubmitDialog *ui;
 
     private slots:
         void StartStopJob();
 
     public slots:
         void AddString(const string &str){
-            ui->ResidualMsg->AddString(str);
-            //cout << str<<endl;
+            //ResidualMsg->AddString(str);
+            cout << str<<endl;
             this->update();}
+        void ChangeStartStopButton (const string &str){StartStopButton->setText(QString::fromUtf8(str.c_str()));}
 
     private:
 
     protected:
 
 
-
+        bool stopped;
+        int iter;
         //Job *job;     //WHIS IS OLD
-        JobThread *thread;
         // Create a table with some points in it
       vtkSmartPointer<vtkTable> table;
       vtkSmartPointer<vtkFloatArray> arrX;
@@ -70,11 +73,18 @@ public QDialog
 
       vtkPlot *line;
 
+      CFDModel *model;
+
+      QThread *thread;
+      JobThread *jobthread;
+      Worker *worker;
+
         // Add multiple line plots, setting the colors etc
       vtkSmartPointer<vtkChartXY> chart;
     void InitResChart();
 
     void DrawResChart();
+    void DrawResChartAlt();
 
     vtkSmartPointer<vtkOpenGLRenderer> ren; //TO MODIFY, create chart object
     vtkSmartPointer<vtkRenderWindow> renderWindow;

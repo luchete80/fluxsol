@@ -9,6 +9,8 @@ void Worker::Solve()
     {
         //cout << "inside while"<<endl;
         model->SolveIter();
+
+        if (iter==100)  emit DrawChart();
         //msgwin->AddString(model->ItLog());
         //msgwin->AddString("Hola\n");
         //cout << "iter: " <<iter<<endl;
@@ -20,8 +22,13 @@ void Worker::Solve()
         //workerThread.msleep(10);
         //emit DrawChart();
         //emit AddMsg(model->ItLog());
+        string str="test\n";
+        emit ChgButton(str);
+        QCoreApplication::processEvents();
         model_itlog+="Iter \n";
-        //emit AddMsg(model->ItLog());
+        //cout << "Test"<<endl;
+        //cout << model->ItLog() <<endl;
+        //emit AdTdMsg(model->ItLog());
         emit AddMsg(model_itlog);
         //QCoreApplication::processEvents();
         //emit statusChanged( model->ItLog());

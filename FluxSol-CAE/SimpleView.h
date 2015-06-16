@@ -146,7 +146,6 @@
 #include "GraphicModel.h"
 
 #include <vector>
-#include "./Job/JobThread.h"
 
 using namespace std;
 
@@ -226,9 +225,7 @@ private:
     //SINCE IT CAn BE LOADED OR RUN FROM AN ArCHIVE (IF IDE IS NOT READY)
     std::vector < CFDModel* > vmodel;    //All models: TO MODIFY, MUST BE INSIDE IDE
     std::vector <JobSubmitDialog *> vjobsubmitdialog;
-//    std::vector <Job *> vjob;
 
-    std::vector <JobThread *> jobthread;
 
     int modelcount;
 

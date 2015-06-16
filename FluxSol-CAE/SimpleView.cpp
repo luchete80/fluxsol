@@ -1040,25 +1040,27 @@ void SimpleView::slotImportIn()
       //this->vmodel.push_back(new GraphicCFDModel(model));
       this->vmodel.push_back(new GraphicCFDModel(fileName.toStdString()));
       this->vmodel[0]->SolveIter();
-      ui->MsgWin->AddString(this->vmodel[0]->ItLog());
+      //ui->MsgWin->AddString(this->vmodel[0]->ItLog());
 
       //vjob.push_back(new Job(*vmodel[0]) );
-      vjobsubmitdialog.push_back(new JobSubmitDialog (this) );
+      vjobsubmitdialog.push_back(new JobSubmitDialog (*this->vmodel[0] , this)); //Model and parent
+      vjobsubmitdialog[0]->exec();
+      //vjobsubmitdialog[0]->show();
 
 
-        jobthread.push_back(new JobThread(*vmodel[0]) );
-        //jobthread[0]->AddMsgWin(*vjobsubmitdialog[0]->ui->ResidualMsg);
-
-        jobthread[0]->WorkerT().AddMsgWin(*vjobsubmitdialog[0]->ui->ResidualMsg);
-      vjobsubmitdialog[0]->AddThread(*jobthread[0]);
-
-
-      vjobsubmitdialog[0]->show();
-
-    connect(jobthread[0]->Thread(), SIGNAL(started()), vjobsubmitdialog[0], SLOT(AddString("Hi  ")));
-    connect(&jobthread[0]->WorkerT(), SIGNAL(AddMsg(string)), vjobsubmitdialog[0], SLOT(AddString(string)),Qt::QueuedConnection);
-    emit jobthread[0]->WorkerT().AddMsg("TEST...");
-    QCoreApplication::processEvents();
+//        jobthread.push_back(new JobThread(*vmodel[0]) );
+//        //jobthread[0]->AddMsgWin(*vjobsubmitdialog[0]->ui->ResidualMsg);
+//
+//        jobthread[0]->WorkerT().AddMsgWin(*vjobsubmitdialog[0]->ui->ResidualMsg);
+//      vjobsubmitdialog[0]->AddThread(*jobthread[0]);
+//
+//
+//      vjobsubmitdialog[0]->show();
+//
+//    connect(jobthread[0]->Thread(), SIGNAL(started()), vjobsubmitdialog[0], SLOT(AddString("Hi  ")));
+//    connect(&jobthread[0]->WorkerT(), SIGNAL(AddMsg(string)), vjobsubmitdialog[0], SLOT(AddString(string)),Qt::QueuedConnection);
+//    emit jobthread[0]->WorkerT().AddMsg("TEST...");
+//    QCoreApplication::processEvents();
         //vjob[0]->MsgWinAddress(vjobsubmitdialog[0]->ResMsgWindow());
         //vjob[0]->LinePlotAddress(vjobsubmitdialog[0]->LinePlot());
       //vjob[0]->start();
