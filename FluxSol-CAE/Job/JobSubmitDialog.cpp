@@ -69,6 +69,14 @@ JobSubmitDialog::JobSubmitDialog(const CFDModel &model_,QWidget *parent)
 
     connect(worker, SIGNAL(finished()), worker, SLOT(deleteLater()));
     connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+
+    qvtkResChart->InitVTK();
+    qvtkResChart->InitChart();
+    qvtkResChart->Draw();
+
+    qvtkResChart->GetRenderWindow()->Render();
+
 }
 
 void JobSubmitDialog::StartStopJob()
@@ -98,8 +106,8 @@ void JobSubmitDialog::StartStopJob()
         //connect(&thread->WorkerT(), SIGNAL(AddMsg(string)), this, SLOT(AddString(string)));
 
         //emit thread->WorkerT().AddMsg("Test\n");
-        //thread->start();
-        jobthread->start();
+        thread->start();
+        //jobthread->start();
         //thread->WorkerT().Solve();
         cout << "COUT"<<endl;
 

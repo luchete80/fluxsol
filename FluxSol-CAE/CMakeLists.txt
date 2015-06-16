@@ -30,7 +30,9 @@ find_package(OpenGL)
 
 include_directories(.)
 include_directories("${PROJECT_SOURCE_DIR}")
+include_directories("${PROJECT_SOURCE_DIR}/Job")
 include_directories("${PROJECT_SOURCE_DIR}/Mesh")
+include_directories("${PROJECT_SOURCE_DIR}/QVTKResWidget")
 include_directories("${PROJECT_SOURCE_DIR}/Qt")
 
 #including FluxSol Library
@@ -142,6 +144,8 @@ set (Meshlib_Srcs "${PROJECT_SOURCE_DIR}/Mesh/ImportMesh.cpp")
 set (Joblib_Srcs 	"${PROJECT_SOURCE_DIR}/Job/JobSubmitDialog.cpp"
 					"${PROJECT_SOURCE_DIR}/Job/JobWorker.cpp"
 					"${PROJECT_SOURCE_DIR}/Job/JobThread.cpp") 
+					
+set (ResWidget_Srcs "${PROJECT_SOURCE_DIR}/QVTKResWidget/QVTKResWidget.cpp") 
 		  
 set( Hdrs 	${PROJECT_SOURCE_DIR}/Job/JobSubmitDialog.h
 			${PROJECT_SOURCE_DIR}/Job/JobWorker.h
@@ -222,6 +226,7 @@ if(VTK_QT_VERSION VERSION_GREATER "4")
 	#$<TARGET_OBJECTS:Mesh>
 	${Meshlib_Srcs}
 	${Joblib_Srcs}
+	${ResWidget_Srcs}
 	${Hdrs} 
 	${UI_Srcs} 	#GENERA el ui_SimpleView.h
 	${MOC_Hdrs} 

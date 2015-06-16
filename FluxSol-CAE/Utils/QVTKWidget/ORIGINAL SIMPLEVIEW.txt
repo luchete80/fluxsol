@@ -1,0 +1,171 @@
+
+// Constructor
+SimpleView::SimpleView()
+{
+	.....
+	
+  /////
+
+  // VTK Renderer
+  //VTK_CREATE(vtkRenderer, ren);
+
+//#if VTK_MAJOR_VERSION <= 5
+//  vtkSmartPointer<vtkRenderer> ren =
+//    vtkSmartPointer<vtkRenderer>::New();
+//#else
+  this-> ren =
+    vtkSmartPointer<vtkOpenGLRenderer>::New();
+    //vtkSmartPointer<vtkRenderer>::New();
+//#endif
+
+
+    // WINDOW AND INTERACTOR
+  vtkSmartPointer<vtkRenderWindow> renderWindow =
+    vtkSmartPointer<vtkRenderWindow>::New();
+  renderWindow->AddRenderer(ren);
+
+
+
+  this->renderWindowInteractor =
+    vtkSmartPointer<vtkRenderWindowInteractor>::New();
+
+
+   _vtkAxes =
+    vtkSmartPointer<vtkAxesActor>::New();
+
+    _vtkOriginAxes =
+    vtkSmartPointer<vtkAxesActor>::New();
+
+
+  _vtkOriginAxes->AxisLabelsOff();
+  _vtkOriginAxes->SetTipTypeToSphere();
+  _vtkOriginAxes->SetNormalizedTipLength(0.,0.,0.);
+
+  //////////////////////////// EX
+
+  ren->SetBackground(.2, .3, .4);
+
+  ren->GradientBackgroundOn();
+  //ren->SetBackground(0.6,0.7,1.);
+  ren->SetBackground(1.,1.,1.);
+  ren->SetBackground2(0,0,1);
+
+
+  ren->AddActor2D ( textFluxSolTitleActor );
+  textFluxSolTitleActor->SetInput ( "FluxSol" );
+   double xpos,ypos;
+
+  //GetRenderWindow()->GetSize()
+  cout << "xsize: "<<this->ui->qvtkWidget->GetRenderWindow()->GetSize()[0]<<endl;
+  cout << "ysize: "<<this->ui->qvtkWidget->GetRenderWindow()->GetSize()[1]<<endl;
+
+    double xsize=(double)(this->ui->qvtkWidget->GetRenderWindow()->GetSize()[0]);
+    xpos=xsize*0.95;
+  cout << "xsize" << xsize << "xpos" <<xpos<<endl;
+ textFluxSolTitleActor->SetPosition ( xpos, 200);
+//  textActor->GetTextProperty()->SetColor ( 0.08,0.0,0.4 );
+//  textActor->SetInput ( "v0.0.1" );
+
+
+
+
+
+   // Add Actor to renderer
+
+ renderWindow->Render();	//If i want to obtain coordinates must to activate renderwindows with Render()
+
+  ///// NEED TO DETERMINE AXES WORLD POSITION GIVEN COORDINATES /////
+  double coordinates[3];
+  coordinates[0]=renderWindow->GetSize()[0]*0.9;
+  coordinates[1]=renderWindow->GetSize()[1]*0.1;
+  coordinates[2]=0.01;
+  cout << "Screen Size" << renderWindow->GetSize()[0] << " " << renderWindow->GetSize()[1]<< " " << renderWindow->GetSize()[2]<<endl;
+	cout << "Display Point: "<<coordinates[0] << " "<<coordinates[1]<<" "<<coordinates[2]<<endl;
+  //vtkDebugMacro("GetWorldToDisplayCoordinates: RAS " << worldPoints[0] << ", " << worldPoints[1] << ", " << worldPoints[2])
+
+  ren->SetDisplayPoint(coordinates);
+  //ren->DisplayToView();
+  //ren->GetViewPoint(coordinates);
+  //cout << "View Point: "<<coordinates[0] << " "<<coordinates[1]<<endl;
+  //ren->ViewToWorld();
+  //ren->GetWorldPoint();
+	ren->DisplayToWorld();
+  double worldPt[3];
+  ren->GetWorldPoint(worldPt);
+  cout << "World Point: "<<worldPt[0] << " "<<worldPt[1]<<" "<<worldPt[2]<<endl;
+
+  //double * worldcoor=new double [3];
+  //worldcoor=ren->GetWorldPoint();
+  //delete worldcoor;
+
+  //double displayPt[3];
+  //ren->GetDisplayPoint(displayPt);
+
+    vtkSmartPointer<vtkCallbackCommand> m_pModifiedCallback =
+    vtkSmartPointer<vtkCallbackCommand>::New();
+  m_pModifiedCallback->SetCallback (WindowModifiedCallback);
+  //m_pModifiedCallback->SetClientData(this);
+
+  vtkSmartPointer<vtkCallbackCommand> modifiedCallback =
+    vtkSmartPointer<vtkCallbackCommand>::New();
+  modifiedCallback->SetCallback (CameraModifiedCallback);
+
+  //renderWindow->AddObserver(vtkCommand::ModifiedEvent,m_pModifiedCallback);
+  ren->GetActiveCamera()->AddObserver(vtkCommand::ModifiedEvent,modifiedCallback);
+
+  //Moving axes
+    vtkSmartPointer<vtkTransform> transform =
+    vtkSmartPointer<vtkTransform>::New();
+  //transform->Translate(worldPt);
+  //axes->SetUserTransform(transform);
+
+
+  // VTK/Qt wedded
+  this->ui->qvtkWidget->GetRenderWindow()->AddRenderer(ren);	//Add
+
+  //This is like the example Four Pane Viewer
+  renderWindowInteractor = this->ui->qvtkWidget->GetInteractor();
+
+	// ----------------------- AXES
+//	char *filename="bunny.vtp";
+//          // Read the polydata for the icon
+//      vtkSmartPointer<vtkXMLPolyDataReader> bunnyreader =
+//        vtkSmartPointer<vtkXMLPolyDataReader>::New();
+//      reader->SetFileName(filename);
+//
+//      vtkSmartPointer<vtkDataSetMapper> iconMapper =
+//        vtkSmartPointer<vtkDataSetMapper>::New();
+//      iconMapper->SetInputConnection(bunnyreader->GetOutputPort());
+//
+//      vtkSmartPointer<vtkActor> iconActor =
+//        vtkSmartPointer<vtkActor>::New();
+//      iconActor->SetMapper(iconMapper);
+
+    _vtkAxesWidget =
+    vtkSmartPointer<vtkOrientationMarkerWidget>::New();
+
+    _vtkAxesWidget->SetDefaultRenderer(ren);
+    _vtkAxesWidget->SetOutlineColor( 0.9300, 0.5700, 0.1300 );
+    _vtkAxesWidget->SetOrientationMarker( _vtkAxes );
+    //widget->SetOrientationMarker( iconActor );
+    _vtkAxesWidget->SetInteractor(renderWindowInteractor );
+    _vtkAxesWidget->SetViewport( 0., 0., 0.34, 0.34 );
+    _vtkAxesWidget->SetEnabled( 1 );
+    _vtkAxesWidget->InteractiveOn();
+
+
+
+	....
+	CONTROLS
+
+    vtkSmartPointer<vtkImageInteractionCallback1> callback =
+    vtkSmartPointer<vtkImageInteractionCallback1>::New();
+
+    vtkSmartPointer<vtkWindowsModInteractionCallback> callbackwinmod =
+    vtkSmartPointer<vtkWindowsModInteractionCallback>::New();
+
+	callback->SetRenderer(this->ren);
+
+	this->ui->qvtkWidget->GetRenderWindow()->AddObserver( vtkCommand::ModifiedEvent, callbackwinmod );
+
+
