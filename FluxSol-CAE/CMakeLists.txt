@@ -145,7 +145,9 @@ set (Joblib_Srcs 	"${PROJECT_SOURCE_DIR}/Job/JobSubmitDialog.cpp"
 					"${PROJECT_SOURCE_DIR}/Job/JobWorker.cpp"
 					"${PROJECT_SOURCE_DIR}/Job/JobThread.cpp") 
 					
-set (ResWidget_Srcs "${PROJECT_SOURCE_DIR}/QVTKResWidget/QVTKResWidget.cpp") 
+set (ResWidget_Srcs "${PROJECT_SOURCE_DIR}/QVTKResWidget/QVTKResWidget.cpp"
+					"${PROJECT_SOURCE_DIR}/QVTKResWidget/ResWidgetWorker.cpp"
+					) 
 		  
 set( Hdrs 	${PROJECT_SOURCE_DIR}/Job/JobSubmitDialog.h
 			${PROJECT_SOURCE_DIR}/Job/JobWorker.h

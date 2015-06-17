@@ -49,6 +49,18 @@ JobSubmitDialog::JobSubmitDialog(const CFDModel &model_,QWidget *parent)
 //
     thread=new QThread();
     worker=new Worker(model_);
+
+
+    // RESIDUAL THREADS AND WORKER
+    resworker = new ResWidgetWorker(*qvtkResChart);  //MUST BW CONSTRUCTED WITH MODEL TO GET RESIDUALS FROM IT
+    worker->AddResWorker(*resworker);
+
+    resworker->moveToThread(qvtkResChart->Thread());
+    QObject::connect (resworker, SIGNAL(DrawTest()), qvtkResChart, SLOT(DrawAlt()),Qt::QueuedConnection);
+    QObject::connect (qvtkResChart->Thread(), SIGNAL(started()), qvtkResChart, SLOT(DrawAlt()));
+
+
+
 //
 //
 //    //connect(worker, SIGNAL(AddMsg(string)), this, SLOT(AddString(string)),Qt::QueuedConnection);
@@ -75,7 +87,9 @@ JobSubmitDialog::JobSubmitDialog(const CFDModel &model_,QWidget *parent)
     qvtkResChart->InitChart();
     qvtkResChart->Draw();
 
-    qvtkResChart->GetRenderWindow()->Render();
+    qvtkResChart->Thread()->start();
+    emit resworker->DrawTest();
+
 
 }
 
@@ -93,6 +107,7 @@ void JobSubmitDialog::StartStopJob()
     }
     else
     {
+        //qvtkResChart->DrawAlt();
         //update();
         ResidualMsg->AddString("Job Submitted...\n");
         AddString("Job Submitted 2 ...\n");
@@ -106,6 +121,9 @@ void JobSubmitDialog::StartStopJob()
         //connect(&thread->WorkerT(), SIGNAL(AddMsg(string)), this, SLOT(AddString(string)));
 
         //emit thread->WorkerT().AddMsg("Test\n");
+        qvtkResChart->Thread()->start();
+        emit resworker->DrawTest();
+
         thread->start();
         //jobthread->start();
         //thread->WorkerT().Solve();

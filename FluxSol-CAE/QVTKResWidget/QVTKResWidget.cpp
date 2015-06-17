@@ -1,124 +1,20 @@
 #include "QVTKResWidget.h"
 
 QVTKResWidget::QVTKResWidget()
+:QVTKWidget()
 {
 
     InitVTK();
     InitChart();
-    //Draw();
-
-   // ORIGINALLY IN SUBMITDIALOG
-//            ren =
-//    vtkSmartPointer<vtkOpenGLRenderer>::New();
-//
-//
-//    // WINDOW AND INTERACTOR
-//  renderWindow =
-//    vtkSmartPointer<vtkRenderWindow>::New();
-//
-//  //renderWindow->AddRenderer(ren);
-//
-//
-//  ren->SetBackground(.2, .3, .4);
-//
-//  ren->GradientBackgroundOn();
-//  //ren->SetBackground(0.6,0.7,1.);
-//  ren->SetBackground(1.,1.,1.);
-//  ren->SetBackground2(0,0,1);
-//
-//    renderWindow->Render();     //If i want to obtain coordinates must to activate renderwindows with Render()
-//
-//    // VTK/Qt wedded
-//    this->ui->qvtkResChart->GetRenderWindow()->AddRenderer(ren);        //Add
-//
-//    //This is like the example Four Pane Viewer
-//    renderWindowInteractor = this->ui->qvtkResChart->GetInteractor();
-//
-//    InitResChart();
-//    DrawResChart();
-
-// IN INIT WAS
-//
-//  // Create a table with some points in it
-//  table =
-//    vtkSmartPointer<vtkTable>::New();
-//
-//  arrX =
-//    vtkSmartPointer<vtkFloatArray>::New();
-//  arrX->SetName("X Axis");
-//  table->AddColumn(arrX);
-//
-//  arrC =
-//    vtkSmartPointer<vtkFloatArray>::New();
-//  arrC->SetName("Cosine");
-//  table->AddColumn(arrC);
-//
-//  arrS =
-//    vtkSmartPointer<vtkFloatArray>::New();
-//  arrS->SetName("Sine");
-//  table->AddColumn(arrS);
-//
-//  // Set up the view
-//  view =
-//    vtkSmartPointer<vtkContextView>::New();
-//
-//  // Add multiple line plots, setting the colors etc
-// chart =
-//    vtkSmartPointer<vtkChartXY>::New();
-//
-//    view->GetScene()->AddItem(chart);
-//
-//    line = chart->AddPlot(vtkChart::LINE);
-//
-//
-//    //      TEST; THIS IS NOT ART OF THE EXAMPLE
-//    //view->SetRenderer(ren);
-//
-//  view->GetRenderer()->SetBackground(1.0, 1.0, 1.0);
-//
-//
-//  //view->GetRenderWindow()->SetMultiSamples(0);
-//
-//
-//
-//  //view->GetRenderWindow()->Render();
-//  //view->GetInteractor()->GetRenderWindow()->Render();
-//
-// //   uisubmitdialog.qvtkResChart->GetRenderWindow()->AddRenderer(view->GetRenderer());
-//
-//  //This in tjeory works
-//    //THIS LINE IS OK FOR SHOW ONLY WITHOUR INTERACTION
-//
-//    //ui->qvtkResChart->GetRenderWindow()->AddRenderer(view->GetRenderer());
-//
-//
-//
-//    //This is EXPLAINED
-//    view->SetInteractor(renderWindowInteractor);
-//    ui->qvtkResChart->SetRenderWindow(view->GetRenderWindow());
-//
-//
-//
-//    //THIS WAS THE ORIGINAL VTK EXAMPLE FILE
-//    //DOES NOT WORK IN QVTKWIDGET
-//    // Start interactor
-//    //  view->GetInteractor()->Initialize();
-//    //  view->GetInteractor()->Start();
-//
-//
-//
-//  //Mode with actor
-//    //vtkSmartPointer <vtkAxesActor> actor_grid = vtkSmartPointer::New();
-//    //VTK_CREATE(vtkActor, actor_grid);
-//        //actor_grid->GetScene()->AddItem(chart);
-//        //ren->AddActor(actor_grid);
+    thread = new QThread();
 }
 QVTKResWidget::QVTKResWidget(QWidget* parent)
+:QVTKWidget(parent)
 {
 
     InitVTK();
     InitChart();
-    //Draw();
+    thread = new QThread();
 
 }
 
@@ -150,10 +46,12 @@ void QVTKResWidget::InitVTK()
   ren->SetBackground(1.,1.,1.);
   ren->SetBackground2(0,0,1);
 
-    renderWindow->Render();	//If i want to obtain coordinates must to activate renderwindows with Render()
+    //renderWindow->Render();	//If i want to obtain coordinates must to activate renderwindows with Render()
 
     // VTK/Qt wedded
     GetRenderWindow()->AddRenderer(ren);	//Add
+
+    //GetRenderWindow()->Render();
 
     //This is like the example Four Pane Viewer
     renderWindowInteractor = GetInteractor();
@@ -204,7 +102,12 @@ void QVTKResWidget::InitVTK()
 
     //This is EXPLAINED
     view->SetInteractor(renderWindowInteractor);
-    this->SetRenderWindow(view->GetRenderWindow());
+    SetRenderWindow(view->GetRenderWindow());
+
+    //SetRenderWindow(GetRenderWindow());
+    //GetRenderWindow()->Render();
+
+    //view->GetRenderWindow()->Render();
 
 }
 
@@ -292,8 +195,6 @@ void QVTKResWidget::Draw()
   // (ifdef-ed out on Windows because DASH_LINE does not work on Windows
   //  machines with built-in Intel HD graphics card...)
 
-  view->GetRenderWindow()->Render();
-
 }
 
 void QVTKResWidget::DrawAlt()
@@ -338,7 +239,7 @@ void QVTKResWidget::DrawAlt()
   // (ifdef-ed out on Windows because DASH_LINE does not work on Windows
   //  machines with built-in Intel HD graphics card...)
 
-  view->GetRenderWindow()->Render();
+  //view->GetRenderWindow()->Render();
 
 }
 

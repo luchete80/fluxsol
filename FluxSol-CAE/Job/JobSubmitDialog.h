@@ -76,8 +76,11 @@ private Ui::JobSubmitDialog
       CFDModel *model;
 
       QThread *thread;
+
       JobThread *jobthread;
-      Worker *worker;
+
+      Worker *worker;                   //MAIN WORKER
+      ResWidgetWorker *resworker;       //To draw residuals, this is created with NEW
 
         // Add multiple line plots, setting the colors etc
       vtkSmartPointer<vtkChartXY> chart;

@@ -26,6 +26,10 @@ void Worker::Solve()
         emit ChgButton(str);
         QCoreApplication::processEvents();
         model_itlog+="Iter \n";
+
+        //IF RESWORKTER THREAD IS RUNNING
+        emit resworker->DrawTest();
+
         //cout << "Test"<<endl;
         //cout << model->ItLog() <<endl;
         //emit AdTdMsg(model->ItLog());

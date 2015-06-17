@@ -8,6 +8,8 @@
 #include "MsgWindow.h"
 #include "ui_JobSubmitDialog.h"
 
+#include "ResWidgetWorker.h"        //To Draw residuals
+
 //#include "JobSubmitDialog.h"
 
 
@@ -25,6 +27,8 @@ class Worker : public QObject
     int iter;
     MsgWindow *msgwin;
     string model_itlog;
+
+    ResWidgetWorker *resworker;
 
 public slots:
     void doWork(const QString &parameter) {
@@ -47,6 +51,7 @@ public slots:
 
     void AddMsgWin(MsgWindow &mw){msgwin=&mw;}
     void AddUi(Ui_JobSubmitDialog &ui_){ui=&ui_;}
+    void AddResWorker(const ResWidgetWorker &rw){resworker=&rw;}
 
     Worker()
     {

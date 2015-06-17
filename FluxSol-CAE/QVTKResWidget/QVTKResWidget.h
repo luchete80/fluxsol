@@ -69,10 +69,13 @@ public QVTKWidget
 
     void InitVTK();
     void InitChart();
-    void Draw();
-    void DrawAlt();
+
+    void StartThread(){thread->start();}
+    QThread *Thread(){return thread;}
 
     public slots:
+    void Draw();
+    void DrawAlt();
 
 };
 
