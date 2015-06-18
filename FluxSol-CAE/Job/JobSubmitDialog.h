@@ -83,11 +83,7 @@ private Ui::JobSubmitDialog
       ResWidgetWorker *resworker;       //To draw residuals, this is created with NEW
 
         // Add multiple line plots, setting the colors etc
-      vtkSmartPointer<vtkChartXY> chart;
-    void InitResChart();
 
-    void DrawResChart();
-    void DrawResChartAlt();
 
     vtkSmartPointer<vtkOpenGLRenderer> ren; //TO MODIFY, create chart object
     vtkSmartPointer<vtkRenderWindow> renderWindow;

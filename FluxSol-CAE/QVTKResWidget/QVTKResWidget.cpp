@@ -1,5 +1,18 @@
 #include "QVTKResWidget.h"
 
+void MyThread::run()
+{
+    int i=0;
+
+    while (i<100)
+    {
+        emit Draw();
+        sleep (1);
+        cout << "Line " << i <<endl;
+        i++;
+    }
+}
+
 QVTKResWidget::QVTKResWidget()
 :QVTKWidget()
 {
@@ -15,6 +28,12 @@ QVTKResWidget::QVTKResWidget(QWidget* parent)
     InitVTK();
     InitChart();
     thread = new QThread();
+
+    mythread=new MyThread();
+
+    connect (mythread,SIGNAL(Draw()),this,SLOT(DrawAlt()));
+
+    //mythread->start();
 
 }
 
@@ -241,6 +260,24 @@ void QVTKResWidget::DrawAlt()
 
   //view->GetRenderWindow()->Render();
 
+  update();
+
 }
 
 
+void QVTKResWidget::Draw(vector < vector <double> > &r)  //Standard residual form, SLOW
+{
+
+}
+void QVTKResWidget::DrawLine(vector <double> &r)            //Single Line
+{
+
+}
+void QVTKResWidget::AddRes (vector <double > &r)           //And Draws it
+{
+
+}
+void QVTKResWidget::DrawRes()                             //Draws existing vector
+{
+
+}

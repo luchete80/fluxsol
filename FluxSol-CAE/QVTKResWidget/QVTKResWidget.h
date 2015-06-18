@@ -37,10 +37,35 @@
 #include <vtkOpenGLRenderer.h>
 #endif
 
+using namespace std;
+
+
+//TEST
+class MyThread:
+    public QThread
+    {
+
+        Q_OBJECT
+    public:
+        Mythread(){};
+
+
+    signals:
+        void Draw();
+
+    protected:
+        void run();
+
+
+    };
+
+
 
 class QVTKResWidget:
 public QVTKWidget
 {
+    Q_OBJECT
+
     protected:
 
       vtkSmartPointer<vtkTable> table;
@@ -51,6 +76,8 @@ public QVTKWidget
       vtkPlot *line;
 
       QThread *thread;
+
+      MyThread *mythread;
 
       //Worker *worker;
         // Add multiple line plots, setting the colors etc
@@ -63,19 +90,28 @@ public QVTKWidget
 
         vtkSmartPointer<vtkContextView> view;       //Chart View
 
+
+        //RESIDUALS
+        vector < vector <double> > res;     //TO MODIFY EVENTUALLY
+
     public:
-    QVTKResWidget();
-    QVTKResWidget(QWidget* parent=0);
+        QVTKResWidget();
+        QVTKResWidget(QWidget* parent=0);
 
-    void InitVTK();
-    void InitChart();
+        void InitVTK();
+        void InitChart();
 
-    void StartThread(){thread->start();}
-    QThread *Thread(){return thread;}
+        void StartThread(){thread->start();}
+        QThread *Thread(){return thread;}
 
     public slots:
-    void Draw();
-    void DrawAlt();
+        void Draw();
+        void DrawAlt();
+
+        void Draw(vector < vector <double> > &);  //Standard residual form, SLOW
+        void DrawLine(vector <double> &);            //Single Line
+        void AddRes (vector <double > &);           //And Draws it
+        void DrawRes();                             //Draws existing vector
 
 };
 

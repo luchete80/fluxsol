@@ -22,6 +22,8 @@ class ResWidgetWorker:
     signals:
         void DrawResiduals();       //
         void DrawTest();
+        void DrawTest2();
+        void AddRes(vector <double> &);
 
 };
 
