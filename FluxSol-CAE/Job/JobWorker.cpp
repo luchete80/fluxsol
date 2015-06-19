@@ -26,6 +26,7 @@ void Worker::Solve()
         model_itlog+="Iter \n";
 
         //IF RESWORKER THREAD IS RUNNING
+        //TEST
         //if (iter==100) emit resworker->DrawTest();
         //if (iter==200) emit resworker->DrawTest2();
 
