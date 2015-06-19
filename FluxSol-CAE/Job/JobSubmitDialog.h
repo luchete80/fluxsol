@@ -33,6 +33,7 @@
 #include "Model.h"
 #include "JobThread.h"
 
+#include <vector>
 
 //This is repeated on ui_JobSubmitDialog
 class JobSubmitDialog:
@@ -94,5 +95,10 @@ private Ui::JobSubmitDialog
 
 
 };
+
+//// This macro call should be put in one of your .h files
+//Q_DECLARE_METATYPE(std::string)
+//Q_DECLARE_METATYPE(std::vector)
+
 
 #endif

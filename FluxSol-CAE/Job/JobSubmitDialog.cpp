@@ -1,6 +1,8 @@
 #include "JobSubmitDialog.h"
 #include "JobWorker.h"
+#include <vector>
 
+using namespace std;
 
 JobSubmitDialog::JobSubmitDialog(const CFDModel &model_,QWidget *parent)
 :QDialog(parent)
@@ -22,11 +24,16 @@ JobSubmitDialog::JobSubmitDialog(const CFDModel &model_,QWidget *parent)
     resworker = new ResWidgetWorker(*qvtkResChart);  //MUST BW CONSTRUCTED WITH MODEL TO GET RESIDUALS FROM IT
     worker->AddResWorker(*resworker);
 
+    // You should call this function before any (queued)
+    // signal/slot connection involving the type
+
+    //qRegisterMetaType<std::vector>();
+
     resworker->moveToThread(qvtkResChart->Thread());
     //resworker->moveToThread(thread);
     QObject::connect (resworker, SIGNAL(DrawTest()), qvtkResChart, SLOT(DrawAlt()));
     QObject::connect (resworker, SIGNAL(DrawTest2()), qvtkResChart, SLOT(Draw()));
-    QObject::connect (resworker, SIGNAL(AddRes(vector <double>&)), qvtkResChart, SLOT(AddRes(vector <double>&)));
+    QObject::connect (resworker, SIGNAL(AddRes(vector<double>)), qvtkResChart, SLOT(AddRes(vector<double>)));
 
     //QObject::connect (qvtkResChart->Thread(), SIGNAL(started()), qvtkResChart, SLOT(DrawAlt()));
 
@@ -56,7 +63,7 @@ JobSubmitDialog::JobSubmitDialog(const CFDModel &model_,QWidget *parent)
 
     qvtkResChart->InitVTK();
     qvtkResChart->InitChart();
-    qvtkResChart->Draw();
+    //qvtkResChart->Draw();
 
     qvtkResChart->Thread()->start();
 

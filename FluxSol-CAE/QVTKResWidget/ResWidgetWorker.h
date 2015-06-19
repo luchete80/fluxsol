@@ -4,6 +4,8 @@
 #include "QVTKResWidget.h"
 #include <vector>
 
+using namespace std;
+
 class ResWidgetWorker:
     public QObject
 {
@@ -23,7 +25,7 @@ class ResWidgetWorker:
         void DrawResiduals();       //
         void DrawTest();
         void DrawTest2();
-        void AddRes(vector <double> &);
+        void AddRes(vector <double>&);
 
 };
 

@@ -68,6 +68,7 @@ public QVTKWidget
 
     protected:
 
+        int numPoints;
       vtkSmartPointer<vtkTable> table;
       vtkSmartPointer<vtkFloatArray> arrX;
       vtkSmartPointer<vtkFloatArray> arrC;
@@ -95,7 +96,6 @@ public QVTKWidget
         vector < vector <double> > res;     //TO MODIFY EVENTUALLY
 
     public:
-        QVTKResWidget();
         QVTKResWidget(QWidget* parent=0);
 
         void InitVTK();

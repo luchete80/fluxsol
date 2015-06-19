@@ -172,6 +172,9 @@ class CFDModel:public Model
 //	const _CC_Fv_Field <Vec3D> &U()const{return this->U;}
 
 
+    public:
+    EqnSystem <Vec3D> U_Eqn(){return UEqn;}
+
 };
 
 class ThermalModel:public Model
