@@ -19,8 +19,9 @@ class FluentMesh:public  Fv_CC_Grid {
 private:
     vector< vector<double> > nodes;
     vector< vector<int> > faces;
-    //vector< vector<int> > patches;
+    vector<string> patch_name;
     vector< vector<int> > connectivity;
+    vector<Patch> vpatch;
 
 public:
     FluentMesh(const string &file);

@@ -3,10 +3,14 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+//#include <pair>
+#include <set>
+#include <map>
 #include <stdlib.h>
 
 #include "FluentMesh.h"
 #include "FvGrid.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -15,12 +19,18 @@ using namespace FluxSol;
 vector< vector<double> > process_nodes(const vector<string> &data);
 vector< vector<int> > process_cells(const vector<string> &data);
 vector< vector<int> > cells_connectivity(const vector< vector<int> > &raw_data, const int &cellqty);
-void process_patches(const vector<string> &data);
+vector<string> patches_names(const vector<string> &data);
+vector<Patch> create_patches(const vector<string> &data, const vector<string> &pname);
+
+struct myclass {
+  bool operator() (int i,int j) { return (i<j);}
+} myobject;
 
 FluentMesh::FluentMesh(const string &file) {
     vector<string> data;
     fstream mesh_input(file.c_str());
     string line;
+    int patch_qty;
 
     cout << "\nReading Fluent Mesh..." << endl;
 
@@ -31,7 +41,6 @@ FluentMesh::FluentMesh(const string &file) {
 
     nodes=process_nodes(data);
     connectivity=process_cells(data);
-    //patches=process_patches(data);
 
     cout << "[I] Creating cells..." << endl;
     for (int idcell=0; idcell<connectivity.size(); idcell++) {
@@ -56,14 +65,21 @@ FluentMesh::FluentMesh(const string &file) {
     this->inicie_nodes=true;
     this->inicie_cells=true;
 
-    cout << "[I] Assigning Faces ..." << endl;
+    cout << "[I] Assigning Faces..." << endl;
     Iniciar_Caras();
 
-    cout << "[I] Assigning Neighbours ..."<<endl;
+    cout << "[I] Assigning Neighbours..." << endl;
     AssignNeigboursCells();
 
-    cout << "[I] Calculating Volumes ..."<<endl;
+    cout << "[I] Calculating Volumes..." << endl;
     CalcCellVolumes();
+
+    cout << "[I] Creating Patches..." << endl;
+    patch_name=patches_names(data);
+    vpatch=create_patches(data, patch_name);
+
+
+
 
 }
 
@@ -131,13 +147,6 @@ vector< vector<double> > process_nodes(const vector<string> &data) {
 
     nodeqty=out.size();
     cout << "\nNodes: " << nodeqty << endl;
-
-    /*for (int i=0; i<out.size(); i++) {
-        for (int j=0; j<out[0].size(); j++) {
-            cout << out[i][j] << " ";
-        }
-        cout << endl;
-    }*/
 
     return out;
 
@@ -377,13 +386,126 @@ vector< vector<int> > cells_connectivity(const vector< vector<int> > &raw_connec
 
     }
 
-    /*for (int r=0; r<connectivity.size(); r++) {
-        for (int s=0; s<connectivity[0].size(); s++) {
-            cout << connectivity[r][s] << " ";
-        }
-        cout << endl;
-    }*/
-
     return connectivity;
 
+}
+
+vector<string> patches_names(const vector<string> &data) {
+    string patch_name_identifier="(45";
+    string interior="(1";
+    string fluid="(2";
+    string buff, str;
+    stringstream ss;
+    vector<string> vline, output, patch_type;
+    int patchqty=0;
+
+    int i=0;
+    while (i<data.size()) {
+        ss << data[i];
+
+        while (ss >> buff) {
+            vline.push_back(buff);
+        }
+        ss << "";
+        ss.clear();
+
+        if (vline[0]==patch_name_identifier && vline[1]!=interior && vline[1]!=fluid) {
+            str=vline[3];
+            str.erase(str.end()-4, str.end());
+            output.push_back(str);
+            patch_type.push_back(vline[2]);
+        }
+
+        vline.clear();
+        str.clear();
+        i++;
+    }
+
+    cout << "[I] Patches created: "<< output.size()  << endl;
+    cout << "Name\t\tType" << endl;
+    for (int j=0; j<output.size(); j++)  {
+        cout << output[j] << "\t\t"<< patch_type[j] << endl;
+    }
+
+    return output;
+
+}
+
+vector<Patch> create_patches(const vector<string> &data, const vector<string> &pname) {
+    vector<Patch> output;
+    vector<int> tempNodesSort;
+    map<vector <int> , int > FaceVerts;
+    string patch_identifier="(13";
+    string interior="(1";
+    string fluid="(2";
+    string comment="(0";
+    string buff, str;
+    stringstream ss;
+    vector<string> vline, fline;
+    int patch_index=0;
+
+    int i=0;
+    while (i<data.size()) {
+        ss << data[i];
+
+        while (ss >> buff) {
+            vline.push_back(buff);
+        }
+        ss << "";
+        ss.clear();
+
+        if (vline[0]==patch_identifier && vline[1]!=interior && vline[1]!=fluid && vline[1]!=comment) {
+            ss << hex << vline[2];
+            int x;
+            ss >> x;
+            ss << "";
+            ss.clear();
+            ss << hex << vline[3];
+            int y;
+            ss >> y;
+            ss << "";
+            ss.clear();
+            int faces_qty=y-x+1;
+
+            list<int> lista;
+            for (int j=1; j<=faces_qty; j++) {
+                ss << data[i+j];
+
+                while (ss >> buff) {
+                    fline.push_back(buff);
+                }
+                ss << "";
+                ss.clear();
+
+                for (int k=0; k<4; k++) {
+                    ss << hex << fline[k];
+                    int z;
+                    ss >> z;
+                    ss << "";
+                    ss.clear();
+                    tempNodesSort.push_back(z);
+                }
+
+                sort (tempNodesSort.begin(), tempNodesSort.end(), myobject);
+                int faceid=FaceVerts[tempNodesSort];
+                lista.push_back(faceid);
+
+                fline.clear();
+
+            }
+
+            Patch p(pname[patch_index], lista);
+            output.push_back(p);
+            tempNodesSort.clear();
+
+            i=i+j;
+            patch_index++;
+        }
+
+        vline.clear();
+        str.clear();
+        i++;
+    }
+
+    return output;
 }

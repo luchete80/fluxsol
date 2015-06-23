@@ -34,28 +34,29 @@ int main (int argc, char *argv[])
 
     // CHECK WHICH TIPE OF MODEL
     //cout <<"arg number: "<<argc<<", "<< argv[1]<<endl;
-    if (argc > 1)
-    {
-        string inputFileName=argv[1];
-        InputFile input(inputFileName);
-        string solscheme=input.ReadEqnType();   //To modify, this must be per grid
+   if (argc > 1)
+   {
+       string inputFileName=argv[1];
+       InputFile input(inputFileName);
+       string solscheme=input.ReadEqnType();   //To modify, this must be per grid
 
-        if (solscheme=="navier-stokes") //if this is empty
-        {
-            CFDModel model(inputFileName);
+       if (solscheme=="navier-stokes") //if this is empty
+       {
+           CFDModel model(inputFileName);
 
-            model.Solve();
-        }
-        else if (solscheme=="diffusion")
-        {
+           model.Solve();
+       }
+       else if (solscheme=="diffusion")
+       {
 
-        }
-    }
-    else
-    {
-        cout << "ERROR: Input file not found. FluxSol syntax: "<<endl<<endl;
-        cout << "fluxsol.exe <InputFile.in>"<<endl;
-    }
+       }
+   }
+   else
+   {
+       cout << "ERROR: Input file not found. FluxSol syntax: "<<endl<<endl;
+       cout << "fluxsol.exe <InputFile.in>"<<endl;
+
+	return 0;
 
 }
 
