@@ -55,7 +55,7 @@ int main (int argc, char *argv[])
    {
        cout << "ERROR: Input file not found. FluxSol syntax: "<<endl<<endl;
        cout << "fluxsol.exe <InputFile.in>"<<endl;
-
+   }
 	return 0;
 
 }
