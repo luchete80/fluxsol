@@ -403,19 +403,71 @@ namespace FluxSol
 
         // New function for non-Orthogonal correction
         template<class T>
-        _Surf_Fv_Field
-        <typenameouterProduct<Vec3D, T>::type >
+        _CC_Fv_Field
+        <typename outerProduct<Vec3D, T>::type >
         NonOrthGrad(const _CC_Fv_Field <T> & field)
         {
-            _Surf_Fv_Field <T> r(VolField.ConstGrid());
+            _CC_Fv_Field <T> r(field.ConstGrid());
             int cell[2];
             std::set<int>::iterator it;
             std::set<int> *nff=&field.IntNetFluxFaces();
 
-            for (it=nff->begin(); it!=nff->end(); ++it)
+            //Cell center Gauss Gradient
+            _CC_Fv_Field < typename outerProduct<Vec3D, T>::type > gradp= FvExp::Grad (field);
+
+
+
+            //Field Interpolation
+            GeomSurfaceField <T> fi_fo=Interpolate(field);
+
+            //Gradient Interpolation
+            GeomSurfaceField < typename outerProduct<Vec3D, T>::type > grad_fo = Interpolate(gradp);
+
+            GeomSurfaceField <T> field_f(field.ConstGrid());
+
+            bool end=false;
+            int numcorr=5;
+            int corrit=0;
+
+            Vec3D fo_f;
+
+            // NON ORTHOGONAL CORRECTIONS
+            while (!end)
+            {
+                for (it=nff->begin(); it!=nff->end(); ++it)
                 {
                     int f=*it;
+                    cell[0]=field.ConstGrid().Face(f).Cell(0);
+
+                    //                       //Average of fi and fi (fio) gradient (gradfio)
+    //                       //Look throug faces to obtain the facefield
+    //                       //fi_f = fio + gradfio & fo-f//Here is inner product between different types
+    //                       //With fo-f = Pf - Pfo = Pf - (Pf&ePN)ePN is the projection
+
+                    fo_f=   field.ConstGrid().Face(f).Dist_pf_LR(0)- (
+                            ( field.ConstGrid().Face(f).Dist_pf_LR(0) & (field.ConstGrid().Face(f).e_PN()) ) *
+                             field.ConstGrid().Face(f).e_PN() );
+    //                       //Dist_pf_LR
+
                 }
+
+                field_f=fi_fo+grad_fo&fo_f;
+
+                for (it=nff->begin(); it!=nff->end(); ++it)
+                {
+                    int f=*it;
+                    for (int c=0;c<2;c++)
+                    {
+                        cell[c]=field.ConstGrid().Face(f).Cell(c);
+                        r[ cell[c] ] += field_f [f] * field.ConstGrid().Face(f).Af();
+                    }
+
+                }
+
+                if (corrit <=numcorr)   end=true;
+                corrit++;
+            }
+
 
             return r;
         } // End of NonOrthGrad
