@@ -401,6 +401,25 @@ namespace FluxSol
         return r;
         }//Enf of Gradf
 
+        // New function for non-Orthogonal correction
+        template<class T>
+        _Surf_Fv_Field
+        <typenameouterProduct<Vec3D, T>::type >
+        NonOrthGrad(const _CC_Fv_Field <T> & field)
+        {
+            _Surf_Fv_Field <T> r(VolField.ConstGrid());
+            int cell[2];
+            std::set<int>::iterator it;
+            std::set<int> *nff=&field.IntNetFluxFaces();
+
+            for (it=nff->begin(); it!=nff->end(); ++it)
+                {
+                    int f=*it;
+                }
+
+            return r;
+        } // End of NonOrthGrad
+
     }//Fin de FvExp
 }//Fin de namespace FluxSol
 
