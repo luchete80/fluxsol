@@ -648,24 +648,37 @@ InputFile::UField()
             udo->Resize(GridPtr->vBoundary().vPatch(meshp).Num_Faces());
             cout << "Patch Addr "<< &GridPtr->vBoundary().vPatch(meshp)<<endl;
 
+            //Patch *p=GridPtr->vBoundary().vPatch(meshp);
+            const Patch &pr=GridPtr->vBoundary().vPatch(meshp);
             udo->AddPatch(GridPtr->vBoundary().vPatch(meshp));
 
-            // TO MODIFY; ASSIGNING GRID FROM READ_CGNS DOES NOT WORK
-            udo->_Patch().AddGrid(*GridPtr);
-            //cout << "Grid Num Cells: "<< udo->_Patch().Grid().Num_Cells()<<endl;
+            _PatchField < Vec3D> pf;
 
-//            for (int p=0;p<GridPtr->vBoundary().vPatch(meshp).Num_Faces();p++)
-//            {
-//                int idface=GridPtr->vBoundary().vPatch(meshp).Id_Face(p);
-//                Vec3D v=GridPtr->Face(idface).Center();
-//                cout << "Value: " <<v.outstr()<<endl;
-//                cout << "Id Face "<< idface<<endl;
-//            }
+            Fv_CC_Grid gp;
+            double r;
+            cout << "Creating r"<<endl;
+            pf.AddPatch(r);
+            pf.AddPatch(GridPtr->vBoundary().vPatch(meshp));
+            cout << "Patch field pf test address: "<< &pf._Patch() <<endl;
+             pf.AddTest(r);
+             cout << "Patch field pf test address: "<< &pf.Test_()<<endl;
 
+
+            udo->AddTest(test);
+            cout << "Input test addr"<<this->test<<endl;
+            cout << "Test udo addr" << udo->Test_()<<endl;
+
+            cout << "p address" << &pr<<endl;
+            cout << "Udo patch adress " << &udo->_Patch()<<endl;
+
+            udo->AddPatch(&GridPtr->vBoundary().vPatch(meshp));
+            cout << "Udo Patch Addr " << udo->_PatchPtr()<<endl;
+            cout << "NumFaces"<<endl;
+
+            //cout <<udo->_PatchPtr()->Num_Faces()<<endl;
             udo->Calculate();
 
             bf.Add_UDOAddr(udo);
-
 
             cout << "Exiting"<<endl;
 

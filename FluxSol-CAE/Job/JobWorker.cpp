@@ -1,5 +1,6 @@
 #include "JobWorker.h"
 
+//THIS IS THE FUNCTION RELATED TO QThread
 void Worker::Solve()
 {
     vector <double> ures;
@@ -14,8 +15,9 @@ void Worker::Solve()
 
         ures=model->U_Eqn().GlobalRes();
 
+        if (iter>2) emit resworker->AddRes(ures);
         if (iter>2) emit resworker->DrawTest2();
-        //if (iter>2) emit resworker->AddRes(ures);
+        //if (iter>2) emit resworker->AddRes(ures[0],ures[1],ures[2]);
 
         //msgwin->append(QString::fromStdString(model->ItLog()));
         //msgwin->append(QString::fromStdString( model_itlog ) );

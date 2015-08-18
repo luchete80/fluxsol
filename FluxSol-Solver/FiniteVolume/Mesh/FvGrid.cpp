@@ -1219,6 +1219,7 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 
             bpfaces.push_back(temp);
             out << "[I] Created Patch "<<pname<<", Face Count: " <<temp.size()<<endl;
+
             Patch p(pname,bpfaces[bp]);
             vpatch.push_back(p);
 
@@ -1239,6 +1240,15 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
         Boundary bound(vpatch);
         this->AddBoundary(bound);
         this->Create_IntFaces();
+
+        //NEW->Assgnind Grid refs to patches
+//        for (int p=0;p<this->boundary.Num_Patches();p++)
+//        {
+//            cout << "Adding Grid"<<endl;
+//            this->boundary.vPatch(p).AddGrid(*this);
+//        }
+        this->boundary.AddGridPtr(*this);
+
 
         out << "[I] Mesh created ..." << endl;
         slog << out;

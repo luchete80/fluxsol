@@ -166,6 +166,9 @@ void QVTKResWidget::InitChart()
 
     line = chart->AddPlot(vtkChart::LINE);
 
+//    chart->GetAxis(1)->SetLogScale(true);
+//    chart->GetAxis(vtkAxis::BOTTOM)->SetTitle("Index");
+//    chart->GetAxis(vtkAxis::BOTTOM)->SetLogScale(true);
 
     //      TEST; THIS IS NOT ART OF THE EXAMPLE
     //view->SetRenderer(ren);
@@ -178,71 +181,52 @@ void QVTKResWidget::InitChart()
 void QVTKResWidget::Draw()
 {
 
-//  // Fill in the table with some example values
-//  int numPoints = 69;
-//  float inc = 7.5 / (numPoints-1);
-//  table->SetNumberOfRows(numPoints);
-//  for (int i = 0; i < numPoints; ++i)
-//  {
-//    table->SetValue(i, 0, i * inc);
-//    table->SetValue(i, 1, cos(i * inc));
-//    table->SetValue(i, 2, sin(i * inc));
-//  }
-//
-//
-//
-//
-//
-//#if VTK_MAJOR_VERSION <= 5
-//  line->SetInput(table, 0, 1);
-//#else
-//  line->SetInputData(table, 0, 1);
-//#endif
-//  line->SetColor(0, 255, 0, 255);
-//  line->SetWidth(1.0);
-//  line = chart->AddPlot(vtkChart::LINE);
-//#if VTK_MAJOR_VERSION <= 5
-//  line->SetInput(table, 0, 2);
-//#else
-//  line->SetInputData(table, 0, 2);
-//#endif
-//  line->SetColor(255, 0, 0, 255);
-//  line->SetWidth(5.0);
-//
-//  // For dotted line, the line type can be from 2 to 5 for different dash/dot
-//  // patterns (see enum in vtkPen containing DASH_LINE, value 2):
-//#ifndef WIN32
-//  line->GetPen()->SetLineType(vtkPen::DASH_LINE);
-//#endif
-//  // (ifdef-ed out on Windows because DASH_LINE does not work on Windows
-//  //  machines with built-in Intel HD graphics card...)
 
+//    std::vector <double> r(3,0.);
+//    res.push_back(r);
 
     std::ofstream outfile ("test.txt");
     numPoints++;
     // Fill in the table with some example values
   table->SetNumberOfRows(numPoints);
   outfile << "Points: "<<numPoints<<endl;
+  outfile << "Residual Size: "<<res[0].size();
 //  res.push_back(r);
+
+    if (res.size()<numPoints)   numPoints=res.size();
+
 
     for (int i = 0; i < numPoints; ++i)
     {
       table->SetValue(i, 0, i);
       //table->SetValue(numPoints-1, 1, res[numPoints-1][0]);
-      table->SetValue(i, 1, i);
+      //table->SetValue(i, 1, res[i][0]);
+      for (int j = 0; j < 3; j++) table->SetValue(i, 1+j, res[i][j]);
+
 //      outfile << "i: " << i << " " << "res: " <<res[numPoints-1][0]<<endl;
-outfile << "i: " << i <<endl;
+//        outfile << "i: " << i <<endl;
+        //cout << res[i][0]<<" " << res[i][1]<<" "<<res[i][2]<<endl;
+        outfile << res[i][0]<<" " << res[i][1]<<" "<<res[i][2]<<endl;
     }
 
     outfile.close();
 
-    cout << numPoints<<endl;
+
 #if VTK_MAJOR_VERSION <= 5
   line->SetInput(table, 0, 1);
 #else
   line->SetInputData(table, 0, 1);
 #endif
   line->SetColor(255, 0, 0, 255);
+  line->SetWidth(1.0);
+  line = chart->AddPlot(vtkChart::LINE);
+
+  #if VTK_MAJOR_VERSION <= 5
+  line->SetInput(table, 0, 2);
+#else
+  line->SetInputData(table, 0, 1);
+#endif
+  line->SetColor(0, 255, 0, 255);
   line->SetWidth(1.0);
   line = chart->AddPlot(vtkChart::LINE);
 
@@ -306,46 +290,19 @@ void QVTKResWidget::DrawLine(vector <double> &r)            //Single Line
 {
 
 }
-void QVTKResWidget::AddRes (vector <double > &r)           //And Draws it
+void QVTKResWidget::AddRes (const std::vector <double > &r)           //And Draws it
 {
-    std::ofstream outfile ("test.txt");
-    numPoints++;
-    // Fill in the table with some example values
-  table->SetNumberOfRows(numPoints);
   res.push_back(r);
 
-    for (int i = 0; i < numPoints; ++i)
-    {
-      table->SetValue(i, 0, i);
-      //table->SetValue(numPoints-1, 1, res[numPoints-1][0]);
-      table->SetValue(i, 1, i);
-      outfile << "i: " << i << " " << "res: " <<res[numPoints-1][0]<<endl;
-    }
-
-    outfile.close();
-
-    cout << numPoints<<endl;
-#if VTK_MAJOR_VERSION <= 5
-  line->SetInput(table, 0, 1);
-#else
-  line->SetInputData(table, 0, 1);
-#endif
-  line->SetColor(255, 0, 0, 255);
-  line->SetWidth(1.0);
-  line = chart->AddPlot(vtkChart::LINE);
-
-#ifndef WIN32
-  line->GetPen()->SetLineType(vtkPen::DASH_LINE);
-#endif
-
-  //
-//  for (int i = 0; i < numPoints; ++i)
-//  {
-//    table->SetValue(i, 0, i);
-////    table->SetValue(i, 1, cos(i * inc));
-////    table->SetValue(i, 2, sin(i * inc));
-//  }
 }
+
+void QVTKResWidget::AddRes(const double &x,const double &y, const double &z)
+{
+    std::vector <double> r(3,0.);
+    r[0]=x;r[1]=y;r[2]=z;
+    res.push_back(r);
+}
+
 void QVTKResWidget::DrawRes()                             //Draws existing vector
 {
 

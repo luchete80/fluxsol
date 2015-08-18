@@ -28,7 +28,6 @@
 #include "Products.h"
 #include "Grid.h"
 #include "Boundary.h"
-
 //A general FvField can inherit fields below
 //#include "UDO_Decl.h"   //BUT NOT UDO
 
@@ -70,7 +69,6 @@ namespace FluxSol
 		Patch *patch;
 
 		T cvalue;           //Field constant value
-		int *test;
 
 
 	public:
@@ -101,12 +99,9 @@ namespace FluxSol
             this->AssignValue(this->cvalue);
         }
 
-        //void AddPatch (Patch *p){this->patch=p;}
-        void AddPatch (const Patch &p){cout<<"Assigning Addr"<< &p << endl;this->patch=&p; cout << "Addr: "<<this->patch<<endl;}
-        const Patch& _Patch()const{return *this->patch;}
-        void AddTest(const int &i){test=&i;}
-        const int & Test_()const{return *this->test;}   //MUST RETURN THE VALUE!!!!!
-        Patch* _PatchPtr()const{this->patch;}
+        void AddPatch (Patch *p){this->patch=new Patch(*p);}
+        void AddPatch (Patch &p){this->patch=new Patch(p);}
+        const Patch& _Patch()const {return this->patch;}
 
 	};
 

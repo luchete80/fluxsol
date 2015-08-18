@@ -1033,6 +1033,8 @@ void SimpleView::slotImportIn()
       //Add Mesh to Tree
       AddMeshToTree(model.Mesh());
 
+      //Add Boundary Conditions to Tree
+
       model.SolveIter();
       ui->MsgWin->AddString(model.ItLog());
 
@@ -1047,120 +1049,6 @@ void SimpleView::slotImportIn()
       //vjobsubmitdialog[0]->exec();
       vjobsubmitdialog[0]->show();
 
-
-//        jobthread.push_back(new JobThread(*vmodel[0]) );
-//        //jobthread[0]->AddMsgWin(*vjobsubmitdialog[0]->ui->ResidualMsg);
-//
-//        jobthread[0]->WorkerT().AddMsgWin(*vjobsubmitdialog[0]->ui->ResidualMsg);
-//      vjobsubmitdialog[0]->AddThread(*jobthread[0]);
-//
-//
-//      vjobsubmitdialog[0]->show();
-//
-//    connect(jobthread[0]->Thread(), SIGNAL(started()), vjobsubmitdialog[0], SLOT(AddString("Hi  ")));
-//    connect(&jobthread[0]->WorkerT(), SIGNAL(AddMsg(string)), vjobsubmitdialog[0], SLOT(AddString(string)),Qt::QueuedConnection);
-//    emit jobthread[0]->WorkerT().AddMsg("TEST...");
-//    QCoreApplication::processEvents();
-        //vjob[0]->MsgWinAddress(vjobsubmitdialog[0]->ResMsgWindow());
-        //vjob[0]->LinePlotAddress(vjobsubmitdialog[0]->LinePlot());
-      //vjob[0]->start();
-
-
-
-//
-//      reader->SetFileName(fileName.toStdString().c_str());
-//      reader->Update();
-//
-//        vtkSmartPointer<vtkUnstructuredGrid> ugrid=
-//        vtkUnstructuredGrid::New();;
-//        ugrid = reader->GetOutput();
-//
-//      double scalarRange[2];
-
-//
-//      int components =
-//        this->PointData->GetScalars()->GetNumberOfComponents();
-//        double tuple[3];
-//        double* tuple = pd->GetArray(0)->GetTuple( 1 );
-//        pd->GetArray(0)->GetTuple( 1 ,tuple);
-//        pd->GetArray(0)->GetRange(scalarRange);
-
-
-
-//      std::cout << pd->GetArrayName(0)<<std::endl;
-
-    //GeometryFilter
-
-
-//      vtkSmartPointer<vtkGeometryFilter> geometryFilter =
-//        vtkSmartPointer<vtkGeometryFilter>::New();
-//
-//        vtkSmartPointer<vtkDataSetSurfaceFilter> surfaceFilter =
-//        vtkSmartPointer<vtkDataSetSurfaceFilter>::New();
-//
-//      surfaceFilter->SetInputData(model.UGrid());
-//
-//    #if VTK_MAJOR_VERSION <= 5
-//      geometryFilter->SetInput(model.UGrid());
-//      surfaceFilter->SetInput(model.UGrid());
-//    #else
-//      geometryFilter->SetInputData(model.UGrid());
-//      surfaceFilter->SetInputData(model.UGrid());
-//    #endif
-//      geometryFilter->Update();
-//      surfaceFilter->Update();
-//
-//    vtkPolyData *polydata= geometryFilter ->GetOutput ();
-
-
-
-//**************************** RANGE AND COLORS ******************************
-//   Generate the colors for each point based on the color map
-//  vtkSmartPointer<vtkUnsignedCharArray> colors =
-//    vtkSmartPointer<vtkUnsignedCharArray>::New();
-//  colors->SetNumberOfComponents(3);
-//  colors->SetName("Colors");
-//
-//    for(int i = 0; i < polydata->GetNumberOfPoints(); i++)
-//    {
-//        unsigned char color[3];
-//        for(unsigned int j = 0; j < 3; j++)
-//          //color[j] = static_cast<unsigned char>(255.0 * dcolor[j]);
-//          color [j]=255.;
-//        colors->InsertNextTupleValue(color);
-//    }
-//
-//	polydata->GetPointData()->SetScalars(colors);
-//
-////    //************************************* MAPPER
-//
-//     vtkSmartPointer<vtkPolyDataMapper> pdmapper =
-//    vtkSmartPointer<vtkPolyDataMapper>::New();
-////
-////    //pdmapper->ScalarVisibilityOff();
-////
-//    #if VTK_MAJOR_VERSION <= 5
-//      pdmapper->SetInputConnection(polydata->GetProducerPort());
-//    #else
-//     pdmapper->SetInputData(polydata);
-//    #endif
-//
-//
-//
-//
-//
-//	/////// END OF CONTOUR
-//
-//  ///////////////////////// RENDERING ////
-//
-//        VTK_CREATE(vtkActor, actor);
-//        actor->SetMapper(pdmapper);
-//        actor->GetProperty()->EdgeVisibilityOn();
-//        this->ren->AddActor(actor);
-//
-//        this->ren->AddActor(this->_vtkOriginAxes);
-
-        //this->models.push_back(GraphicCFDModel(model));
 
     }//If not filename Empty
 		//loadFile(fileName);

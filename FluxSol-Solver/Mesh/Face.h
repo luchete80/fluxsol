@@ -80,7 +80,7 @@ class _Face
 		const int & NumVerts()const{return num_vertex;}
 		Vec3D& Af(){return af;}
 
-		Vec3D& Center(){return sm;}
+		const Vec3D& Center()const{return sm;}
 
 		const bool & Boundaryface()const {return boundaryface;}
 		void Null_Flux_Face(bool b){null_flux_face=b;}

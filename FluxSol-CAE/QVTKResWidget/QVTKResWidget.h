@@ -110,7 +110,8 @@ public QVTKWidget
 
         void Draw(vector < vector <double> > &);  //Standard residual form, SLOW
         void DrawLine(vector <double> &);            //Single Line
-        void AddRes (vector <double > &);           //And Draws it
+        void AddRes (const std::vector <double > &);           //And Draws it
+        void AddRes(const double &x,const double &y, const double &z);
         void DrawRes();                             //Draws existing vector
 
 };

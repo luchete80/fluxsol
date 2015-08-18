@@ -25,7 +25,8 @@ class ResWidgetWorker:
         void DrawResiduals();       //
         void DrawTest();
         void DrawTest2();
-        void AddRes(vector <double>&);
+        void AddRes(const std::vector <double>&);
+        void AddRes(const double &x,const double &y, const double &z);
 
 };
 

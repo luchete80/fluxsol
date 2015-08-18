@@ -347,7 +347,7 @@ void _Grid::Read_InitialCGNS() {
 		_Vertex vt(raw.node[v][0],raw.node[v][1],raw.node[v][2]);
 		this->vert.push_back(vt);
 	}
-	//All other members are particular of Cell Centered Grid
+	//All other members are particular of Cell Centered Gri
 
 
 

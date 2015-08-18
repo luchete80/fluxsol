@@ -48,5 +48,4 @@ ParamDialog::ParamDialog(QWidget *parent)
     mainLayout->addLayout(rightLayout);
     setLayout(mainLayout);
 
-
 }

@@ -42,6 +42,7 @@ _PatchField<T>::_PatchField(const Patch &p)
 		this->value.push_back(v);
 		this->numberofvals++;
 	}
+    this->patch=&p;
 }
 
 template <typename T>

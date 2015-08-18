@@ -129,6 +129,7 @@ include_directories(
 #set( Srcs main.cpp SimpleView.cpp )
 set( Srcs main.cpp 
 		  MainWindow.cpp 
+		  ManageBCDialog.cpp
 		  ModelTree.cpp
 		  MsgWindow.cpp
 		  ParamDialog.cpp 
@@ -152,6 +153,7 @@ set (ResWidget_Srcs "${PROJECT_SOURCE_DIR}/QVTKResWidget/QVTKResWidget.cpp"
 set( Hdrs 	${PROJECT_SOURCE_DIR}/Job/JobSubmitDialog.h
 			${PROJECT_SOURCE_DIR}/Job/JobWorker.h
 			${PROJECT_SOURCE_DIR}/Job/JobThread.h
+			ManageBCDialog.h
 			ModelTree.h 
 			MsgWindow.h 
 			SimpleView.h 
@@ -169,7 +171,8 @@ set( MOC_Hdrs SimpleView.h )
 
 set( UIs 	SimpleView.ui 
 			Param.ui 
-			JobSubmitDialog.ui) #THIS IS THE SAME TO uic -o Param.h Param.ui
+			JobSubmitDialog.ui
+			ManageBCDialog.ui) #THIS IS THE SAME TO uic -o Param.h Param.ui
 
 set( QRCs Icons/icons.qrc )
 

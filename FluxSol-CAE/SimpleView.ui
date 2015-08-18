@@ -51,7 +51,7 @@
    <string>FluxSolCAE 0.0.1 64-bit</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Icons/icons.qrc">
+   <iconset>
     <normaloff>:/Icons/cae.png</normaloff>:/Icons/cae.png</iconset>
   </property>
   <property name="autoFillBackground">
@@ -383,7 +383,7 @@
         </size>
        </property>
        <attribute name="icon">
-        <iconset resource="Icons/icons.qrc">
+        <iconset>
          <normaloff>:/Icons/ImportMesh.png</normaloff>:/Icons/ImportMesh.png</iconset>
        </attribute>
        <attribute name="title">
@@ -515,7 +515,7 @@
         </size>
        </property>
        <attribute name="icon">
-        <iconset resource="Icons/icons.qrc">
+        <iconset>
          <normaloff>:/Icons/Job.png</normaloff>:/Icons/Job.png</iconset>
        </attribute>
        <attribute name="title">
@@ -539,7 +539,7 @@
         <bool>false</bool>
        </property>
        <attribute name="icon">
-        <iconset resource="Icons/icons.qrc">
+        <iconset>
          <normaloff>:/Icons/Results.png</normaloff>:/Icons/Results.png</iconset>
        </attribute>
        <attribute name="title">
@@ -603,7 +603,7 @@
            </size>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="ModelTreeWidget" name="ModelTree">
            <property name="headerHidden">
@@ -630,7 +630,7 @@
                <string>Parts</string>
               </property>
               <property name="icon">
-               <iconset resource="Icons/icons.qrc">
+               <iconset>
                 <normaloff>:/Icons/parts.png</normaloff>:/Icons/parts.png</iconset>
               </property>
              </item>
@@ -639,7 +639,7 @@
                <string>Materials</string>
               </property>
               <property name="icon">
-               <iconset resource="Icons/icons.qrc">
+               <iconset>
                 <normaloff>:/Icons/Materials.png</normaloff>:/Icons/Materials.png</iconset>
               </property>
              </item>
@@ -659,7 +659,7 @@
               <string>Jobs</string>
              </property>
              <property name="icon">
-              <iconset resource="Icons/icons.qrc">
+              <iconset>
                <normaloff>:/Icons/Job.png</normaloff>:/Icons/Job.png</iconset>
              </property>
             </item>
@@ -835,7 +835,7 @@
   </action>
   <action name="actionPrint">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/print.png</normaloff>:/Icons/print.png</iconset>
    </property>
    <property name="text">
@@ -844,7 +844,7 @@
   </action>
   <action name="actionSave">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/save.png</normaloff>:/Icons/save.png</iconset>
    </property>
    <property name="text">
@@ -858,7 +858,7 @@
   </action>
   <action name="actionZoomExt">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/zoomext.png</normaloff>:/Icons/zoomext.png</iconset>
    </property>
    <property name="text">
@@ -870,7 +870,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/fileopen.png</normaloff>:/Icons/fileopen.png</iconset>
    </property>
    <property name="text">
@@ -879,7 +879,7 @@
   </action>
   <action name="actionView_Z">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/view+Z-2.png</normaloff>:/Icons/view+Z-2.png</iconset>
    </property>
    <property name="text">
@@ -888,7 +888,7 @@
   </action>
   <action name="actionView_Z_2">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/view-Z.png</normaloff>:/Icons/view-Z.png</iconset>
    </property>
    <property name="text">
@@ -897,7 +897,7 @@
   </action>
   <action name="actionView_Y">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/view+Y.png</normaloff>:/Icons/view+Y.png</iconset>
    </property>
    <property name="text">
@@ -906,7 +906,7 @@
   </action>
   <action name="actionView_Y_2">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/view-Y.png</normaloff>:/Icons/view-Y.png</iconset>
    </property>
    <property name="text">
@@ -915,7 +915,7 @@
   </action>
   <action name="actionView_X_2">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/view-X.png</normaloff>:/Icons/view-X.png</iconset>
    </property>
    <property name="text">
@@ -927,7 +927,7 @@
   </action>
   <action name="actionView_X">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/view+X.png</normaloff>:/Icons/view+X.png</iconset>
    </property>
    <property name="text">
@@ -962,7 +962,7 @@
   </action>
   <action name="actionImport_in">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/import_in.png</normaloff>:/Icons/import_in.png</iconset>
    </property>
    <property name="text">
@@ -974,7 +974,7 @@
   </action>
   <action name="actionExportIn">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/save_in.png</normaloff>:/Icons/save_in.png</iconset>
    </property>
    <property name="text">
@@ -983,7 +983,7 @@
   </action>
   <action name="actionImportMesh">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/ImportMesh.png</normaloff>:/Icons/ImportMesh.png</iconset>
    </property>
    <property name="text">
@@ -995,7 +995,7 @@
   </action>
   <action name="actionOpenResults">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/OpenResults.png</normaloff>:/Icons/OpenResults.png</iconset>
    </property>
    <property name="text">
@@ -1007,7 +1007,7 @@
   </action>
   <action name="actionMeshProp">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/meshprop.png</normaloff>:/Icons/meshprop.png</iconset>
    </property>
    <property name="text">
@@ -1016,7 +1016,7 @@
   </action>
   <action name="actionNewJob">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/New.png</normaloff>:/Icons/New.png</iconset>
    </property>
    <property name="text">
@@ -1025,7 +1025,7 @@
   </action>
   <action name="actionNewJobFromInput">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/JobFromInput.png</normaloff>:/Icons/JobFromInput.png</iconset>
    </property>
    <property name="text">
@@ -1037,7 +1037,7 @@
   </action>
   <action name="actionGridSelectVertex">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/GridSelectVertex.png</normaloff>:/Icons/GridSelectVertex.png</iconset>
    </property>
    <property name="text">
@@ -1046,7 +1046,7 @@
   </action>
   <action name="actionGridSelectFace">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/GridSelectFace.png</normaloff>:/Icons/GridSelectFace.png</iconset>
    </property>
    <property name="text">
@@ -1055,7 +1055,7 @@
   </action>
   <action name="actionGridSelectCell">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/GridSelectCell.png</normaloff>:/Icons/GridSelectCell.png</iconset>
    </property>
    <property name="text">
@@ -1064,7 +1064,7 @@
   </action>
   <action name="actionTransparency">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/MeshTransparency.png</normaloff>:/Icons/MeshTransparency.png</iconset>
    </property>
    <property name="text">
@@ -1073,7 +1073,7 @@
   </action>
   <action name="actionMeshSelect">
    <property name="icon">
-    <iconset resource="Icons/icons.qrc">
+    <iconset>
      <normaloff>:/Icons/Arrow.png</normaloff>:/Icons/Arrow.png</iconset>
    </property>
    <property name="text">

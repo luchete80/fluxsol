@@ -27,6 +27,9 @@
 #include <vector>
 #include <list>
 #include "../Nastran/Varios.h"
+#include "Boundary_Decl.h"
+#include "FvGrid_Decl.h"
+#include "FvFace.h"
 
 namespace FluxSol{
 
@@ -42,6 +45,8 @@ class Patch{
 
 	std::string name;
 
+    Fv_CC_Grid *grid;   //Which belongs, to return faces as example
+
 
 	public:
 		Patch(){};
@@ -55,7 +60,13 @@ class Patch{
 
 		void AddFace(const int &f){id_face.push_back(f);id_face[num_faces]=f;num_faces++;}
 		int & Num_Faces(){return num_faces;};
-		int & Id_Face(const int &i){return this->id_face[i];}
+		const int & Id_Face(const int &i)const{return this->id_face[i];}
+
+		void AddGrid(const Fv_CC_Grid &fvgrid){grid=&fvgrid;}
+
+		const Fv_CC_Grid &Grid()const{return *this->grid;}
+
+		const _FvFace & Face(const int &i)const;
 
 		// OJO QUE ESTA FUNCION DEBE CREARSE, VER EN DONDE
 		// LO PIDE EL COMPILADOR
@@ -87,7 +98,13 @@ class Boundary{
 	Boundary (std::vector <Patch> patchlist);
 	int & Num_Faces(){return num_faces;}
 	int & Num_Patches(){return num_patches;}
-	Patch & vPatch(const int &i){return patch[i];}
+	const Patch & vPatch(const int &i)const {return patch[i];}
+	void AddGridPtr(const Fv_CC_Grid &grid)
+	{
+        //NEW->Assgnind Grid refs to patches
+        for (int p=0;p<this->num_patches;p++)   this->patch[p].AddGrid(grid);
+
+	}
 
 	const string & PatchName(const int &id)const{return patchname[id];}
 };

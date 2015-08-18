@@ -2,7 +2,15 @@
 #include "JobWorker.h"
 #include <vector>
 
+// WORKERS BELONGS TO THIS CLASS
+
 using namespace std;
+
+#include<QMetaType>
+typedef std::vector <double> MyArray;
+
+// ...
+
 
 JobSubmitDialog::JobSubmitDialog(const CFDModel &model_,QWidget *parent)
 :QDialog(parent)
@@ -33,8 +41,10 @@ JobSubmitDialog::JobSubmitDialog(const CFDModel &model_,QWidget *parent)
     //resworker->moveToThread(thread);
     QObject::connect (resworker, SIGNAL(DrawTest()), qvtkResChart, SLOT(DrawAlt()));
     QObject::connect (resworker, SIGNAL(DrawTest2()), qvtkResChart, SLOT(Draw()));
-    QObject::connect (resworker, SIGNAL(AddRes(vector<double>)), qvtkResChart, SLOT(AddRes(vector<double>)));
-
+    //QObject::connect (resworker, SIGNAL(AddRes(const std::vector<double> &)), qvtkResChart, SLOT(AddRes(const std::vector<double> &)));
+    qRegisterMetaType<MyArray>("MyArray");
+    QObject::connect (resworker, SIGNAL(AddRes(const MyArray &)), qvtkResChart, SLOT(AddRes(const MyArray &)));
+    QObject::connect (resworker, SIGNAL(AddRes(const double &x, const double &y, const double &z)), qvtkResChart, SLOT(AddRes(const double &x, const double &y, const double &z)));
     //QObject::connect (qvtkResChart->Thread(), SIGNAL(started()), qvtkResChart, SLOT(DrawAlt()));
 
 
@@ -91,13 +101,15 @@ void JobSubmitDialog::StartStopJob()
     {
         ResidualMsg->AddString("Job Submitted...\n");
 
-        qvtkResChart->Thread()->start();
+        //qvtkResChart->Thread()->start();
 
-        thread->start();
+        thread->start();    //THIS IS THE IMPORTANT
+                            //Is connected with Solve()
 
+        StartStopButton->setText(tr("Stop"));
         //jobthread->start();
         //thread->WorkerT().Solve();
-        cout << "COUT"<<endl;
+        //cout << "COUT"<<endl;
 
     }
 

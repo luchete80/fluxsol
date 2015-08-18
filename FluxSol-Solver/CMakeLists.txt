@@ -12,7 +12,7 @@ option (USE_PETSC "Enable PETSc support (required for parallel)" ON)
 option (USE_METIS "Enable METIS support	                       " OFF)
 if (${CMAKE_VERSION} VERSION_GREATER "2.8.7") # Compability with older version of cmake
     option (USE_SHARED_LIB "Build shared library" ON)
-    option (USE_STATIC_LIB "Build static library" OFF)
+    option (USE_STATIC_LIB "Build static library" ON)
 endif ()
 option (DEBUG_MODE "Enable FLUXSOL DEBUG" OFF)
 

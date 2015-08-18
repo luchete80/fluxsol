@@ -184,6 +184,7 @@ protected:
 
     	_CC_Fv_Field <Vec3D> * ufield;
     	_CC_Fv_Field <Scalar> * pfield;
+    	int test;
 
 
 public:
