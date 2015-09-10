@@ -6,11 +6,11 @@ include (CheckIncludeFiles)
 include (CheckIncludeFileCXX)
 include (CheckCXXSourceCompiles)
 
-set (CMAKE_BUILD_TYPE Debug)
+option (DEBUG_MODE "Enable FLUXSOL DEBUG" OFF)
 
 #set(CMAKE_PREFIX_PATH $ENV{QTDIR}) # Unnecessary on Windows apparently
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive -static-libgcc -static-libstdc++ -g")
-set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fpermissive -static-libgcc -static-libstdc++ -g")
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive -static-libgcc -static-libstdc++")
+set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fpermissive -static-libgcc -static-libstdc++")
 
 set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "${CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS} -static-libgcc -static-libstdc++ -s -g")
 SET(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -static-libgcc")
@@ -21,6 +21,18 @@ set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
 set (FLUXSOL_SOLVER_DIR "${FLUXSOL_DIR}/Src/FluxSol-Solver")
 
 set (NAME FluxSolCAE)
+
+if(DEBUG_MODE)
+# Default is debug build
+#if (NOT CMAKE_BUILD_TYPE)
+	set (CMAKE_BUILD_TYPE Debug)
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+else()
+	set (CMAKE_BUILD_TYPE Release)
+	set (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -fpermissive")
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
+endif ()
+
 
 project(${NAME})
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -88,9 +100,6 @@ include_directories(${ALGLIB_INCLUDE_DIRS})
 
 include_directories("D:/Luciano/Numerico/Libs/QtSDK-5.2.1-x86_64-seh/include")
 
-
-
-set (CMAKE_BUILD_TYPE Debug) #LUCIANO
 
 cmake_minimum_required(VERSION 2.8)
 

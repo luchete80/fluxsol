@@ -32,72 +32,64 @@ void SimpleView::ImportMesh(const string &filename)
         {
             // GraphicCFDModel model(fileName.toStdString());
             cout << "Importing CGNS Mesh: " << fileName.toStdString() <<" ... "<<endl;
-
-         	//Fv_CC_Grid mesh(fileName.toStdString());
-         	mesh=Fv_CC_Grid(fileName.toStdString());
-         	ui->MsgWin->AddString(std::string("Importing file " + fileName.toStdString() + "\n") );
-         	this->ui->MsgWin->AddString(mesh.StrLog());
-         	this->ui->MsgWin->AddString("Mesh has been succesfully imported.\n");
-         	cout << "Mesh successfully imported ..."<<endl;
-         	GraphicCFDModel model(mesh);
-            mesh.Log("Log.txt");
-
-            vtkSmartPointer<vtkGeometryFilter> geometryFilter =
-            vtkSmartPointer<vtkGeometryFilter>::New();
 //
-            #if VTK_MAJOR_VERSION <= 5
-              geometryFilter->SetInput(model.UGrid());
-              //surfaceFilter->SetInput(ugrid);
-            #else
-              geometryFilter->SetInputData(model.UGrid());
-//              //surfaceFilter->SetInputData(ugrid);
-            #endif
-              geometryFilter->Update();
-//              //surfaceFilter->Update();
+//         	mesh=Fv_CC_Grid(fileName.toStdString());
+//         	ui->MsgWin->AddString(std::string("Importing file " + fileName.toStdString() + "\n") );
+//         	this->ui->MsgWin->AddString(mesh.StrLog());
+//         	this->ui->MsgWin->AddString("Mesh has been succesfully imported.\n");
+//         	cout << "Mesh successfully imported ..."<<endl;
+//         	GraphicCFDModel model(mesh);
+//            mesh.Log("Log.txt");
 //
-//            //vtkSmartPointer<vtkPolyData>
-            polydata= geometryFilter ->GetOutput ();
+//            vtkSmartPointer<vtkGeometryFilter> geometryFilter =
+//            vtkSmartPointer<vtkGeometryFilter>::New();
 //
+//            #if VTK_MAJOR_VERSION <= 5
+//              geometryFilter->SetInput(model.UGrid());
+//              //surfaceFilter->SetInput(ugrid);
+//            #else
+//              geometryFilter->SetInputData(model.UGrid());
 //
-             vtkSmartPointer<vtkPolyDataMapper> pdmapper =
-            vtkSmartPointer<vtkPolyDataMapper>::New();
-        //
-        //    //pdmapper->ScalarVisibilityOff();
-        //
-            #if VTK_MAJOR_VERSION <= 5
-              pdmapper->SetInputConnection(polydata->GetProducerPort());
-            #else
-             pdmapper->SetInputData(polydata);
-            #endif
-
-            /////// END OF CONTOUR
-
-          ///////////////////////// RENDERING ////
-
-            actor->SetMapper(pdmapper);
+//            #endif
+//              geometryFilter->Update();
+//
+//            polydata= geometryFilter ->GetOutput ();
+//
+//             vtkSmartPointer<vtkPolyDataMapper> pdmapper =
+//            vtkSmartPointer<vtkPolyDataMapper>::New();
+//
+//            #if VTK_MAJOR_VERSION <= 5
+//              pdmapper->SetInputConnection(polydata->GetProducerPort());
+//            #else
+//             pdmapper->SetInputData(polydata);
+//            #endif
+//
+//          ///////////////////////// RENDERING ////
+//
+//            actor->SetMapper(pdmapper);
 
         }
-        else if (extension==".vtk")
-        {
-            // ------- SIMPLE READER
+//        else if (extension==".vtk")
+//        {
+//            // ------- SIMPLE READER
+//
+//              //read all the data from the file
+//          vtkSmartPointer<vtkXMLUnstructuredGridReader> ugreader =
+//            vtkSmartPointer<vtkXMLUnstructuredGridReader>::New();
+//          ugreader->SetFileName(fileName.toStdString().c_str());
+//          ugreader->Update();
+//
+//          geometryFilter->SetInputConnection(ugreader->GetOutputPort());
+//          geometryFilter->Update();
+//
+//          datasetmapper ->SetInputConnection(ugreader->GetOutputPort());
+//            actor->SetMapper(datasetmapper);
+//        }
 
-              //read all the data from the file
-          vtkSmartPointer<vtkXMLUnstructuredGridReader> ugreader =
-            vtkSmartPointer<vtkXMLUnstructuredGridReader>::New();
-          ugreader->SetFileName(fileName.toStdString().c_str());
-          ugreader->Update();
-
-          geometryFilter->SetInputConnection(ugreader->GetOutputPort());
-          geometryFilter->Update();
-
-          datasetmapper ->SetInputConnection(ugreader->GetOutputPort());
-            actor->SetMapper(datasetmapper);
-        }
-
-      areaPicker =
-        vtkSmartPointer<vtkAreaPicker>::New();
-
-        renderWindowInteractor->SetPicker(areaPicker);
+//      areaPicker =
+//        vtkSmartPointer<vtkAreaPicker>::New();
+//
+//        renderWindowInteractor->SetPicker(areaPicker);
 
 
         //this->gridselectionstyle->Data = polydata;
@@ -121,69 +113,55 @@ void SimpleView::ImportMesh(const string &filename)
     // POINT SELECTION ///
     //////////////////////
 
-
-
-  vtkSmartPointer<HighlightInteractorStylePoints> style =
-    vtkSmartPointer<HighlightInteractorStylePoints>::New();
-
-
-      //style->IdFilter()->SetInputConnection(polydata->GetProducerPort());   //This takes a polydata (in original example takes a pointsource)
-
-        //style->IdFilter()->SetInputConnection(ugrid->GetProducerPort());
-        //style->IdFilter()->SetInputData(ugrid);
-
-        cout << "Creating Id Filter"<<endl;
-        style->IdFilter()->SetInputData(polydata);
-
-      style->IdFilter()->SetIdsArrayName("ids");
-      style->IdFilter()->Update();
-
-      style->SurfaceFilter()->SetInputConnection(style->IdFilter()->GetOutputPort());
-      style->SurfaceFilter()->Update();
-
-
-      style->SurfaceFilter()->SetInputConnection(style->IdFilter()->GetOutputPort());
-      style->SurfaceFilter()->Update();
-
-        style->SetPoints(polydata); //All points
-
-    // INPUT POLYDATA NLY FOR VISUALIZATION
-  //vtkPolyData* input = surfaceFilter->GetOutput();
-    ///// END OF POINT SELECTION //////
-    ///////////////////////////////////
-
-
-
-
-      // For vtkInteractorStyleTrackballCamera - use 'p' to pick at the current mouse position
-      //vtkSmartPointer<vtkInteractorStyleTrackballCamera> style =
-      //  vtkSmartPointer<vtkInteractorStyleTrackballCamera>::New(); //like paraview
-      style->SetCurrentRenderer(this->ren);
-      renderWindowInteractor->SetInteractorStyle( style );
-
-//////////////////////////////////
-
-
-//      vtkSmartPointer<vtkCallbackCommand> pickCallback =
-//        vtkSmartPointer<vtkCallbackCommand>::New();
-//    pickCallback->SetCallback ( PickCallbackFunction );
 //
-//        areaPicker->AddObserver ( vtkCommand::EndPickEvent, pickCallback );
-
-      // Visualize
-     // vtkSmartPointer<vtkPolyDataMapper> pdmapper =
-     //   vtkSmartPointer<vtkPolyDataMapper>::New();
-     // pdmapper->SetInputConnection(geometryFilter->GetOutputPort());
-
-
-
-          actor->GetProperty()->SetEdgeColor(0, 0, 0);
-          actor->GetProperty()->EdgeVisibilityOn();
-
-      this->ren->AddActor( actor);
-
-
-    AddMeshToTree(mesh);
+//
+//  vtkSmartPointer<HighlightInteractorStylePoints> style =
+//    vtkSmartPointer<HighlightInteractorStylePoints>::New();
+//
+//
+//      //style->IdFilter()->SetInputConnection(polydata->GetProducerPort());   //This takes a polydata (in original example takes a pointsource)
+//
+//        //style->IdFilter()->SetInputConnection(ugrid->GetProducerPort());
+//        //style->IdFilter()->SetInputData(ugrid);
+//
+//        cout << "Creating Id Filter"<<endl;
+//        style->IdFilter()->SetInputData(polydata);
+//
+//      style->IdFilter()->SetIdsArrayName("ids");
+//      style->IdFilter()->Update();
+//
+//      style->SurfaceFilter()->SetInputConnection(style->IdFilter()->GetOutputPort());
+//      style->SurfaceFilter()->Update();
+//
+//
+//      style->SurfaceFilter()->SetInputConnection(style->IdFilter()->GetOutputPort());
+//      style->SurfaceFilter()->Update();
+//
+//        style->SetPoints(polydata); //All points
+//
+//    // INPUT POLYDATA NLY FOR VISUALIZATION
+//  //vtkPolyData* input = surfaceFilter->GetOutput();
+//    ///// END OF POINT SELECTION //////
+//    ///////////////////////////////////
+//
+//
+//
+//
+//      // For vtkInteractorStyleTrackballCamera - use 'p' to pick at the current mouse position
+//      //vtkSmartPointer<vtkInteractorStyleTrackballCamera> style =
+//      //  vtkSmartPointer<vtkInteractorStyleTrackballCamera>::New(); //like paraview
+//      style->SetCurrentRenderer(this->ren);
+//      renderWindowInteractor->SetInteractorStyle( style );
+//
+//
+//
+//          actor->GetProperty()->SetEdgeColor(0, 0, 0);
+//          actor->GetProperty()->EdgeVisibilityOn();
+//
+//      this->ren->AddActor( actor);
+//
+//
+//    AddMeshToTree(mesh);
 
 	}
 
