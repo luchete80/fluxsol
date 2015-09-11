@@ -938,116 +938,118 @@ void SimpleView::slotImportIn()
         cout << "Importing Input File: " << fileName.toStdString() <<" ..."<<endl;
 
         //TO Modify, at first is only a CFD Model
-        GraphicCFDModel model(fileName.toStdString());
-
-
-        cout << "Input file has been successfully imported."<<endl;
-
-        //QTreeWidgetItem *itm = new QTreeWidgetItem(this->ui->ModelTree); //WITH THIS ARGS DOES NOT WORK
-        QTreeWidgetItem *itm = new QTreeWidgetItem();
-        itm->setText(0,name);
-        itm->setText(1,Description);
-        //this->ui->ModelTree->topLevelItem( 0 )->addChild(itm);
-
-        //item->setFlags( Qt::ItemIsUserCheckable | Qt::ItemIsSelectable | Qt::ItemIsEnabled );
-        //item->setCheckState(0, Qt::Unchecked);
-
-        QList<QTreeWidgetItem*> items = this->ui->ModelTree->findItems("Models",Qt::MatchExactly);
-        int num = items.count();
-        //cout <<"Items found"<<num;
-
-        addTreeChild(items[0], fileName, "Desc");
-
-        this->ui->ModelTree->update();
-        //items[0]->addChild(itm);
-
-        items = this->ui->ModelTree->findItems("Model-1",Qt::MatchExactly);
-
-        if (items.count()>0)
-        addTreeChild(items[0],
-                  "Hola2", "Desc");
-        //items[0]->addChild(itm);
-
-        //sitems[0]->insertChild(0,itm);
-        //items[0]->setText(0,"Changed");
-
-        QTreeView modtreeview(this->ui->ModelTree);
-
-
-        modtreeview.expandAll();
-        modtreeview.show();
-
-        //this->ui->ModelTree->expandAll();
-
-
-        this->ui->ModelTree->update();
-        this->ui->ModelTree->show();
-
-
-        /////////////////////////////
-        ///// MODEL VISUALIZATION ///
-        /////////////////////////////
-
-                    vtkSmartPointer<vtkGeometryFilter> geometryFilter =
-            vtkSmartPointer<vtkGeometryFilter>::New();
+        //GraphicCFDModel model(fileName.toStdString());
+        //CFDModel modeltest(fileName.toStdString());
+        Model modeltest(fileName.toStdString());
 //
-            #if VTK_MAJOR_VERSION <= 5
-              geometryFilter->SetInput(model.UGrid());
-              //surfaceFilter->SetInput(ugrid);
-            #else
-              geometryFilter->SetInputData(model.UGrid());
-//              //surfaceFilter->SetInputData(ugrid);
-            #endif
-              geometryFilter->Update();
-//              //surfaceFilter->Update();
 //
-            vtkSmartPointer<vtkPolyData>
-            polydata= geometryFilter ->GetOutput ();
-
-
-
-             vtkSmartPointer<vtkPolyDataMapper> pdmapper =
-            vtkSmartPointer<vtkPolyDataMapper>::New();
-        //
-        //    //pdmapper->ScalarVisibilityOff();
-        //
-            #if VTK_MAJOR_VERSION <= 5
-              pdmapper->SetInputConnection(polydata->GetProducerPort());
-            #else
-             pdmapper->SetInputData(polydata);
-            #endif
-
-            /////// END OF CONTOUR
-
-          ///////////////////////// RENDERING ////
-      vtkSmartPointer<vtkActor> actor =
-        vtkSmartPointer<vtkActor>::New();
-
-            actor->SetMapper(pdmapper);
-
-          actor->GetProperty()->SetEdgeColor(0, 0, 0);
-          actor->GetProperty()->EdgeVisibilityOn();
-
-      this->ren->AddActor( actor);
-
-      //Add Mesh to Tree
-      AddMeshToTree(model.Mesh());
-
-      //Add Boundary Conditions to Tree
-
-      model.SolveIter();
-      ui->MsgWin->AddString(model.ItLog());
-
-
-      //this->vmodel.push_back(new GraphicCFDModel(model));
-      this->vmodel.push_back(new GraphicCFDModel(fileName.toStdString()));
-      this->vmodel[0]->SolveIter();
-      //ui->MsgWin->AddString(this->vmodel[0]->ItLog());
-
-      //vjob.push_back(new Job(*vmodel[0]) );
-      vjobsubmitdialog.push_back(new JobSubmitDialog (*this->vmodel[0] , this)); //Model and parent
-      //vjobsubmitdialog[0]->exec();
-      vjobsubmitdialog[0]->show();
+//        cout << "Input file has been successfully imported."<<endl;
+//
+//        //QTreeWidgetItem *itm = new QTreeWidgetItem(this->ui->ModelTree); //WITH THIS ARGS DOES NOT WORK
+//        QTreeWidgetItem *itm = new QTreeWidgetItem();
+//        itm->setText(0,name);
+//        itm->setText(1,Description);
+//        //this->ui->ModelTree->topLevelItem( 0 )->addChild(itm);
+//
+//        //item->setFlags( Qt::ItemIsUserCheckable | Qt::ItemIsSelectable | Qt::ItemIsEnabled );
+//        //item->setCheckState(0, Qt::Unchecked);
+//
+//        QList<QTreeWidgetItem*> items = this->ui->ModelTree->findItems("Models",Qt::MatchExactly);
+//        int num = items.count();
+//        //cout <<"Items found"<<num;
+//
+//        addTreeChild(items[0], fileName, "Desc");
+//
+//        this->ui->ModelTree->update();
+//        //items[0]->addChild(itm);
+//
+//        items = this->ui->ModelTree->findItems("Model-1",Qt::MatchExactly);
+//
+//        if (items.count()>0)
+//        addTreeChild(items[0],
+//                  "Hola2", "Desc");
+//        //items[0]->addChild(itm);
+//
+//        //sitems[0]->insertChild(0,itm);
+//        //items[0]->setText(0,"Changed");
+//
+//        QTreeView modtreeview(this->ui->ModelTree);
+//
+//
+//        modtreeview.expandAll();
+//        modtreeview.show();
+//
+//        //this->ui->ModelTree->expandAll();
+//
+//
+//        this->ui->ModelTree->update();
+//        this->ui->ModelTree->show();
+//
+//
+//        /////////////////////////////
+//        ///// MODEL VISUALIZATION ///
+//        /////////////////////////////
+//
+//                    vtkSmartPointer<vtkGeometryFilter> geometryFilter =
+//            vtkSmartPointer<vtkGeometryFilter>::New();
+////
+//            #if VTK_MAJOR_VERSION <= 5
+//              geometryFilter->SetInput(model.UGrid());
+//              //surfaceFilter->SetInput(ugrid);
+//            #else
+//              geometryFilter->SetInputData(model.UGrid());
+////              //surfaceFilter->SetInputData(ugrid);
+//            #endif
+//              geometryFilter->Update();
+////              //surfaceFilter->Update();
+////
+//            vtkSmartPointer<vtkPolyData>
+//            polydata= geometryFilter ->GetOutput ();
+//
+//
+//
+//             vtkSmartPointer<vtkPolyDataMapper> pdmapper =
+//            vtkSmartPointer<vtkPolyDataMapper>::New();
+//        //
+//        //    //pdmapper->ScalarVisibilityOff();
+//        //
+//            #if VTK_MAJOR_VERSION <= 5
+//              pdmapper->SetInputConnection(polydata->GetProducerPort());
+//            #else
+//             pdmapper->SetInputData(polydata);
+//            #endif
+//
+//            /////// END OF CONTOUR
+//
+//          ///////////////////////// RENDERING ////
+//      vtkSmartPointer<vtkActor> actor =
+//        vtkSmartPointer<vtkActor>::New();
+//
+//            actor->SetMapper(pdmapper);
+//
+//          actor->GetProperty()->SetEdgeColor(0, 0, 0);
+//          actor->GetProperty()->EdgeVisibilityOn();
+//
+//      this->ren->AddActor( actor);
+//
+//      //Add Mesh to Tree
+//      AddMeshToTree(model.Mesh());
+//
+//      //Add Boundary Conditions to Tree
+//
+//      model.SolveIter();
+//      ui->MsgWin->AddString(model.ItLog());
+//
+//
+//      //this->vmodel.push_back(new GraphicCFDModel(model));
+//      this->vmodel.push_back(new GraphicCFDModel(fileName.toStdString()));
+//      this->vmodel[0]->SolveIter();
+//      //ui->MsgWin->AddString(this->vmodel[0]->ItLog());
+//
+//      //vjob.push_back(new Job(*vmodel[0]) );
+//      vjobsubmitdialog.push_back(new JobSubmitDialog (*this->vmodel[0] , this)); //Model and parent
+//      //vjobsubmitdialog[0]->exec();
+//      vjobsubmitdialog[0]->show();
 
 
     }//If not filename Empty

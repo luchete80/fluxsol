@@ -59,8 +59,6 @@ CFDModel::CFDModel(const std::string s):Model(s)
     this->InitFields();
 }
 
-
-
 void CFDModel::InitFields()
 {
         //Converts all mesh to one
