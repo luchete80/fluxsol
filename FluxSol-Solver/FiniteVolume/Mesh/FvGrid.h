@@ -71,13 +71,17 @@ private:
 	    vector <vector <int> > face_local_cell_neighbour;  //Local cell neigbours
 
 
+    //TEMP VALUES
+    map<vector <int> , int > sortbfacemap;   //map to the sorted face vertex set
+
+
     //To be replaces by sorting faces, allocating interior faces at first
     void Create_IntFaces()//This was old and worng NetFlux Faces, which belongs to field
     {
         for (int f=0;f<this->num_faces;f++)
         {
             //cout << "Face "<<f<<endl;
-            _FvFace face=this->Face(f);
+            //_FvFace face=this->Face(f);
             //if (!face.Is_Null_Flux_Face() && !this->Grid().Face(f).Boundaryface())
             if (!this->Face(f).Boundaryface())
                 this->int_faces.insert(f);

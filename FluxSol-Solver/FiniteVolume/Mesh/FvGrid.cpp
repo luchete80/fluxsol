@@ -21,6 +21,7 @@
 
 *************************************************************************/
 #include "FvGrid.h"
+#include <time.h>
 
 //To utils
 //Redundance with vector c++ lib
@@ -524,8 +525,6 @@ void Fv_CC_Grid::Init_Faces()
             cellit->Init_NumberofFaces(numcellfaces[cellit->Num_Vertex()]);
         }
 
-
-
         //vector<vector<int> > vec(4, vector<int>(4))
 
 
@@ -544,6 +543,11 @@ void Fv_CC_Grid::Init_Faces()
         int k=0;
         int numfaces=0;
         int globalfaceid=0;
+
+        double ittime_spent;
+        clock_t ittime_begin, ittime_end, ittime_temp;
+        ittime_end = clock();
+        cout << "[I] Creating Faces..."<<endl;
 
         for (cellit=cell.begin();cellit!=cell.end();cellit++)
         {
@@ -624,41 +628,17 @@ void Fv_CC_Grid::Init_Faces()
             c++;
         }
         cout << "\n";
-//        cout << "Num faces" <<numfaces<<endl;
-
-//        c=0;
-//        for (cellit=cell.begin();cellit!=cell.end();cellit++)
-//        {
-//
-//         for (int nf=0;nf<numcellfaces[cellit->Num_Vertex()];nf++)
-//            {cout <<cellglobalfaces[c][nf]<< " ";}
-//        cout << endl;
-//        }
-//        for (sit=faceverts.begin();sit!=faceverts.end();sit++)
-//        {
-//            vector <int>tempv=*sit;
-//            for (int i=0;i<tempv.size();i++)
-//                cout << tempv[i]<< " ";
-//            cout << endl;
-//        }
 
 
-
-//        cout << "Mapped Values..."<<endl;
-//        int i=0;
-//        for (mymapit=mymap.begin();mymapit!=mymap.end();mymapit++)
-//        {
-//            for (int v=0;v<4;v++)
-//                cout << mymapit->second[v]<<" ";
-//            cout <<endl;
-//            i++;
-//        }
-
-
-//        cout << "Faces inserted: "<<deffaceverts.size()<<endl;
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        cout << "[I] Face Creation Time: " <<scientific <<ittime_spent <<" " <<endl;
 
         //Inserting faces
-        cout << "[I] Creating Faces ..." <<endl;
+        cout << "[I] Inserting Faces ..." <<endl;
+
+        ittime_end = clock();
+
+
         int nf=0;
         int nfb=0;
         for (it=deffaceverts.begin(); it!=deffaceverts.end(); ++it)
@@ -688,6 +668,11 @@ void Fv_CC_Grid::Init_Faces()
                 //this->Cell(facecells[1]).Id_Face(nfenc2,nf);    //Id_Face(nfenc2,Face Id);
                 temp_boundfaces.push_back(nf);
                 nfb++;
+
+                //NEW
+                vector <int> sortfacevertex(tempNodes);
+                std::sort (sortfacevertex.begin(), sortfacevertex.end(), myobject);
+                sortbfacemap.insert(std::pair< vector <int> , int > (sortfacevertex, nf) );
             }
             else
             {
@@ -702,6 +687,9 @@ void Fv_CC_Grid::Init_Faces()
 
         this->num_faces=deffaceverts.size();
         this->num_boundary_faces=nfb;
+
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        cout << "[I] Face Insertion Time: " <<scientific <<ittime_spent <<" " <<endl;
 
     }//If cells were initialized
 
@@ -1020,6 +1008,9 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 
 	const std::string  Fv_CC_Grid::Read_CGNS()
 	{
+
+	    map<vector <int> , int >::iterator sortfacemapit;   //for boundary creation
+
         std::stringstream out;
         //raw data - vertices
         //base class function
@@ -1134,15 +1125,15 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
         out << "[I] Assigning Faces ..."<<endl;
         //Iniciar_Caras();
         Init_Faces();
-        out << "[I] Assigning Neighbours ..."<<endl;
+        cout << "[I] Assigning Neighbours ..."<<endl;
         AssignNeigboursCells();
-        out << "[I] Calculating Volumes ..."<<endl;
+        cout << "[I] Calculating Volumes ..."<<endl;
         CalcCellVolumes();
         //CreateNodesFromCellVerts();
 
         vector <Patch> vpatch;
 
-        out << "[I] Boundary Faces count: " <<temp_boundfaces.size()<<endl;
+        cout << "[I] Boundary Faces count: " <<temp_boundfaces.size()<<endl;
         std::vector<std::list <int> >bpfaces;
 
 //        cout << "Boundary zone nodes" << bpnode[0][node]<<endl;
@@ -1150,18 +1141,27 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
         int nBocos=raw.bocoNameMap.size();  //Extrcted from freecfd
         out << "[I] Creating Patches ..."<<endl;
 
+        cout << "[I] Creating Boundary Patches..." <<endl;
+
+        double ittime_spent;
+        clock_t ittime_begin, ittime_end, ittime_temp;
+        ittime_end = clock();
+        vector <int> faceverts;
+
         string pname;
         int totalboundfaces=temp_boundfaces.size();
         for (int bp=0;bp<this->raw.bc_elem_list.size();bp++)    //Look Through patch
         {
             pname=this->imported_patchnames[bp];
             list <int> temp;
+            list <int> tempnew;
 
             out << "[I] Searching patch " << bp << ", named "<< pname<<", remaining boundary faces count: "<<temp_boundfaces.size()<<endl;
 
             int nfoundfaces=0;
             if (raw.bocoNodes[bp].size()>0)
             {
+                cout << "[I] Patch defined via Nodes..."<<endl;
                 for (int bf=0;bf<temp_boundfaces.size();bf++)   //Look through all boundary faces, coincidence with each boconodes patch
                 {
                     int idf=temp_boundfaces[bf];
@@ -1181,72 +1181,50 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
             else if (bpelem[bp].size()>0) //If bc are defined via 2D elements
             {
                //Looking through raw elements (faces in Grid)
+               cout << "[I] Patch defined via Elems..."<<endl;
                 for (int el=0;el<bpelem[bp].size();el++)
                 {
-                    vector<int> faceverts;
                     //Adding element vertices
                     //for (int iv=0;iv<this->Cell(bpelem[bp][el]).Num_Vertex();iv++)
                     for (int iv=0;iv<vboundcell[bcell].Num_Vertex();iv++)   faceverts.push_back(vboundcell[bcell].Vert(iv));
 
-                    //TO MODIFY: THIS MUST BE DONE WTH A MAP of sets
-                    for (int bf=0;bf<temp_boundfaces.size();bf++)   //Look through all boundary faces, coincidence with each boconodes patch
-                    {
-                        int idf=temp_boundfaces[bf];
-                        bool enc=FindAllVals(faceverts,this->Face(idf).Vert());
-//                        bool enc=true;
-//                        for (int n=0;n<this->Face(idf).Vert().size();n++)
-//                            if (!(this->raw.bocoNodes[bp].find(this->Face(idf).Vert()[n])!=faceverts.end())) enc=false;
+                    vector <int> sortfaceverts(faceverts);
+                    std::sort (sortfaceverts.begin(), sortfaceverts.end(), myobject);
 
-                        if (enc)
-                        {
-                            //Add face idf to Boundary patch - Agrego idf al Patch
-                            temp.push_back(idf);
-                            temp_boundfaces.erase(temp_boundfaces.begin()+bf);
-                            bf--;
-                        }
-                    }
+                    //NEW FORM
+                    //// /*COULD BE LIKE THIS:*/int faceid=sortbfacemap[sortfaceverts];
+
+                    sortfacemapit=sortbfacemap.find(sortfaceverts);
+                    int faceid=sortfacemapit->second;
+                    if (sortfacemapit!=sortbfacemap.end()) //Found
+                        temp.push_back(faceid);
+                    faceverts.clear();
                     bcell++;
+
                 }//End element
             }
             else
             out << "[I] WARNING: No Boundary defined. "<<endl;
 
-//
-//            bool badpatch=false;
-//            if (  ( bp==(this->raw.bc_elem_list.size()-1) && (temp.size()==totalboundfaces) )  )  //If it is last pacth and has all faces
-//                badpatch=true;
-
-
             bpfaces.push_back(temp);
-            out << "[I] Created Patch "<<pname<<", Face Count: " <<temp.size()<<endl;
+            cout << "[I] Created Patch "<<pname<<", Face Count: " <<temp.size()<<endl;
+            //cout << "[I] Created new Patch "<<pname<<", Face Count: " <<tempnew.size()<<endl;
 
             Patch p(pname,bpfaces[bp]);
             vpatch.push_back(p);
 
-//            else
-//            {
-//                cout << "[E] Wrong Last Patch found. Created Patch_1"<<endl;
-//                temp.clear();
-//                for (int i=0;i<temp_boundfaces.size();i++)temp.push_back(temp_boundfaces[i]);
-//
-//                bpfaces.push_back(temp);
-//                Patch p(pname,bpfaces[bp]);
-//                vpatch.push_back(p);
-//            }
         }
+
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        cout << "[I] Boundary Patches Creation Time: " <<scientific <<ittime_spent <<" " <<endl;
 
         this->SetFaceLocalCellNeighbours(); //New, 20150518
 
         Boundary bound(vpatch);
         this->AddBoundary(bound);
+        cout << "[I] Creating internal faces..." <<endl;
         this->Create_IntFaces();
 
-        //NEW->Assgnind Grid refs to patches
-//        for (int p=0;p<this->boundary.Num_Patches();p++)
-//        {
-//            cout << "Adding Grid"<<endl;
-//            this->boundary.vPatch(p).AddGrid(*this);
-//        }
         this->boundary.AddGridPtr(*this);
 
 
