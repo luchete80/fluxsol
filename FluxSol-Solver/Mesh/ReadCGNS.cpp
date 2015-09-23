@@ -352,12 +352,14 @@ void _Grid::Read_InitialCGNS() {
 	//--------------------------------------//
 	//raw -> Grid
 	this->num_verts=globalNodeCount;
+	cout << "[I] Creating Vertices ..."<<endl;
 	for (int v=0;v<this->num_verts;v++)
 	{
 		_Vertex vt(raw.node[v][0],raw.node[v][1],raw.node[v][2]);
 		this->vert.push_back(vt);
 	}
 	//All other members are particular of Cell Centered Grid
+	cout << "[I] Vertices Created"<<endl;
 
 
 

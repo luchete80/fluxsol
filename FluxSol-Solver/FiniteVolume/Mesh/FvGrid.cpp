@@ -1022,7 +1022,7 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 
         int boundnode =0;
 
-        out << "[I] Creating boundary Elements ..."<<endl;
+        cout << "[I] Creating boundary Elements ..."<<endl;
         //--------------------------------
         //IF INPUT IS WITH BOUNDARY CELLS
         //--------------------------------
@@ -1050,12 +1050,27 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
             }
             bpelem.push_back(temp);
         }
-        out << "[I] Boundary Elements Count: "<<boundelem<<endl;
+        cout << "[I] Boundary Elements Count: "<<boundelem<<endl;
 
         //vector<vector<int>> idbcellasoc(boundelem,vector<int>(2,-1)); //Id cells
         vector<int> idbcell(boundelem,-1);
         int bcell=0;
 
+        cout << "[I] Creating Cells ..."<<endl;
+
+        double ittime_spent;
+        clock_t ittime_begin, ittime_end, ittime_temp;
+        ittime_end = clock();
+
+        set <int> bcellids;
+        set <int>::iterator bcellidsit;
+        for (int bp=0;bp<bpelem.size();bp++)
+            for(int el=0;el<bpelem[bp].size();el++)
+                bcellids.insert(bpelem[bp][el]-1);
+
+
+//        vector<int> connect;
+//        Cell_CC scell;
         for (int idcell =0 ; idcell<raw.cellConnIndex.size();idcell++)
         {
             int cellvertnum;
@@ -1070,54 +1085,46 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 
             Cell_CC scell(idcell,connect);
 
-                //Check if this is a boundary element
-                //TO MODIFY, MUST CONSIDER TETRA CELLS
+            //Check if this is a boundary element
+            //TO MODIFY, MUST CONSIDER TETRA CELLS
             //if (connect.size()<=4)   //All connectivity numbers are 3d
-            for (int bp=0;bp<bpelem.size();bp++)
-                for(int el=0;el<bpelem[bp].size();el++)
-                    if (idcell==(bpelem[bp][el]-1))     //Index of rawdata is counting from 1
-                    {
-                        vboundcell.push_back(scell);
-                        idbcell[bcell]=idcell;
-                        bcell++;
-                        found=true;
-                    }
-            if (!found)
+//            for (int bp=0;bp<bpelem.size();bp++)
+//                for(int el=0;el<bpelem[bp].size();el++)
+//                    if (idcell==(bpelem[bp][el]-1))     //Index of rawdata is counting from 1
+//                    {
+//                        vboundcell.push_back(scell);
+//                        idbcell[bcell]=idcell;
+//                        bcell++;
+//                        found=true;
+//                    }
+            //New form
+
+           bcellidsit=bcellids.find(idcell);
+           if (bcellidsit!=bcellids.end())
+            {
+                vboundcell.push_back(scell);
+                idbcell[bcell]=idcell;
+                bcell++;
+                found=true;
+            }
+            else
                 this->cell.push_back(scell);
-                //}
+
 
         }
 
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        cout << "[I] Cell Creation Time: " <<scientific <<ittime_spent <<" " <<endl;
 
         //vector<vector<int>> idbcellasoc(boundelem,vector<int>(2,-1));	//Id cells
         bcell=0;
 
-//        cout << "[I] Creating cells ..."<<endl;
-//        for (int idcell =0 ; idcell<raw.cellConnIndex.size();idcell++)
-//        {
-//            int cellvertnum;
-//            if (idcell<(raw.cellConnIndex.size()-1))
-//                cellvertnum = raw.cellConnIndex [idcell+1] - raw.cellConnIndex [idcell];
-//            else cellvertnum = raw.cellConnectivity.size()- raw.cellConnIndex [idcell] ;
-//
-//            vector<int> connect;
-//            for (int cv =0 ; cv<cellvertnum;cv++)
-//                connect.push_back(raw.cellConnectivity[ raw.cellConnIndex [idcell] + cv]);
-//
-//            Cell_CC scell(idcell,connect);
-//
-//                //Check if this is a boundary element
-//                //TO MODIFY
-//                //if (connect.size()>4)	//All connectivity numbers are 3d, BUT TETRA?
-//            this->cell.push_back(scell);
-//
-//        }
-        out << "[I] Created " << this->cell.size() << " cells. "<<endl;
+        cout << "[I] Created " << this->cell.size() << " cells. "<<endl;
         //Updating cell number
         this->num_cells=cell.size();
 
         // Nodes
-        out << "[I] Creating Central Nodes ..."<<endl;
+        cout << "[I] Creating Central Nodes ..."<<endl;
         CreateNodesFromCellVerts();
 
         this->inicie_nodes=true;
@@ -1143,8 +1150,6 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 
         cout << "[I] Creating Boundary Patches..." <<endl;
 
-        double ittime_spent;
-        clock_t ittime_begin, ittime_end, ittime_temp;
         ittime_end = clock();
         vector <int> faceverts;
 
