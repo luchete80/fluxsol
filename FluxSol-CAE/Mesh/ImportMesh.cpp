@@ -3,10 +3,16 @@
 void SimpleView::ImportMesh(const string &filename)
 {
 
+    clock_t ittime_begin, ittime_end;
+    double ittime_spent;
+    clock_t begin, end;
+
 	QString fileName = QString::fromStdString(filename);
 
     Fv_CC_Grid mesh;
 
+
+    ittime_end = clock();
 	//Another option is to separate with commas
 	if (!fileName.isEmpty())
 	{
@@ -39,6 +45,12 @@ void SimpleView::ImportMesh(const string &filename)
          	this->ui->MsgWin->AddString(mesh.StrLog());
          	this->ui->MsgWin->AddString("Mesh has been succesfully imported.\n");
          	cout << "Mesh successfully imported ..."<<endl;
+
+         	ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+            ittime_end = clock();
+            cout << "Mesh Import Time: " << ittime_spent <<" seconds" <<endl;
+
+
          	GraphicCFDModel model(mesh);
             //mesh.Log("Log.txt");
 
@@ -87,6 +99,12 @@ void SimpleView::ImportMesh(const string &filename)
             actor->SetMapper(datasetmapper);
         }
 
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        ittime_end = clock();
+        cout << "Graphic Model Creation Time: " << ittime_spent <<" seconds" <<endl;
+
+
+
       areaPicker =
         vtkSmartPointer<vtkAreaPicker>::New();
 
@@ -102,7 +120,7 @@ void SimpleView::ImportMesh(const string &filename)
 //      vtkSmartPointer<vtkInteractorStyleRubberBandPick> style =
 //        vtkSmartPointer<vtkInteractorStyleRubberBandPick>::New();
 
-/////////////////////////////////
+///////////////////////////////
 // FACE SELECTION /////////////
 //------
 //  vtkSmartPointer<HighlightInteractorStyleCells> style =
@@ -163,6 +181,10 @@ void SimpleView::ImportMesh(const string &filename)
 
 
     AddMeshToTree(mesh);
+
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        ittime_end = clock();
+        cout << "[I] Graphic Selection Tree Creation Time: " << ittime_spent <<" seconds" <<endl;
 
 	}
 

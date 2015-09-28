@@ -7,12 +7,17 @@ using namespace FluxSol;
 
 Model::Model(const std::string filename)
 {
+    clock_t ittime_begin, ittime_end;
+    double ittime_spent;
+    clock_t begin, end;
+
     this->inputfile=InputFile(filename);
 
     //Control of inputfile
     //TO MODIFY
     this->numparts=1;
 
+    ittime_end = clock();
     cout << "[I] Initializing Model ..."<<endl;
     if (this->numparts==1)
     {
@@ -44,6 +49,12 @@ Model::Model(const std::string filename)
 //        std::cout <<"List size"<< listi.size()<<std::endl;
 
     }
+
+    ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+    ittime_end = clock();
+    cout << "Mesh Import Total Time: " << ittime_spent <<" seconds" <<endl;
+
+
     iternumber=0;
 
 }

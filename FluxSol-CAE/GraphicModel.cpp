@@ -4,6 +4,9 @@ using namespace FluxSol;
 
 GraphicCFDModel::GraphicCFDModel(const std::string s):CFDModel(s)
 {
+
+    ittime_end = clock();
+
     this->uGrid=vtkSmartPointer<vtkUnstructuredGrid>::New();
     // Create the points
     this->points = vtkSmartPointer<vtkPoints>::New();
@@ -42,9 +45,6 @@ GraphicCFDModel::GraphicCFDModel(const std::string s):CFDModel(s)
 
       }
 
-    //for (int c=0;c<this->mesh.Num_Cells();c++)
-        //uGrid->InsertNextCell(hex->GetCellType(), hex->GetPointIds());
-
 }
 
 GraphicCFDModel::GraphicCFDModel(const Fv_CC_Grid &im)
@@ -58,7 +58,7 @@ GraphicCFDModel::GraphicCFDModel(const Fv_CC_Grid &im)
     //cout << "Vertex Count: " << this->mesh.<<endl;
 
     //cout << "Creating points ..." <<endl;
-
+    ittime_end = clock();
     for (int v=0;v<this->mesh.Num_Verts();v++)
     {
         double p[3];
@@ -66,10 +66,12 @@ GraphicCFDModel::GraphicCFDModel(const Fv_CC_Grid &im)
         for (int i=0;i<3;i++)
             p[i]=this->mesh.Vertex(v).Comp()[i];
 
-        //cout << "X: " << p[0] << ", X: " << p[1] << ", Z: "<< p[3]<<endl;
-
         points->InsertNextPoint(p);
     }
+    ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+    ittime_end = clock();
+    cout << "Point Creation Time: " << ittime_spent <<" seconds" <<endl;
+
     this->uGrid->SetPoints(points);
     //TO MODIFY, ASSUMING HEXA CELLS
 
@@ -89,6 +91,4 @@ GraphicCFDModel::GraphicCFDModel(const Fv_CC_Grid &im)
 
       }
 
-    //for (int c=0;c<this->mesh.Num_Cells();c++)
-        //uGrid->InsertNextCell(hex->GetCellType(), hex->GetPointIds());
 }
