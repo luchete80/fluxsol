@@ -22,8 +22,6 @@ GraphicCFDModel::GraphicCFDModel(const std::string s):CFDModel(s)
         for (int i=0;i<3;i++)
             p[i]=this->mesh.Vertex(v).Comp()[i];
 
-        //cout << "X: " << p[0] << ", X: " << p[1] << ", Z: "<< p[3]<<endl;
-
         points->InsertNextPoint(p);
     }
     this->uGrid->SetPoints(points);
@@ -31,10 +29,11 @@ GraphicCFDModel::GraphicCFDModel(const std::string s):CFDModel(s)
 
     cout << "Reading Cells ..."<<endl;
 
-      for (int c=0;c<this->mesh.Num_Cells();c++)
-      {
         vtkSmartPointer<vtkHexahedron> hex =
         vtkSmartPointer<vtkHexahedron>::New();
+
+      for (int c=0;c<this->mesh.Num_Cells();c++)
+      {
 
         for (int v=0;v<this->mesh.Cell(c).Num_Vertex();v++)
         {
@@ -77,10 +76,11 @@ GraphicCFDModel::GraphicCFDModel(const Fv_CC_Grid &im)
 
     cout << "Reading Cells ..."<<endl;
 
+    vtkSmartPointer<vtkHexahedron> hex =
+        vtkSmartPointer<vtkHexahedron>::New();
+
       for (int c=0;c<this->mesh.Num_Cells();c++)
       {
-        vtkSmartPointer<vtkHexahedron> hex =
-        vtkSmartPointer<vtkHexahedron>::New();
 
         for (int v=0;v<this->mesh.Cell(c).Num_Vertex();v++)
         {
