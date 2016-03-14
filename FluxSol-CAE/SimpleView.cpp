@@ -517,6 +517,7 @@ SimpleView::SimpleView()
   connect(this->ui->actionView_Z, SIGNAL(triggered()), this, SLOT(slotViewZpos()));
   connect(this->ui->actionImportMesh, SIGNAL(triggered()), this, SLOT(slotImportMesh()));
   connect(this->ui->actionOpenResults, SIGNAL(triggered()), this, SLOT(slotOpenResults()));
+  connect(this->ui->actionNewJob, SIGNAL(triggered()), this, SLOT(slotNewJob()));
 
 
 
@@ -589,6 +590,10 @@ void SimpleView::slotImportMesh()
 
 }
 
+
+void SimpleView::slotNewJob()
+{
+}
 
 void SimpleView::slotOpenResults()
 {
@@ -923,6 +928,18 @@ void SimpleView::slotViewZpos()
 
 }
 
+//
+// IMPORT via string must be fixed
+// Now is working import via input file
+
+//       string inputFileName=argv[1];
+//       InputFile input(inputFileName);
+//       string solscheme=input.ReadEqnType();   //To modify, this must be per grid
+//
+//       if (solscheme=="navier-stokes") //if this is empty
+//       {
+//           CFDModel model(inputFileName);
+
 void SimpleView::slotImportIn()
 {
 	QString fileName = QFileDialog::getOpenFileName(this,
@@ -939,6 +956,7 @@ void SimpleView::slotImportIn()
 
         //TO Modify, at first is only a CFD Model
         //GraphicCFDModel model(fileName.toStdString());
+
         string s="inputldc10.in";
         GraphicCFDModel model(s);
 

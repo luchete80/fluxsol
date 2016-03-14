@@ -177,6 +177,7 @@ public slots:
 	virtual void slotExit();
 	virtual void slotImportMesh();
 	virtual void slotOpenResults();
+	virtual void slotNewJob();
 
 
 	protected:

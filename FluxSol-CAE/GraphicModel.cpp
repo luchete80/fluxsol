@@ -46,7 +46,7 @@ GraphicCFDModel::GraphicCFDModel(const std::string s):CFDModel(s)
 
 }
 
-GraphicCFDModel::GraphicCFDModel(const Fv_CC_Grid &im)
+GraphicCFDModel::GraphicCFDModel(const FeGrid <3> &im)
 {
     this->mesh=im;
 

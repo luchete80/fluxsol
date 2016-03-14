@@ -179,7 +179,8 @@ set( Hdrs 	${PROJECT_SOURCE_DIR}/Job/JobSubmitDialog.h
 set( MOC_Hdrs SimpleView.h )
 
 set( UIs 	SimpleView.ui 
-			Param.ui 
+			Param.ui
+			NewJobDialog.ui			
 			JobSubmitDialog.ui
 			ManageBCDialog.ui) #THIS IS THE SAME TO uic -o Param.h Param.ui
 
