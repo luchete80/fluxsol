@@ -35,7 +35,7 @@ class Worker : public QObject
 public slots:
     void doWork(const QString &parameter) {
         // ...
-//        QString result="Hi...";
+        QString result="Hi...";
         emit resultReady(result);
     }
 
