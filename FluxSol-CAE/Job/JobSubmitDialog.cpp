@@ -52,7 +52,7 @@ JobSubmitDialog::JobSubmitDialog(const CFDModel &model_,QWidget *parent)
 //
 //
 //    //connect(worker, SIGNAL(AddMsg(string)), this, SLOT(AddString(string)),Qt::QueuedConnection);
-    connect(worker, SIGNAL(&Worker::AddMsg(string)), this, SLOT(&JobSubmitDialog::AddString(string)));
+    connect(worker, SIGNAL(&Worker::AddMsg(QString)), this, SLOT(&JobSubmitDialog::AddString(QString)));
     //connect(worker, SIGNAL(DrawChart()), this, SLOT(DrawResChartAlt()));
 
     worker->moveToThread(thread);

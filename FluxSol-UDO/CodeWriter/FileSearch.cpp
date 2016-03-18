@@ -67,10 +67,7 @@ FileSearcher::FileSearcher(string dir)
     if(filepath.substr(filepath.find_last_of(".") + 1) == "h")
     {
         GetUDOMapsFromFile(filepath);
-    //    if (fin >> num)
-    //    {
-    //
-    //    }
+
         cout << filepath << ": " << num << endl;
         this->filenames.insert(filepath.c_str());
         fin.close();

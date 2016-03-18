@@ -2,6 +2,7 @@
 #define _JOBWORKER_H
 
 #include <QtCore>
+#include <string>
 //#include "Job.h"
 //#include "JobClasses.h"
 #include "Model.h"
@@ -9,9 +10,10 @@
 #include "ui_JobSubmitDialog.h"
 
 #include "ResWidgetWorker.h"        //To Draw residuals
-
+#include <QString>
 //#include "JobSubmitDialog.h"
 
+using namespace std;
 
 //From http://doc.qt.io/qt-4.8/qthread.html
 
@@ -26,14 +28,14 @@ class Worker : public QObject
     bool stopped;
     int iter;
     MsgWindow *msgwin;
-    string model_itlog;
+    std::string model_itlog;
 
     ResWidgetWorker *resworker;
 
 public slots:
     void doWork(const QString &parameter) {
         // ...
-        QString result="Hi...";
+//        QString result="Hi...";
         emit resultReady(result);
     }
 
@@ -69,7 +71,7 @@ public slots:
     void resultReady(const QString &result);
     void DrawChart();
     void ChgButton(const string &str);
-    void AddMsg(const string &str);
+    void AddMsg(const QString &str);
     void statusChanged( const string &str);
 };
 

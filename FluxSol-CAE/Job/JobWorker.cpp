@@ -5,7 +5,7 @@ void Worker::Solve()
 {
     vector <double> ures;
     //cout << "Before while..."<<endl;
-    emit AddMsg("Hi...\n");
+//    emit AddMsg("Hi...\n");
     //emit resworker->DrawTest();
 
     while (!stopped)
@@ -40,12 +40,13 @@ void Worker::Solve()
             }
     }
 
-    emit this->AddMsg("Job Stopped...\n");
+    //emit this->AddMsg("Job Stopped...\n");
 
 }
 
 void Worker::Stop()
 {
+    emit AddMsg("Stopping Process...\n");
     if (!stopped)
         stopped=true;
 }

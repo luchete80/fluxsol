@@ -34,6 +34,7 @@
 #include "JobThread.h"
 
 #include <vector>
+#include <QString>
 
 //This is repeated on ui_JobSubmitDialog
 class JobSubmitDialog:
@@ -52,9 +53,9 @@ private Ui::JobSubmitDialog
         void StartStopJob();
 
     public slots:
-        void AddString(const string &str){
-            //ResidualMsg->AddString(str);
-            cout << str<<endl;
+        void AddString(const QString &str){
+            ResidualMsg->AddString(str.toStdString());
+            //cout << str<<endl;
             this->update();}
         void ChangeStartStopButton (const string &str){StartStopButton->setText(QString::fromUtf8(str.c_str()));}
 

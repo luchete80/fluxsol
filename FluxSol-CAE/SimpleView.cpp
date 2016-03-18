@@ -1058,7 +1058,7 @@ void SimpleView::slotImportIn()
       this->vmodel[0]->SolveIter();
       //ui->MsgWin->AddString(this->vmodel[0]->ItLog());
 
-      //vjob.push_back(new Job(*vmodel[0]) );
+
       vjobsubmitdialog.push_back(new JobSubmitDialog (*this->vmodel[0] , this)); //Model and parent
       //vjobsubmitdialog[0]->exec();
       vjobsubmitdialog[0]->show();

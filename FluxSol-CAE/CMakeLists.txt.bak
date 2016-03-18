@@ -236,8 +236,7 @@ if(VTK_QT_VERSION VERSION_GREATER "4")
   #add_library(CAE_Mesh ${Meshlib_Srcs})
   
   #WIN32 to exclude DOS Console Window 
-  #add_executable(${NAME} WIN32 #MACOSX_BUNDLE
-add_executable(${NAME} #MACOSX_BUNDLE
+  add_executable(${NAME} WIN32 #MACOSX_BUNDLE
     ${Srcs}
 	#$<TARGET_OBJECTS:Mesh>
 	${Meshlib_Srcs}

@@ -24,6 +24,6 @@ void JobThread::run()
 //            }
 //    }
 
-    emit this->AddMsg("Job Stopped...\n");
+//    emit this->AddMsg("Job Stopped...\n");
 
 }
