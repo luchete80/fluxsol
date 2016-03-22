@@ -31,7 +31,7 @@ using namespace FluxSol;
 
 ///////////////////////////
 //// FLUXSOL EXAMPLE 6 ////
-///////////////////////////
+///////////////////////////     template<class T>
 
 int main()
 {
@@ -169,13 +169,16 @@ int main()
         //TO MODIFY: IF MESH IS NOT ASSIGNED PREVIOUSLY TO EQUAL, ERROR
 		_CC_Fv_Field <Vec3D> gradpV(mesh);
 //		-FvExp::Grad(p);
-		gradpV=-FvExp::GradV(p);
+
+		//Originally Is
+		//gradpV=-FvExp::GradV(p);
+		gradpV=-FvExp::NonOrthGrad(p);
 		//Correct boundary conditions, by imposing zero pressure gradient at wall
 
 		//From sezai courses
 //		An iterative process is required to calculate gradients:
 //        Step 1: Calculate gradient from Eq. (11.31)
-//        Step 2: Calculate φf from Eq. (11.32)
+//        Step 2: Calculate φf from Eq. (11.32) [fiface=gradfi_fo+gradfi_fo]
 //        Step 3: Repeat steps 1 and 2 until convergence. (4-5 repetitions required )
 
 

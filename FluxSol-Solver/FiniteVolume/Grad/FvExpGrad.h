@@ -407,7 +407,24 @@ namespace FluxSol
         <typename outerProduct<Vec3D, T>::type >
         NonOrthGrad(const _CC_Fv_Field <T> & field)
         {
-            _CC_Fv_Field <T> r(field.ConstGrid());
+
+
+//              THIS IS THE ORIGINAL WHTHOUT CORRECTION, DELETE THIS
+//                GeomSurfaceField <T> facefi=Interpolate(field);
+//                double afdir[2];afdir[0]=1.;afdir[1]=-1.;
+//                for (int f=0;f<r.Grid().Num_Faces();f++)
+//                {
+//                    for (int fc=0;fc<r.Grid().Face(f).NumCells();fc++)
+//                    {
+//                        int c=r.Grid().Face(f).Cell(fc);
+//                        r[c]+=r.Grid().Face(f).Af()*facefi[f]*afdir[fc];
+//                    }
+//                }
+//                return r;
+
+
+            _CC_Fv_Field < typename outerProduct<Vec3D, T>::type > r(field.Grid());
+
             int cell[2];
             std::set<int>::iterator it;
             std::set<int> *nff=&field.IntNetFluxFaces();
@@ -418,12 +435,23 @@ namespace FluxSol
 
 
             //Field Interpolation
-            GeomSurfaceField <T> fi_fo=Interpolate(field);
+            _CC_Fv_Field < typename outerProduct<Vec3D, T>::type > fi_fo(field.Grid());
 
             //Gradient Interpolation
             GeomSurfaceField < typename outerProduct<Vec3D, T>::type > grad_fo = Interpolate(gradp);
 
-            GeomSurfaceField <T> field_f(field.ConstGrid());
+            GeomSurfaceField <T> field_f(field);
+
+            GeomSurfaceField <T> facefi=Interpolate(field);
+            double afdir[2];afdir[0]=1.;afdir[1]=-1.;
+            for (int f=0;f<r.Grid().Num_Faces();f++)
+            {
+                for (int fc=0;fc<r.Grid().Face(f).NumCells();fc++)
+                {
+                    int c=r.Grid().Face(f).Cell(fc);
+                    fi_fo[c]+=r.Grid().Face(f).Af()*facefi[f]*afdir[fc];
+                }
+            }
 
             bool end=false;
             int numcorr=5;
@@ -434,6 +462,7 @@ namespace FluxSol
             // NON ORTHOGONAL CORRECTIONS
             while (!end)
             {
+                //Loop through Faces via iterator
                 for (it=nff->begin(); it!=nff->end(); ++it)
                 {
                     int f=*it;
@@ -451,7 +480,7 @@ namespace FluxSol
 
                 }
 
-                field_f=fi_fo+grad_fo&fo_f;
+                field_f[f]=fi_fo[f]+grad_fo[f]&fo_f;
 
                 for (it=nff->begin(); it!=nff->end(); ++it)
                 {
