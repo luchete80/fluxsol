@@ -109,7 +109,15 @@ set (NAME UDO)
 set (SOURCES 
 UDOLib.cpp
 UDOCreator.cpp
-udf_boundary.cpp
+#udf_boundary.cpp
+${FLUXSOL_SRC_DIR}/Input/Input.cpp
+${FLUXSOL_SRC_DIR}/Field/Field.cpp
+${FLUXSOL_SRC_DIR}/Field/PatchField.cpp
+${FLUXSOL_SRC_DIR}/Utils/Utils.cpp
+${FLUXSOL_SRC_DIR}/SistEcuac/SistEcuac.cpp
+${FLUXSOL_SRC_DIR}/Field/BoundaryField.cpp
+${FLUXSOL_SRC_DIR}/Type/Scalar.cpp
+${FLUXSOL_SRC_DIR}/Type/Vec3D.cpp
 ${FLUXSOL_DIR}/Src/FluxSol-UDO/CodeWriter/FileSearch.cpp
 )
 
@@ -123,4 +131,4 @@ install (FILES ${NAME}.h DESTINATION include)
 set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all-symbols")
 
 add_library(${NAME} SHARED ${SOURCES})
-target_link_libraries (${NAME} fluxsollib)
+#target_link_libraries (${NAME} fluxsollib)

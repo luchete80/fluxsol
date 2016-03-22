@@ -104,6 +104,15 @@ endif ()
 
 set (SOURCES 
 FileSearch.cpp
+${FLUXSOL_SRC_DIR}/Input/Input.cpp
+${FLUXSOL_SRC_DIR}/Field/Field.cpp
+${FLUXSOL_SRC_DIR}/Field/PatchField.cpp
+${FLUXSOL_SRC_DIR}/Utils/Utils.cpp
+${FLUXSOL_SRC_DIR}/SistEcuac/SistEcuac.cpp
+${FLUXSOL_SRC_DIR}/Field/BoundaryField.cpp
+${FLUXSOL_SRC_DIR}/Type/Scalar.cpp
+${FLUXSOL_SRC_DIR}/Type/Vec3D.cpp
+dummylib.cpp
 main.cpp
 )
 
@@ -115,4 +124,5 @@ FILE(GLOB _header
 install (FILES ${NAME}.h DESTINATION include)
 
 add_executable(${NAME} ${SOURCES})
-target_link_libraries (${NAME} ${FLUXSOL_LIB} ${EXT_LIBS})
+#target_link_libraries (${NAME} ${FLUXSOL_LIB} ${EXT_LIBS})
+target_link_libraries (${NAME} ${EXT_LIBS})
