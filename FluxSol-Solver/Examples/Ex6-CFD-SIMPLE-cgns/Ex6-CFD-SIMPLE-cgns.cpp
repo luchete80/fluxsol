@@ -199,7 +199,6 @@ int main()
 
         _CC_Fv_Field <Scalar> AUr(mesh);
 
-        //TO MODIFY
         //THIS CRASHES!!!!
         //AUr=0.001/UEqn.A();       // In OpenFoam these are scalar
 
