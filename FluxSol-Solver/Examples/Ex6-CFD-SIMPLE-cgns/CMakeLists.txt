@@ -21,7 +21,7 @@ set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
 include_directories(${FLUXSOL_DIR}/Src/FluxSol-Solver)
 
 set (FLUXSOL_INCLUDE_DIR ${FLUXSOL_DIR}/Src/FluxSol-Solver)
-set (FLUXSOL_LIB_DIR ${FLUXSOL_DIR}/Bin_CodeBlocks/FluxSol)
+set (FLUXSOL_LIB_DIR ${FLUXSOL_DIR}/Bin_Release/Solver)
 
 set (LASPACK_INCLUDE ${FLUXSOL_DIR}/Libs/laspack/src/)
 set (LASPACK_LIBRARY_DIR ${FLUXSOL_DIR}/Libs/laspack/bin)
@@ -48,8 +48,47 @@ include_directories("${FLUXSOL_INCLUDE_DIR}/SistEcuac")
 include_directories("${FLUXSOL_INCLUDE_DIR}/Solver")
 include_directories("${FLUXSOL_INCLUDE_DIR}/Tests")
 include_directories("${FLUXSOL_INCLUDE_DIR}/Type")
+include_directories("${FLUXSOL_INCLUDE_DIR}/UDO")
 include_directories("${FLUXSOL_INCLUDE_DIR}/Utils")
 
+
+set (MY_PETSC_DIR "$ENV{PETSC_DIR}")
+set (MPI_LIB_DIR "$ENV{MPI_LIB_DIR}")
+set (MPI_INC_DIR "$ENV{MPI_INC_DIR}")
+set (MY_PETSC_ARCH "$ENV{PETSC_ARCH}")
+
+#if (USE_PETSC)
+	find_package (PETSc REQUIRED HINTS "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/conf")
+	include_directories (..)
+	include_directories ("${MY_PETSC_DIR}/include" "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/include" ${PETSC_INCLUDE_PATH})
+	
+	#THIS IS NOT USED IN WINDOWS, USED MSMPI
+	#include_directories ("${MY_PETSC_DIR}/include/mpiuni")
+	
+	include_directories ("E:/Programas/cygwin64/petsc-3.4.4/include")
+	find_library (PETSC_LIB petsc PATH "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/lib/") 
+	if (${PETSC_LIB} STREQUAL "PETSC_LIB-NOTFOUND")
+		message (FATAL_ERROR "PETSc library not found")
+	endif ()
+	##set (EXT_LIBS ${EXT_LIBS} ${PETSC_LIB} ${PETSC_PACKAGE_LIBS})
+
+	#Blas And Lapack, Manual, can be also automatic
+	set (PETSC_LIBRARY_DIRS  ${MY_PETSC_DIR}/${MY_PETSC_ARCH}/lib)
+	link_directories(${PETSC_LIBRARY_DIRS})
+	set (EXT_LIBS ${EXT_LIBS} ${PETSC_LIB} flapack fblas)
+
+	set (MODULE_LIST ${MODULE_LIST} "PETSc")
+	set (USE_MPI ON)
+	add_definitions (-D__PETSC_MODULE)
+
+
+	link_directories(${MPI_LIB_DIR})
+	include_directories(${MPI_INC_DIR})
+
+	set (EXT_LIBS ${EXT_LIBS} msmpi gfortran)
+	
+
+#endif ()
 
 include_directories(${FLUXSOL_INCLUDE_DIR})
 include_directories(${LASPACK_INCLUDE})
