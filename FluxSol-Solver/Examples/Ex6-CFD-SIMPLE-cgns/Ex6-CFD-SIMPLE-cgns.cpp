@@ -1,24 +1,17 @@
 /************************************************************************
-
 	Copyright 2012-2013 Luciano Buglioni
-
 	Contact: luciano.buglioni@gmail.com
-
 	This file is a part of FluxSol
-
 	FluxSol is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     any later version.
-
     FluxSol is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-
     For a copy of the GNU General Public License,
     see <http://www.gnu.org/licenses/>.
-
 *************************************************************************/
 // THERMAL 5 CELLS EXAMPLE //
 
@@ -31,7 +24,7 @@ using namespace FluxSol;
 
 ///////////////////////////
 //// FLUXSOL EXAMPLE 6 ////
-///////////////////////////
+///////////////////////////     template<class T>
 
 int main()
 {
@@ -169,13 +162,16 @@ int main()
         //TO MODIFY: IF MESH IS NOT ASSIGNED PREVIOUSLY TO EQUAL, ERROR
 		_CC_Fv_Field <Vec3D> gradpV(mesh);
 //		-FvExp::Grad(p);
-		gradpV=-FvExp::GradV(p);
+
+		//Originally Is
+		//gradpV=-FvExp::GradV(p);
+		gradpV=-FvExp::NonOrthGrad(p);
 		//Correct boundary conditions, by imposing zero pressure gradient at wall
 
 		//From sezai courses
 //		An iterative process is required to calculate gradients:
 //        Step 1: Calculate gradient from Eq. (11.31)
-//        Step 2: Calculate φf from Eq. (11.32)
+//        Step 2: Calculate φf from Eq. (11.32) [fiface=gradfi_fo+gradfi_fo]
 //        Step 3: Repeat steps 1 and 2 until convergence. (4-5 repetitions required )
 
 
@@ -199,6 +195,7 @@ int main()
 
         _CC_Fv_Field <Scalar> AUr(mesh);
 
+        //TO MODIFY
         //THIS CRASHES!!!!
         //AUr=0.001/UEqn.A();       // In OpenFoam these are scalar
 
