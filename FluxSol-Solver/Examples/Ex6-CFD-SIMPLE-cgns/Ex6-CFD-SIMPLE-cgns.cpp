@@ -31,19 +31,25 @@ using namespace FluxSol;
 
 ///////////////////////////
 //// FLUXSOL EXAMPLE 6 ////
-///////////////////////////     template<class T>
+///////////////////////////
+
+stringstream reslog;
 
 int main()
 {
 
+    bool orth_mesh=true;
 
     //string inputFileName=argv[1];
 	string inputFileName="InputEx.in";
+	cout << "Opening InputEx.in ..."<<endl;
 	InputFile input(inputFileName);
 
     string meshfname=input.section("grid",0).get_string("file");
 	Fv_CC_Grid mesh(meshfname);
 	mesh.Log("Log.txt");
+
+	cout << "Is your mesh Non-Orthogonal?"<<endl;
 
     for (int c=0;c<mesh.Num_Cells();c++)
         cout << mesh.Cell(c).Vp().outstr()<<endl;
@@ -123,6 +129,8 @@ int main()
 	clock_t starttime,endtime;
 	time_t starttimec,endtimec;
 	int it=0;
+
+	vector <double> ures;
 	while (it <100)
 	{
 
@@ -170,15 +178,19 @@ int main()
 		_CC_Fv_Field <Vec3D> gradpV(mesh);
 //		-FvExp::Grad(p);
 
-		//Originally Is
-		//gradpV=-FvExp::GradV(p);
-		gradpV=-FvExp::NonOrthGrad(p);
+        if (orth_mesh)
+            gradpV=-FvExp::GradV(p);
+		else
+            gradpV=-FvExp::NonOrthGrad(p);
+
+
+
 		//Correct boundary conditions, by imposing zero pressure gradient at wall
 
 		//From sezai courses
 //		An iterative process is required to calculate gradients:
 //        Step 1: Calculate gradient from Eq. (11.31)
-//        Step 2: Calculate φf from Eq. (11.32) [fiface=gradfi_fo+gradfi_fo]
+//        Step 2: Calculate φf from Eq. (11.32)
 //        Step 3: Repeat steps 1 and 2 until convergence. (4-5 repetitions required )
 
 
@@ -202,7 +214,6 @@ int main()
 
         _CC_Fv_Field <Scalar> AUr(mesh);
 
-        //TO MODIFY
         //THIS CRASHES!!!!
         //AUr=0.001/UEqn.A();       // In OpenFoam these are scalar
 
@@ -242,7 +253,7 @@ int main()
                 phi.Val(f,0.);
         }
 
-        cout << "Corrected phi"<<phi.outstr()<< endl;
+        //cout << "Corrected phi"<<phi.outstr()<< endl;
 
 		//8. Define and Solve Pressure Correction And Repeat
 		//Div(mf)=Div(m´f+m*f)=0 ==> Div(m*f)+Div(-rho(DfGrad(p´f)Af)=0
@@ -281,6 +292,22 @@ int main()
         //cout << "AU*FvExp::Grad(p)"<<(AU*FvExp::Grad(p)).Val(0).outstr()<<endl;
         //cout << "U(0) Val: "<<U.Val(0).outstr()<<endl;
 
+        Scalar sum;
+        for (int c=0;c<p.Numberofvals();c++)
+        {
+            sum+=pEqn.Eqn(c).Source().Norm();
+        }
+
+        ures=UEqn.GlobalRes();
+
+        reslog.str("");
+
+        reslog << "[I] Iter - Residuals u v w p - Time || " << it << " - " <<ures[0] << " " << ures[1] << " "<< ures[2] << " " <<sum.outstr()<< " - " << /*time_spent<<*/endl;
+        // TO MODIFY: ADD PERSONALIZED RESIDUALS
+        cout <<reslog.str()<<endl;
+
+
+
         Vec3D maxudiff=0.;
         Scalar maxpdiff=0.;
 
@@ -306,10 +333,10 @@ int main()
         }
 
         it++;
-        _CC_Fv_Field <Vec3D> test(mesh);
-        test=FvExp::Grad(p);
-        OutputFile("CellField-gradpx.vtu",test,0);
-        OutputFile("CellField-gradpy.vtu",test,2);
+//        _CC_Fv_Field <Vec3D> test(mesh);
+//        test=FvExp::Grad(p);
+//        OutputFile("CellField-gradpx.vtu",test,0);
+//        OutputFile("CellField-gradpy.vtu",test,2);
 	} //while
 
 	OutputFile("CellField-U.vtu",U);
@@ -441,3 +468,4 @@ int main()
 //           itlog << ittime_spent <<" "<<endl;
 //           iternumber++;
 //}
+
