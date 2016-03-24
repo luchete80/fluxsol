@@ -132,6 +132,7 @@ include_directories("${PROJECT_SOURCE_DIR}/Interpolation")
 include_directories("${PROJECT_SOURCE_DIR}/Materials")
 include_directories("${PROJECT_SOURCE_DIR}/Mesh")
 include_directories("${PROJECT_SOURCE_DIR}/Model")
+include_directories("${PROJECT_SOURCE_DIR}/Nastran")
 include_directories("${PROJECT_SOURCE_DIR}/Output")
 include_directories("${PROJECT_SOURCE_DIR}/SistEcuac")
 include_directories("${PROJECT_SOURCE_DIR}/Solver")
@@ -171,6 +172,7 @@ add_subdirectory(Interpolation)
 add_subdirectory(Materials)
 add_subdirectory(Mesh)
 add_subdirectory(Model)
+add_subdirectory(Nastran)
 add_subdirectory(Output)
 add_subdirectory(SistEcuac)
 add_subdirectory(Solver)
@@ -209,7 +211,8 @@ add_library(${NAME}lib SHARED FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 												$<TARGET_OBJECTS:Materials>
 												$<TARGET_OBJECTS:Mesh>
 												$<TARGET_OBJECTS:Model>
-												$<TARGET_OBJECTS:FvMesh>												
+												$<TARGET_OBJECTS:FvMesh>
+												$<TARGET_OBJECTS:Nastran>												
 												$<TARGET_OBJECTS:Output>
 												$<TARGET_OBJECTS:SistEcuac>
 												$<TARGET_OBJECTS:Solver>	
@@ -233,6 +236,7 @@ add_library(${NAME}lib_static STATIC FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 														$<TARGET_OBJECTS:Mesh>
 														$<TARGET_OBJECTS:Model>														
 														$<TARGET_OBJECTS:FvMesh>
+														$<TARGET_OBJECTS:Nastran>	
 														$<TARGET_OBJECTS:Output>
 														$<TARGET_OBJECTS:SistEcuac>
 														$<TARGET_OBJECTS:Solver>	
