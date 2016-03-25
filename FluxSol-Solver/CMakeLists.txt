@@ -217,6 +217,7 @@ add_library(${NAME}lib SHARED FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 												$<TARGET_OBJECTS:SistEcuac>
 												$<TARGET_OBJECTS:Solver>	
 												$<TARGET_OBJECTS:Tests>
+												$<TARGET_OBJECTS:Type>
 												$<TARGET_OBJECTS:Utils>
 											)
 #target_link_libraries (${NAME} ${EXTRA_LIBS} ${EXT_LIBS})

@@ -107,4 +107,4 @@ ${NAME}.cpp
 )
 add_executable(${NAME} ${SOURCES})
 
-target_link_libraries (${NAME} ${FLUXSOL_LIB} laspack alglib)
+target_link_libraries (${NAME} ${FLUXSOL_LIB} laspack alglib Type_)
