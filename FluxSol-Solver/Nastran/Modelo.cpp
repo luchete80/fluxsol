@@ -41,8 +41,10 @@ Modelo::Modelo (string cad)
 	//Inicio nodos
 	numnodos=Nastran.Buscar_numnodos();
 	//Inicio sistema de Coordenadas
-	SistCoords=Nastran.Leer_SistCoord();
-	numsistcoord=SistCoords.size();
+
+	//SistCoords=Nastran.Leer_SistCoord();
+	//numsistcoord=SistCoords.size();
+	cout << "[I] Reading Nodes ..."<<endl;
 	Nodos=Nastran.Leer_Nodos();
 	Leer_Elementos();
 	Asociar_Ids_Nodos();	//Esto tambien asocia las conectividades
@@ -69,11 +71,6 @@ void Modelo::Lectura_Rapida (string cad)
 	//Inicio nodos
 }
 
-Modelo::~Modelo()
-{
-
-}
-
 void Modelo::Leer_Elementos()
 {
 	int elem=0;
@@ -84,7 +81,7 @@ void Modelo::Leer_Elementos()
 	vector<int> conect;
 	conect.assign(2,-1);
 
-	cout <<"Leyendo Elementos"<<endl;
+	cout <<"Reading Elements..."<<endl;
 	for (int i=Nastran.pos_nodos[1]+1;i<Nastran.numfilas;i++)
 	{
 		//Elementos de fluidos
@@ -99,6 +96,8 @@ void Modelo::Leer_Elementos()
 
 	}//fin del for
 	numelem=elem;
+
+	cout << numelem << " elements readed."<<endl;
 
 	//Asigno elementos
 	int ind;
@@ -610,8 +609,8 @@ vector <_Vertex> & Modelo::Convert_VertexVector()
 
 	for (int v=0;v<this->numnodos;v++)
 	{
-		_Vertex vert(this->Nodos[v].VerId_Nastran(),this->Nodos[v].Sc(),this->Nodos[v].Coords());
-		vv.push_back(vert);
+//		_Vertex vert(this->Nodos[v].VerId_Nastran(),this->Nodos[v].Sc(),this->Nodos[v].Coords());
+//		vv.push_back(vert);
 	}
 
 	return vv;

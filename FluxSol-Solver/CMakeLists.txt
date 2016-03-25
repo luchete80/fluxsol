@@ -203,6 +203,7 @@ if (USE_SHARED_LIB)
 #Before creating library
 set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all-symbols")
 add_library(Type_ SHARED $<TARGET_OBJECTS:Type>)
+add_library(Nastran_ SHARED $<TARGET_OBJECTS:Nastran>)
 add_library(${NAME}lib SHARED FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 												$<TARGET_OBJECTS:Boundary>
 												$<TARGET_OBJECTS:Field>
@@ -212,16 +213,14 @@ add_library(${NAME}lib SHARED FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 												$<TARGET_OBJECTS:Mesh>
 												$<TARGET_OBJECTS:Model>
 												$<TARGET_OBJECTS:FvMesh>
-												$<TARGET_OBJECTS:Nastran>												
 												$<TARGET_OBJECTS:Output>
 												$<TARGET_OBJECTS:SistEcuac>
 												$<TARGET_OBJECTS:Solver>	
 												$<TARGET_OBJECTS:Tests>
-												$<TARGET_OBJECTS:Type>
 												$<TARGET_OBJECTS:Utils>
 											)
 #target_link_libraries (${NAME} ${EXTRA_LIBS} ${EXT_LIBS})
-target_link_libraries (${NAME}lib libUDO ${EXTRA_LIBS} ${EXT_LIBS} )
+target_link_libraries (${NAME}lib libUDO ${EXTRA_LIBS} ${EXT_LIBS} Nastran_ Type_)
 else ()
     set (USE_STATIC_LIB ON)
 endif ()
@@ -236,7 +235,6 @@ add_library(${NAME}lib_static STATIC FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 														$<TARGET_OBJECTS:Mesh>
 														$<TARGET_OBJECTS:Model>														
 														$<TARGET_OBJECTS:FvMesh>
-														$<TARGET_OBJECTS:Nastran>	
 														$<TARGET_OBJECTS:Output>
 														$<TARGET_OBJECTS:SistEcuac>
 														$<TARGET_OBJECTS:Solver>	

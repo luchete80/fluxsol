@@ -81,9 +81,9 @@ class Modelo{
 	public:
 
 		Archivo Nastran;	//Aca ya le digo el constructor
-		
+
 		Modelo(){};
-		Modelo(string cad){};	//Lee de un archivo NASTRAN
+		Modelo(string cad);	//Lee de un archivo NASTRAN
 		~Modelo(){};
 		void Modelo::Lectura_Rapida (string cad);
 
