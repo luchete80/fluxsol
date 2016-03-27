@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <vector>
 
+#include "Cadenas.h"
+
 
 using namespace std;
 
@@ -15,6 +17,7 @@ using namespace std;
 class Elemento{
 	public:
 		Elemento::Elemento();
+		Elemento::Elemento(vector <string> *, const int &);
 		vector <int> Elemento::Conect();
 		vector <int> Elemento::Conect_int();
 		void Elemento::Asignar_Conect_Interna(vector <int> v);
@@ -44,7 +47,8 @@ class Elemento{
         bool Es_cbush() {return es_cbush;}
         bool Es_libre() {return es_libre;}
         void Es_libre(bool es) {es_libre=es;}
-
+        const bool & HasError()const {return haserror;}
+        const bool & isBoundElem()const {return isboundelem;}
 
 
 
@@ -58,12 +62,15 @@ class Elemento{
 		vector <int> Nodos_int;	//Indice del nodo interno
 		int pid;	//id de la propiedad, pero el interno
 		int linea_nastran;	//Posicion de la fila en NASTRAN
+		string type;            //THIS WILL BE USED BY DIFFERENT SOLVERS
 
 		int id_nastran_prop_modificada;
 
 		int idprop,pos_idprop_nastran;
 		int pos_nastran;
         std::string tipo;
+        bool haserror;
+        bool isboundelem;
 
 };
 

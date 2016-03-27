@@ -47,12 +47,12 @@ Modelo::Modelo (string cad)
 	cout << "[I] Reading Nodes ..."<<endl;
 	Nodos=Nastran.Leer_Nodos();
 	Leer_Elementos();
-	Asociar_Ids_Nodos();	//Esto tambien asocia las conectividades
-	Asociar_Ids_Scs();
-
-	inicio_mats_ec=false;
-	inicio_prop_ec=false;
-	inicio_carac_ec=false;
+//	Asociar_Ids_Nodos();	//Esto tambien asocia las conectividades
+//	Asociar_Ids_Scs();
+//
+//	inicio_mats_ec=false;
+//	inicio_prop_ec=false;
+//	inicio_carac_ec=false;
 
 }
 
@@ -81,38 +81,40 @@ void Modelo::Leer_Elementos()
 	vector<int> conect;
 	conect.assign(2,-1);
 
-	cout <<"Reading Elements..."<<endl;
+	cout <<"[I] Reading Elements..."<<endl;
 	for (int i=Nastran.pos_nodos[1]+1;i<Nastran.numfilas;i++)
 	{
 		//Elementos de fluidos
-		if (Nastran.lineas[i].find("CQUAD4  ")!=Nastran.lineas[i].npos ||
-			Nastran.lineas[i].find("CBEAM   ")!=Nastran.lineas[i].npos)
-		{
-			Elemento el;
-			el.Leer_String(Nastran.lineas[i]);
-			Elementos.push_back(el);
+		//if (Nastran.lineas[i].find("CQUAD4  ")!=Nastran.lineas[i].npos ||
+        // Nastran.lineas[i].find("CBEAM   ")!=Nastran.lineas[i].npos)
+		//{
+			Elemento el(&Nastran.lineas, i);
+			//el.Leer_String(Nastran.lineas[i]);
+			if (!el.HasError())
+                Elementos.push_back(el);
+
 			elem++;
-		}
+		//}
 
 	}//fin del for
 	numelem=elem;
 
 	cout << numelem << " elements readed."<<endl;
 
-	//Asigno elementos
-	int ind;
-	int idprop;
-	CBush temp;
-	CBushes.assign(icbush,temp);	//Inicializo
+//	//Asigno elementos
+//	int ind;
+//	int idprop;
+//	CBush temp;
+//	CBushes.assign(icbush,temp);	//Inicializo
 
 
 
-	cout << "Asociando Indices de Elementos"<<endl;
-	Asoc_Nodos.assign(MaxId_Nodos()+1,-1);
-	for (int n=0;n<numnodos;n++)
-	{
-		Asoc_Nodos[Nodos[n].VerId_Nastran()]=n;
-	}
+//	cout << "Asociando Element Indices"<<endl;
+//	Asoc_Nodos.assign(MaxId_Nodos()+1,-1);
+//	for (int n=0;n<numnodos;n++)
+//	{
+//		Asoc_Nodos[Nodos[n].VerId_Nastran()]=n;
+//	}
 
 
 

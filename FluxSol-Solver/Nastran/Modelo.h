@@ -78,6 +78,11 @@ class Modelo{
 	void Modelo::Leer_Elementos();
 
 
+	//Boundary Conditions
+	int numberofpatches;
+
+
+
 	public:
 
 		Archivo Nastran;	//Aca ya le digo el constructor
