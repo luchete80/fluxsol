@@ -130,14 +130,17 @@ private:
 
         //El nodo tiene el mismo indice que el cell
 //        cout << "creating nodes"<<endl;
+        cout << "[I] Creating Nodes from Cell Verts" <<endl;
         for (int cellid=0;cellid<this->Num_Cells();cellid++)
         {
             Cell_CC cell=this->Cell(cellid);
             int globvert;
             Node nod(0.);
             //Recorro los vertices del cell
+            cout << "Id vert"<<endl;
             for (int n=0;n<cell.Num_Vertex();n++)
             {
+                cout << cell.Id_Vert(n)<<endl;
                 nod+=this->Vertex(cell.Id_Vert(n));
             }
             //Ahora divido por la cantidad de vertices

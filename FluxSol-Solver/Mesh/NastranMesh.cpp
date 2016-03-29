@@ -25,7 +25,7 @@ NastranMesh::NastranMesh(const string &file) {
     string line;
     int patch_qty;
 
-    cout << "\nReading Fluent Mesh..." << endl;
+    cout << "\nReading Nastran Mesh..." << endl;
 
     while (!mesh_input.eof()) {
         getline(mesh_input, line);
@@ -41,18 +41,21 @@ NastranMesh::NastranMesh(const string &file) {
     cout << "[I] " <<mod.NumNodes() << " vertices created. "<<endl;
 
 
-//    CreateNodesFromCellVerts();
-
-
 //    nodes=process_nodes(data);
 //    connectivity=process_cells(data);
 //
-//    cout << "[I] Creating cells..." << endl;
+    cout << "[I] Creating cells..." << endl;
+    //this->cell.assign(mod.Elementos.size(),scell);
+    for (int idcell=0; idcell<mod.Elementos.size();idcell++)
+    {
+        Cell_CC scell(idcell, mod.Elementos[idcell].Conect_int());
+        this->cell.push_back(scell);
+    }
 //    for (int idcell=0; idcell<connectivity.size(); idcell++) {
 //        Cell_CC scell(idcell, connectivity[idcell]);
 //        this->cell.push_back(scell);
 //        }
-//    this->num_cells=cell.size();
+    this->num_cells=cell.size();
 //
 //    // Paso del vector nodes al Vertex<Vec3D>
 //    for (int i=0; i<nodes.size(); i++) {
