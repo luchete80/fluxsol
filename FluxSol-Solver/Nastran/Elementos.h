@@ -19,7 +19,7 @@ class Elemento{
 		Elemento::Elemento();
 		Elemento::Elemento(vector <string> *, const int &);
 		vector <int> & Elemento::Conect();
-		vector <int> Elemento::Conect_int();
+		vector <int> & Elemento::Conect_int();
 		void Elemento::Asignar_Conect_Interna(vector <int> v);
 		void Elemento::Asignar_Conect_Nastran(vector <int> v);
 		const string Tipo(){return tipo;}
@@ -47,7 +47,9 @@ class Elemento{
         const bool & HasError()const {return haserror;}
         const bool & isBoundElem()const {return isboundelem;}
         const int & NastranLines()const{return this->nastranlines;}
-        const int & NumNodes()const {return this->Nodo.size();}
+        const int & NumNodes()const {return nnodos;}
+
+        const string & Type()const{return this->type;}
 
 
 

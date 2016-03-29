@@ -146,12 +146,14 @@ vector <int> Elemento::VerConect_Int()
 	return nodos;
 }
 
-vector <int> Elemento::Conect_int()
+vector <int> & Elemento::Conect_int()
 {
-	vector <int> v;
-	for (int i=0;i<2;i++)
-	v.push_back(Nodos_int[i]);
-	return v;
+//	vector <int> v;
+//	for (int i=0;i<2;i++)
+//	v.push_back(Nodos_int[i]);
+//	return v;
+
+	return this->Nodos_int;
 }
 
 void Elemento::Asignar_Conect_Interna(vector <int> v)
@@ -273,13 +275,14 @@ Elemento::Elemento(vector <string> *strptr, const int &pos)
             string firstfield=Leer_Hasta_Caracter((*strptr)[pos+i],' ');
             if (type=="CHEXA")
             {
-                for (int i=0;i<2;i++)
-                    Nodo[6+i]=Leer_Campo((*strptr)[pos],1+i);
+                for (int j=0;j<2;j++)
+                    Nodo[6+i]=Leer_Campo((*strptr)[pos+i],1+j);
             }
             if (firstfield.find("+")==firstfield.npos)
                 end_=true;
         }
-
+        this->nnodos=nnodes;
+        //cout << "nnodes"<<nnodes<<endl;
         this->linea_nastran=i;
 
         //for (int i=0;i<nnodes;i++)  cout << Nodo[i]<< " "<<endl;
