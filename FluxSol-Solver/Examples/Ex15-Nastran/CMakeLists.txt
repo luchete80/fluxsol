@@ -19,7 +19,7 @@ set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
 include_directories(${FLUXSOL_DIR}/Src/FluxSol-Solver)
 
 set (FLUXSOL_INCLUDE_DIR ${FLUXSOL_DIR}/Src/FluxSol-Solver)
-set (FLUXSOL_LIB_DIR ${FLUXSOL_DIR}/Bin_Release/Solver)
+set (FLUXSOL_LIB_DIR "$ENV{FLUXSOL_LIB_DIR}")
 
 set (LASPACK_INCLUDE ${FLUXSOL_DIR}/Libs/laspack/src/)
 set (LASPACK_LIBRARY_DIR ${FLUXSOL_DIR}/Libs/laspack/bin)

@@ -18,14 +18,11 @@ class Elemento{
 	public:
 		Elemento::Elemento();
 		Elemento::Elemento(vector <string> *, const int &);
-		vector <int> Elemento::Conect();
+		vector <int> & Elemento::Conect();
 		vector <int> Elemento::Conect_int();
 		void Elemento::Asignar_Conect_Interna(vector <int> v);
 		void Elemento::Asignar_Conect_Nastran(vector <int> v);
 		const string Tipo(){return tipo;}
-
-		void Leer_String(const std::string cad);
-        void Leer_StringVec(const std::vector <string> cad);
 
 		const int Elemento::VerId();
 		vector <int> Elemento::VerConect_Int();
@@ -49,6 +46,8 @@ class Elemento{
         void Es_libre(bool es) {es_libre=es;}
         const bool & HasError()const {return haserror;}
         const bool & isBoundElem()const {return isboundelem;}
+        const int & NastranLines()const{return this->nastranlines;}
+        const int & NumNodes()const {return this->Nodo.size();}
 
 
 
@@ -71,6 +70,7 @@ class Elemento{
         std::string tipo;
         bool haserror;
         bool isboundelem;
+        int nastranlines;//Nastran lines in original
 
 };
 

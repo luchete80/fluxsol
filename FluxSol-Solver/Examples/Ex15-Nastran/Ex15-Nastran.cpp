@@ -23,6 +23,7 @@
 *************************************************************************/
 #include "FluxSol.h"
 #include "Modelo.h"
+#include "NastranMesh.h"
 
 // LAPLACIAN MESH REORDER FOR
 //SIMILAR TO EXAMPLE 18
@@ -33,7 +34,10 @@ int main(int argc,char **args)
 {
 
     cout << "Open Model from file..."<<endl;
-    Nastran::Modelo model("test2.bdf");
+//    Nastran::Modelo model("test2.bdf");
+
+    NastranMesh nasmesh("test2.bdf");
+    //Nastran::Modelo model;
 
 	return 0;
 }

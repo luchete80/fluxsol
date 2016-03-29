@@ -196,6 +196,8 @@ class Modelo{
 	//Esta convierte la malla y llama a las anteriores
  	//Fv_CC_Grid & Convert2FvGrid();
 
+ 	const int & NumNodes()const{return this->numnodos;}
+
 
 
 

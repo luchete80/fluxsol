@@ -4,6 +4,7 @@ set (SOURCES
 Cell.cpp
 Face.cpp
 FluentMesh.cpp
+NastranMesh.cpp
 Grid.cpp
 MeshInfo.cpp
 Node.cpp
