@@ -320,7 +320,7 @@ void Fv_CC_Grid::Iniciar_Caras()
     for (cellit=cell.begin();cellit!=cell.end();cellit++)
     {
         //cout <<"cell loop"<<endl;
-		cout <<"Looking through cell "<<c1<<endl;
+//		cout <<"Looking through cell "<<c1<<endl;
 		vector <int> intverts;				//Los vertices interiores que voy encontrando
 
 		vector <Cell_CC>::iterator cellit2;		//cellit 2 es a la segunda cara del elemento
@@ -497,7 +497,6 @@ void Fv_CC_Grid::Init_Faces()
     {
         cout << "Nodes or cells not initiated. Grid initiation failed..."<<endl;
         return;
-
     }
     else
     {

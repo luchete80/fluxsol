@@ -137,12 +137,13 @@ private:
             int globvert;
             Node nod(0.);
             //Recorro los vertices del cell
-            cout << "Id vert"<<endl;
+//            cout << "Id vert"<<endl;
             for (int n=0;n<cell.Num_Vertex();n++)
             {
-                cout << cell.Id_Vert(n)<<endl;
+                //cout << cell.Id_Vert(n)<<" ";
                 nod+=this->Vertex(cell.Id_Vert(n));
             }
+            //cout << endl;
             //Ahora divido por la cantidad de vertices
             nod/=(double)cell.Num_Vertex();
             nod.Id(cellid);

@@ -13,6 +13,7 @@
 #include "Utils.h"
 #include "Nastran.h"
 #include "Modelo.h"
+#include "Elementos.h"
 
 using namespace std;
 
@@ -65,24 +66,139 @@ NastranMesh::NastranMesh(const string &file) {
 
     cout << "[I] Creating Central Nodes..." << endl;
     CreateNodesFromCellVerts();
-//
-//    this->inicie_nodes=true;
-//    this->inicie_cells=true;
-//
-//    cout << "[I] Assigning Faces..." << endl;
-//    Iniciar_Caras();
-//
-//    cout << "[I] Assigning Neighbours..." << endl;
-//    AssignNeigboursCells();
-//
-//    cout << "[I] Calculating Volumes..." << endl;
-//    CalcCellVolumes();
-//
-//    cout << "[I] Creating Patches..." << endl;
+
+    this->inicie_nodes=true;
+    this->inicie_cells=true;
+
+    cout << "[I] Assigning Faces..." << endl;
+    Iniciar_Caras();
+
+    cout << "[I] Assigning Neighbours..." << endl;
+    AssignNeigboursCells();
+
+    cout << "[I] Calculating Volumes..." << endl;
+    CalcCellVolumes();
+
+    map<vector <int> , int > facevertsmap=FaceVertsMap();
+
+    cout << "[I] Creating Patches..." << endl;
 //    patch_name=patches_names(data);
 //    vpatch=create_patches(data, patch_name);
-//
 
+    set <int> util_pids;
+    vector <set <int> > pid_els;    //Element per each pid
+    vector<int> tempNodesSort;
+    map<vector <int> , int > FaceVerts;
+    myclass myobject;
+    list<int> lista;
+    vector<Elemento> vel=mod.Elementos;
+
+    for (int e=0;e<mod.Elementos.size();e++)
+    {
+        if (!mod.Elementos[e].isBoundElem())
+        {
+            util_pids.insert(mod.Elementos[e].Pid());
+            int faceid=FaceVerts[tempNodesSort];
+            lista.push_back(faceid);
+        }
+
+
+    }
+
+    for (int pid=0;pid<util_pids.size();pid++)
+    {
+        //int e=;
+        tempNodesSort=mod.Elementos[e].Conect_int();
+        sort (tempNodesSort.begin(), tempNodesSort.end(), myobject);
+
+    }
+
+    //            Patch p(pname[patch_index], lista);
+    //            output.push_back(p);
+    //            tempNodesSort.clear();
+
+
+
+//    vector <Elemento> vel=mod.;
+//
+//vector<Patch> create_patches(const vector<string> &data, const vector<string> &pname) {
+//    vector<Patch> output;
+//    vector<int> tempNodesSort;
+//    map<vector <int> , int > FaceVerts;
+//    string patch_identifier="(13";
+//    string interior="(1";
+//    string fluid="(2";
+//    string comment="(0";
+//    string buff, str;
+//    stringstream ss;
+//    vector<string> vline, fline;
+//    int patch_index=0;
+//
+//    int i=0;
+//    while (i<data.size()) {
+//        ss << data[i];
+//
+//        while (ss >> buff) {
+//            vline.push_back(buff);
+//        }
+//        ss << "";
+//        ss.clear();
+//
+//        if (vline[0]==patch_identifier && vline[1]!=interior && vline[1]!=fluid && vline[1]!=comment) {
+//            ss << hex << vline[2];
+//            int x;
+//            ss >> x;
+//            ss << "";
+//            ss.clear();
+//            ss << hex << vline[3];
+//            int y;
+//            ss >> y;
+//            ss << "";
+//            ss.clear();
+//            int faces_qty=y-x+1;
+//
+//            list<int> lista;
+//            for (int j=1; j<=faces_qty; j++) {
+//                ss << data[i+j];
+//
+//                while (ss >> buff) {
+//                    fline.push_back(buff);
+//                }
+//                ss << "";
+//                ss.clear();
+//
+//                for (int k=0; k<4; k++) {
+//                    ss << hex << fline[k];
+//                    int z;
+//                    ss >> z;
+//                    ss << "";
+//                    ss.clear();
+//                    tempNodesSort.push_back(z);
+//                }
+//
+//                sort (tempNodesSort.begin(), tempNodesSort.end(), myobject);
+//                int faceid=FaceVerts[tempNodesSort];
+//                lista.push_back(faceid);
+//
+//                fline.clear();
+//
+//            }
+//
+//            Patch p(pname[patch_index], lista);
+//            output.push_back(p);
+//            tempNodesSort.clear();
+//
+//            i=i+j;
+//            patch_index++;
+//        }
+//
+//        vline.clear();
+//        str.clear();
+//        i++;
+//    }
+//
+//    return output;
+//}
 
 
 }

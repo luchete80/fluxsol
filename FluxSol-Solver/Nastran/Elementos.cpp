@@ -268,22 +268,32 @@ Elemento::Elemento(vector <string> *strptr, const int &pos)
         //U otro elemento (cuya linea puede tener un +)
         //La primera comparacion es para la linea que tiene + al final, las que siguen lo tienen al ppio y al final
         int i=0;
+        //If following line has a +
         bool end_=false;
+        if (((*strptr)[pos]).find("+")==string::npos){end_=true;}
+
         while(!end_)
         {
-            i++;
+            i++; /*cout << "i = "<<i<<endl;*/
             string firstfield=Leer_Hasta_Caracter((*strptr)[pos+i],' ');
+            //cout << firstfield<<endl;
             if (type=="CHEXA")
             {
+                //cout << "field "<<Leer_Campo((*strptr)[pos+i],1)<< " " <<Leer_Campo((*strptr)[pos+i],2)<<endl;
                 for (int j=0;j<2;j++)
-                    Nodo[6+i]=Leer_Campo((*strptr)[pos+i],1+j);
+                    Nodo[6+j]=Leer_Campo((*strptr)[pos+i],1+j);
             }
-            if (firstfield.find("+")==firstfield.npos)
+            //cout << "Find result " << firstfield.find("+",0)<<endl;
+            if (firstfield.find("+")!=string::npos)
                 end_=true;
+
+
+
         }
         this->nnodos=nnodes;
         //cout << "nnodes"<<nnodes<<endl;
-        this->linea_nastran=i;
+        this->linea_nastran=i+1;
+        //cout << "Lineas nastran "<<i+1<<endl;
 
         //for (int i=0;i<nnodes;i++)  cout << Nodo[i]<< " "<<endl;
         //cout << endl;

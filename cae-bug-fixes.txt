@@ -1,0 +1,1573 @@
+commit 697e376509ca7f321e0f4a029186df947328d04e
+Author: luchete80 <luciano.buglioni@gmail.com>
+Date:   Sat Mar 26 12:32:43 2016 -0300
+
+    Example 6 is crashing via CAE while input is imported.
+    "Input file input ldc10.in could not be found"
+    1 - There was "inputldc10.in" as default string input.
+        It was passed to generic - CORRECTED.
+    2 - When stops a submitted and running job. App crashes:
+        Is discovered that thread->wait(); is causing the crash.
+    3 - String are not passed via QThread, replaced by QString
+    4 - Track Bar is not going to log end.
+    5 - CORRECTED PAUSE OF THE JOBS!!!!!
+
+commit 151459e71fe06373a875346d0945d12ea40c7acb
+Author: luchete80 <luciano.buglioni@gmail.com>
+Date:   Tue Mar 22 20:25:23 2016 -0300
+
+    Modified CAE CMakeLists to take local ENV variable of FluxSol.
+
+commit a1b74c5ae080e0f8800a2bcbd0572b25ce18e18a
+Author: luchete80 <luciano.buglioni@gmail.com>
+Date:   Tue Mar 22 18:40:57 2016 -0300
+
+    1 - Created Ex6-CFD-SIMPLE-cgns-NonOrth.
+    2 - Modified Example 6.
+    3 - Modified GeometricField for redundant functions.
+
+commit 7aefdb031bf650f090be921d9fd3f3e5ac457882
+Author: luchete80 <luciano.buglioni@gmail.com>
+Date:   Tue Mar 22 18:09:33 2016 -0300
+
+    1 - Changes in readme file. Begining to write information.
+    2 - Corrected CodeWriter to be compiled without FluxSol lib. This now
+    can be compiled without it, instead are used libraries.
+    3 - MUST BE SEPARATED IN SEVERAL DLLS
+    4 - NOW CODEWRITER AND UDOLIB AND CAN BE GENERATED WITHOUT FLUXSOL.dll
+
+commit 27dd5e4f72b15d9b69b7400cd094447c7de15fb7
+Author: luchete80 <luciano.buglioni@gmail.com>
+Date:   Tue Mar 22 16:41:06 2016 -0300
+
+    Created develop branch.
+
+commit 233bba65156b8657fe92c5087a04a07366c892f0
+Author: luchete80 <luciano.buglioni@gmail.com>
+Date:   Sun Mar 20 21:46:05 2016 -0300
+
+    Added readme file.
+
+commit 014c10756ed6c633a6695ed1293cadffe4d2c9e3
+Author: luchete80 <luciano.buglioni@gmail.com>
+Date:   Sat Mar 19 16:23:28 2016 -0300
+
+    Added branch 0.0.1 and README file.
+
+commit 145c5e94995035ea85088da042505ea2c04f19f3
+Author: luciano <luciano.buglioni@gmail.com>
+Date:   Fri Mar 18 13:39:55 2016 -0300
+
+    fix JobWorker::doWork
+
+commit 78fc3c90546ff7ebb0034dc49e17a38a3e6c2961
+Author: luciano <luciano.buglioni@gmail.com>
+Date:   Fri Mar 18 13:38:46 2016 -0300
+
+    IMPORTANT: AddMsg from Worker is passed as QString. string, even with
+    registermetatype, does not work.
+
+commit 5fb27e5e6f88aac2636c66f79c36cfc09566da03
+Author: luciano <luciano.buglioni@gmail.com>
+Date:   Mon Mar 14 14:39:33 2016 -0300
+
+    Update.
+
+commit 19fa5ad2588266ccd5f6a2ffe1519b6519ea3b91
+Author: luciano <luciano.buglioni@gmail.com>
+Date:   Tue Sep 29 14:17:17 2015 -0300
+
+    MUST TO REPLACE GRAPHICCFDMODEL(string) with GRAPHICCFDMODEL(INPUTFILE).
+
+commit 84aeb56a66aa528564bd25192ce29d82d2db552a
+Author: luciano <luciano.buglioni@gmail.com>
+Date:   Mon Sep 28 14:04:43 2015 -0300
+
+    Studying mesh loading.
+
+commit 5405430bbdf856a39a882378b6dcb1637f98f37e
+Author: luciano <luciano.buglioni@gmail.com>
+Date:   Wed Sep 23 15:10:52 2015 -0300
+
+    Accelerated inpu mesh.
+
+commit e8bc1aa3b37cbf1b6ff0bc5ed244a4fa52c157c3
+Author: luciano <luciano.buglioni@gmail.com>
+Date:   Mon Sep 21 14:16:47 2015 -0300
+
+    Accelerated imput CGNS reading.
+
+commit 48d40b8b82b70ce13165372667842f0c89930a70
+Author: luciano <luciano.buglioni@gmail.com>
+Date:   Fri Sep 11 14:24:53 2015 -0300
+
+    Testing.
+
+commit cc1477c8cc68df37e9174d57bce6ef6d3f57c46c
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu Sep 10 19:24:45 2015 -0300
+
+    Tracking Error importing mesh in release mode. Fixed CMakeLists of CAE.
+
+commit 3bffedd1cb88596664e8e316ab9d43ad07e509da
+Author: luciano <luciano.buglioni@gmail.com>
+Date:   Tue Aug 18 14:13:16 2015 -0300
+
+    Test.
+
+commit cfac979ba15c2dcb948e572720549fddd5e91cc9
+Author: luciano <luciano.buglioni@gmail.com>
+Date:   Tue Aug 18 09:27:27 2015 -0300
+
+    ATTENTION!
+    Pointer Members must return value!
+    const Patch& PatchField::_Patch()const{return *this->patch;}
+    To Modify: GridPtr from patch must be corrected.
+    Is now assigned in velocityfield from input field.
+
+commit 4700d017f60e785e4afa770009f133249554e125
+Author: luciano <luciano.buglioni@gmail.com>
+Date:   Thu Jul 2 10:42:51 2015 -0300
+
+    NonOrthogonal Gradient Built!!!
+
+commit 9d130394aea4fde5455f22268626763f616c5ae8
+Author: PabloZ <zitelli.pablo@gmail.com>
+Date:   Thu Jul 2 09:26:28 2015 -0300
+
+    Starting non-orthogonal correction
+
+commit 032e0359a4e85be635d9fb7e3f73599c6f3ea051
+Author: PabloZ <zitelli.pablo@gmail.com>
+Date:   Tue Jun 23 08:08:18 2015 -0300
+
+    Minor modification
+
+commit 2b69339f18ca0777ee288d01862003d2c05f9d86
+Author: PabloZ <zitelli.pablo@gmail.com>
+Date:   Tue Jun 23 07:28:31 2015 -0300
+
+    Fluent Mesh Reader finished!!
+
+commit a120583c016b3614ab241f5db6eae1296fae6793
+Author: luciano <luciano.buglioni@gmail.com>
+Date:   Fri Jun 19 14:34:36 2015 -0300
+
+    Test.-
+
+commit 574a611fcef3f101273fb162c6d0e81e443535a4
+Author: NewUser <newuser@example.com>
+Date:   Fri Jun 19 14:24:10 2015 -0300
+
+    Solved residuals monitor.
+
+commit d77f3dc6a55dc3b6376ea605a4722031ab32b4c5
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Jun 17 21:09:24 2015 -0300
+
+    Solved CAE Residuals Monitor!
+
+commit a26b3fd14b23662131f0c8112e7f24d1916b28fc
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Jun 17 14:34:43 2015 -0300
+
+    Inherited from QVTKWidget MUST BE CALL BASE QVTKWidget CONSTRUCTOR!!!!!!
+
+commit 5b143ff4fad10709b36d15c91d71fb71ac78823f
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Jun 16 20:01:13 2015 -0300
+
+    Changed Residual VTKWIDGET
+
+commit 6a117c1b6a5bbb599569e3799b3e3e28df7c33c5
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Jun 16 17:29:31 2015 -0300
+
+    Stated.
+
+commit 8b882cea1c1ec6057c538673469c2b7957c0c306
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Jun 16 17:26:48 2015 -0300
+
+    Changes
+
+commit 6fe3ae5cbab491dc0b529bf701a227cffe494735
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Jun 16 14:35:07 2015 -0300
+
+    Jobs
+
+commit 3eaf5667f5d4bd81f0abd759dad67f94ad263cf1
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Jun 16 14:28:34 2015 -0300
+
+    Working with Qthreads
+    
+    Signed-off-by: Luciano <luciano.buglioni@gmail.com>
+
+commit 7921d65d501617286f31d83172da964ddf67ba51
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Jun 15 21:43:18 2015 -0300
+
+    .
+
+commit 329eff774f89b5315bc1179d924a7856bd9a9068
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Jun 15 14:25:04 2015 -0300
+
+    Solved CAE Model iteration.
+
+commit 9380cf7ecff7c5eebc1d6672c198ac6b685c248b
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu Jun 11 23:51:35 2015 -0300
+
+    Added CAE feat.
+
+commit 6dcbfa03d12d8dc9dd94a9edba0521aeb1fa9d5d
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Jun 10 22:36:50 2015 -0300
+
+    Updated Job Submit.
+
+commit 3c95346215e392c634366450fe89c30b6c76c368
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Jun 10 20:29:14 2015 -0300
+
+    Added Job And Job Dialog. Sill GUI freezes when run.
+
+commit 3258f1e76e285a4f5760645031cd0db29ae33bf1
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Jun 10 14:22:35 2015 -0300
+
+    Removing Laspack because of inconvenients with QMatrix Qt object name.
+
+commit c24e857c52ed10f3ac8a87ed784bb6d480865b1b
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Jun 9 23:17:34 2015 -0300
+
+    Changes in CAE
+
+commit f8e311c496c999c97372d8065d76018b91ac81dc
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Jun 9 20:51:54 2015 -0300
+
+    Chages to IDE.
+
+commit d4f94fcc5c7a5bb14481bd514f95f2d72ad6fd7f
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Jun 8 14:27:18 2015 -0300
+
+    Changed CAE Feat.
+
+commit 802c46eaa90e1e93816db6ad0d352a9b87f3b4dc
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Jun 8 14:25:40 2015 -0300
+
+    CAE: Assign tabs to Main Window to build graphic residual monitor
+    Solver: Add CFDModel::SolveIter()
+
+commit 890cdf0877c84da15aadc097fdb01688ebc23d42
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Fri Jun 5 14:00:40 2015 -0300
+
+    .
+
+commit 4b36ddd9b477dcf2c7f3328a9dd0f8964fbcbebf
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Fri Jun 5 13:59:42 2015 -0300
+
+    Added CGNS reader
+
+commit e456ed898e5fc8814cae930cd78cd16c68a1b02d
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu Jun 4 15:26:35 2015 -0300
+
+    Begining to organize FluxSol CAE into pieces. Adding import features.
+
+commit 95e96b9f483fb43573ea6109c46b3d39c47fc18f
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Jun 3 22:42:23 2015 -0300
+
+    Crash when reading cgns. It is not caused by tree.
+    
+    Signed-off-by: Luciano <luciano.buglioni@gmail.com>
+
+commit ca4bc74dbfe66d3f2a8bb4d5fd262f073458a1ef
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Jun 3 21:59:43 2015 -0300
+
+    Added console output to DAE MessageWindow. Begining to build FluxSol package.
+
+commit c49203a6e6d0244e8b0c750fce42026a5d37e08c
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Jun 3 14:27:47 2015 -0300
+
+    UDO BASIC ARCHITECTURE IS FINALLY WORKING!!!!!!
+
+commit f2fb026697f0ed58d706d6516d53a0db441f5491
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Jun 2 23:41:46 2015 -0300
+
+    UDO Creation.
+
+commit 7880243a56cc81d80b7fd043a7469f6422d052aa
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Jun 2 15:02:25 2015 -0300
+
+    Added UDOLib generator.
+
+commit f7ea78c0f2d8f1f832a8b05d473270166bb318fe
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Sun May 31 22:08:27 2015 -0300
+
+    Defining UDO architecture.
+
+commit 35d62c150343d2baef4e817a7a0fbe4fcbcff046
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu May 28 23:11:15 2015 -0300
+
+    Building up UDO Lib Generator and file parser.
+
+commit 8617836ae148529cd8a96e33c9a193f63cafdc47
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed May 27 23:09:34 2015 -0300
+
+    Begining to write UDOs architecture. Example 7 and file interpreter.
+
+commit fe0f1718685db2379cf7bf177e2dbfdbb01832b6
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed May 27 15:01:28 2015 -0300
+
+    Added MessageBox
+    
+    Signed-off-by: Luciano <luciano.buglioni@gmail.com>
+
+commit 7a96b61cd2adc300355c71ffae5996f23cbb0667
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Fri May 22 14:36:29 2015 -0300
+
+    Added Mesh import tree actions.
+
+commit 22558be1f075d7fb579feba12a6567b8495adc28
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu May 21 21:52:32 2015 -0300
+
+    Adjusting tolerances of UEqn is faster.
+    However, this not occurs for pressure correction eqn.
+    Working with CAE. Import msh and tree.
+
+commit cf5f3075dd89630ee46156461e9b61efec88b660
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu May 21 14:25:03 2015 -0300
+
+    Adding PETSC to fluxsol CAE.
+    generate must be like this:
+    
+    set PETSC_DIR=D:\Luciano\Programas\cygwin64\petsc-3.4.4
+    set PETSC_ARCH=arch-mswin-mpi1-release
+    
+    set MPI_LIB_DIR=D:\Luciano\Programas\Microsoft-HPCPack-2008R2\Lib\amd64
+    set MPI_INC_DIR=D:\Luciano\Programas\Microsoft-HPCPack-2008R2\Inc
+    
+    set PARMETIS_DIR=D:\Luciano\Numerico\Libs\parmetis-4.0.3
+
+commit ce02ddd8114c1760565051b3ebb5fa01a9389e6a
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed May 20 22:37:57 2015 -0300
+
+    Recalculating residuals.
+
+commit 56228c3594a8e2dee3c8994b5c884ac2a0dbb116
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed May 20 14:07:03 2015 -0300
+
+    Must be changed Grad
+
+commit 4e5f02c286ed81de68bf569f0e0e3a5d1002856e
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue May 19 23:00:20 2015 -0300
+
+    Begining to fix laplacian
+
+commit 9604f69b1c9260826cb75f53b704386baba33743
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue May 19 14:31:49 2015 -0300
+
+    Changed Pointer Call
+
+commit 453634717997de2b5cf525de6e841a2049df3467
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue May 19 14:23:25 2015 -0300
+
+    Changed Laplacian.
+
+commit deed4c51c0c513af432f9361c257af2c4c2174ba
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon May 18 23:02:15 2015 -0300
+
+    Must To check phi recorrection.
+
+commit 6fc5677236c0e701e56847e65a3ceadab03d6a28
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon May 18 20:41:01 2015 -0300
+
+    MUST CHANGE LAPLACIAN FROM (FIELD, FIELD), USEd FOR P, MUST INCLUDE IN
+    BOTH LAPLACIANS INTERPOLATED FIELD (OR CONSTANT) FI, USING THE NEW
+    FaceLocalCellNeighbour
+
+commit 4ef0f10744738d29a56f609f07263e438b8eb374
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon May 18 14:17:45 2015 -0300
+
+    Example 13 and reduction of tolerances.
+
+commit 2dca71c4028020705760a470680e76b38f3183b0
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Sun May 17 22:41:15 2015 -0300
+
+    Opts 10?
+
+commit 5aabbb886cb690ca5882790717a40b23c928a4b5
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Fri May 15 13:50:30 2015 -0300
+
+    Correction: LAST PERFORMANCE OPT WAS NUMBER 8.
+    Opt 9: deleted temp pField <Scalar> pcorr.
+    Changed boundary condition treatment by operators Laplacian, Div.
+    Null-flux-face passed to patch type.
+
+commit 22b5d92fe33025baee3706b54b88ee2c223b7b6d
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu May 14 23:25:26 2015 -0300
+
+    Optimizations 7:
+    Changing push_back by static initialization of eqn system.
+    CRUCIAL IMPROVEMENT: removing temp Face creation in FvImp::Interpolate.
+    TO MODIFY:
+    1) mesh.Sf() must return an existing mesh allocated field.
+    2) Same with EqnSys::A(), Field()?? To consider.
+    3) FvExp::Div change algorithm to faces like implicit grad
+    4) Null flux faces for entire patch
+    
+    Reorder must be implemented.
+
+commit 24c57716946990f2c393bcb47286156b1245fd97
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu May 14 14:21:48 2015 -0300
+
+    Modified Field constructor assigning vector length instead of push_back.
+
+commit e095bf6a7cb42768b72fb872332ead656274fcba
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed May 13 18:57:46 2015 -0300
+
+    PETSC Assembly. Corrected AMG Solver.
+
+commit 180a92e48d3254188f825be3b1867f5ac8e05241
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed May 13 14:34:12 2015 -0300
+
+    EqnSys can acces Eqn members. Optimized EqnSys::A(), creating new field
+    constructor from vector of pointers.
+    CC_Field Operator= MUST NO CREATE InnerNetFluxField, mut to copy it.
+    EqnSys MUST HAVE A FIELD. EqnSys::Field() must only add values of field.
+    Otherwise, this field is created in every iteration.
+    TIME IMPROVEMENT WITH FIELD CONSTRUCTOR COPYING INTERNAL FACES
+    TO MODIFY:
+    Field::Int_Net_flux_faces MUST BE REPLACED BY INTERNAL FACES. BOUNDARY CONDITION
+    MUST NOT BE DECLARED IN BOUNDARY, THIS MUST BE DEFINED IN FIELD!
+    THIS IS WRONG: _BoundaryField<Vec3D> bf(GridPtr->vBoundary(),cvalues);
+    EACH BC MUST BE A PATCHFIELD INHERITED TYPE
+
+commit 14f5f59c5a2f68d6284caf9ec81c8c64dd85eb33
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue May 12 21:23:13 2015 -0300
+
+    Push_backs in field constructors are removed. Grad algorithm has been changed.
+    
+    Must be constructed a vector with
+    Eqn.Field() must give a vector wth values, and not call Field Val(,) for assigning each val.
+    Corrected Interpolate(CC Field), removing if sentence.
+    Pending to modify Divergence by removing if sentence, replacing it by order
+
+commit 3199231f579a585be352fd8c2e9f1aa657b211b6
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue May 12 14:37:32 2015 -0300
+
+    Added optimization Issues.
+
+commit 554954251b09a61920afc618fdfca25e8b850e55
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue May 12 00:06:00 2015 -0300
+
+    Laplacian has been reduced by a half by using new grid allocated
+    localfacecellneighbours.
+    Added MaxIter Control.
+    Corrected residual calculation error.
+    Included AMG Solver for laplacian eqn like in OpenFoam.
+    To correct New Laplacian
+
+commit 14aa26f92358166151bba22079450f164dd74def
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon May 11 14:56:21 2015 -0300
+
+    To Modify Laplacian interior, Divergence interior, and mainly EqnSystem operator-
+    wich calls Eqn operator==
+
+commit 75f15405a91d2f72981ae8a5156099007785baba
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Sun May 10 23:16:51 2015 -0300
+
+    Removing Interior faces conditions for every face and null flux face.
+    Creating sets for fast face loops.
+    Begining to add headers to project libraries.
+    Added Globally scaled Residuals for Velocity.
+    
+    For time optimization MUST TO CHECK Eqn Operator==
+
+commit 23c3923fbf38c47a80799b510de55c572ec5c418
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Fri May 8 01:06:31 2015 -0300
+
+    Deleting Mesh Log creation from examples.
+    Specifying Default Patch Field Type. If not (as it was), boundary
+    of explicit eqn is empty. If not specyfied, is a Dirichlet BC.
+    Null FLux Face must be passed to Null Flux Patch, IF SENTENCES MUST BE
+    ONCE PER PATCH, NOT PER FACE!!!
+
+commit ef843775b2d188c636a0415d2c980a5f079e1b19
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu May 7 14:34:00 2015 -0300
+
+    Created AMG Example from Laplacian.
+
+commit bd047948c45163630a46b1c775c1e21676a72b04
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed May 6 18:52:21 2015 -0300
+
+    Added Matrix Reorder (still not working).
+    Founded Example 11 Mutigrid Error and Fixed.
+    MUST TO IMPROVE MAT INSERT VALUES, INSERTING FROM ONCE AND
+    NOT CALLING PETSC FUNCTION FOR EVERY VALUE.
+
+commit ebaa7bb718280a3886cc14ec0b879fb3484c46f2
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed May 6 14:14:27 2015 -0300
+
+    Fixed deleting of KSP conxtext, which was causing memory leaking.
+
+commit 63d8fccd0126afc69229c20e390504367816c656
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue May 5 00:24:35 2015 -0300
+
+    Corrected CGNS reader. Improved PETSC SOlver Matrix Allocating.
+    Long long way faster now. Now solver is PETSC. Must switch to AMG for
+    inner iterations like ANSYS Fluent.
+    FIXED CFDMODEL: Assign BoundaryField functions WERE OUTSIDE MAIN ITERATION, MUST BE INSIDE.
+
+commit c37e60aaf0d48599f7a3de4b319ecd591ed5280a
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Sun May 3 22:28:54 2015 -0300
+
+    Modified InputEx from FSW example.
+    Solver must be changed to PEtSC Seq Sparse Matrix.
+    Then, must to be fixed Ex11-PETSC-AMG-Laplacian
+
+commit 4ee2cb5611165b3ae4a75dc12d52ebfdc6f2f7e9
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu Apr 30 09:00:23 2015 -0300
+
+    Optimized CGNS reading for performance issues.
+    Pending to be modified Patch assigning. And action after Mesh creation.
+
+commit 9a90bde0ee74d664a9b148d9063a08d1f05b3238
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Apr 28 22:58:45 2015 -0300
+
+    COrrected example 10. Solving time for 128^2 laplacian: 0.095s
+
+commit 39d353027a078b8e4cc092ab6bce7abef09a16f4
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Apr 28 14:26:51 2015 -0300
+
+    Removed Qt-Tests
+
+commit f2c95fb1e44b80541960927d855607ce7628a246
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Apr 27 23:57:44 2015 -0300
+
+    Changed to BICGSTAB solver. Now is time to add AMG method.
+
+commit c43d2a6da8795653be4456265fcb3678f3844d69
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Apr 27 20:40:40 2015 -0300
+
+    Begining to implement MPI with ParMETIS. Advanced PETSC example 10.
+    Pending to add parMETIS fill reordering with Node_
+
+commit 7f05dd770b03dd1a72a34c883a133e5ace3c023e
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Apr 27 05:54:21 2015 -0300
+
+    PETSC Preallocation
+    
+    Signed-off-by: Luciano <luciano.buglioni@gmail.com>
+
+commit 316d14c0ff9e64752be54ac7b7e03b7575579f47
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu Apr 23 23:37:40 2015 -0300
+
+    Begining to build PETSC Mat BAIJ Preallocate. (Extremelly slow if is autoallocate)
+
+commit 8b8428e25f049b3afdbe73aa944439d61d91707c
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Apr 22 23:03:27 2015 -0300
+
+    Added PETSC Solver. Checking functions to fill matrices.
+
+commit cdf1c3dbbbcb78c548c182101b58f44ca7a93248
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Apr 21 15:34:19 2015 -0300
+
+    Corrected CMakeLists to allow PETSC to be functional with MSMPI
+    (DO NOT INCLUDE PETSC MPI using MSWIN)
+
+commit b04db363e095291a4aca8fa4e1d6655ace647628
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Apr 21 00:03:34 2015 -0300
+
+    Must be analyzed the mpi lib path from petsc cache.
+    Maybe reconsider to rebuild in a nb station.
+
+commit 8ad0ad35d2d6accc73b34c2ec55f575793f6b7b6
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Apr 20 21:28:30 2015 -0300
+
+    Begining inclusion of PETSC library and Solver.
+
+commit 33b7293b3357fc8de4c2d3bb821688969c6e3208
+Author: PabloZ <zitelli.pablo@gmail.com>
+Date:   Mon Apr 20 13:14:41 2015 -0300
+
+    Modificacion de FluentMesh y creacion de Ex-9
+
+commit aac254aba4602d64d80991786f6bd19902b142ca
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Apr 20 11:23:05 2015 -0300
+
+    Added const map<vector <int> , int > Fv_CC_Grid::FaceVertsMap()const
+    To a fast searching of faceid from vertex. Used by FluentMesh object.
+
+commit c3c21e9db2b64ac7f4e377a9d9948123bfd33090
+Author: PabloZ <zitelli.pablo@gmail.com>
+Date:   Thu Apr 16 10:37:03 2015 -0300
+
+    modificaciones de fluent mesh
+
+commit 6e14bbd4ccc3133f1102869381f8bf629a27b9db
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Apr 15 14:18:28 2015 -0300
+
+    Completed conversion of Init_Faces().
+    This function replaces entirelly old and slow function Iniciar_Caras().
+    New methods works with maps, sets.
+
+commit 3606823e774fb421f81bb4a4e8c3784d85b5e561
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Apr 13 14:50:30 2015 -0300
+
+    Solving Inits_Face
+
+commit 1ddec55a7a1c84ee3e6902e6d65c8cf7c777a3bf
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu Apr 9 10:43:40 2015 -0300
+
+    Begining to build Init_Faces() function.
+
+commit 4b97c2cdbfffd95506225440cf6a7860d36f533c
+Author: PabloZ <zitelli.pablo@gmail.com>
+Date:   Thu Apr 9 09:30:16 2015 -0300
+
+    update
+
+commit 5038c5832d598d9dbc4ec5ec1c1fc6bb20dcf5f6
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Apr 8 14:12:43 2015 -0300
+
+    Checking Iniciar_Caras function.
+
+commit e4544fc9efb9799fb6c648894a813ba4890adfd3
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Apr 7 14:38:04 2015 -0300
+
+    Debugging some solver issues.
+
+commit 7b46573c1e8bd225bfc6a836e735c132aeb725ef
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Mar 30 15:23:18 2015 -0300
+
+    Added iterator logs.
+
+commit 81143edb6daf479227b41dc68056149369abc658
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Fri Mar 27 12:15:28 2015 -0300
+
+    To Modify Face Initializer algorithm.
+
+commit a456fd3f3baf03644aa9f183cbd07915e68c4971
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu Mar 26 16:22:24 2015 -0300
+
+    Added Vertex Selection.
+
+commit c981df2e3295ebee9c93f743ccc52e74a9e9a360
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Mar 25 23:32:53 2015 -0300
+
+    1) Added Cases directory icluding benchmarks and example
+    input files and meshes.
+    2) Begining to work with UDOs. Example 7 added.
+    
+    Included materials in fluxsol namespace.
+
+commit c0e499f6ae32ffc8a27c8db801bad27cde8cb9bc
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Mar 25 14:20:01 2015 -0300
+
+    Removed Fluent.rar reader
+
+commit 4facbdf65ab16581f255a3c44b86634740094724
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Mar 25 14:18:23 2015 -0300
+
+    Solved Backwads facing step.
+    Pending to solve interpolation Cell Center to VertexField issues.
+    Begining to work with udf. Can construct maps or sets of udf objects.
+    Need to create a inputfile reader to obtain object names.
+
+commit 071f5adce771be273d21d7bc43dab5043ba8cd52
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Fri Mar 20 13:51:11 2015 -0300
+
+    Added CGNS Nodal or elemental (2D) Boundary Conditions.
+    Must be change phi.
+
+commit 53062a3ea61bd5b83c81e626eb61e435239db4ee
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Mar 18 11:48:25 2015 -0300
+
+    Fixed several input issues. Added inlet-velocity.
+    Added CGNS correction for bad boundary patches.
+
+commit 5028e872be0c4fbe433e289c9101ac7b493ccc9d
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Mar 17 14:28:51 2015 -0300
+
+    Added Input Mesh
+
+commit b438cdc23fc6cd7d3917f6d975b91877b17f92ae
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Mar 16 14:50:09 2015 -0300
+
+    Added Boundary Condition Class with bc type.
+
+commit a35abd5e718b3882ce7180ffb0b6d69ab463c030
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Fri Mar 13 13:35:32 2015 -0300
+
+    Added Mesh Volume Field and operator/ between geometric fields.
+
+commit e72bec5d84cd9f7139e3dcc818996d296150923e
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu Mar 12 16:01:15 2015 -0300
+
+    Added Input boundary and patch reading issues. Now it is possible to read
+    velocity boundary values and to associate them with grid patches.
+
+commit 063db3ad7cdd68094b5ee9786e7da2bd2548c983
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Mar 11 14:26:13 2015 -0300
+
+    Added incons
+
+commit 6b603ef8c6ce7267c5f8d822ba648b9670bab8af
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Mar 11 14:20:22 2015 -0300
+
+    Adding CAE changes.
+
+commit 1b68c9da2833b60d3208d7b867be6ae68f4019d6
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Mar 11 14:16:39 2015 -0300
+
+    Added Patch Mesh reading.
+
+commit a6d0f8edbbdbe2f05cd4f8c1d49a3f24abe3cccb
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Mar 3 14:44:38 2015 -0300
+
+    Ge2yk4KH9RW7
+
+commit 26d6c0ea4a96e95ca97b1c94c7fa97fa41568983
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Mar 2 15:57:15 2015 -0300
+
+    Added features.
+
+commit d1fa0af775340e09672896a3a39874c59b22c071
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Mar 2 15:56:20 2015 -0300
+
+    Added and rearranged CAE Features.
+
+commit d54e37bcae0913bd7b9287f5dd6dca0a57af5a07
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu Feb 26 19:40:49 2015 -0300
+
+    Added features
+
+commit 4c08a81f068fa6f680e070da58e53b7efb5dfb70
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Feb 25 15:07:41 2015 -0300
+
+    Import CGNS Slot Corrected.
+
+commit 24795cf48c27e374a06c1cc82dc883f317e497ce
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Feb 25 14:49:04 2015 -0300
+
+    Added several CAE features, buttons. Fixed FluxSol Legend. Begining to work on import mesh.
+
+commit f5180a5d660e802c6a6091f5ca7ca36d0c19392a
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Feb 24 23:13:00 2015 -0300
+
+    Adding Full CFDModel Output
+
+commit f6244b8c759bc18a20b0db2e1a98e557c27e2a1d
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Feb 23 17:01:27 2015 -0300
+
+    Working on FluxSol executable and CAE features.
+
+commit 4c50997fc35c55b2f7b9ab1f3419dc953c64c88e
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Fri Feb 20 14:07:21 2015 -0300
+
+    Added CAE
+
+commit c049a6fdc5e6a2f0321221cb3b109f5b5de0bfe5
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu Feb 19 15:56:54 2015 -0300
+
+    Added CAE features.
+
+commit d3c3e0542524bd5e5bca7dcbd0694c6399b117ac
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Feb 18 14:52:47 2015 -0300
+
+    Changed GraphicModel, Added Axis
+
+commit 782163053db112eba08a15580dea03b50200ed00
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Feb 17 22:37:29 2015 -0300
+
+    Modified CAE
+
+commit 58c2f054f95db739d3bed0954eaa55591202c9da
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu Feb 12 23:01:58 2015 -0300
+
+    corrected fluxsol solver
+
+commit 7bf5a89364b155def1c7248811694812336146a6
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu Feb 12 17:32:37 2015 -0300
+
+    Modified Tabbed Toolbars
+
+commit 9064242ff80057d18cda99b7c0f21711c05818da
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Feb 11 15:50:57 2015 -0300
+
+    Rebuilding FluxSol
+
+commit 44eebd9c30ed7c7f3c76f18a625ae70b0aeb6f2d
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Feb 9 14:55:15 2015 -0300
+
+    Working on FluxSol exec and CAE Trees
+
+commit 87da41161ed95b1601f2f04c753058c51a79f8f4
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu Feb 5 15:42:57 2015 -0300
+
+    Changed Icons
+
+commit a19074a9d77bc56f9ed0676d30eaca3294eaee84
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Feb 3 15:53:40 2015 -0300
+
+    Added IDE Features
+
+commit 7b8ab30a947a34127c4cd80b0cbd3ce3c09ceec4
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Feb 2 23:07:27 2015 -0300
+
+    Organizing.
+
+commit 6b123a6fe42149e824a635fb0bfba1851587bf50
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Feb 2 19:28:37 2015 -0300
+
+    change
+
+commit 778892c3be0d52ff210a2b5ab3edf30e9a74aab4
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Feb 2 15:20:57 2015 -0300
+
+    Signed-off-by: Luciano <luciano.buglioni@gmail.com>
+
+commit 5d82d0c9ab4fd20ee03de07316c7d12dc5e4269e
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Sat Jan 31 22:07:46 2015 -0300
+
+    Merge
+
+commit 696fce5e9dd680d5f9566fca435a7926f5a8394d
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Sat Jan 31 20:40:04 2015 -0300
+
+    Merging
+
+commit 6742d56e5e0248988b0fe52a04d9adf782cf087d
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Fri Jan 30 14:54:25 2015 -0300
+
+    Added IDE Features.
+
+commit 62be4c7d54dddbf4c80ae5b84696b55be53f67ef
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu Jan 29 15:43:25 2015 -0300
+
+    Changing IDE
+    
+    Signed-off-by: Luciano <luciano.buglioni@gmail.com>
+
+commit 18ec09c94409c733dab73c58749944a2d37e7f5c
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Jan 28 15:02:36 2015 -0300
+
+    Modified IDE
+
+commit 61dabc5d440729984c867f94cde136734c937adc
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Jan 27 15:00:22 2015 -0300
+
+    Added Viewing features.
+
+commit 1354884edc0e8e23ab3f354deefb143d65ba523c
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Jan 27 07:12:28 2015 -0300
+
+    Merged.
+
+commit ba0feab55cd5b091932d2bcd27c7004458c1982c
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Jan 27 07:04:26 2015 -0300
+
+    Modified Table test Color Ranges.
+
+commit c8839a10fb0d75cbf0e08c19bd6731a5e8a930b7
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Mon Jan 26 23:13:47 2015 -0300
+
+    Modified Laplacian.inst
+
+commit 3e71eea8799f685773d42d6233b7341a23b3f5f1
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Tue Jan 13 11:02:21 2015 -0300
+
+    Commented Contour data.
+
+commit 33f739e0b1fdad2a9e4167f15565b5009326162a
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Fri Jan 9 14:21:48 2015 -0300
+
+    Changed Icon
+
+commit b92a6becd3f37aa61bea58be718521761fd505da
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Fri Jan 9 14:20:33 2015 -0300
+
+    Changed Icons and views.
+
+commit 9af5e158a6c3a82f4f76ed5eaced26dd02bcd5a7
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Thu Jan 8 22:59:43 2015 -0300
+
+    Added Model Trees.
+
+commit 863cceb908574eda8115f260edbd1de32cdb4cc4
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu Jan 8 14:59:57 2015 -0300
+
+    Changed icons
+
+commit dd078830fd28a815adf1cb2117f69c245687d8f8
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Wed Jan 7 23:26:02 2015 -0300
+
+    CAE Modified
+
+commit cc6a93f2d79e2b3748f5b2c9f005d2ac70932cbe
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Jan 7 14:53:12 2015 -0300
+
+    Begining to work with FluxSol CAE.
+
+commit 557560ea531e925002d0bcf8cdcce6eeee181470
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Tue Jan 6 21:10:43 2015 -0300
+
+    Changed Directories. Added CAE.
+
+commit 6beab205a169528c1124e82b7a2bfe600f61f205
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Tue Jan 6 16:28:02 2015 -0300
+
+    Changed Phi Correction Eqn. Corrected SurfaceField operator*.
+    Created only for testing CDS Divergence.
+
+commit a6d63de89543be331ad5e92c396c061302980cd8
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Jan 6 14:52:21 2015 -0300
+
+    Begining to test CenterToVertexInterpolation.
+    Class works fine, except foor boundary, where
+    must to read this boundary values.
+
+commit 3665a598e17eb3bad2fca3c0ca80c9fca00116d3
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Jan 5 14:46:29 2015 -0300
+
+    Modified differents things. Momentum and Pressure eqns solved with overrelaxation OK.
+
+commit 13509682fd9da0538d8d55cc4a936ae51a55b88e
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Sun Jan 4 22:48:50 2015 -0300
+
+    Fixed Vec3D Assignment operator.
+    Deleted redundant header version of Vec3D operator/(Vec3D, Scalar)
+    Fixed Volume Calculator
+
+commit 62432ae7685181efacaa9faf695da773b6d25232
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Tue Dec 23 00:13:36 2014 -0300
+
+    Corrected phi correction. First term was not calculated.
+    Encountered an error in Solver, z component is not passed To Field.
+
+commit 4a224bcb6da9d2e4f654b528210b19191664aa71
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Fri Dec 19 06:18:09 2014 -0300
+
+    Added Ops, show residuals, remains to check mesh orientation
+
+commit 8ff65410b7716f41c0aefb777b34e73a7eaf7c7a
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Wed Dec 17 06:20:08 2014 -0300
+
+    Addded Bc to Pressure Correction Eqn.
+
+commit f74517710768cfe9f43976ae9683c986f87ff521
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Tue Dec 16 13:45:51 2014 -0300
+
+    Modifications:
+    1) Added grid assignment in component product operator*
+    2) Created Example 6 reading from mesh.
+
+commit 031e40147cbd8e09b091e5512601fb8b1ff9430c
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Thu Dec 11 18:25:54 2014 -0300
+
+    1) Added Volume calculation in grid construction. Error in U correction.
+    2) Fixed eqn operator-(eqn)
+    3) Corrected Boundary Divergence Conditions in upwing (unique till now) scheme
+    4) Sf() corrected, now returns vector as is
+    5) Corrected Solver Scalar coefficients. Were bad allocated, col[dim] from solver
+    is now used only a member
+    6) Solver row widths were restored from original but were corrected sparse col
+    7) Corrected FvExp::Grad(), with outwards normal
+    8) Corrected EqnSystem, and Eqn operator==(field) to do not override eqn source
+    9) Corrected single FluxSum (Explicit Div, pending to change name).
+    It was not consider face orientation
+    10) Changed Pressure Correction Eqn. This eqn did not have AUr correction
+    11) Created operator/ GeomField and repaired operator/ Scalar matrix assignment
+    12) Corrected flux BCs in walls (applied null flux). This last thing makes
+    the pressure correction matrix well conditioned.
+    
+    PENDING: TO MODIFY EQN AND EQNSYSTEM OPERATORS TO RETURN PER VALUE
+    ACCORDING TO MAINTAIN EQN WITHOUT MODIFICATIONS
+    
+    To Modify:
+    0) Separate internal field in Fv_SurfField(boundary field.
+    1) Create a surface field boundary for CenterCell Fields, extrapolating vars
+    2) operator=double must be inherited from geomfield
+    3) Sf() corrected,
+    4) Remove field constructor with mesh and pass it to operator= so its no need to construct with a mesh
+    
+    Signed-off-by: Lucho <luciano.buglioni@gmail.com>
+
+commit 15c81e0787e1ec07004708a37b71943cda1fa30f
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Mon Dec 1 21:06:17 2014 -0300
+
+    Fixed Surf_Fv_Field constructor to all faces.
+    Fixed Div() single sum operator. TO BE REPLACED WITH FvExp::Sum()
+    (Div must include Sf()).
+
+commit cee24c64476aa3bb96ca06f746046a274d2e3b3b
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Wed Nov 26 00:25:09 2014 -0300
+
+    CenterToFaceInterpolation < > () .Sf() is replaced with Interpolate<>()
+    With openfoam like Sintax
+    
+    PENDING TO FIX
+    
+    FvExp::SnGrad(p);
+    In r.Val(f,grad)
+
+commit 383ab88d99f07d5020b33e1e18d7e0d9eb64b5a0
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Tue Nov 25 20:53:34 2014 -0300
+
+    Added assign of GridPtr to GeometricField operators+ and -.
+    Fixed Assign
+    
+    ONLY REST TO CREATE GeometricField FvExp::Interpolate(CC_Fv_Field)
+    
+    or GeomsurfaceField FvExp::Interpolate(VolSurfaceField)
+    or directly Fv_CC_Field as input.
+    
+    
+    PENDING: TO CHECK WITH ASSERT NULL POINTER
+    
+    ANOTHER PENDING IS TO UNIFY FIELD CONSTRUCTION REPLACING ASSIGNGRID FOr:
+    
+    Create GeometricField: virtual void SizeFromGrid(const _Grid *gPtr);
+    This function is used in the constructor to build from grid and is virtual
+    depending on FieldType (center cell, faces)
+    
+    PENDING: To create a single function Interpolate (fields) which creates
+    a reference to GeomSurfaceField
+    
+    Signed-off-by: Lucho <luciano.buglioni@gmail.com>
+
+commit a5369c724bf1277cb104002a548ef66dd6845806
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Thu Nov 20 23:00:02 2014 -0300
+
+    PENDING TO ADD FIX EQNSYS OPERATOR=
+
+commit f053c00df7def3a7314f3598be62e23792b7624c
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Thu Nov 20 22:39:09 2014 -0300
+
+    Fixed GeomField operator-, assigning Grid.
+    THIS HAS AN ERROR
+    
+    TO MODIFY ABOUT THIS, Associating with operator=
+    Corrected EqnSys Field() function.
+    REPAIR FUNCTION Grid()
+    LAST FIELDS OF SIMPLE HAVE ERRROR
+    ASSIGNING GRID POINTER TO FIELDS
+
+commit 8cdbbfa63f0c8071dd8b549e04cdd5a3ad7708ce
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Wed Nov 19 23:41:05 2014 -0300
+
+    Corrected Ap returns a non reference (POSSIBLY MODIFICATION, TO STORE IT).
+    Replacing SurfaceField from example 3 to Fv_Surf_Field.
+    Div is adapted to GeomField<>
+    IS PENDING TO CREATE GEOMF BOUNDARY.
+    PENDING TO ASSIGN MESH TO EQNSYSTEM A()
+    Corrected CenterTofaceInterpolation Sf() returning base class
+    Added GeomSurfaceField operator=
+    There is an issue with copy constructor. When RHS of an equal is a
+    constructor (then a copy constructor is called), it is necessary till now
+    to assgihn direction operator.
+    
+    Is an error in line:
+    phi=phi - AUf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
+    
+    Updated Example 3 operators.
+    Corrected snGrad
+    PENDING
+    1) To Define Div(_Surf_Fv_Field) which simply sum flux over faces.
+    2) To assign a field to phi
+
+commit 33439cabd13a553eb29537408baf9c5357c778f2
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Tue Nov 18 23:03:33 2014 -0300
+
+    Fixed EqnSystem operator+ which crashes.
+    GeomField operator= is required, in order
+    to combine several Field operators (Example CC_FV_Field<..>=-FvExp::Grad()
+    crashes.
+    STILL PENDING TO ASSIGN BOUNDARY
+    PENDING TO FIX SURFACE
+
+commit 2552a66f5fdd57f7280a295c4bbc7aa4f5137f29
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Mon Nov 17 23:51:04 2014 -0300
+
+    FIxed FIeld Operations. Remains to build explicit copy constructors, equal operators.
+
+commit 6ed0020e5cc94a2c28caeed445b19e5dcd0b6557
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Mon Nov 17 17:25:59 2014 -0300
+
+    Signed-off-by: Lucho <luciano.buglioni@gmail.com>
+
+commit 4d642696b223d9e778322af758df0f90ca4b5f53
+Author: PabloZ <zitelli.pablo@gmail.com>
+Date:   Fri Nov 14 14:54:16 2014 -0300
+
+    Input reading
+
+commit 127b50611ad896062ff5f7840a27cc06c23e589b
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Thu Nov 13 23:11:38 2014 -0300
+
+    Begining to replace FIelds, in order to have a cell centered field without
+    a mesh.
+    // CREATED GEOMERTICFIELD WITH POINTERS TO BASE CLASSES!!!!!!
+    //THIS IS A NEW FEATURE;
+    //NOW FV VOLFIELD Sf() RETURNS A GEOMFIELD WITH A POINTER TO ITSELF
+    //SURF FV FIELD INHERITS ALL MEMBERS FROM IT
+    THIS IS EXACTLY LIKE SURF_FV_FIELD WITHOUT OPERATORS
+    MUST BE CHECKED ACTUAL CLASS GEOMSURFFIELD
+
+commit 057328ffdd98d83f0a66252f0530ee9bc730df2a
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Wed Nov 12 21:10:06 2014 -0300
+
+    Creation of Explicit SnGrad and Div (FluxField),
+    the last one without an extra parameter, simply sums fuxes through grid faces.
+    IS IMPORTANT TO NOTE THAT MUST BE MODIFIED Surf_FV_Field, due to the following:
+    this object must contain boundaryfield. So, Sf() returned by grid must be
+    an intermediate base class which contain boundary field (but no grid),
+    Surf_Fv_Field must inherit from last one.
+
+commit 1e5c74fd5b83bbd4a74c43ee7576c3967f2ad889
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Nov 12 14:41:02 2014 -0300
+
+    Updating From Work.
+
+commit e69dc6e272bc4009d07c785b0023d5e4d9aa4c94
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Tue Nov 11 22:40:02 2014 -0300
+
+    Changes
+
+commit 0f9131bc6c984f27dcd5e4b5ba02aaff763ca11d
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Mon Nov 10 23:37:05 2014 -0300
+
+    Writing SIMPLE Example.
+
+commit d6d1ec9d5940b431487a75bfaac066674e7c0a31
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Wed Nov 5 22:46:31 2014 -0300
+
+    Changes
+
+commit f02e7f21f5ebc39f6fe556c1595e8cea6c65c564
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Wed Nov 5 06:18:54 2014 -0300
+
+    Working on SIMPLE
+
+commit e8c9fc50e21b49b84b9e366e9735023acec4811a
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Mon Nov 3 23:24:54 2014 -0300
+
+    Corrected Laplacian to solve Vec3D
+
+commit f2d317b39960b8f9840dc4818776e0988fd3ce54
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Fri Oct 31 20:22:10 2014 -0300
+
+    Repaired Convection Eqn Example 3.
+    Added Material DB, added to sources
+
+commit 6a2bf3cdbcf51dd3fba331a2fc2da552d34e6ea0
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu Oct 30 09:07:25 2014 -0300
+
+    Commented some lines.
+
+commit f6430c61c09e7bb609fb6b7a1543cdd8e440f74d
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Wed Oct 29 23:44:57 2014 -0300
+
+    Corrected Divergence.
+    Pending to correct Eqn operator-(), to unify criteria with operator==.
+
+commit 8ad56151de7ee862c215f15b77ad9ecf9c264fdf
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Tue Oct 28 22:22:26 2014 -0300
+
+    In order to build CFD SIMPLE Coupling algorithm,
+    there was modified Divergence to be like OpenFOAM
+    //FORMERLY WAS Div(phi,U)
+    Now is EqnSys<T> Div(Scalar Flux, Field <T>)
+    THere is no longer built by inner product (like explicit Div)
+    Example 3 and FluxSolCore is being repared
+    by the other hand, CC_Fv_SurfaceField must be inherit from SurfaceField
+    This was changed.
+    Another pending task is to change mesh.Sf() from SurfaceField to Fv_CC_SurfaceField
+    Div contents must be change to new configuration
+
+commit 2ebe47ee933a9c2db12ddbf0e10cd1a5e65eb630
+Author: PabloZ <zitelli.pablo@gmail.com>
+Date:   Mon Oct 27 14:59:53 2014 -0300
+
+    Materials database creation.
+    Examples 1, 2, 3 and 4 modifications to use Materials data base.
+
+commit cb34787999f6fb8d9cd35d8f8d8a7eb113952a64
+Author: PabloZ <zitelli.pablo@gmail.com>
+Date:   Thu Oct 23 09:18:56 2014 -0300
+
+    Changes made to Materials.
+
+commit 8ba228ba24931be13caf67799b2ed7cf5947a61f
+Author: PabloZ <zitelli.pablo@gmail.com>
+Date:   Wed Oct 22 09:31:46 2014 -0300
+
+    Merged
+
+commit 5846625d613205f4f81ac7d82bb4a0cb4176c27f
+Author: PabloZ <zitelli.pablo@gmail.com>
+Date:   Wed Oct 22 09:03:28 2014 -0300
+
+    Material feature added
+
+commit 37bf79ca0b1846c03dd3ce75343dcf7c44f6ec00
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Mon Oct 20 15:27:59 2014 -0300
+
+    Comments.
+
+commit 539bdf60ea28ac2ce321e8357494b3ff4cc88131
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Thu Oct 16 21:27:12 2014 -0300
+
+    By now operator& belongs only to SurfaceField because of rank.
+    If this is from field, throws an error.
+
+commit 825ef4c481e250b5ab80a9f5991842dc7a402c41
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Thu Oct 16 21:18:15 2014 -0300
+
+    Fixing operators. Making virtual Field operator& (before in surfacefield)
+
+commit 44285ff3c56c009f8b35238de176457a46c96eca
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Thu Oct 16 17:02:30 2014 -0300
+
+    Added FvExp::Interpolate.
+    Begin to write SIMPLE Solver example.
+
+commit a258ac32ee9c2f17a5166b8383ef5a3890b2e553
+Author: PabloZ <zitelli.pablo@gmail.com>
+Date:   Wed Oct 15 13:43:32 2014 -0300
+
+    Log en ingles y acomodado
+
+commit 9ebf8755e91c391435b98a2eadb086be35a2ce44
+Author: PabloZ <zitelli.pablo@gmail.com>
+Date:   Tue Oct 14 14:18:20 2014 -0300
+
+    Fixed Log Mesh
+
+commit 666164e1688617273eec051efca640761fb6faa3
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Fri Oct 10 14:29:09 2014 -0300
+
+    Fixed Mesh Log.
+
+commit a0fb404f1dffd129a395e371e29074f852347843
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Fri Oct 10 09:51:44 2014 -0300
+
+    to verify:
+    1) neighbour id assignment
+    2) Eqn<T> operator ==
+
+commit 7626dfc58c67b6270dbf924648f69547988a88c9
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Thu Oct 9 23:15:47 2014 -0300
+
+    Fixed Divergence.
+
+commit eab5acd3ac3c506a5b330f5498e82fb2db4c2404
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu Oct 9 16:07:08 2014 -0300
+
+    Fixed Upwind Div() coeffs. Added Face.Fp() to meshlog.
+    Corrected Vec3D vec_pn.normalize by .Norm() in Face init.
+    Vec3D normalize() function.
+    Crrected Face Fp and interpolation field.
+
+commit f28629d3adc65417b6c83ee48b3f679ff525b7ca
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Wed Oct 8 23:32:36 2014 -0300
+
+    Corrected Div. Now Div does not crash. The problem was in Cell assignment.
+
+commit 5fbfd66ece044482ca2279fd3a4285d0bcdb98cc
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Oct 8 15:11:22 2014 -0300
+
+    Working on Convection Diffussion example. Error in operator== from EqnSystem
+
+commit 3803346c788484c7674228ff1f3eac0dc745fd83
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Oct 8 07:47:50 2014 -0300
+
+    Corrected Examples directories and CMakeLists files.
+
+commit 778243c0524f99864737f6ed4fbe60b94e0dea76
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Wed Oct 8 07:04:58 2014 -0300
+
+    EnqSystem operator== and Field Vec3D assignment
+
+commit 8e35c70d335c826c752470a2ee5ce0eb905c18f7
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Wed Oct 8 07:02:13 2014 -0300
+
+    Fixed CGNS read, initializing variables. Added and corrected examples.
+    Remains to be changed interpolation.
+
+commit 905b8318313131cb3d4c3b1dac73a8d9b4d120b7
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Oct 7 12:09:54 2014 -0300
+
+    Corrected Structured Mesh generation.
+
+commit fedbdc9c31dbe0b700a811d030f49b64e7e822b4
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Tue Oct 7 06:49:43 2014 -0300
+
+    Begining to build Convection Diffusion 1D example.
+    Must be fixed, not priority face global numbers in regular mesh generation.
+
+commit 28d9086f11843d6218a671db1a1d0f32058ca6e3
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Sun Oct 5 23:18:07 2014 -0300
+
+    Added Example 3.
+
+commit 9981fca4216d065c7f97997c9c8c0cb8c41e18a1
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Sep 30 11:33:57 2014 -0300
+
+    First order Upwind Written. Begin to check it.
+
+commit 7fb72363215d8211bb72b0a6a881d3f1b9410657
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Mon Sep 29 21:18:18 2014 -0300
+
+    Beginning to write Single Upwind First Order Div.
+
+commit 158dc242cd4ce980b146c68b7f750ce87e6b24b1
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Tue Sep 23 22:28:26 2014 -0300
+
+    Fixed Eqn<T> operator==. Begining to build FvImp::Div
+
+commit acc227755966a6f15cbdadf2a32c517828f7ff32
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Sep 23 08:02:34 2014 -0300
+
+    Changed CmakeLists.txt
+
+commit d81d045b799f4ad7efb60972f3dc637196c84fb3
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Tue Sep 23 07:53:56 2014 -0300
+
+    Changed CMakeLists.txt
+
+commit df1c3b6e701b4f8dd0683434ba15fce3debd040b
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Mon Sep 22 21:33:17 2014 -0300
+
+    Corrected EqnSystem NumEqn. VTU Writer Fixed. To correct Eqn<T> operator==, used in FvImp::Div
+
+commit a1a165ae12ea2ad27dfa0c993af1566487db98ca
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Fri Sep 19 08:33:20 2014 -0300
+
+    Added Field reference to EqnSystem. To modify several field and eqsys vars.
+
+commit 0dc3323ab1df18ee330b5a0e9c74368d33cbe8fe
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Thu Sep 18 23:30:04 2014 -0300
+
+    Corrected Face Cells assignment.
+
+commit 8b4835976245b6ff3ac8a61410ec1fe4ed874aad
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Thu Sep 18 15:49:47 2014 -0300
+
+    Fixed FvG. To Fix interpolation.
+
+commit 3db3cb1f04fdbd37cfe452fb940f923343d2976b
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Tue Sep 16 23:34:37 2014 -0300
+
+    Fixed Mesh reading. Faces.
+
+commit 7de0ddace2571d36d1a6dfbeba7d9679d5b1ce92
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Mon Sep 15 23:24:00 2014 -0300
+
+    Fixed Example 3, Convection Diffusion
+
+commit 3173234208b971969d852e4a9069cea8f8b038cb
+Author: Luciano <luciano.buglioni@gmail.com>
+Date:   Fri Aug 29 14:03:29 2014 -0300
+
+    Fixed Eqn System Constructor, Example 1 working.
+
+commit cc348cf3dd2c3bc0f0b619eeea8532e02928cbe4
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Mon Aug 25 23:11:38 2014 -0300
+
+    Fixed Mesh Generation.
+    Adapted to gcc mingw compilers.
+
+commit df56b494c6b54dcbe977fd650fe2413cd900e8a0
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Mon Aug 25 18:26:13 2014 -0300
+
+    Adapted to gcc compilers.
+
+commit a7be655679c2a5bf4185e1c9112268be01e0400e
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Thu Aug 14 09:10:29 2014 -0300
+
+    Initial Commit. Arranging files.
+
+commit 60c9ce02dc67971cd20561ed05e9cd4ef4808192
+Author: Lucho <luciano.buglioni@gmail.com>
+Date:   Wed Aug 13 20:01:29 2014 -0300
+
+    Beta Version

@@ -157,6 +157,7 @@ void Modelo::Asociar_Ids_Nodos()
     cout << "Asigning element connectivity..."<<endl;
 	for (int i=0;i<numelem;i++)
 	{
+	    cout << "Element "<<i<<endl;
 //	    cout << "Element nodes: "<<Elementos[i].NumNodes()<<endl;
 	    v.assign(Elementos[i].NumNodes(),-1);
 	    //cout << "Element "<<i<<endl;
@@ -167,10 +168,10 @@ void Modelo::Asociar_Ids_Nodos()
 //		cout << "asigning"<<endl;
 //		cout <<"connect [0]"<<conect[0]<<endl;
 //		cout << "id nodo interno"<<IdNodoInterno[conect[0]]<<endl;
-//		for (int nn=0;nn<Elementos[i].NumNodes();nn++)		cout << conect[nn] <<" ";
+		for (int nn=0;nn<Elementos[i].NumNodes();nn++)		cout << conect[nn] <<" ";
 		for (int nn=0;nn<Elementos[i].NumNodes();nn++)		v[nn]=IdNodoInterno[conect[nn]];
 
-//        cout << endl;
+        cout << endl;
 //        cout << "elem "<<i<<endl;
 		Elementos[i].Asignar_Conect_Interna(v);
 	}

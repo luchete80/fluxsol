@@ -50,6 +50,7 @@ class Elemento{
         const int & NumNodes()const {return nnodos;}
 
         const string & Type()const{return this->type;}
+        const int & Pid()const{return this->pid;}
 
 
 
