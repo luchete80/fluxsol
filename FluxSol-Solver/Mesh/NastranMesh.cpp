@@ -56,13 +56,17 @@ NastranMesh::NastranMesh(const string &file) {
 //    cout << "Element type: "<<mod.Elementos[0].Type()<<endl;
 
     cout <<endl;
-
+    set<int> belem;
     for (int idcell=0; idcell<mod.Elementos.size();idcell++)
     {
-        Cell_CC scell(idcell, mod.Elementos[idcell].Conect_int());
-        this->cell.push_back(scell);
+        if (mod.Elementos[idcell].Type()!="CQUAD4" && mod.Elementos[idcell].Type()!="CTRIA3")
+        {Cell_CC scell(idcell, mod.Elementos[idcell].Conect_int());
+        this->cell.push_back(scell);}
+        else
+            belem.insert(idcell);
     }
     this->num_cells=cell.size();
+    cout << "[I] Created " << mod.Elementos.size() - belem.size() << " internal cells." << endl;
 
     cout << "[I] Creating Central Nodes..." << endl;
     CreateNodesFromCellVerts();
@@ -71,15 +75,13 @@ NastranMesh::NastranMesh(const string &file) {
     this->inicie_cells=true;
 
     cout << "[I] Assigning Faces..." << endl;
-    Iniciar_Caras();
+    Init_Faces();
 
     cout << "[I] Assigning Neighbours..." << endl;
     AssignNeigboursCells();
 
     cout << "[I] Calculating Volumes..." << endl;
     CalcCellVolumes();
-
-    map<vector <int> , int > facevertsmap=FaceVertsMap();
 
     cout << "[I] Creating Patches..." << endl;
 //    patch_name=patches_names(data);
@@ -92,6 +94,8 @@ NastranMesh::NastranMesh(const string &file) {
     myclass myobject;
     list<int> lista;
     vector<Elemento> vel=mod.Elementos;
+
+    vector <int> bpelem;    //elements per patch
 
     for (int e=0;e<mod.Elementos.size();e++)
     {
@@ -111,6 +115,33 @@ NastranMesh::NastranMesh(const string &file) {
         tempNodesSort=mod.Elementos[e].Conect_int();
         sort (tempNodesSort.begin(), tempNodesSort.end(), myobject);
 
+    }
+
+    //SAME OF FvGrid::ReadCGNS
+    //Looking through raw elements (faces in Grid)
+    for (int bp=0;bp<XXX;bp++)
+    {
+        cout << "[I] Patch defined via Elems..."<<endl;
+        for (int el=0;el<bpelem[bp].size();el++)
+        {
+            //Adding element vertices
+            //for (int iv=0;iv<this->Cell(bpelem[bp][el]).Num_Vertex();iv++)
+            for (int iv=0;iv<vboundcell[bcell].Num_Vertex();iv++)   faceverts.push_back(vboundcell[bcell].Vert(iv));
+
+            vector <int> sortfaceverts(faceverts);
+            std::sort (sortfaceverts.begin(), sortfaceverts.end(), myobject);
+
+            //NEW FORM
+            //// /*COULD BE LIKE THIS:*/int faceid=sortbfacemap[sortfaceverts];
+
+            sortfacemapit=sortbfacemap.find(sortfaceverts);
+            int faceid=sortfacemapit->second;
+            if (sortfacemapit!=sortbfacemap.end()) //Found
+                temp.push_back(faceid);
+            faceverts.clear();
+            bcell++;
+
+        }//End element
     }
 
     //            Patch p(pname[patch_index], lista);

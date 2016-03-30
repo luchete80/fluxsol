@@ -1005,8 +1005,8 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 	return ret;
 }
 
-	const std::string  Fv_CC_Grid::Read_CGNS()
-	{
+const std::string  Fv_CC_Grid::Read_CGNS()
+{
 
 	    map<vector <int> , int >::iterator sortfacemapit;   //for boundary creation
 
