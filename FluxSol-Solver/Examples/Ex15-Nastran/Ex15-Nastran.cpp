@@ -36,8 +36,9 @@ int main(int argc,char **args)
     cout << "Open Model from file..."<<endl;
 //    Nastran::Modelo model("test2.bdf");
 
-    NastranMesh nasmesh("test2.bdf");
+    //NastranMesh nasmesh("test2.bdf");
     //Nastran::Modelo model;
+    Fv_CC_Grid("test2.bdf");
 
 	return 0;
 }
