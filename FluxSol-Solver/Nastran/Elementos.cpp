@@ -225,7 +225,7 @@ Elemento::Elemento(vector <string> *strptr, const int &pos)
     haserror=true;
     isboundelem=false;
     this->type=Leer_Hasta_Caracter((*strptr)[pos],' ');
-    pid=Leer_Campo((*strptr)[pos],3);
+    pid=Leer_Campo((*strptr)[pos],2);
 
     // Looking for solid elements CTETRA, CPENTA, CPYRA, CHEXA
     //And Node number are 4, 6, 5, 8

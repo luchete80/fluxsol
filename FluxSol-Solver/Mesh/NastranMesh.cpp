@@ -55,18 +55,36 @@ NastranMesh::NastranMesh(const string &file) {
     cout << "Element vector conect size: "<<v.size()<<endl;
 //    cout << "Element type: "<<mod.Elementos[0].Type()<<endl;
 
-    cout <<endl;
-    set<int> belem;
+    map < int , int> pidloc;       //at left is id, right is position
+    map <int, int >::iterator pidloc_it;
+    vector < vector <int> > patchelem;  //Element (position per patch
+    set<int> belem;                     //Element number per patch
+
+    int found_pids=0;
     for (int idcell=0; idcell<mod.Elementos.size();idcell++)
     {
         if (mod.Elementos[idcell].Type()!="CQUAD4" && mod.Elementos[idcell].Type()!="CTRIA3")
         {Cell_CC scell(idcell, mod.Elementos[idcell].Conect_int());
         this->cell.push_back(scell);}
-        else
-            belem.insert(idcell);
+        else {  //Boundary element
+            int pid=mod.Elementos[idcell].Pid();
+            pidloc_it=pidloc.find(pid);
+            if (pidloc_it!=pidloc.end()) //pid already created
+            {
+                cout << "Existent pid "<< pid << ", element" <<idcell<<endl;
+                patchelem[pidloc_it->second].push_back(idcell);
+            }
+            else
+            {
+                cout << "Found new pid "<< pid << ", element" <<idcell<<endl;
+                pidloc.insert(std::pair <int,int> (pid,found_pids));
+                patchelem.push_back(vector<int>(1,idcell));
+                found_pids++;
+            }}
+            //belem.insert(idcell);
     }
     this->num_cells=cell.size();
-    cout << "[I] Created " << mod.Elementos.size() - belem.size() << " internal cells." << endl;
+    //cout << "[I] Created " << mod.Elementos.size() - belem.size() << " internal cells." << endl;
 
     cout << "[I] Creating Central Nodes..." << endl;
     CreateNodesFromCellVerts();
@@ -84,49 +102,30 @@ NastranMesh::NastranMesh(const string &file) {
     CalcCellVolumes();
 
     cout << "[I] Creating Patches..." << endl;
-//    patch_name=patches_names(data);
-//    vpatch=create_patches(data, patch_name);
 
-    set <int> util_pids;
-    vector <set <int> > pid_els;    //Element per each pid
-    vector<int> tempNodesSort;
-    map<vector <int> , int > FaceVerts;
     myclass myobject;
-    list<int> lista;
-    vector<Elemento> vel=mod.Elementos;
 
-    vector <int> bpelem;    //elements per patch
-
-    for (int e=0;e<mod.Elementos.size();e++)
-    {
-        if (!mod.Elementos[e].isBoundElem())
-        {
-            util_pids.insert(mod.Elementos[e].Pid());
-            int faceid=FaceVerts[tempNodesSort];
-            lista.push_back(faceid);
-        }
-
-
-    }
-
-    for (int pid=0;pid<util_pids.size();pid++)
-    {
-        //int e=;
-        tempNodesSort=mod.Elementos[e].Conect_int();
-        sort (tempNodesSort.begin(), tempNodesSort.end(), myobject);
-
-    }
-
+    //TO MODIFY: THIS MUST BE COMBINED WITH FvGrid::ReadCGNS AT FVGRID.CPP
+    map<vector <int> , int >::iterator sortfacemapit;
+    vector <Patch> vpatch;
+    std::vector<std::list <int> >bpfaces;
+    vector <int> faceverts;
     //SAME OF FvGrid::ReadCGNS
     //Looking through raw elements (faces in Grid)
-    for (int bp=0;bp<XXX;bp++)
+    //Looks faces in sortbfacemap defined in Init_Faces
+
+    for (int bp=0;bp<found_pids;bp++)
     {
+        list <int> temp;
         cout << "[I] Patch defined via Elems..."<<endl;
-        for (int el=0;el<bpelem[bp].size();el++)
+        for (int el=0;el<patchelem[bp].size();el++)
         {
             //Adding element vertices
             //for (int iv=0;iv<this->Cell(bpelem[bp][el]).Num_Vertex();iv++)
-            for (int iv=0;iv<vboundcell[bcell].Num_Vertex();iv++)   faceverts.push_back(vboundcell[bcell].Vert(iv));
+            //for (int iv=0;iv<vboundcell[bcell].Num_Vertex();iv++)   faceverts.push_back(vboundcell[bcell].Vert(iv));
+            int bcell=patchelem[bp][el];
+            faceverts=mod.Elementos[bcell].Conect_int();
+            //for (int iv=0;iv<mod.Elementos[bcell].NumNodes();iv++)   faceverts.push_back(vboundcell[bcell].Vert(iv));
 
             vector <int> sortfaceverts(faceverts);
             std::sort (sortfaceverts.begin(), sortfaceverts.end(), myobject);
@@ -134,6 +133,7 @@ NastranMesh::NastranMesh(const string &file) {
             //NEW FORM
             //// /*COULD BE LIKE THIS:*/int faceid=sortbfacemap[sortfaceverts];
 
+            //or sortfacemapit=sortbfacemap.find(sortfaceverts);
             sortfacemapit=sortbfacemap.find(sortfaceverts);
             int faceid=sortfacemapit->second;
             if (sortfacemapit!=sortbfacemap.end()) //Found
@@ -142,94 +142,29 @@ NastranMesh::NastranMesh(const string &file) {
             bcell++;
 
         }//End element
-    }
 
-    //            Patch p(pname[patch_index], lista);
-    //            output.push_back(p);
-    //            tempNodesSort.clear();
+        bpfaces.push_back(temp);
+        stringstream convert;
+        int pid=mod.Elementos[patchelem[bp][0]].Pid();
+        convert <<pid;
+        cout << "[I] Created Patch id"<<convert.str() <<", Face Count: " <<temp.size()<<endl;
+        //cout << "[I] Created new Patch "<<pname<<", Face Count: " <<tempnew.size()<<endl;
 
+        Patch p(convert.str(),bpfaces[bp]);
+        vpatch.push_back(p);
 
+    }//End patch
 
-//    vector <Elemento> vel=mod.;
-//
-//vector<Patch> create_patches(const vector<string> &data, const vector<string> &pname) {
-//    vector<Patch> output;
-//    vector<int> tempNodesSort;
-//    map<vector <int> , int > FaceVerts;
-//    string patch_identifier="(13";
-//    string interior="(1";
-//    string fluid="(2";
-//    string comment="(0";
-//    string buff, str;
-//    stringstream ss;
-//    vector<string> vline, fline;
-//    int patch_index=0;
-//
-//    int i=0;
-//    while (i<data.size()) {
-//        ss << data[i];
-//
-//        while (ss >> buff) {
-//            vline.push_back(buff);
-//        }
-//        ss << "";
-//        ss.clear();
-//
-//        if (vline[0]==patch_identifier && vline[1]!=interior && vline[1]!=fluid && vline[1]!=comment) {
-//            ss << hex << vline[2];
-//            int x;
-//            ss >> x;
-//            ss << "";
-//            ss.clear();
-//            ss << hex << vline[3];
-//            int y;
-//            ss >> y;
-//            ss << "";
-//            ss.clear();
-//            int faces_qty=y-x+1;
-//
-//            list<int> lista;
-//            for (int j=1; j<=faces_qty; j++) {
-//                ss << data[i+j];
-//
-//                while (ss >> buff) {
-//                    fline.push_back(buff);
-//                }
-//                ss << "";
-//                ss.clear();
-//
-//                for (int k=0; k<4; k++) {
-//                    ss << hex << fline[k];
-//                    int z;
-//                    ss >> z;
-//                    ss << "";
-//                    ss.clear();
-//                    tempNodesSort.push_back(z);
-//                }
-//
-//                sort (tempNodesSort.begin(), tempNodesSort.end(), myobject);
-//                int faceid=FaceVerts[tempNodesSort];
-//                lista.push_back(faceid);
-//
-//                fline.clear();
-//
-//            }
-//
-//            Patch p(pname[patch_index], lista);
-//            output.push_back(p);
-//            tempNodesSort.clear();
-//
-//            i=i+j;
-//            patch_index++;
-//        }
-//
-//        vline.clear();
-//        str.clear();
-//        i++;
-//    }
-//
-//    return output;
-//}
+//    ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+//    cout << "[I] Boundary Patches Creation Time: " <<scientific <<ittime_spent <<" " <<endl;
 
+    this->SetFaceLocalCellNeighbours(); //New, 20150518
 
+    Boundary bound(vpatch);
+    this->AddBoundary(bound);
+    cout << "[I] Creating internal faces..." <<endl;
+    this->Create_IntFaces();
+    this->boundary.AddGridPtr(*this);
+
+    cout << "[I] Mesh created ..." << endl;
 }
