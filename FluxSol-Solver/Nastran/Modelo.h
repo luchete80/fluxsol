@@ -78,12 +78,17 @@ class Modelo{
 	void Modelo::Leer_Elementos();
 
 
+	//Boundary Conditions
+	int numberofpatches;
+
+
+
 	public:
 
 		Archivo Nastran;	//Aca ya le digo el constructor
-		
+
 		Modelo(){};
-		Modelo(string cad){};	//Lee de un archivo NASTRAN
+		Modelo(string cad);	//Lee de un archivo NASTRAN
 		~Modelo(){};
 		void Modelo::Lectura_Rapida (string cad);
 
@@ -190,6 +195,8 @@ class Modelo{
 
 	//Esta convierte la malla y llama a las anteriores
  	//Fv_CC_Grid & Convert2FvGrid();
+
+ 	const int & NumNodes()const{return this->numnodos;}
 
 
 

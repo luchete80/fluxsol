@@ -137,6 +137,6 @@ struct myclass {
   bool operator() (int i,int j) { return (i<j);}
 };
 
-
 }
+
 #endif

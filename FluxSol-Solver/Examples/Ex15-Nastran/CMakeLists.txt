@@ -5,12 +5,10 @@ include (CheckIncludeFiles)
 include (CheckIncludeFileCXX)
 include (CheckCXXSourceCompiles)
 
-#CONVECTION - DIFFUSION EXAMPLE
-set (NAME Ex6-CFD-SIMPLE-cgns)
+#FLUENT MESH READING EXAMPLE
+set (NAME Ex15-Nastran)
 project(${NAME})
 
-#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -fpermissive")
-set (CMAKE_CXX_FLAGS "-fpermissive -g")
 
 
 # add to the include search path
@@ -30,28 +28,6 @@ set (ALGLIB_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/src)
 set (ALGLIB_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/bin)
 
 
-include_directories("${FLUXSOL_INCLUDE_DIR}")
-include_directories("${FLUXSOL_INCLUDE_DIR}/Analysis")
-include_directories("${FLUXSOL_INCLUDE_DIR}/Boundary")
-include_directories("${FLUXSOL_INCLUDE_DIR}/Field")
-include_directories("${FLUXSOL_INCLUDE_DIR}/FiniteVolume")
-include_directories("${FLUXSOL_INCLUDE_DIR}/FiniteVolume/Div")
-include_directories("${FLUXSOL_INCLUDE_DIR}/FiniteVolume/Grad")
-include_directories("${FLUXSOL_INCLUDE_DIR}/FiniteVolume/Laplacian")
-include_directories("${FLUXSOL_INCLUDE_DIR}/FiniteVolume/Mesh")
-include_directories("${FLUXSOL_INCLUDE_DIR}/Input")
-include_directories("${FLUXSOL_INCLUDE_DIR}/Libs/Laspack")
-include_directories("${FLUXSOL_INCLUDE_DIR}/Mesh")
-include_directories("${FLUXSOL_INCLUDE_DIR}/Model")
-include_directories("${FLUXSOL_INCLUDE_DIR}/Output")
-include_directories("${FLUXSOL_INCLUDE_DIR}/SistEcuac")
-include_directories("${FLUXSOL_INCLUDE_DIR}/Solver")
-include_directories("${FLUXSOL_INCLUDE_DIR}/Tests")
-include_directories("${FLUXSOL_INCLUDE_DIR}/Type")
-include_directories("${FLUXSOL_INCLUDE_DIR}/UDO")
-include_directories("${FLUXSOL_INCLUDE_DIR}/Utils")
-
-
 set (MY_PETSC_DIR "$ENV{PETSC_DIR}")
 set (MPI_LIB_DIR "$ENV{MPI_LIB_DIR}")
 set (MPI_INC_DIR "$ENV{MPI_INC_DIR}")
@@ -61,10 +37,7 @@ set (MY_PETSC_ARCH "$ENV{PETSC_ARCH}")
 	find_package (PETSc REQUIRED HINTS "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/conf")
 	include_directories (..)
 	include_directories ("${MY_PETSC_DIR}/include" "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/include" ${PETSC_INCLUDE_PATH})
-	
-	#THIS IS NOT USED IN WINDOWS, USED MSMPI
 	#include_directories ("${MY_PETSC_DIR}/include/mpiuni")
-	
 	include_directories ("E:/Programas/cygwin64/petsc-3.4.4/include")
 	find_library (PETSC_LIB petsc PATH "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/lib/") 
 	if (${PETSC_LIB} STREQUAL "PETSC_LIB-NOTFOUND")
@@ -90,6 +63,30 @@ set (MY_PETSC_ARCH "$ENV{PETSC_ARCH}")
 
 #endif ()
 
+include_directories("${FLUXSOL_INCLUDE_DIR}")
+include_directories("${FLUXSOL_INCLUDE_DIR}/Analysis")
+include_directories("${FLUXSOL_INCLUDE_DIR}/Boundary")
+include_directories("${FLUXSOL_INCLUDE_DIR}/Field")
+include_directories("${FLUXSOL_INCLUDE_DIR}/FiniteVolume")
+include_directories("${FLUXSOL_INCLUDE_DIR}/FiniteVolume/Div")
+include_directories("${FLUXSOL_INCLUDE_DIR}/FiniteVolume/Grad")
+include_directories("${FLUXSOL_INCLUDE_DIR}/FiniteVolume/Laplacian")
+include_directories("${FLUXSOL_INCLUDE_DIR}/FiniteVolume/Mesh")
+include_directories("${FLUXSOL_INCLUDE_DIR}/Input")
+include_directories("${FLUXSOL_INCLUDE_DIR}/Libs/Laspack")
+include_directories("${FLUXSOL_INCLUDE_DIR}/Materials")
+include_directories("${FLUXSOL_INCLUDE_DIR}/Mesh")
+include_directories("${FLUXSOL_INCLUDE_DIR}/Model")
+include_directories("${FLUXSOL_INCLUDE_DIR}/Nastran")
+include_directories("${FLUXSOL_INCLUDE_DIR}/Output")
+include_directories("${FLUXSOL_INCLUDE_DIR}/SistEcuac")
+include_directories("${FLUXSOL_INCLUDE_DIR}/Solver")
+include_directories("${FLUXSOL_INCLUDE_DIR}/Tests")
+include_directories("${FLUXSOL_INCLUDE_DIR}/Type")
+include_directories("${FLUXSOL_INCLUDE_DIR}/UDO")
+include_directories("${FLUXSOL_INCLUDE_DIR}/Utils")
+
+
 include_directories(${FLUXSOL_INCLUDE_DIR})
 include_directories(${LASPACK_INCLUDE})
 
@@ -107,4 +104,4 @@ ${NAME}.cpp
 )
 add_executable(${NAME} ${SOURCES})
 
-target_link_libraries (${NAME} ${FLUXSOL_LIB} laspack alglib Type_)
+target_link_libraries (${NAME} ${FLUXSOL_LIB} ${EXT_LIBS} laspack alglib Nastran_)

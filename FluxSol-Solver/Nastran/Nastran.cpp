@@ -24,11 +24,6 @@
 
 using namespace FluxSol;
 
-//Este constructor por defecto se llama cuando se crea desde otra clase!!!
-Archivo::Archivo()
-{
-}
-
 const vector<int> Archivo::Buscar_ini_fin(string cadena)
 {
 	vector <int> inifin;
@@ -142,7 +137,7 @@ const vector <Nodo> Archivo::Leer_Nodos()
 	Nodos.assign(nnodos,nini);
 
 	//ASUMO QUE LOS NODOS SIEMPRE TIENEN LAS COSAS ALINEADAS
-	cout<<"Leyendo Nodos"<<endl;
+	cout<<"Reading Nodes"<<endl;
 	int indn=0;
 	for (int i=pos_nodos[0];i<pos_nodos[1]+1;i++)
 	{
@@ -192,6 +187,8 @@ const vector <Nodo> Archivo::Leer_Nodos()
 		indn++;
 		//Nodos.push_back(n); //ESTO TARDA MUCHO!!!!;
 	}// Recorrido de nodos
+
+	cout << nnodos<<" nodes readead."<<endl;
 
 	return Nodos;
 }
@@ -283,9 +280,6 @@ void Archivo_sal::Escribir_cadena(const string cad)
 {
 	fsal<<cad<<endl;
 }
-
-Archivo_sal::Archivo_sal()
-{}
 
 void Archivo_sal::Iniciar(string cad)
 {

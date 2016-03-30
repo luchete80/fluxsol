@@ -1,9 +1,10 @@
 /************************************************************************
 
-	Copyright 2012-2013 Luciano Buglioni
+	Copyright 2012-2014 Luciano Buglioni - Pablo Zitelli
 
-	Contact: luciano.buglioni@gmail.com
-
+	Contacts:
+        Luciano Buglioni: luciano.buglioni@gmail.com
+        Pablo Zitelli:    zitelli.pablo@gmail.com
 	This file is a part of FluxSol
 
 	FluxSol is free software: you can redistribute it and/or modify
@@ -20,62 +21,25 @@
     see <http://www.gnu.org/licenses/>.
 
 *************************************************************************/
-#include "Nodo.h"
+#include "FluxSol.h"
+#include "Modelo.h"
+#include "NastranMesh.h"
 
-Nodo::Nodo()
+// LAPLACIAN MESH REORDER FOR
+//SIMILAR TO EXAMPLE 18
+
+using namespace FluxSol;
+
+int main(int argc,char **args)
 {
-}
 
-Nodo::Nodo(const int &i, const int &sc, vector<double> &coord)
-{
-	id=i;
-	Coord=coord;
-	SistCoord=sc;
-}
+    cout << "Open Model from file..."<<endl;
+//    Nastran::Modelo model("test2.bdf");
 
-const int & Nodo::VerId_Nastran()const
-{
-	return id;
-}
+    //NastranMesh nasmesh("test2.bdf");
+    //Nastran::Modelo model;
+    Fv_CC_Grid("test2.bdf");
 
-const int Nodo::Sc()
-{
-	return SistCoord;
-}
-
-void Nodo::Iniciar_Coord_cart(vector<double> &coord)
-{
-	Coord_cart=coord;
-}
-
-const int & Nodo::Sc_int()const
-{
-	return SistCoord_int;
-}
-
-
-vector <double> & Nodo::Coords()
-{
-	return Coord;
-}
-
-vector <double> Nodo::Coord_carts()
-{
-	return Coord_cart;
-}
-
-const int Nodo::Pos_Nastran()
-{
-	return pos_nastran;
-}
-
-void Nodo::Nodo_Cargar_Ubic(const int u)
-{
-	pos_nastran=u;
-}
-
-void Nodo::Cargar_IdSc_Int(const int &val)
-{
-	SistCoord_int=val;
+	return 0;
 }
 

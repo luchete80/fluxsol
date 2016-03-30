@@ -41,16 +41,19 @@ Modelo::Modelo (string cad)
 	//Inicio nodos
 	numnodos=Nastran.Buscar_numnodos();
 	//Inicio sistema de Coordenadas
-	SistCoords=Nastran.Leer_SistCoord();
-	numsistcoord=SistCoords.size();
+
+	//SistCoords=Nastran.Leer_SistCoord();
+	//numsistcoord=SistCoords.size();
+	cout << "[I] Reading Nodes ..."<<endl;
 	Nodos=Nastran.Leer_Nodos();
 	Leer_Elementos();
+	cout << "Indexing nodes... "<<endl;
 	Asociar_Ids_Nodos();	//Esto tambien asocia las conectividades
-	Asociar_Ids_Scs();
-
-	inicio_mats_ec=false;
-	inicio_prop_ec=false;
-	inicio_carac_ec=false;
+//	Asociar_Ids_Scs();
+//
+//	inicio_mats_ec=false;
+//	inicio_prop_ec=false;
+//	inicio_carac_ec=false;
 
 }
 
@@ -69,11 +72,6 @@ void Modelo::Lectura_Rapida (string cad)
 	//Inicio nodos
 }
 
-Modelo::~Modelo()
-{
-
-}
-
 void Modelo::Leer_Elementos()
 {
 	int elem=0;
@@ -84,36 +82,42 @@ void Modelo::Leer_Elementos()
 	vector<int> conect;
 	conect.assign(2,-1);
 
-	cout <<"Leyendo Elementos"<<endl;
-	for (int i=Nastran.pos_nodos[1]+1;i<Nastran.numfilas;i++)
+	cout <<"[I] Reading Elements..."<<endl;
+	for (int i=Nastran.pos_nodos[1]+1;i<Nastran.numfilas;)
 	{
 		//Elementos de fluidos
-		if (Nastran.lineas[i].find("CQUAD4  ")!=Nastran.lineas[i].npos ||
-			Nastran.lineas[i].find("CBEAM   ")!=Nastran.lineas[i].npos)
-		{
-			Elemento el;
-			el.Leer_String(Nastran.lineas[i]);
-			Elementos.push_back(el);
-			elem++;
-		}
+		//if (Nastran.lineas[i].find("CQUAD4  ")!=Nastran.lineas[i].npos ||
+        // Nastran.lineas[i].find("CBEAM   ")!=Nastran.lineas[i].npos)
+		//{
+			Elemento el(&Nastran.lineas, i);
+			//el.Leer_String(Nastran.lineas[i]);
+			if (!el.HasError())
+            {
+                Elementos.push_back(el);
+                elem++;
+            }
+            i+=el.Linea_Nastran();
+//			cout << "Lineas Nastran: "<< el.Linea_Nastran()<<endl;
+		//}
 
 	}//fin del for
 	numelem=elem;
+	cout << numelem << " elements readed."<<endl;
 
-	//Asigno elementos
-	int ind;
-	int idprop;
-	CBush temp;
-	CBushes.assign(icbush,temp);	//Inicializo
+//	//Asigno elementos
+//	int ind;
+//	int idprop;
+//	CBush temp;
+//	CBushes.assign(icbush,temp);	//Inicializo
 
 
 
-	cout << "Asociando Indices de Elementos"<<endl;
-	Asoc_Nodos.assign(MaxId_Nodos()+1,-1);
-	for (int n=0;n<numnodos;n++)
-	{
-		Asoc_Nodos[Nodos[n].VerId_Nastran()]=n;
-	}
+//	cout << "Asociando Element Indices"<<endl;
+//	Asoc_Nodos.assign(MaxId_Nodos()+1,-1);
+//	for (int n=0;n<numnodos;n++)
+//	{
+//		Asoc_Nodos[Nodos[n].VerId_Nastran()]=n;
+//	}
 
 
 
@@ -128,22 +132,6 @@ void Modelo::Asociar_Ids_Nodos()
 {
 	cout << "Asociando Indices" <<endl;
 	vector <int> v,conect;
-	v.assign(2,-1);
-
-	//Esto es muy lento
-	//for (int i=0;i<numelem;i++)
-	//{
-	//	conect=Elementos[i].Conect();
-	//	for (int n=0;n<numnodos;n++)
-	//	{
-	//		if (conect[0]==Nodos[n].VerId_Nastran())
-	//		v[0]=n;
-	//		else if (conect[1]==Nodos[n].VerId_Nastran())
-	//		v[1]=n;
-	//	}
-
-	//	Elementos[i].Asignar_Conect_Interna(v);
-	//}
 
 	int nummax=0;
 	int idn;
@@ -156,22 +144,38 @@ void Modelo::Asociar_Ids_Nodos()
 	}
 
 	//Le asigno el tamaño del máximo numero de NASTRAN +1
+	//cout << "Max internal id: "<<nummax;
 	IdNodoInterno.assign(nummax+1,-1);
 
+    //cout << "Asigning internal id..."<<endl;
 	for (int n=0;n<numnodos;n++)
 	{
 		idn=Nodos[n].VerId_Nastran();
 		IdNodoInterno[idn]=n;
 	}
 
+    cout << "Asigning element connectivity..."<<endl;
 	for (int i=0;i<numelem;i++)
 	{
+	    cout << "Element "<<i<<endl;
+//	    cout << "Element nodes: "<<Elementos[i].NumNodes()<<endl;
+	    v.assign(Elementos[i].NumNodes(),-1);
+	    //cout << "Element "<<i<<endl;
 		conect=Elementos[i].Conect();
-		v[0]=IdNodoInterno[conect[0]];
-		v[1]=IdNodoInterno[conect[1]];
+//		cout << "Vector size: "<<v.size()<<endl;
+//		for (int nn=0;nn<this->Elementos[i].NumNodes();nn++)    cout << conect [nn]<<" ";
+		//cout <<endl;
+//		cout << "asigning"<<endl;
+//		cout <<"connect [0]"<<conect[0]<<endl;
+//		cout << "id nodo interno"<<IdNodoInterno[conect[0]]<<endl;
+		for (int nn=0;nn<Elementos[i].NumNodes();nn++)		cout << conect[nn] <<" ";
+		for (int nn=0;nn<Elementos[i].NumNodes();nn++)		v[nn]=IdNodoInterno[conect[nn]];
 
+        cout << endl;
+//        cout << "elem "<<i<<endl;
 		Elementos[i].Asignar_Conect_Interna(v);
 	}
+	cout << "End."<<endl;
 }
 
 void Modelo::Asociar_Ids_Scs()
@@ -450,36 +454,6 @@ string Modelo::Linea_Nastran(const int &pos)
 }
 
 
-void Modelo::Leer_Elementos_String()
-{
-
-
-    for (int i=Nastran.Pos_Nodos()[1];i<Nastran.NumFilas();i++)
-    {
-
-        Elemento el;
-
-        string cad=Nastran.Linea(i);
-        if ( (cad.find("CBUSH",0)!=cad.npos) || (cad.find("CQUADR",0)!=cad.npos) || (cad.find("CQUAD4",0)!=cad.npos) || (cad.find("CBEAM",0)!=cad.npos) ||
-         (cad.find("CBAR",0)!=cad.npos) || (cad.find("CTRIAR",0)!=cad.npos) || (cad.find("CTRIA3",0)!=cad.npos) || (cad.find("RBE2",0)!=cad.npos) || (cad.find("RBE2",0)!=cad.npos)
-            || (cad.find("CONM2",0)!=cad.npos))
-        //Primero veo que elemento es
-        {
-        el.Leer_String(Nastran.Linea(i));
-        Elementos.push_back(el);
-        }
-        //Si es un CBUSH pongo en el contenedor un derivado
-//        else if (cad.find("CBUSH",0)!=cad.npos)
- //       {
-
-   //     }
-
-    }
-
-
-
-}
-
 //Lee todos los nodos de los rigid spider
 void Modelo::Leer_Elementos_String_Mejorado()
 {
@@ -516,13 +490,13 @@ void Modelo::Leer_Elementos_String_Mejorado()
                 }
                 else
                 {
-                i--;
-                break;
+                    i--;
+                    break;
                 }
             }
 
 
-        el.Leer_StringVec(vcad);
+//        el.Leer_StringVec(vcad);
         Elementos.push_back(el);
         //cout <<i<<endl;
         }
@@ -610,8 +584,8 @@ vector <_Vertex> & Modelo::Convert_VertexVector()
 
 	for (int v=0;v<this->numnodos;v++)
 	{
-		_Vertex vert(this->Nodos[v].VerId_Nastran(),this->Nodos[v].Sc(),this->Nodos[v].Coords());
-		vv.push_back(vert);
+//		_Vertex vert(this->Nodos[v].VerId_Nastran(),this->Nodos[v].Sc(),this->Nodos[v].Coords());
+//		vv.push_back(vert);
 	}
 
 	return vv;
