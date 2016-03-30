@@ -26,18 +26,23 @@
 //Este archivo contiene una malla de volumenes finitos centrada en el cuerpo
 //que se hereda de una malla general
 #include <vector>
+#include <set>
+#include <map>
 #include <math.h> //For max function
 
-#include "../../Mesh/Node.h"
-#include "../../Mesh/Grid.h"
-#include "../../FiniteVolume/Mesh/CC_Cell.h"
+#include "Node.h"
+#include "Grid.h"
+#include "CC_Cell.h"
 #include "FvFace.h"
-#include "../Boundary/Boundary.h"
-#include "../Mesh/Structured.h"
-#include "../Mesh/Vertex.h"
-#include "../Utils/Utils.h"
-#include "../../Type/Operations.h"	//For mixed types
+#include "FvGrid_Decl.h"
+#include "Boundary_Decl.h"
+#include "Structured.h"
+#include "Vertex.h"
+#include "Utils.h"
+#include "Operations.h"	//For mixed types
 #include "GeometricField.h"
+
+#include <algorithm>    // std::sort
 
 
 using namespace std;    //Tiene inlines, ver que pasa cuando tiene inlines
@@ -48,15 +53,44 @@ class Fv_CC_Grid:public _Grid{
 
 private:
 	 std::vector <_FvFace> face;
-	 std::vector <Cell_CC> cell;    //Celdas con nodos centrados en el cuerpo
 	 std::vector <Node>    node;    //En el centro de cada una de las cells
 
 	 std::vector<Node>::iterator nodeit;
 	 std::vector<_FvFace>::iterator faceit;
 
+
+    int np;     //Number of processors
+
+    struct myclass myobject;        //Object usedd to sort, TO MODIFY
+
 	protected:
 
+        std::set<int> int_faces;      //TO MODIFY; FOR INSERTIONS
+	    std::vector <Cell_CC> cell;    //Celdas con nodos centrados en el cuerpo
+
+	    vector <vector <int> > face_local_cell_neighbour;  //Local cell neigbours
+
+
+    //TEMP VALUES
+    map<vector <int> , int > sortbfacemap;   //map to the sorted face vertex set
+
+
+    //To be replaces by sorting faces, allocating interior faces at first
+    void Create_IntFaces()//This was old and worng NetFlux Faces, which belongs to field
+    {
+        for (int f=0;f<this->num_faces;f++)
+        {
+            //cout << "Face "<<f<<endl;
+            //_FvFace face=this->Face(f);
+            //if (!face.Is_Null_Flux_Face() && !this->Grid().Face(f).Boundaryface())
+            if (!this->Face(f).Boundaryface())
+                this->int_faces.insert(f);
+
+        }
+    }
+
 	public:
+    const set<int> IntFaces()const{return this->int_faces;}
 	std::vector<Cell_CC>::iterator cellit;
 	Boundary boundary;
 
@@ -65,7 +99,12 @@ private:
     //generada la malla y cargo la malla rectangular
     //Por que la paso como argumento??
     Fv_CC_Grid(const int &nex,const int &ney,const double &lx,const double &ly);
-  	Fv_CC_Grid(const char *name){fileName=name;this->Read_CGNS();};
+  	Fv_CC_Grid(const char *name){
+  	    fileName=name;
+        if(fileName.substr(fileName.find_last_of(".") + 1) == "cgns")
+            this->Read_CGNS();
+        else if(fileName.substr(fileName.find_last_of(".") + 1) == "bdf")
+            this->Read_CGNS();}
 	Fv_CC_Grid(string name){fileName=name;this->Read_CGNS();};
 	//Constructor para leer desde NASTRAN
 	//El boundary deberia salir solo, pero es bueno para colocarle indices
@@ -85,6 +124,7 @@ private:
     //para crear una funcion dentro de la misma clase
     //Esta lo hace ya habiendo iniciado
     void Malla_Rectangular(const double &lx,const double &ly){GenerarMallaRectangular(lx,ly,(*this));};
+    void Init_Faces();
 
 	Node & Node_(const int &i){return this->node[i];}
     Node & CreateNodeFromCellVerts(const int &cellid);
@@ -95,16 +135,20 @@ private:
 
         //El nodo tiene el mismo indice que el cell
 //        cout << "creating nodes"<<endl;
+        cout << "[I] Creating Nodes from Cell Verts" <<endl;
         for (int cellid=0;cellid<this->Num_Cells();cellid++)
         {
             Cell_CC cell=this->Cell(cellid);
             int globvert;
             Node nod(0.);
             //Recorro los vertices del cell
+//            cout << "Id vert"<<endl;
             for (int n=0;n<cell.Num_Vertex();n++)
             {
+                //cout << cell.Id_Vert(n)<<" ";
                 nod+=this->Vertex(cell.Id_Vert(n));
             }
+            //cout << endl;
             //Ahora divido por la cantidad de vertices
             nod/=(double)cell.Num_Vertex();
             nod.Id(cellid);
@@ -126,6 +170,8 @@ private:
 	const _FvFace & Face(const int &i)const {return face[i];}
 
 	void AssignNeigboursCells();
+
+	const map<vector <int> , int > FaceVertsMap()const;
 
     std::vector<Cell_CC>::iterator BeginCell(){return cell.begin();}
     std::vector<Cell_CC>::iterator EndCell()  {return cell.end();}
@@ -162,122 +208,9 @@ private:
     //      LOG         //
     //////////////////////
 
-	virtual void Read_CGNS()
-	{
+	virtual const std::string Read_CGNS();
+	virtual const std::string Read_NASTRAN();
 
-        //raw data - vertices
-        //base class function
-        Read_InitialCGNS();
-
-        //Read boundary cells - Assuming boundary cell entry
-        vector<vector<int> > bpnode;
-
-        int boundnode =0;
-        //Boundary Patches bc
-        for (int bp=0;bp<this->raw.bc_elem_list.size();bp++)
-        {
-            vector <int> temp;
-
-            //Search bc vertex in each 2D Cell
-            set <int> sbc =this->raw.bocoNodes[bp];
-            set <int>::iterator sit=sbc.bengin();
-
-
-            for (; sit!=sbc.end();sit++)
-            {
-                boundnode++;
-                temp.push_back(*sit);
-            }
-            cout << "[I] BC "<< bp << "has " <<temp.size()<<endl;
-            bpnode.push_back(temp);
-        }
-
-        //vector<vector<int>> idbcellasoc(boundelem,vector<int>(2,-1));	//Id cells
-        int bcell=0;
-
-        for (int idcell =0 ; idcell<raw.cellConnIndex.size();idcell++)
-        {
-            int cellvertnum;
-            if (idcell<(raw.cellConnIndex.size()-1))
-                cellvertnum = raw.cellConnIndex [idcell+1] - raw.cellConnIndex [idcell];
-            else cellvertnum = raw.cellConnectivity.size()- raw.cellConnIndex [idcell] ;
-
-            vector<int> connect;
-            for (int cv =0 ; cv<cellvertnum;cv++)
-                connect.push_back(raw.cellConnectivity[ raw.cellConnIndex [idcell] + cv]);
-
-            Cell_CC scell(idcell,connect);
-
-                //Check if this is a boundary element
-                //TO MODIFY
-                if (connect.size()>4)	//All connectivity numbers are 3d, BUT TETRA?
-                    this->cell.push_back(scell);
-
-        }
-
-        //Updating cell number
-        this->num_cells=cell.size();
-
-        // Nodes
-        CreateNodesFromCellVerts();
-
-        this->inicie_nodes=true;
-        this->inicie_cells=true;
-        Iniciar_Caras();
-        AssignNeigboursCells();
-        CalcCellVolumes();
-        CreateNodesFromCellVerts();
-
-        vector <Patch> vpatch;
-
-        cout << "boundary faces size" <<temp_boundfaces.size()<<endl;
-        std::vector<std::list <int> >bpfaces;
-        bcell=0;
-        cout << "[I] Creating Boundary Faces ..."<<endl;
-
-        cout << "[I] "<< bpnode[0].size() << endl;
-        for (int node=0;node<bpnode[0].size();node++)
-            cout <<bpnode[0][node]<<" ";
-
-
-//        cout << "Boundary zone nodes" << bpnode[0][node]<<endl;
-        cout << "[I] Number of Patches: " << this->raw.bc_elem_list.size() <<endl;
-        int nBocos=raw.bocoNameMap.size();  //Extrcted from freecfd
-        cout << "[I] Creating Patches ..."<<endl;
-
-        string pname;
-        for (int bp=0;bp<this->raw.bc_elem_list.size();bp++)
-        {
-            pname=this->imported_patchnames[bp];
-            list <int> temp;
-
-            for (int bf=0;bf<temp_boundfaces.size();bf++)
-            {
-                int idf=temp_boundfaces[bf];
-//                cout << "Face "<<idf<<endl;
-                //cout << "Boundary zone nodes" << bpnode[bp].size()<<endl;
-                bool enc=FindAllVals(this->Face(idf).Vert(), bpnode[bp]);
-                if (enc)
-                {
-                    cout << "Found face "<<idf <<endl;
-                    temp.push_back(idf);
-                }
-            }
-
-            bpfaces.push_back(temp);
-            cout << "Created Patch "<<pname<<", Face Count: " <<temp.size()<<endl;
-            Patch p(pname,bpfaces[bp]);
-            vpatch.push_back(p);
-        }
-
-
-
-        Boundary bound(vpatch);
-        this->AddBoundary(bound);
-
-        cout << "[I] Mesh created ..." << endl;
-
-	}
     void Log_Conect();
 
 
@@ -306,6 +239,9 @@ private:
 
         this->boundary=right.vBoundary();
 
+        this->SetFaceLocalCellNeighbours(); //New
+        this->Create_IntFaces();
+
         return *this;
 	}
 
@@ -321,6 +257,12 @@ private:
         }
         return ret;
 	}
+
+	int Partition();
+
+	void SetFaceLocalCellNeighbours();
+	const vector <int> & FaceLocalCellNeighbour(const int &f)const{return this->face_local_cell_neighbour[f];}
+
 };
 
 } //Fin FluxSol

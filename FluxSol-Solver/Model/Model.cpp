@@ -33,8 +33,10 @@ Model::Model(const std::string filename)
         {
             cout << "[I] Reading mesh file "<< meshfname <<endl;
             Fv_CC_Grid mesht(meshfname);
+            cout << "[I] Mesh readed."<<endl;
             this->mesh=mesht;
-            this->mesh.SetFaceLocalCellNeighbours();
+
+            cout << "[I] Mesh assigned." <<endl;
 
             //this->mesh.Log("MeshLog.txt");
         }
