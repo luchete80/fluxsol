@@ -22,6 +22,7 @@
 *************************************************************************/
 #include "FvGrid.h"
 #include <time.h>
+#include "Modelo.h"
 
 //To utils
 //Redundance with vector c++ lib
@@ -33,6 +34,27 @@ template <class T> const T& max_int(const T& a, const T& b) {
 using namespace std;
 
 namespace FluxSol {
+
+//TO MODIFY
+Fv_CC_Grid::Fv_CC_Grid(const char *name){
+  	    fileName=name;
+        if(fileName.substr(fileName.find_last_of(".") + 1) == "cgns"){
+            cout << "[I] Mesh file format: CGNS"<<endl;
+            this->Read_CGNS();}
+        else if(fileName.substr(fileName.find_last_of(".") + 1) == "bdf")
+            this->Read_NASTRAN();}
+
+Fv_CC_Grid::Fv_CC_Grid(string name){
+  	    fileName=name;
+        if(fileName.substr(fileName.find_last_of(".") + 1) == "cgns"){
+            cout << "[I] Mesh file format: CGNS"<<endl;
+            this->Read_CGNS();}
+        else if(fileName.substr(fileName.find_last_of(".") + 1) == "bdf"){
+            cout << "[I] Mesh file format: NASTRAN"<<endl;
+            this->Read_NASTRAN();}
+}
+
+
 
 Fv_CC_Grid::Fv_CC_Grid(const int &nex,const int &ney,const double &lx,const double &ly):
 _Grid(nex,ney)
@@ -51,6 +73,37 @@ _Grid(nex,ney)
 	cout << "Assigning Neighbours..."<<endl;
 	AssignNeigboursCells();
 	CalcCellVolumes();
+}
+
+Fv_CC_Grid & Fv_CC_Grid::operator=(const Fv_CC_Grid & right)
+{
+    this->num_verts=right.num_verts;						//Este Numero no es constante por si modifico la malla
+                                                    //Si voy a tener vertices tipo baffle no lo voy a tener en cuenta
+    this->num_cells_int=right.num_cells_int;				//Numero de celdas efectivas
+    this->num_faces_int=right.num_faces_int;				//Numero de faces efectivas (INTERIORES)
+    this->num_faces=right.num_faces;
+    this->num_cells=right.num_cells;
+    this->num_verts=right.num_verts;
+
+    cout << "Equalling cells, "<< right.num_cells << endl;
+
+    for (int c=0;c<right.num_cells;c++)
+    {
+        this->cell.push_back(right.Cell(c));
+        this->node.push_back(right.Node_(c));
+    }
+    cout << "Equalling verts "<< right.num_verts << endl;
+    for (int v=0;v<right.num_verts;v++) this->vert.push_back(right.Vertex(v));
+    cout << "Equalling faces "<<endl;
+    for (int f=0;f<right.num_faces;f++) this->face.push_back(right.Face(f));
+
+    this->boundary=right.vBoundary();
+
+    cout << "Setting up cell neigbours"<<endl;
+    this->SetFaceLocalCellNeighbours(); //New
+    this->Create_IntFaces();
+
+    return *this;
 }
 
 //Inserto una celda
@@ -320,7 +373,7 @@ void Fv_CC_Grid::Iniciar_Caras()
     for (cellit=cell.begin();cellit!=cell.end();cellit++)
     {
         //cout <<"cell loop"<<endl;
-		cout <<"Looking through cell "<<c1<<endl;
+//		cout <<"Looking through cell "<<c1<<endl;
 		vector <int> intverts;				//Los vertices interiores que voy encontrando
 
 		vector <Cell_CC>::iterator cellit2;		//cellit 2 es a la segunda cara del elemento
@@ -497,7 +550,6 @@ void Fv_CC_Grid::Init_Faces()
     {
         cout << "Nodes or cells not initiated. Grid initiation failed..."<<endl;
         return;
-
     }
     else
     {
@@ -1006,8 +1058,8 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 	return ret;
 }
 
-	const std::string  Fv_CC_Grid::Read_CGNS()
-	{
+const std::string  Fv_CC_Grid::Read_CGNS()
+{
 
 	    map<vector <int> , int >::iterator sortfacemapit;   //for boundary creation
 
@@ -1290,6 +1342,153 @@ const GeomSurfaceField<Vec3D> Fv_CC_Grid::Sf() const
 
         }//Faces
     }//Fv_CC_Grid::SetFaceLocalCellNeighbour()
+
+
+
+
+const std::string  Fv_CC_Grid::Read_NASTRAN() {
+
+    string cad;
+    FluxSol::Nastran::Modelo mod(this->fileName);
+    cout << "Nastran model created."<<endl;
+    cout << "[I] Creating vertices ..."<<endl;
+    this->vert.assign(mod.NumNodes(),_Vertex());
+    for (int nv=0;nv<mod.NumNodes();nv++)
+        this->vert[nv]=_Vertex(mod.Nodos[nv].VerId_Nastran(),
+                                mod.Nodos[nv].Sc_int(),
+                                mod.Nodos[nv].Coords());
+
+    this->num_verts=this->vert.size();
+
+    cout << "[I] " <<mod.NumNodes() << " vertices created. "<<endl;
+
+
+//    nodes=process_nodes(data);
+//    connectivity=process_cells(data);
+//
+    cout << "[I] Creating cells..." << endl;
+    //this->cell.assign(mod.Elementos.size(),scell);
+    cout << "[I] Cell number "<<mod.Elementos.size()<<endl;
+    vector <int> v=mod.Elementos[140].Conect_int();
+    cout << "Element vector conect size: "<<v.size()<<endl;
+//    cout << "Element type: "<<mod.Elementos[0].Type()<<endl;
+
+    map < int , int> pidloc;       //at left is id, right is position
+    map <int, int >::iterator pidloc_it;
+    vector < vector <int> > patchelem;  //Element (position per patch
+    set<int> belem;                     //Element number per patch
+
+    int found_pids=0;
+    for (int idcell=0; idcell<mod.Elementos.size();idcell++)
+    {
+        if (mod.Elementos[idcell].Type()!="CQUAD4" && mod.Elementos[idcell].Type()!="CTRIA3")
+        {Cell_CC scell(idcell, mod.Elementos[idcell].Conect_int());
+        this->cell.push_back(scell);}
+        else {  //Boundary element
+            int pid=mod.Elementos[idcell].Pid();
+            pidloc_it=pidloc.find(pid);
+            if (pidloc_it!=pidloc.end()) //pid already created
+            {
+                cout << "Existent pid "<< pid << ", element" <<idcell<<endl;
+                patchelem[pidloc_it->second].push_back(idcell);
+            }
+            else
+            {
+                cout << "Found new pid "<< pid << ", element" <<idcell<<endl;
+                pidloc.insert(std::pair <int,int> (pid,found_pids));
+                patchelem.push_back(vector<int>(1,idcell));
+                found_pids++;
+            }}
+            //belem.insert(idcell);
+    }
+    this->num_cells=cell.size();
+    //cout << "[I] Created " << mod.Elementos.size() - belem.size() << " internal cells." << endl;
+
+    cout << "[I] Creating Central Nodes..." << endl;
+    CreateNodesFromCellVerts();
+
+    this->inicie_nodes=true;
+    this->inicie_cells=true;
+
+    cout << "[I] Assigning Faces..." << endl;
+    Init_Faces();
+
+    cout << "[I] Assigning Neighbours..." << endl;
+    AssignNeigboursCells();
+
+    cout << "[I] Calculating Volumes..." << endl;
+    CalcCellVolumes();
+
+    cout << "[I] Creating Patches..." << endl;
+
+    myclass myobject;
+
+    //TO MODIFY: THIS MUST BE COMBINED WITH FvGrid::ReadCGNS AT FVGRID.CPP
+    map<vector <int> , int >::iterator sortfacemapit;
+    vector <Patch> vpatch;
+    std::vector<std::list <int> >bpfaces;
+    vector <int> faceverts;
+    //SAME OF FvGrid::ReadCGNS
+    //Looking through raw elements (faces in Grid)
+    //Looks faces in sortbfacemap defined in Init_Faces
+
+    for (int bp=0;bp<found_pids;bp++)
+    {
+        list <int> temp;
+        cout << "[I] Patch defined via Elems..."<<endl;
+        for (int el=0;el<patchelem[bp].size();el++)
+        {
+            //Adding element vertices
+            //for (int iv=0;iv<this->Cell(bpelem[bp][el]).Num_Vertex();iv++)
+            //for (int iv=0;iv<vboundcell[bcell].Num_Vertex();iv++)   faceverts.push_back(vboundcell[bcell].Vert(iv));
+            int bcell=patchelem[bp][el];
+            faceverts=mod.Elementos[bcell].Conect_int();
+            //for (int iv=0;iv<mod.Elementos[bcell].NumNodes();iv++)   faceverts.push_back(vboundcell[bcell].Vert(iv));
+
+            vector <int> sortfaceverts(faceverts);
+            std::sort (sortfaceverts.begin(), sortfaceverts.end(), myobject);
+
+            //NEW FORM
+            //// /*COULD BE LIKE THIS:*/int faceid=sortbfacemap[sortfaceverts];
+
+            //or sortfacemapit=sortbfacemap.find(sortfaceverts);
+            sortfacemapit=sortbfacemap.find(sortfaceverts);
+            int faceid=sortfacemapit->second;
+            if (sortfacemapit!=sortbfacemap.end()) //Found
+                temp.push_back(faceid);
+            faceverts.clear();
+            bcell++;
+
+        }//End element
+
+        bpfaces.push_back(temp);
+        stringstream convert;
+        int pid=mod.Elementos[patchelem[bp][0]].Pid();
+        convert <<pid;
+        cout << "[I] Created Patch id"<<convert.str() <<", Face Count: " <<temp.size()<<endl;
+        //cout << "[I] Created new Patch "<<pname<<", Face Count: " <<tempnew.size()<<endl;
+
+        Patch p(convert.str(),bpfaces[bp]);
+        vpatch.push_back(p);
+
+    }//End patch
+
+//    ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+//    cout << "[I] Boundary Patches Creation Time: " <<scientific <<ittime_spent <<" " <<endl;
+
+    this->SetFaceLocalCellNeighbours(); //New, 20150518
+
+    Boundary bound(vpatch);
+    this->AddBoundary(bound);
+    cout << "[I] Creating internal faces..." <<endl;
+    this->Create_IntFaces();
+    this->boundary.AddGridPtr(*this);
+
+    cout << "[I] Mesh created ..." << endl;
+
+    return cad;
+}
+
 
 
 }// FluxSol

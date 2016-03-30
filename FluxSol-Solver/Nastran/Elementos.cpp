@@ -22,9 +22,19 @@
 *************************************************************************/
 #include "Elementos.h"
 #include "Varios.h"
+#include <map>
 
-//CBush::CBush()
-//{}
+using namespace std;
+
+//Each line has 9 available fields
+//first three are ElCode EID and PID
+//Only remains 6 fields available.
+//Hence, for hexa elements
+//Element type
+// Looking for solid elements CTETRA, CPENTA, CPYRA, CHEXA
+//FAce number are 4, 5, 5, 6
+//And Node number are 4, 6, 5, 8
+
 
 Elemento::Elemento()
 {
@@ -113,9 +123,9 @@ bool Rigid::Es_Spider()
 }
 
 //Devuelve un vector de conectividad del elemento
-vector <int> Elemento::Conect()
+vector <int> & Elemento::Conect()
 {
-	return Nodo;
+	return this->Nodo;
 }
 
 void CBush::Iniciar_Es_Estructural(bool es)
@@ -136,12 +146,14 @@ vector <int> Elemento::VerConect_Int()
 	return nodos;
 }
 
-vector <int> Elemento::Conect_int()
+vector <int> & Elemento::Conect_int()
 {
-	vector <int> v;
-	for (int i=0;i<2;i++)
-	v.push_back(Nodos_int[i]);
-	return v;
+//	vector <int> v;
+//	for (int i=0;i<2;i++)
+//	v.push_back(Nodos_int[i]);
+//	return v;
+
+	return this->Nodos_int;
 }
 
 void Elemento::Asignar_Conect_Interna(vector <int> v)
@@ -199,150 +211,134 @@ void Elemento::Iniciar_Nastran(const int &i, vector <int> nodos_nastran)	//Es co
 	Nodo=nodos_nastran;
 }
 
-void Elemento::Leer_String(const std::string cad)
+Elemento::Elemento(vector <string> *strptr, const int &pos)
 {
-    //Primero miro todos los elementos que tienen los campos en el primero y en el segundo lugar (campos 4 y 5)
-    if ( (cad.find("CBUSH",0)!=cad.npos) || (cad.find("CQUADR",0)!=cad.npos) || (cad.find("CQUAD4",0)!=cad.npos) || (cad.find("CBEAM",0)!=cad.npos) ||
-         (cad.find("CBAR",0)!=cad.npos) || (cad.find("CTRIAR",0)!=cad.npos) || (cad.find("CTRIA3",0)!=cad.npos) )
+    std::map<string,int> type_nnod;
+
+    type_nnod["CTRIA3"]=3;
+    type_nnod["CQUAD4"]=4;
+    type_nnod["CTETRA"]=4;
+    type_nnod["CPENTA"]=6;
+    type_nnod["CPYRA"]=5;
+    type_nnod["CHEXA"]=8;
+
+    haserror=true;
+    isboundelem=false;
+    this->type=Leer_Hasta_Caracter((*strptr)[pos],' ');
+    pid=Leer_Campo((*strptr)[pos],2);
+
+    // Looking for solid elements CTETRA, CPENTA, CPYRA, CHEXA
+    //And Node number are 4, 6, 5, 8
+    // 2D elements are CTRIA3 AND CQUAD4
+    //Nodes are 3 and 4
+    //Boundary elements
+    // TO MODIFY, CAN USE MAP
+    int nnodes;
+    if (type=="CQUAD4" || type=="CTRIA3")
     {
-        //El primer campo siempre es el 4 en este caso
-        Nodo.push_back(Leer_Campo(cad,4));//Es el indice de Nastran
-        Nodo.push_back(Leer_Campo(cad,5));//Es el indice de Nastran
+        isboundelem=true;
+        haserror=false;
+    }
+    else if (type=="CTETRA" || type=="CPENTA" || type=="CPYRA" || type=="CHEXA")
+    {
+        haserror=false;
     }
 
-    //RBE2 lee el campo 3 y 5
-    if ( (cad.find("RBE2",0)!=cad.npos))
+    if (!haserror)
     {
-        //El primer campo siempre es el 4 en este caso
-        Nodo.push_back(Leer_Campo(cad,3));//Es el indice de Nastran
-        Nodo.push_back(Leer_Campo(cad,5));//Es el indice de Nastran
-    }
+        nnodes=type_nnod[type];
+        //cout << "type nodes: "<<type << nnodes<<endl;
+        //Correct hexa case for first line
+        int corrnnodes=nnodes;
 
-    //Si es CTRIA3leo un nodo mas
-    if ( (cad.find("CTRIAR",0)!=cad.npos) || (cad.find("CTRIA3",0)!=cad.npos))
-    {
-        //El primer campo siempre es el 4 en este caso
-        Nodo.push_back(Leer_Campo(cad,6));//Es el indice de Nastran
-    }
+        if (type=="CHEXA")  corrnnodes=6;
 
-    //Si es quad leo 2 nodos mas
-    if ( (cad.find("CQUADR",0)!=cad.npos) || (cad.find("CQUAD4",0)!=cad.npos))
-    {
-        //El primer campo siempre es el 4 en este caso
-        Nodo.push_back(Leer_Campo(cad,6));//Es el indice de Nastran
-        Nodo.push_back(Leer_Campo(cad,7));//Es el indice de Nastran
-
-    }
-
-    if ( (cad.find("CBUSH",0)!=cad.npos))
-    {
-        Nodo.push_back(Leer_Campo(cad,3));//Es el indice de Nastran
-    }
-
-    id=Leer_Campo(cad,2);//Es el indice de Nastran
-
-    if ( (cad.find("CBUSH",0)!=cad.npos))
-        es_cbush=true;
-
-	else  if ( (cad.find("RBE2",0)!=cad.npos))
-    tipo="RBE2";
-
-	//tipo=Leer_Hasta_Caracter(cad, ' ');
-	//Leo propiedad
-	pid=Leer_Campo(cad,3);
+        //cout << (*strptr)[pos]<<endl;
+        //THIS READ ONLY 1st order nodes
+        //TO MODIFY, CHECK ERROR IN STRING LENGTH
+        Nodo.assign(nnodes,0);
+        for (int i=0;i<corrnnodes;i++)
+            Nodo[i]=Leer_Campo((*strptr)[pos],3+i);
 
 
-	//Coloco los primeros 8 caracteres de la cadena
 
+       bool prim_linea=true;
 
-}
+        //Sumo las cadenas hasta que no aparezca el +
+        //U otro elemento (cuya linea puede tener un +)
+        //La primera comparacion es para la linea que tiene + al final, las que siguen lo tienen al ppio y al final
+        int i=0;
+        //If following line has a +
+        bool end_=false;
+        if (((*strptr)[pos]).find("+")==string::npos){end_=true;}
 
-void Elemento::Leer_StringVec(const std::vector <string> vcad)
-{
-
-    bool es_rigid=false;
-
-    for (int i=0;i<vcad.size();i++)
-    {
-        string cad=vcad[i];
-        if (i==0)
+        while(!end_)
         {
-            //Primero miro todos los elementos que tienen los campos en el primero y en el segundo lugar (campos 4 y 5)
-            if ( (cad.find("CBUSH",0)!=cad.npos) || (cad.find("CQUADR",0)!=cad.npos) || (cad.find("CQUAD4",0)!=cad.npos) || (cad.find("CBEAM",0)!=cad.npos) ||
-                 (cad.find("CBAR",0)!=cad.npos) || (cad.find("CTRIAR",0)!=cad.npos) || (cad.find("CTRIA3",0)!=cad.npos) )
+            i++; /*cout << "i = "<<i<<endl;*/
+            string firstfield=Leer_Hasta_Caracter((*strptr)[pos+i],' ');
+            //cout << firstfield<<endl;
+            if (type=="CHEXA")
             {
-                //El primer campo siempre es el 4 en este caso
-                Nodo.push_back(Leer_Campo(cad,4));//Es el indice de Nastran
-                Nodo.push_back(Leer_Campo(cad,5));//Es el indice de Nastran
+                //cout << "field "<<Leer_Campo((*strptr)[pos+i],1)<< " " <<Leer_Campo((*strptr)[pos+i],2)<<endl;
+                for (int j=0;j<2;j++)
+                    Nodo[6+j]=Leer_Campo((*strptr)[pos+i],1+j);
             }
+            //cout << "Find result " << firstfield.find("+",0)<<endl;
+            if (firstfield.find("+")!=string::npos)
+                end_=true;
 
-            //RBE2 lee el campo 3 y 5
-            if ( (cad.find("RBE2",0)!=cad.npos))
-            {
-                //El primer campo siempre es el 4 en este caso
-                Nodo.push_back(Leer_Campo(cad,3));//Es el indice de Nastran
-                Nodo.push_back(Leer_Campo(cad,5));//Es el indice de Nastran
-
-                int campo=6;
-                int val;
-                while(Leer_Campo(cad,campo)!=0)
-                {
-                    val=Leer_Campo(cad,campo);
-                    Nodo.push_back(val);
-                    campo++;
-                }
-            }
-
-            //Si es CTRIA3leo un nodo mas
-            if ( (cad.find("CTRIAR",0)!=cad.npos) || (cad.find("CTRIA3",0)!=cad.npos))
-            {
-                //El primer campo siempre es el 4 en este caso
-                Nodo.push_back(Leer_Campo(cad,6));//Es el indice de Nastran
-            }
-
-            //Si es quad leo 2 nodos mas
-            if ( (cad.find("CQUADR",0)!=cad.npos) || (cad.find("CQUAD4",0)!=cad.npos))
-            {
-                //El primer campo siempre es el 4 en este caso
-                Nodo.push_back(Leer_Campo(cad,6));//Es el indice de Nastran
-                Nodo.push_back(Leer_Campo(cad,7));//Es el indice de Nastran
-
-            }
-
-            id=Leer_Campo(cad,2);//Es el indice de Nastran
-
-            if ( (cad.find("CBUSH",0)!=cad.npos))
-                es_cbush=true;
-
-            if ( (cad.find("RBE2",0)!=cad.npos))
-            {
-                tipo="RBE2";
-                es_rigid=true;
-            }
 
 
         }
-        else    //No es la primera linea
-        {
-            if (es_rigid)   //Leo los slaves de mas
-            {
-                int campo=2;
-                int val;
-                while(Leer_Campo(cad,campo)!=0)
-                {
-                    val=Leer_Campo(cad,campo);
-                    Nodo.push_back(val);
-                    campo++;
-                }
+        this->nnodos=nnodes;
+        //cout << "nnodes"<<nnodes<<endl;
+        this->linea_nastran=i+1;
+        //cout << "Lineas nastran "<<i+1<<endl;
 
-            }
-
-
-        }
-
+        //for (int i=0;i<nnodes;i++)  cout << Nodo[i]<< " "<<endl;
+        //cout << endl;
     }
-
+    //else, element has error
+//
+//        //Primero miro todos los elementos que tienen los campos en el primero y en el segundo lugar (campos 4 y 5)
+//    if ( (cad.find("CBUSH",0)!=cad.npos) || (cad.find("CQUADR",0)!=cad.npos) || (cad.find("CQUAD4",0)!=cad.npos) || (cad.find("CBEAM",0)!=cad.npos) ||
+//         (cad.find("CBAR",0)!=cad.npos) || (cad.find("CTRIAR",0)!=cad.npos) || (cad.find("CTRIA3",0)!=cad.npos) )
+//    {
+//        //El primer campo siempre es el 4 en este caso
+//        Nodo.push_back(Leer_Campo(cad,4));//Es el indice de Nastran
+//        Nodo.push_back(Leer_Campo(cad,5));//Es el indice de Nastran
+//    }
+//
+//
+//    //Si es CTRIA3 leo un nodo mas
+//    if ( (cad.find("CTRIAR",0)!=cad.npos) || (cad.find("CTRIA3",0)!=cad.npos))
+//    {
+//        //El primer campo siempre es el 4 en este caso
+//        Nodo.push_back(Leer_Campo(cad,6));//Es el indice de Nastran
+//    }
+//
+//    //Si es quad leo 2 nodos mas
+//    if ( (cad.find("CQUADR",0)!=cad.npos) || (cad.find("CQUAD4",0)!=cad.npos))
+//    {
+//        //El primer campo siempre es el 4 en este caso
+//        Nodo.push_back(Leer_Campo(cad,6));//Es el indice de Nastran
+//        Nodo.push_back(Leer_Campo(cad,7));//Es el indice de Nastran
+//
+//    }
+//
+//    if ( (cad.find("CBUSH",0)!=cad.npos))
+//    {
+//        Nodo.push_back(Leer_Campo(cad,3));//Es el indice de Nastran
+//    }
+//
+//    id=Leer_Campo(cad,2);//Es el indice de Nastran
+//
+//    if ( (cad.find("CBUSH",0)!=cad.npos))
+//        es_cbush=true;
+//
+//	else  if ( (cad.find("RBE2",0)!=cad.npos))
+//    tipo="RBE2";
+//
+//	//tipo=Leer_Hasta_Caracter(cad, ' ');
 
 }
-
-

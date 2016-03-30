@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <vector>
 
+#include "Cadenas.h"
+
 
 using namespace std;
 
@@ -15,14 +17,12 @@ using namespace std;
 class Elemento{
 	public:
 		Elemento::Elemento();
-		vector <int> Elemento::Conect();
-		vector <int> Elemento::Conect_int();
+		Elemento::Elemento(vector <string> *, const int &);
+		vector <int> & Elemento::Conect();
+		vector <int> & Elemento::Conect_int();
 		void Elemento::Asignar_Conect_Interna(vector <int> v);
 		void Elemento::Asignar_Conect_Nastran(vector <int> v);
 		const string Tipo(){return tipo;}
-
-		void Leer_String(const std::string cad);
-        void Leer_StringVec(const std::vector <string> cad);
 
 		const int Elemento::VerId();
 		vector <int> Elemento::VerConect_Int();
@@ -44,7 +44,13 @@ class Elemento{
         bool Es_cbush() {return es_cbush;}
         bool Es_libre() {return es_libre;}
         void Es_libre(bool es) {es_libre=es;}
+        const bool & HasError()const {return haserror;}
+        const bool & isBoundElem()const {return isboundelem;}
+        const int & NastranLines()const{return this->nastranlines;}
+        const int & NumNodes()const {return nnodos;}
 
+        const string & Type()const{return this->type;}
+        const int & Pid()const{return this->pid;}
 
 
 
@@ -58,12 +64,16 @@ class Elemento{
 		vector <int> Nodos_int;	//Indice del nodo interno
 		int pid;	//id de la propiedad, pero el interno
 		int linea_nastran;	//Posicion de la fila en NASTRAN
+		string type;            //THIS WILL BE USED BY DIFFERENT SOLVERS
 
 		int id_nastran_prop_modificada;
 
 		int idprop,pos_idprop_nastran;
 		int pos_nastran;
         std::string tipo;
+        bool haserror;
+        bool isboundelem;
+        int nastranlines;//Nastran lines in original
 
 };
 

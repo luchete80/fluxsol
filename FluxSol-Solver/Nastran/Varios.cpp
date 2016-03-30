@@ -21,15 +21,19 @@
 
 *************************************************************************/
 #include "Varios.h"
+#include <iostream>     // std::cout
+#include <sstream>      // std::istringstream
+#include <string>       // std::string
 
 using namespace std;
 
-//El campo empieza desde 1 !!!!!!!!!!!!!!!!!!!!
+//Read_Field
+//BEGINS FROM 0
 int Leer_Campo(const string cad, const int campo)
 {
     string strlin=cad;
     string cadtemp;
-    int iniciocad=(campo-1)*8;
+    int iniciocad=campo*8;
 
     for (int k=0;k<8;k++)
     {
@@ -38,7 +42,9 @@ int Leer_Campo(const string cad, const int campo)
     } //Delf for k
 
         int Number;
-        //if ( ! (istringstream(cadtemp) >> Number) ) Number = 0;
+
+        //CAN BE DONE WITH ATOI, STOI, AND SO ON
+        if ( ! (istringstream(cadtemp) >> Number) ) Number = 0;
         //Si no es un entero
         if ( (cadtemp.find(".",0)!=cadtemp.npos))           Number=0;
 

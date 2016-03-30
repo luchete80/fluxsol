@@ -22,10 +22,6 @@
 *************************************************************************/
 #include "Material.h"
 
-
-Material::~Material()
-{}
-
 const int Material::VerId()
 {
 	return id;
