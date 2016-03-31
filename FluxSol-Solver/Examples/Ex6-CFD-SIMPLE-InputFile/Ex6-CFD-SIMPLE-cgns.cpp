@@ -25,19 +25,22 @@ using namespace FluxSol;
 ///////////////////////////
 //// FLUXSOL EXAMPLE 6 ////
 ///////////////////////////     template<class T>
+///////////////////////////
+// RUNS SIMPLE PRESSURE - VELOCITY COUPLING ALGORITHM FROM AN INPUT FILE
 
 stringstream reslog;
 
-int main()
+int main(int argc,char **args)
 {
 
-    bool orth_mesh=false;
-
     //string inputFileName=argv[1];
-	string inputFileName="InputEx.in";
-	cout << "Opening InputEx.in ..."<<endl;
+	if (argc>1)
+	{
+	string inputFileName=args[1];
+	cout << "Opening "<< inputFileName <<endl;
 	InputFile input(inputFileName);
 
+	bool orth_mesh=false;
     string meshfname=input.section("grid",0).get_string("file");
 	Fv_CC_Grid mesh(meshfname);
 	mesh.Log("Log.txt");
@@ -100,15 +103,15 @@ int main()
     vector<Scalar> pant;
     pant.assign(mesh.Num_Cells(),Scalar(0.));
 
-    cout << "Face Patches" <<endl;
-    for (int p=0;p<mesh.vBoundary().Num_Patches();p++)
-    {
-        cout << "Patch " <<p<<endl;
-        for (int f=0;f<mesh.vBoundary().vPatch(p).Num_Faces();f++)
-        {
-            cout <<mesh.vBoundary().vPatch(p).Id_Face(f)<<endl;
-        }
-    }
+//    cout << "Face Patches" <<endl;
+//    for (int p=0;p<mesh.vBoundary().Num_Patches();p++)
+//    {
+//        cout << "Patch " <<p<<endl;
+//        for (int f=0;f<mesh.vBoundary().vPatch(p).Num_Faces();f++)
+//        {
+//            cout <<mesh.vBoundary().vPatch(p).Id_Face(f)<<endl;
+//        }
+//    }
 
 
     EqnSystem <Scalar> pEqn;
@@ -335,6 +338,7 @@ int main()
 
     cout << "Writing results ..." <<endl;
 
+    cout << "Writing cell fielda..."<<endl;
 	OutputFile("CellField-U.vtu",U);
 	OutputFile("CellField-Uy.vtu",U,1);
     OutputFile("CellField-Uz.vtu",U,2);
@@ -353,7 +357,11 @@ int main()
     vv=interv.Interpolate(U);
     OutputFile("VertexField-U.vtu",vv);
     OutputFile("VertexField-Uz.vtu",vv,2);
-
+	}//If argc>1
+	else
+    {
+        cout << "Input file not specified. Usage Ex6.. <Input file name.in>"<<endl;
+    }
 	//	---- The End -------
 	return 0;
 }
