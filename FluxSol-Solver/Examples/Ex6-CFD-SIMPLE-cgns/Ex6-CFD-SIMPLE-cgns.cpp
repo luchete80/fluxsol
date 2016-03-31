@@ -131,7 +131,7 @@ int main()
 	int it=0;
 
 	vector <double> ures;
-	while (it <100)
+	while (it <1)
 	{
 
 	    cout << "-----------------------------------------------------------------------------------------------"<<endl;
@@ -218,6 +218,7 @@ int main()
         //AUr=0.001/UEqn.A();       // In OpenFoam these are scalar
 
         AUr=mesh.Vp()/UEqn.A();
+        cout << "AUr"<<AUr.outstr()<<endl;
 
 //        //Assign to U Eqn Solved values
         _Surf_Fv_Field <Vec3D> Uf_;
@@ -274,6 +275,7 @@ int main()
         //Nodal are corrected with Gauss grad and central coeffs
         U=U-alpha_u*(AUr*FvExp::Grad(pEqn.Field()));                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
         p=p+alpha_p*pEqn.Field();
+
 
 
         //Correct Flux: m = m* + m´
@@ -338,6 +340,8 @@ int main()
 //        OutputFile("CellField-gradpx.vtu",test,0);
 //        OutputFile("CellField-gradpy.vtu",test,2);
 	} //while
+
+    cout << "Writing results ..." <<endl;
 
 	OutputFile("CellField-U.vtu",U);
 	OutputFile("CellField-Uy.vtu",U,1);

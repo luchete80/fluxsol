@@ -586,6 +586,7 @@ InputFile::UField()
 
     for (int pf=0;pf<patchfieldnumber;pf++)
     {
+        bool found=false;
         string pfname=section("grid",0).subsection("BC",pf).get_string("patch");
 
         for (int meshp=0;meshp<numpatches;meshp++)
@@ -596,6 +597,7 @@ InputFile::UField()
                 asoc[meshp]=validpfnum;
                 validpf_id.push_back(pf);
                 validpfnum++;
+                found=true;
            }
         }
     }
