@@ -1,15 +1,13 @@
 // Inputs
 	squareSide = 1; //m
 	meshThickness = squareSide / 10; 
-	gridsize = squareSide / 10;
-	cos45=0.70710678;
+	gridsize = squareSide / 32;
  
-    // Geometry
-	// Clockwise
-	Point(1) = {0.,0., 0., gridsize};
-	Point(2) = {squareSide, 0., 0, gridsize};
-	Point(3) = {squareSide*cos45 + squareSide, squareSide*cos45, 0, gridsize};
-	Point(4) = {squareSide*cos45, squareSide*cos45, 0, gridsize};
+        // Geometry
+	Point(1) = {-squareSide/2, -squareSide/2, 0, gridsize};
+	Point(2) = {squareSide/2, -squareSide/2, 0, gridsize};
+	Point(3) = {squareSide/2, squareSide/2, 0, gridsize};
+	Point(4) = {-squareSide/2, squareSide/2, 0, gridsize};
 	Line(1) = {1, 2};				// bottom line
 	Line(2) = {2, 3};				// right line
 	Line(3) = {3, 4};				// top line

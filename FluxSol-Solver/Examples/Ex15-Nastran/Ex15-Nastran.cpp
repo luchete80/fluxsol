@@ -26,7 +26,7 @@
 #include "NastranMesh.h"
 
 // LAPLACIAN MESH REORDER FOR
-//SIMILAR TO EXAMPLE 18
+// SIMILAR TO EXAMPLE 18
 
 using namespace FluxSol;
 

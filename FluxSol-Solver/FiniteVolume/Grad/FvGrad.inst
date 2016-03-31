@@ -1,0 +1,33 @@
+namespace FluxSol
+{
+    namespace FvExp
+    {
+
+    template
+    _CC_Fv_Field
+    < typename outerProduct<Vec3D, Scalar>::type >
+        Grad (const _CC_Fv_Field <Scalar>& field);
+
+
+     template
+    _CC_Fv_Field
+    < typename outerProduct<Vec3D, Scalar>::type >
+        GradV (const _CC_Fv_Field <Scalar>& field);
+
+
+    template
+    _Surf_Fv_Field
+    < Scalar >
+        SnGrad (const _CC_Fv_Field <Scalar> &VolField);
+
+
+	template
+	_CC_Fv_Field
+	<typename outerProduct<Vec3D, Scalar>::type >
+	NonOrthGrad(const _CC_Fv_Field <Scalar> & field);
+
+
+
+
+    }//Fin de FvExp
+}//Fin de namespace FluxSol
