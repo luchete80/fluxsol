@@ -1,0 +1,9 @@
+
+To be fixed 
+
+1 - Crashes example 6
+2 - Residual (in another branch)
+3 - To input with patches
+	- Not to use a current patch
+	
+4 - Solver crashes when convergence is not reached and values must to be written in a field.
