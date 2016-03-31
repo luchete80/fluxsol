@@ -31,7 +31,7 @@ stringstream reslog;
 int main()
 {
 
-    bool orth_mesh=true;
+    bool orth_mesh=false;
 
     //string inputFileName=argv[1];
 	string inputFileName="InputEx.in";
@@ -124,7 +124,7 @@ int main()
 	int it=0;
 
 	vector <double> ures;
-	while (it <1)
+	while (it <100)
 	{
 
 	    cout << "-----------------------------------------------------------------------------------------------"<<endl;
@@ -463,9 +463,4 @@ int main()
 //
 //           itlog << ittime_spent <<" "<<endl;
 //           iternumber++;
-<<<<<<< HEAD
-//}
 
-=======
-//}
->>>>>>> Fixed-Crashes
