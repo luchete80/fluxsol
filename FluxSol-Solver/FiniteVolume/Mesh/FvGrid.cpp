@@ -186,6 +186,10 @@ void FluxSol::Fv_CC_Grid::Log(string s)
         meshlog<<"fof: " << faceit->fof().outstr()<<endl;
         meshlog << "PF: "<<faceit->Dist_pf_LR(0)<<endl;
         meshlog << "e_PN: "<<faceit->e_PN().outstr()<<endl;
+        meshlog << "Baricenter (sm): "<<faceit->Baric()<<endl;
+        meshlog << "Af (Normal): "<<faceit->Af()<<endl;
+        meshlog << "Ad (Collineal to PN): "<<faceit->Ad()<<endl;
+        //faceit->ANorm()
 
 		meshlog<<endl;
 

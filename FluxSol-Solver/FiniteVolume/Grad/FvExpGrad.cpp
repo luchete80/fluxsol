@@ -471,11 +471,12 @@ namespace FluxSol
                 grad_fo = Interpolate(r);
 
                 //Loop through Net Flux Faces (nff) via iterator
+                //ALL FACES IS NOT SENSE, BOUNDARY FACES HAVE ZERO FO_F VALUE
                 cout << "Loop trough faces"<<endl;
-                //for (it=nff->begin(); it!=nff->end(); ++it)
-                for (int f=0;f<r.Grid().Num_Faces();f++)
+                for (it=nff->begin(); it!=nff->end(); ++it)
+                //for (int f=0;f<r.Grid().Num_Faces();f++)
                 {
-                    //int f=*it;
+                    int f=*it;
                     cell[0]=field.ConstGrid().Face(f).Cell(0);
 
                     cout << "PF"<<field.ConstGrid().Face(f).Dist_pf_LR(0) <<endl;
