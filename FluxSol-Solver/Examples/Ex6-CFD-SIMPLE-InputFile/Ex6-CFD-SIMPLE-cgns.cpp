@@ -40,7 +40,7 @@ int main(int argc,char **args)
 	cout << "Opening "<< inputFileName <<endl;
 	InputFile input(inputFileName);
 
-	bool orth_mesh=false;
+	bool orth_mesh=true;
     string meshfname=input.section("grid",0).get_string("file");
 	Fv_CC_Grid mesh(meshfname);
 	mesh.Log("Log.txt");
@@ -127,7 +127,7 @@ int main(int argc,char **args)
 	int it=0;
 
 	vector <double> ures;
-	while (it <100)
+	while (it <1)
 	{
 
 	    cout << "-----------------------------------------------------------------------------------------------"<<endl;
@@ -178,7 +178,9 @@ int main(int argc,char **args)
         if (orth_mesh)
             gradpV=-FvExp::GradV(p);
 		else
-		gradpV=-FvExp::NonOrthGrad(p);
+            gradpV=-FvExp::NonOrthGrad(p);
+
+		cout << "Grad p evaluated"<<endl;
 
 		//Correct boundary conditions, by imposing zero pressure gradient at wall
 
