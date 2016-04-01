@@ -37,4 +37,4 @@
 	Physical Surface("right") = surfaceVector[3];
 	Physical Surface("top") = surfaceVector[4];
 	Physical Surface("left") = surfaceVector[5];
-	Physical Surface("back") = {6};
+	Physical Surface("back") = {6};Show "*";
