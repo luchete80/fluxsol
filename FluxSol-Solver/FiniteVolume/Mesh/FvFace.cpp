@@ -87,6 +87,12 @@ _FvFace::_FvFace(const int &Id, std::vector<int> &idverts,const vector <_Vertex>
 		fp=vec_pf_LR[idnode[0]].dot(e_pn)/vec_pn.Norm();
 		fn=1.0-fp;
 
+        cout << "Calculating fof"<<endl;
+//		FINALLY, used in non-orth grids
+        fo_f=   this->Dist_pf_LR(0)- (
+            ( this->Dist_pf_LR(0) & (this->e_PN()) ) *
+             this->e_PN() );
+
 	}
 	else //celda del borde, tiene solo el nodo interior
 	{
@@ -101,6 +107,7 @@ _FvFace::_FvFace(const int &Id, std::vector<int> &idverts,const vector <_Vertex>
 
 		norm_ad=(af.dot(af)/af.dot(e_pf_LR));
 		ad=norm_ad*vec_pf_LR[0];
+		fo_f=0.;
 
 	}
 

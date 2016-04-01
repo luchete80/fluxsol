@@ -60,7 +60,7 @@ class _FvFace:public _Face{
                                                 //PUEDEN SER 2 LOS VECINOS SI ES UN GRADIENTE SIMPLE (PN-PP)/d O MUCHOS MAS
                                                 //SI ES UN GRADIENTE NORMAL
 
-
+    Vec3D fo_f;
 	public:
 		_FvFace(){};
 		_FvFace(const int &nom,const vector<int> & cells, const vector<int> & verts);  //
@@ -82,6 +82,7 @@ class _FvFace:public _Face{
 		//Gradientes
 		void GradCoeffs_Central();              //Calculo los coeficientes que necesito para los gradientes de cara
 		//~_FvFace(){};
+		const Vec3D & fof()const{return this->fo_f;}
 
 
 

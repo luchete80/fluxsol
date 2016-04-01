@@ -403,6 +403,8 @@ namespace FluxSol
         // FACEFI=AT FACES
         // FI_FO = (AT FACES )
 
+        //AT FIRST IS A GAUSS GRADIENT
+        //TO MODIFY: USE ANOTHER TYPE OF GRADIENTAND CALL GRAD SChEME
         template<class T>
         _CC_Fv_Field
         <typename outerProduct<Vec3D, T>::type >
@@ -421,14 +423,19 @@ namespace FluxSol
 
 
             //Field Interpolation
-            _CC_Fv_Field < typename outerProduct<Vec3D, T>::type > fi_fo(field.Grid());
+            //_CC_Fv_Field < typename outerProduct<Vec3D, T>::type > fi_fo(field.Grid());
 
             //Gradient Interpolation
             GeomSurfaceField < typename outerProduct<Vec3D, T>::type > grad_fo = Interpolate(gradp);
 
             GeomSurfaceField <T> field_f(field);
 
-            GeomSurfaceField <T> facefi=Interpolate(field);    //INITIAL VALUES OF FACEFI
+            //FI_FO IS A CONSTANT VALUE
+            GeomSurfaceField <T> fi_fo=Interpolate(field);    //INITIAL VALUES OF FACEFI
+
+            field_f=fi_fo;  //Initial value
+
+
             Vec3D fo_f;
 
             double afdir[2];afdir[0]=1.;afdir[1]=-1.;
@@ -440,54 +447,57 @@ namespace FluxSol
 
             // NON ORTHOGONAL CORRECTIONS
             // Calculate gradient at faces
+            cout << "Loop Through faces"<<endl;
             while (!end)
             {
 
-                fi_fo=0.;
+                r=0.;
+                cout << "Creating gradient r"<<endl;
+                 // EQN (1) GRADIENT CALC
+                 // INTERNAL OR EXTERNAL??
                 for (int f=0;f<r.Grid().Num_Faces();f++)
                 {
                     for (int fc=0;fc<r.Grid().Face(f).NumCells();fc++)
                     {
                         int c=r.Grid().Face(f).Cell(fc);
-                        fi_fo[c]+=r.Grid().Face(f).Af()*facefi[f]*afdir[fc];
+                        r[c]+=r.Grid().Face(f).Af()*field_f[f]*afdir[fc];
                     }
                 }
 
-                r=0.;
+                int c;
+                for (c=0,r.Grid().cellit=r.Grid().BeginCell(); r.Grid().cellit!=r.Grid().EndCell(); r.Grid().cellit++,c++)
+                    r[c]=r[c]/r.Grid().cellit->Vp();
+
+                grad_fo = Interpolate(r);
+
                 //Loop through Net Flux Faces (nff) via iterator
+                //ALL FACES IS NOT SENSE, BOUNDARY FACES HAVE ZERO FO_F VALUE
+                cout << "Loop trough faces"<<endl;
                 for (it=nff->begin(); it!=nff->end(); ++it)
+                //for (int f=0;f<r.Grid().Num_Faces();f++)
                 {
                     int f=*it;
                     cell[0]=field.ConstGrid().Face(f).Cell(0);
 
-                    fo_f=   field.ConstGrid().Face(f).Dist_pf_LR(0)- (
-                            ( field.ConstGrid().Face(f).Dist_pf_LR(0) & (field.ConstGrid().Face(f).e_PN()) ) *
-                             field.ConstGrid().Face(f).e_PN() );
-    //                       //Dist_pf_LR
+                    cout << "PF"<<field.ConstGrid().Face(f).Dist_pf_LR(0) <<endl;
+//                    fo_f=   field.ConstGrid().Face(f).Dist_pf_LR(0)- (
+//                            ( field.ConstGrid().Face(f).Dist_pf_LR(0) & (field.ConstGrid().Face(f).e_PN()) ) *
+//                             field.ConstGrid().Face(f).e_PN() );
+//    //                       //Dist_pf_LR
+                    cout << "dist fo_f"<<endl;
+                    cout << fo_f.outstr()<<endl;
 
-                    field_f[f]=fi_fo[f]+grad_fo[f]&fo_f;        // EQN (2)
+                    field_f[f]=fi_fo[f]+(grad_fo[f]&field.ConstGrid().Face(f).fof());        // EQN (2)
 
-                    //For each cell neighbour to face
-                    for (int c=0;c<2;c++)
-                    {
-                        cell[c]=field.ConstGrid().Face(f).Cell(c);
-                        r[ cell[c] ] += field_f [f] * field.ConstGrid().Face(f).Af();
-                    }
-
-                        int c;
-                    for (c=0,r.Grid().cellit=r.Grid().BeginCell(); r.Grid().cellit!=r.Grid().EndCell(); r.Grid().cellit++,c++)
-                        r[c]=r[c]/r.Grid().cellit->Vp();
-
-
-                    grad_fo = Interpolate(r);
 
                 }   //For net flux faces
-
+                cout <<"end of iteration"<<endl;
 
                 if (corrit <=numcorr)   end=true;
                 corrit++;
             }
-
+            cout << "returning grad"<<endl;
+            cout <<r.outstr()<<endl;
             return r;
         } // End of NonOrthGrad
 

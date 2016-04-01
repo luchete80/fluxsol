@@ -1,24 +1,17 @@
 /************************************************************************
-
 	Copyright 2012-2013 Luciano Buglioni
-
 	Contact: luciano.buglioni@gmail.com
-
 	This file is a part of FluxSol
-
 	FluxSol is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     any later version.
-
     FluxSol is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
-
     For a copy of the GNU General Public License,
     see <http://www.gnu.org/licenses/>.
-
 *************************************************************************/
 // THERMAL 5 CELLS EXAMPLE //
 
@@ -31,20 +24,23 @@ using namespace FluxSol;
 
 ///////////////////////////
 //// FLUXSOL EXAMPLE 6 ////
+///////////////////////////     template<class T>
 ///////////////////////////
+// RUNS SIMPLE PRESSURE - VELOCITY COUPLING ALGORITHM FROM AN INPUT FILE
 
 stringstream reslog;
 
-int main()
+int main(int argc,char **args)
 {
 
-    bool orth_mesh=true;
-
     //string inputFileName=argv[1];
-	string inputFileName="InputEx.in";
-	cout << "Opening InputEx.in ..."<<endl;
+	if (argc>1)
+	{
+	string inputFileName=args[1];
+	cout << "Opening "<< inputFileName <<endl;
 	InputFile input(inputFileName);
 
+	bool orth_mesh=true;
     string meshfname=input.section("grid",0).get_string("file");
 	Fv_CC_Grid mesh(meshfname);
 	mesh.Log("Log.txt");
@@ -107,15 +103,15 @@ int main()
     vector<Scalar> pant;
     pant.assign(mesh.Num_Cells(),Scalar(0.));
 
-    cout << "Face Patches" <<endl;
-    for (int p=0;p<mesh.vBoundary().Num_Patches();p++)
-    {
-        cout << "Patch " <<p<<endl;
-        for (int f=0;f<mesh.vBoundary().vPatch(p).Num_Faces();f++)
-        {
-            cout <<mesh.vBoundary().vPatch(p).Id_Face(f)<<endl;
-        }
-    }
+//    cout << "Face Patches" <<endl;
+//    for (int p=0;p<mesh.vBoundary().Num_Patches();p++)
+//    {
+//        cout << "Patch " <<p<<endl;
+//        for (int f=0;f<mesh.vBoundary().vPatch(p).Num_Faces();f++)
+//        {
+//            cout <<mesh.vBoundary().vPatch(p).Id_Face(f)<<endl;
+//        }
+//    }
 
 
     EqnSystem <Scalar> pEqn;
@@ -131,7 +127,7 @@ int main()
 	int it=0;
 
 	vector <double> ures;
-	while (it <100)
+	while (it <1)
 	{
 
 	    cout << "-----------------------------------------------------------------------------------------------"<<endl;
@@ -178,19 +174,20 @@ int main()
 		_CC_Fv_Field <Vec3D> gradpV(mesh);
 //		-FvExp::Grad(p);
 
+
         if (orth_mesh)
             gradpV=-FvExp::GradV(p);
 		else
             gradpV=-FvExp::NonOrthGrad(p);
 
-
+		cout << "Grad p evaluated"<<endl;
 
 		//Correct boundary conditions, by imposing zero pressure gradient at wall
 
 		//From sezai courses
 //		An iterative process is required to calculate gradients:
 //        Step 1: Calculate gradient from Eq. (11.31)
-//        Step 2: Calculate φf from Eq. (11.32)
+//        Step 2: Calculate φf from Eq. (11.32) [fiface=gradfi_fo+gradfi_fo]
 //        Step 3: Repeat steps 1 and 2 until convergence. (4-5 repetitions required )
 
 
@@ -343,6 +340,7 @@ int main()
 
     cout << "Writing results ..." <<endl;
 
+    cout << "Writing cell fielda..."<<endl;
 	OutputFile("CellField-U.vtu",U);
 	OutputFile("CellField-Uy.vtu",U,1);
     OutputFile("CellField-Uz.vtu",U,2);
@@ -361,7 +359,11 @@ int main()
     vv=interv.Interpolate(U);
     OutputFile("VertexField-U.vtu",vv);
     OutputFile("VertexField-Uz.vtu",vv,2);
-
+	}//If argc>1
+	else
+    {
+        cout << "Input file not specified. Usage Ex6.. <Input file name.in>"<<endl;
+    }
 	//	---- The End -------
 	return 0;
 }
@@ -471,5 +473,4 @@ int main()
 //
 //           itlog << ittime_spent <<" "<<endl;
 //           iternumber++;
-//}
 
