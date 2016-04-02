@@ -1,9 +1,16 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 include (CheckSymbolExists)
 include (CheckCXXSymbolExists)
 include (CheckIncludeFiles)
 include (CheckIncludeFileCXX)
 include (CheckCXXSourceCompiles)
+
+#CONVECTION - DIFFUSION EXAMPLE
+set (NAME Ex16-ConjugateHeat)
+project(${NAME})
+
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -fpermissive")
+set (CMAKE_CXX_FLAGS "-fpermissive -g")
 
 
 # add to the include search path
@@ -22,13 +29,6 @@ set (LASPACK_LIBRARY_DIR ${FLUXSOL_DIR}/Libs/laspack/bin)
 set (ALGLIB_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/src)
 set (ALGLIB_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/bin)
 
-SET(TARGET_DEFAULT_PREFIX "example_")
-SET(TARGET_DEFAULT_LABEL_PREFIX "Examples")
-
-set (MY_PETSC_DIR "$ENV{PETSC_DIR}")
-set (MPI_LIB_DIR "$ENV{MPI_LIB_DIR}")
-set (MPI_INC_DIR "$ENV{MPI_INC_DIR}")
-set (MY_PETSC_ARCH "$ENV{PETSC_ARCH}")
 
 include_directories("${FLUXSOL_INCLUDE_DIR}")
 include_directories("${FLUXSOL_INCLUDE_DIR}/Analysis")
@@ -49,9 +49,16 @@ include_directories("${FLUXSOL_INCLUDE_DIR}/Solver")
 include_directories("${FLUXSOL_INCLUDE_DIR}/Tests")
 include_directories("${FLUXSOL_INCLUDE_DIR}/Type")
 include_directories("${FLUXSOL_INCLUDE_DIR}/UDO")
-include_directories("${FLUXSOL_INCLUDE_DIR}/Utils")	
+include_directories("${FLUXSOL_INCLUDE_DIR}/Utils")
 
-find_package (PETSc REQUIRED HINTS "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/conf")
+
+set (MY_PETSC_DIR "$ENV{PETSC_DIR}")
+set (MPI_LIB_DIR "$ENV{MPI_LIB_DIR}")
+set (MPI_INC_DIR "$ENV{MPI_INC_DIR}")
+set (MY_PETSC_ARCH "$ENV{PETSC_ARCH}")
+
+#if (USE_PETSC)
+	find_package (PETSc REQUIRED HINTS "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/conf")
 	include_directories (..)
 	include_directories ("${MY_PETSC_DIR}/include" "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/include" ${PETSC_INCLUDE_PATH})
 	
@@ -79,8 +86,25 @@ find_package (PETSc REQUIRED HINTS "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/conf")
 	include_directories(${MPI_INC_DIR})
 
 	set (EXT_LIBS ${EXT_LIBS} msmpi gfortran)
+	
 
+#endif ()
 
+include_directories(${FLUXSOL_INCLUDE_DIR})
+include_directories(${LASPACK_INCLUDE})
 
-ADD_SUBDIRECTORY (Ex1-Thermal-Single)
-ADD_SUBDIRECTORY (Ex2-CGNS-Input)
+link_directories(${LASPACK_LIBRARY_DIR})
+link_directories (${FLUXSOL_LIB_DIR})
+
+include_directories(${ALGLIB_INCLUDE_DIRS})
+link_directories(${ALGLIB_LIBRARY_DIRS})
+
+set (FLUXSOL_LIB fluxsollib)
+
+#add the executable
+set (SOURCES
+${NAME}.cpp
+)
+add_executable(${NAME} ${SOURCES})
+
+target_link_libraries (${NAME} ${FLUXSOL_LIB} laspack alglib Type_)
