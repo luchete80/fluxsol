@@ -238,7 +238,7 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 	//Internal field0
 	//cout << "Face Number"<<VolField.Grid().Num_Faces()<<endl;
 	//cout << "Cell Number"<<VolField.Grid().Num_Cells()<<endl;
-	cout << "Laplacian, sizeof intnetfluxface: "<<VolField.IntNetFluxFaces().size()<<endl;
+	//cout << "Laplacian, sizeof intnetfluxface: "<<VolField.IntNetFluxFaces().size()<<endl;
 	set <int> intfaces=VolField.IntNetFluxFaces();
 	//for (std::set<int>::iterator it=VolField.IntNetFluxFaces().begin(); it!=VolField.IntNetFluxFaces().end(); ++it)
 
