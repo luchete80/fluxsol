@@ -59,6 +59,9 @@ class _Field:
 	std::vector <int> idgrid_domain;	//Ya sea vertex, surface o volume
 										//Son los id de los vertices que forman parte del dominio
 
+
+    std::vector <T> prev_value;
+
 	std::string name;
 
     public:
@@ -69,6 +72,7 @@ class _Field:
 	_Field(const int &numval, const double &val =0.)
     {
  	    this->value=vector<T>(numval);
+ 	    this->prev_value=vector<T>(numval);
 
         this->numberofvals=numval;
         for (int v=0;v<numval;v++)
@@ -82,6 +86,7 @@ class _Field:
 	_Field(const vector<T> &val)
 	{
 	    this->value=vector<T>(val.size());
+	    this->prev_value=vector<T>(val.size());
 	    for (int v=0;v<val.size();v++)
             //this->value.push_back(val[v]);
             this->value[v]=val[v];
@@ -89,6 +94,7 @@ class _Field:
         this->numberofvals=val.size();
 	}
 	const T & Val(const int &i)const{return value[i];};
+	const T & PrevVal() const {return this->old_value;}
 	inline void Val (const int &i,const T &v){this->value[i]=v;}
 	const int & Numberofvals()const{return numberofvals;}
 	void  Insert_Idgrid_domain(const int &i){idgrid_domain.push_back(i);}

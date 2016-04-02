@@ -375,6 +375,9 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
     return eqnsys;
 }
 
+template<typename T>
+EqnSystem <T> FvImp::NonOrthLaplacian(_CC_Fv_Field<Scalar> fi,_CC_Fv_Field <T> &VolField);
+
 };	//Fin namespace FluxSol
 
 #endif

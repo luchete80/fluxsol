@@ -232,6 +232,24 @@ EqnSystem <T> FvImp::Laplacian(_CC_Fv_Field<Scalar> fi,_CC_Fv_Field <T> &VolFiel
     return eqnsys;
 }
 
+// AS
+// NEW FAST NON ORTHOGONAL
+//
+template<typename T>
+EqnSystem <T> FvImp::NonOrthLaplacian(_CC_Fv_Field<Scalar> fi,_CC_Fv_Field <T> &VolField)
+{
+    EqnSystem <T> eqnsys(VolField.Grid());
+
+    eqnsys=Laplacian(fi,VolField);
+
+    //Now Add Deferred Correction Values
+    // Fed= Sig_e Se (dfi/dpsi) + Sig_e Se [ dfi/dn - dfi/dpsi ]_old
+    //eqnsys==;
+
+
+
+    return eqnsys;
+}
 
 } //FluxSol
 
