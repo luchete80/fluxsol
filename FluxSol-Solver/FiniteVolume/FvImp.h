@@ -68,8 +68,13 @@ EqnSystem <T> Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField);
 template<typename T>
 EqnSystem <T> Laplacian(_Surf_Fv_Field<Scalar> fi,_CC_Fv_Field <T> &VolField);
 
+//TEMP
+template<typename T>
+EqnSystem <T> NonOrthLaplacian(Scalar fi,_CC_Fv_Field <T> &VolField);
+
 template<typename T>
 EqnSystem <T> Laplacian(_CC_Fv_Field <Scalar> fi,_CC_Fv_Field <T> &VolField);
+
 
 //-- DIVERGENCE
 template<typename T>
