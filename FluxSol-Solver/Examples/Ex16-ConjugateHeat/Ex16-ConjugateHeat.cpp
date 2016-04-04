@@ -74,10 +74,10 @@ int main(int argc,char **args)
 	U.AssignPatchFieldTypes(FIXEDVALUE);
 
     //TEMPERATURE IS A MIXING FIELD
-    T.Boundaryfield().PatchField(0).AssignType(FIXEDVALUE);
-    T.Boundaryfield().PatchField(2).AssignType(FIXEDVALUE);
-    T.Boundaryfield().PatchField(1).AssignType(FIXEDGRADIENT);
-    T.Boundaryfield().PatchField(3).AssignType(FIXEDGRADIENT);
+    h.Boundaryfield().PatchField(0).AssignType(FIXEDVALUE);
+    h.Boundaryfield().PatchField(2).AssignType(FIXEDVALUE);
+    h.Boundaryfield().PatchField(1).AssignType(FIXEDGRADIENT);
+    h.Boundaryfield().PatchField(3).AssignType(FIXEDGRADIENT);
 
 
 
@@ -155,6 +155,9 @@ int main(int argc,char **args)
 //        Pressure gradient is null at all walls
         for (int pf=0;pf<4;pf++) p.Boundaryfield().PatchField(pf).AssignValue(0.0);
         //p.Val(36,0.);    //Reference Pressure
+
+        h.Boundaryfield().PatchField(1).AssignValue(0.0);
+        h.Boundaryfield().PatchField(3).AssignValue(0.0);
 
         cout << "Assigning boundary value"<<endl;
         for (int f=0;f<mesh.Num_Faces();f++)
@@ -303,11 +306,13 @@ int main(int argc,char **args)
         /////////////////////////////////
         //Flux for transport eqn is cT=h
         //d(rho c T)/dt + Div(rho c T U) - Div . (k Grad (cT) ) = ScT
-        h=cp*T;
+
+        //h=cp*T;
         TEqn=( FvImp::Div(phi, h)-FvImp::Laplacian(k,h) );
         Solve(TEqn);
         h=TEqn.Field();
-        T=h;
+        //T=h;
+
         //HERE MUSt BE T=h/cp,
 
 
