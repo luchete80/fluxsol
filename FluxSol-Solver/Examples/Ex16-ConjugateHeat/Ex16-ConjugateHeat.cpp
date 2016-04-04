@@ -46,12 +46,9 @@ int main(int argc,char **args)
 	//cout << "Opening "<< inputFileName <<endl;
 	InputFile input(inputFileName);
 
-	bool orth_mesh=false;
     string meshfname=input.section("grid",0).get_string("file");
 	Fv_CC_Grid mesh(meshfname);
 	mesh.Log("Log.txt");
-
-	cout << "Is your mesh Non-Orthogonal?"<<endl;
 
     for (int c=0;c<mesh.Num_Cells();c++)
         cout << mesh.Cell(c).Vp().outstr()<<endl;
@@ -197,12 +194,7 @@ int main(int argc,char **args)
 		_CC_Fv_Field <Vec3D> gradpV(mesh);
 //		-FvExp::Grad(p);
 
-        if (orth_mesh)
-            gradpV=-FvExp::GradV(p);
-		else
-            gradpV=-FvExp::NonOrthGrad(p);
-
-
+        gradpV=-FvExp::GradV(p);
 
 		//Correct boundary conditions, by imposing zero pressure gradient at wall
 
@@ -314,6 +306,10 @@ int main(int argc,char **args)
         h=cp*T;
         TEqn=( FvImp::Div(phi, h)-FvImp::Laplacian(k,h) );
         Solve(TEqn);
+        h=TEqn.Field();
+        T=h;
+        //HERE MUSt BE T=h/cp,
+
 
 //        {
 //    solve
@@ -327,6 +323,12 @@ int main(int argc,char **args)
 //
 //    thermo->correct();
 //}
+    //http://cfd.direct/openfoam/energy-equation/
+
+
+    // volTensorField gradU = fvc::grad(U);
+    // volTensorField tau = mu * (gradU + gradU.T());
+    // rho * cp * (fvm::ddt(T) + fvm::div(phi,T)) - fvm::laplacian(kT,T)+ ( tau && gradU )
 
 
         /////////////////////////////////
@@ -404,6 +406,9 @@ int main(int argc,char **args)
 
 	vF=interp.Interpolate(p);
     OutputFile("VertexField-p.vtu",vF);
+
+    vF=interp.Interpolate(h);
+    OutputFile("VertexField-h.vtu",vF);
 
     U.Boundaryfield().PatchField(1).AssignValue(Vec3D(1.,0.,0.));
     vv=interv.Interpolate(U);
