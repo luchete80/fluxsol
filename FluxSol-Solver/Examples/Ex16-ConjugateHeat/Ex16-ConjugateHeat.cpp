@@ -58,7 +58,7 @@ int main(int argc,char **args)
 	_CC_Fv_Field <Vec3D>  U(mesh);
 
 	//
-	_CC_Fv_Field <Scalar>  T(mesh);
+	//_CC_Fv_Field <Scalar>  T(mesh);
 	_CC_Fv_Field <Scalar>  h(mesh);
 
     //TO MODIFY, MUST BE READED BOTH h AND T
@@ -97,6 +97,7 @@ int main(int argc,char **args)
     //U=Vec3D(1.0,0.,1.0);
     //U=Vec3D(0.01,0.,0.01);
     U=Vec3D(0.0,0.,0.0);
+    h=0;
 
     phi=mesh.Sf() & FvExp::Interpolate(U);
 
@@ -156,8 +157,8 @@ int main(int argc,char **args)
         for (int pf=0;pf<4;pf++) p.Boundaryfield().PatchField(pf).AssignValue(0.0);
         //p.Val(36,0.);    //Reference Pressure
 
-        h.Boundaryfield().PatchField(1).AssignValue(0.0);
-        h.Boundaryfield().PatchField(3).AssignValue(0.0);
+//        h.Boundaryfield().PatchField(1).AssignValue(0.0);
+//        h.Boundaryfield().PatchField(3).AssignValue(0.0);
 
         cout << "Assigning boundary value"<<endl;
         for (int f=0;f<mesh.Num_Faces();f++)
@@ -182,8 +183,8 @@ int main(int argc,char **args)
         for (int pf=0;pf<4;pf++) U.Boundaryfield().PatchField(pf).AssignValue(Vec3D(0.,0.,0.));
         U.Boundaryfield().PatchField(1).AssignValue(Vec3D(1.,0.,0.));
 
-        for (int pf=0;pf<4;pf++) T.Boundaryfield().PatchField(pf).AssignValue(Scalar(0.));
-            T.Boundaryfield().PatchField(2).AssignValue(Scalar(1.));
+        for (int pf=0;pf<4;pf++) h.Boundaryfield().PatchField(pf).AssignValue(Scalar(0.));
+            h.Boundaryfield().PatchField(2).AssignValue(Scalar(1.));
 
 		//2. U Calculation
 		//UEqn=FvImp::Div_CDS(phi, U)-FvImp::Laplacian(k,U);//TO MODIFY WITH CONVECTION SCHEME
@@ -306,11 +307,18 @@ int main(int argc,char **args)
         /////////////////////////////////
         //Flux for transport eqn is cT=h
         //d(rho c T)/dt + Div(rho c T U) - Div . (k Grad (cT) ) = ScT
+        //tauij=mu(dui/dxj+duj/dxi)
 
+        cout << "Phi values: "<<endl;
+        cout << phi.outstr()<<endl;
         //h=cp*T;
         TEqn=( FvImp::Div(phi, h)-FvImp::Laplacian(k,h) );
         Solve(TEqn);
+        TEqn==0.;
         h=TEqn.Field();
+        cout << "Enthalpy value: "<<endl;
+        for (int e=0;e<TEqn.Num_Eqn();e++)cout <<TEqn.Eqn(e).Source().outstr()<<endl;
+        cout << TEqn.outstr()<<endl;
         //T=h;
 
         //HERE MUSt BE T=h/cp,
