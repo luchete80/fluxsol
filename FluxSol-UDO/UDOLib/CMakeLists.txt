@@ -10,7 +10,7 @@ project(${NAME})
 
 set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
 
-set (FLUXSOL_LIB_DIR ${FLUXSOL_DIR}/Bin/FluxSol)
+set (FLUXSOL_LIB_DIR ${FLUXSOL_LIB_DIR})
 
 set (LASPACK_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/laspack/src)
 set (CGNS_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src)
@@ -41,7 +41,7 @@ link_directories(${ALGLIB_LIBRARY_DIRS})
 link_directories(${LASPACK_LIBRARY_DIRS})
 link_directories (${FLUXSOL_LIB_DIR})
 
-set (FLUXSOL_SRC_DIR "$ENV{FLUXSOL_DIR}/Src/FluxSol-Solver")
+set (FLUXSOL_SRC_DIR "$ENV{FLUXSOL_BIN_DIR}/Src/FluxSol-Solver")
 
 set (FLUXSOL_LIB fluxsollib)
 
@@ -131,4 +131,4 @@ install (FILES ${NAME}.h DESTINATION include)
 set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all-symbols")
 
 add_library(${NAME} SHARED ${SOURCES})
-#target_link_libraries (${NAME} fluxsollib)
+target_link_libraries (${NAME} fluxsollib)
