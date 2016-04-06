@@ -46,7 +46,7 @@ int main(int argc,char **args)
 	cout << "Opening "<< inputFileName <<endl;
 	InputFile input(inputFileName);
 
-	bool orth_mesh=false;
+	bool orth_mesh=true;
     string meshfname=input.section("grid",0).get_string("file");
 	Fv_CC_Grid mesh(meshfname);
 	mesh.Log("Log.txt");

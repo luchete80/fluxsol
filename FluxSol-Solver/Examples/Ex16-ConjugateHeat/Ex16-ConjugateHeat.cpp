@@ -313,8 +313,8 @@ int main(int argc,char **args)
         cout << phi.outstr()<<endl;
         //h=cp*T;
         TEqn=( FvImp::Div(phi, h)-FvImp::Laplacian(k,h) );
-        Solve(TEqn);
         TEqn==0.;
+        Solve(TEqn);
         h=TEqn.Field();
         cout << "Enthalpy value: "<<endl;
         for (int e=0;e<TEqn.Num_Eqn();e++)cout <<TEqn.Eqn(e).Source().outstr()<<endl;
@@ -420,6 +420,7 @@ int main(int argc,char **args)
 	vF=interp.Interpolate(p);
     OutputFile("VertexField-p.vtu",vF);
 
+    h.Boundaryfield().PatchField(2).AssignValue(1.);
     vF=interp.Interpolate(h);
     OutputFile("VertexField-h.vtu",vF);
 
