@@ -144,6 +144,9 @@ int main(int argc,char **args)
 	time_t starttimec,endtimec;
 	int it=0;
 
+    _BoundaryField<Vec3D>  bf =U.Boundaryfield();   //Temp pbf
+    _BoundaryField<Scalar>pbf =p.Boundaryfield();   //Temp bf
+
 	vector <double> ures;
 	while (it <100)
 	{
@@ -155,7 +158,7 @@ int main(int argc,char **args)
       //Boundary Conditions
 //        Pressure gradient is null at all walls
         for (int pf=0;pf<4;pf++) p.Boundaryfield().PatchField(pf).AssignValue(0.0);
-        //p.Val(36,0.);    //Reference Pressure
+        p.Val(0,0.);    //Reference Pressure
 
 //        h.Boundaryfield().PatchField(1).AssignValue(0.0);
 //        h.Boundaryfield().PatchField(3).AssignValue(0.0);
@@ -181,7 +184,7 @@ int main(int argc,char **args)
         //TO Modify (Simply correct an internal field constant value)
         //Like Update field Boundary Values
         for (int pf=0;pf<4;pf++) U.Boundaryfield().PatchField(pf).AssignValue(Vec3D(0.,0.,0.));
-        U.Boundaryfield().PatchField(1).AssignValue(Vec3D(1.,0.,0.));
+        U.Boundaryfield().PatchField(2).AssignValue(Vec3D(1.,0.,0.));
 
         for (int pf=0;pf<4;pf++) h.Boundaryfield().PatchField(pf).AssignValue(Scalar(0.));
             h.Boundaryfield().PatchField(2).AssignValue(Scalar(1.));
@@ -395,6 +398,8 @@ int main(int argc,char **args)
             uant[nu]=U.Val(nu);
             pant[nu]=p.Val(nu);
         }
+            U.AssignBoundaryField(bf);
+            p.AssignBoundaryField(pbf);
 
         it++;
 //        _CC_Fv_Field <Vec3D> test(mesh);
@@ -436,3 +441,234 @@ int main(int argc,char **args)
 	//	---- The End -------
 	return 0;
 }
+
+
+
+
+//    cout << "[I] Initializing fields ..."<<endl;
+//    alpha_p=0.3;
+//    alpha_u=0.7;
+//    k=1.;
+//    rho=1.;
+//
+//    this->InitFields();
+//}
+
+//    //TO MODIFY
+//    bf =U.Boundaryfield();
+//    pbf =p.Boundaryfield();
+//
+//
+//    UEqn.InitField(U);
+//    pEqn.InitField(p);
+//
+//    //Test
+//    //GeomSurfaceField <Vec3D> meshSf=this->mesh.Sf();
+//    meshSf=this->mesh.Sf();
+//
+//    cout << "[I] Field initialized"<<endl;
+//
+//
+//
+//        cout << "Solving iteration..."<<endl;
+//
+//            ittime_end = clock();
+//
+//            U.Boundaryfield().ApplyBC();
+//            p.Boundaryfield().ApplyBC();
+//
+//
+//            ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+//            itlog << scientific <<ittime_spent <<" " ;
+//                    //2. U Calculation
+//                    //UEqn=FvImp::Div_CDS(phi, U)-FvImp::Laplacian(k,U);//TO MODIFY WITH CONVECTION SCHEME
+//
+//            UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
+//
+//            //cout << "Eqn Log"<<endl<<UEqn.outstr()<<endl;
+//            //cout << "End Log"<<endl;
+//
+//            ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+//            ittime_end = clock();
+//            itlog << std::setprecision(6)<<ittime_spent <<" " ;
+//    //
+//    //              //4. Solve Momentum predictor (UEqn)
+//                    //Solve(UEqn==-FvExp::Grad(p));
+//                    //_CC_Fv_Field<Vec3D> pru2(-FvExp::Grad(p));
+//            //TO MODIFY: IF MESH IS NOT ASSIGNED PREVIOUSLY TO EQUAL, ERROR
+//                    _CC_Fv_Field <Vec3D> gradpV(mesh);
+//                    gradpV=-FvExp::GradV(p);
+//                    //Correct boundary conditions, by imposing zero pressure gradient at wall
+//
+//
+//                    //UEqn==gradpV;
+//                    UEqn==(1.-alpha_u)/alpha_u*(UEqn.A()*U)+gradpV;
+//
+//            ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+//            ittime_end = clock();
+//            ittime_temp=clock();
+//            itlog << ittime_spent <<" " ;
+//
+//                            //TO MODIFY
+//                    UEqn.Relax();   //This MUST INCLUDE R VECTOR
+//
+//            FluxSol::Solve(UEqn);
+//
+//            ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+//            ittime_end = clock();
+//            itlog << ittime_spent <<" " ;
+//
+//            ittime_temp=clock();
+//
+//            //UEqn.Field(); GetNShowTimeSpent("phi_calc: test Field() function ");
+//                    U=UEqn.Field(); //GetNShowTimeSpent("phi_calc: U Creation");
+//
+//            //TO MODIFY
+//            //Mesh Volume
+//            AUr=mesh.Vp()/UEqn.A();       //GetNShowTimeSpent("phi_calc: Aur=V/A");// In OpenFoam these are scalar
+//
+//    //        //Assign to U Eqn Solved values
+//            //_Surf_Fv_Field <Vec3D> Uf_;//GetNShowTimeSpent("phi_calc: Uf Creation");
+//            //Uf_=FvExp::Interpolate(U);  //GetNShowTimeSpent("phi_calc: Uf interpolation");//Uf Overbar
+//
+//
+//
+//            AUrf_=FvExp::Interpolate(AUr);//GetNShowTimeSpent("phi_calc: AUr interpolation");
+//
+//
+//            //INSTEAD OF
+//            Gradpf_=FvExp::Interpolate(FvExp::Grad(p));//GetNShowTimeSpent("phi_calc: Gradp Interpolate");
+//
+//    //
+//    //        //Rhie-Chow Correction
+//    //        //vf=vf_ - Df (Grad(p)-Grad_(p))
+//    //        //Where Grad(p)=(pn-pp)/.. + Orth Correction
+//    //        //Is more simple to directly calculate fluxes
+//            //Obtaining m*, RhieChow Interpolated Flux
+//            //phi=phi - AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) );
+//            //phi=Uf_ & mesh.Sf();//GetNShowTimeSpent("phi_calc: InnerProd U . Sf");
+//            //phi=FvExp::Interpolate(U) & meshSf;
+//            //phi= phi - alpha_u*AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & mesh.Sf()) ); //GetNShowTimeSpent("phi_calc: Rhie Chow");
+//            phi= (FvExp::Interpolate(U) & meshSf) - alpha_u*AUrf_*( FvExp::SnGrad(p) - ( Gradpf_ & meshSf ) );
+//
+//            ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+//            ittime_end = clock();
+//            itlog << ittime_spent <<" " ;
+//
+//
+//            //TO MODIFY
+//            //IF THERE ARE WALLS
+//            //To modify FvExp::Interpolate
+//            //
+//            // TO MODIFY
+//            for (int pa=0;pa<mesh.vBoundary().Num_Patches();pa++)
+//            {
+//                //cout << "Velocity val"<<bf.PatchField(pa).ConstValue().outstr()<<endl;
+//                for (int f=0;f<mesh.vBoundary().vPatch(pa).Num_Faces();f++)
+//                {
+//                    int idface=mesh.vBoundary().vPatch(pa).Id_Face(f);
+//                    //_FvFace face=mesh.Face(idface);  //TO MODIFY idface or face pos??
+//
+//                    Scalar val;
+//                    //if (!face.Is_Null_Flux_Face())
+//                    if (bf.PatchField(pa).Type()==FIXEDVALUE)
+//                    {
+//                        //If constant value
+//                        val=bf.PatchField(pa).ConstValue() & mesh.Face(idface).Af();
+//                        //cout << "boundary val"<<val.outstr()<<endl;
+//                        phi.Val(idface,val);
+//                    }
+//                    else //fixedgradient
+//                    {
+//
+//                    }
+//                }
+//            }
+//            //phi.Boundaryfield().ApplyBC();
+//
+//
+//        //for (int i=0;i<mesh.vBoundary().Num_Patches();i++)
+//        //    cout << "patch " << i << "cvalue phi" << phi.Boundaryfield().PatchField(i).ConstValue().outstr()<<endl;
+//
+//
+//
+//    //        cout << "Corrected phi"<<phi.outstr()<< endl;
+//    //
+//    //              //8. Define and Solve Pressure Correction And Repeat
+//    //              //Div(mf)=Div(m´f+m*f)=0 ==> Div(m*f)+Div(-rho(DfGrad(p´f)Af)=0
+//    //        //We solve pressure correction in cell centers but eqn is indeed for cell faces
+//    //              //THIS IS INSIDE DIV ALGORITHM Sum(-rhof (Df) Grad(p´f)Af + Sum (m*f) = 0
+//    //              //for the prescribed for the non orth steps
+//
+//            ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+//            ittime_end = clock();
+//            itlog << ittime_spent <<" " ;
+//
+//            pEqn=FvImp::Laplacian(rho*AUr,p);   //Solve Laplacian for p (by the way, is p´)
+//            //GetNShowTimeSpent("peqn Laplacian (LHS)==");
+//
+//            //FvExp::Div(phi);GetNShowTimeSpent("Temp Ext div");
+//            pEqn==FvExp::Div(phi);GetNShowTimeSpent("Ext div + operator==");
+//
+//            ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+//            ittime_end = clock();
+//            itlog << ittime_spent <<" " ;
+//
+//            Scalar sum;
+//            for (int c=0;c<p.Numberofvals();c++)
+//            {
+//                sum+=pEqn.Eqn(c).Source().Norm();
+//            }
+//
+//            //pEqn.Eqn(36).SetValueCondition(0.);
+//            //Solve(pEqn==FvExp::Div(phi)); //Simply sum fluxes through faces
+//
+//            //FluxSol::Solve(pEqn);
+//            PETSC_GAMGSolver <double>pSolver;
+//            pSolver.Solve(pEqn);
+//
+//            ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+//            ittime_end = clock();
+//            itlog << ittime_spent <<" " ;
+//            //Important:
+//            //Since Correction is in flux we have yet the faces areas includes, then
+//            //we must not to compute inner product another time
+//            //BEING BUILT
+//            //Nodal are corrected with Gauss grad and central coeffs
+//            pcorr=pEqn.Field();
+//            //U=U-alpha_u*(AUr*FvExp::Grad(pEqn.Field()));                  //up=up*-Dp*Grad(p´_p), GAUSS GRADIENT
+//            //p=p+alpha_p*pEqn.Field();
+//            U=U-alpha_u*( AUr*FvExp::Grad(pcorr) );
+//            p=p+alpha_p*pcorr;
+//
+//            //Correct Flux: m = m* + m´
+//            //phi=phi-FvExp::SnGrad(AUr*p);   //Add deferred correction to this gradient
+//            //Correct WITH P CORRECTION
+//            //_CC_Fv_Field<Scalar> pcorr(mesh);   //TO MODIFY; ASSIGN MESH AUTOMATICALLY
+//
+//            //pcorr=pEqn.Field();
+//            phi= phi - alpha_u*AUrf_*FvExp::SnGrad(pcorr);
+//            //phi= phi - alpha_u*AUrf_*FvExp::SnGrad(pEqn.Field());
+//
+//            ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+//            ittime_end = clock();
+//            itlog << ittime_spent <<" " ;  //phi Corr
+//
+//            //TO MODIFY, CORRECT THIS
+//            //phi=phi-alpha_u*(AUrf_*FvExp::SnGrad(prod));
+//
+//            //cout << "grad p" <<FvExp::Grad(p).Val(0).outstr()<<endl;
+//            //cout << "AU Val(0)" <<AU.Val(0).outstr()<<endl;
+//            //cout << "AU*FvExp::Grad(p)"<<(AU*FvExp::Grad(p)).Val(0).outstr()<<endl;
+//            //cout << "U(0) Val: "<<U.Val(0).outstr()<<endl;
+//
+//            Vec3D maxudiff=0.;
+//            Scalar maxpdiff=0.;
+//            Scalar maxphidiff=0.;
+//
+//
+//
+//            // THESE ASSIGS MUST BE INSIDE ITERATIONS!!!! THESE COPIES CVALUES
+//            U.AssignBoundaryField(bf);
+//            p.AssignBoundaryField(pbf);
+
