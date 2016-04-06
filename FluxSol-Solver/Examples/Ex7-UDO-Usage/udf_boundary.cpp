@@ -4,10 +4,16 @@ using namespace FluxSol;
 
 void ufield::Calculate()
 {
-	for (int i=0;i<)
+
+    cout << "UDF Calculating"<<endl;
+	Scalar x;
+	double xveloc;
+
+	for (int f=0;f<this->_Patch().Num_Faces();f++)
 	{
-		Vec3D xyz=this->;
-		this->val[i]=;
+		x=this->_Patch().Face(f).Center()[0]-0.5;
+		xveloc=(0.25-(x.Val()*x.Val()))*100.0;
+		this->value[f]=Vec3D(xveloc,0.,0.);
 	}
 }
 

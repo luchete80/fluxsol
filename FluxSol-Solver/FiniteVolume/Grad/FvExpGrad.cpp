@@ -403,8 +403,103 @@ namespace FluxSol
         // FACEFI=AT FACES
         // FI_FO = (AT FACES )
 
+
         //AT FIRST IS A GAUSS GRADIENT
         //TO MODIFY: USE ANOTHER TYPE OF GRADIENTAND CALL GRAD SChEME
+
+//          //THIS IS THE OLD SEZAI
+//        template<class T>
+//        _CC_Fv_Field
+//        <typename outerProduct<Vec3D, T>::type >
+//        NonOrthGrad(const _CC_Fv_Field <T> & field)
+//        {
+//
+//            _CC_Fv_Field < typename outerProduct<Vec3D, T>::type > r(field.Grid());
+//
+//            int cell[2];
+//            std::set<int>::iterator it;
+//            std::set<int> *nff=&field.IntNetFluxFaces();
+//
+//            //Cell center Gauss Gradient
+//            _CC_Fv_Field < typename outerProduct<Vec3D, T>::type > gradp= FvExp::Grad (field);
+//
+//
+//
+//            //Field Interpolation
+//            _CC_Fv_Field < typename outerProduct<Vec3D, T>::type > fi_fo(field.Grid());
+//
+//            //Gradient Interpolation
+//            GeomSurfaceField < typename outerProduct<Vec3D, T>::type > grad_fo = Interpolate(gradp);
+//
+//            GeomSurfaceField <T> field_f(field);
+//
+//            GeomSurfaceField <T> facefi=Interpolate(field);    //INITIAL VALUES OF FACEFI
+//            Vec3D fo_f;
+//
+//            double afdir[2];afdir[0]=1.;afdir[1]=-1.;
+//
+//            bool end=false;
+//            int numcorr=5;
+//            int corrit=0;
+//
+//
+//            // NON ORTHOGONAL CORRECTIONS
+//            // Calculate gradient at faces
+//            while (!end)
+//            {
+//
+//                fi_fo=0.;
+//                for (int f=0;f<r.Grid().Num_Faces();f++)
+//                {
+//                    for (int fc=0;fc<r.Grid().Face(f).NumCells();fc++)
+//                    {
+//                        int c=r.Grid().Face(f).Cell(fc);
+//                        fi_fo[c]+=r.Grid().Face(f).Af()*facefi[f]*afdir[fc];
+//                    }
+//                }
+//
+//                r=0.;
+//                //Loop through Net Flux Faces (nff) via iterator
+//                for (it=nff->begin(); it!=nff->end(); ++it)
+//                {
+//                    int f=*it;
+//                    cell[0]=field.ConstGrid().Face(f).Cell(0);
+//
+//                    fo_f=   field.ConstGrid().Face(f).Dist_pf_LR(0)- (
+//                            ( field.ConstGrid().Face(f).Dist_pf_LR(0) & (field.ConstGrid().Face(f).e_PN()) ) *
+//                             field.ConstGrid().Face(f).e_PN() );
+//    //                       //Dist_pf_LR
+//
+//                    field_f[f]=fi_fo[f]+grad_fo[f]&fo_f;        // EQN (2)
+//
+//                    //For each cell neighbour to face
+//                    for (int c=0;c<2;c++)
+//                    {
+//                        cell[c]=field.ConstGrid().Face(f).Cell(c);
+//                        r[ cell[c] ] += field_f [f] * field.ConstGrid().Face(f).Af();
+//                    }
+//
+//                        int c;
+//                    for (c=0,r.Grid().cellit=r.Grid().BeginCell(); r.Grid().cellit!=r.Grid().EndCell(); r.Grid().cellit++,c++)
+//                        r[c]=r[c]/r.Grid().cellit->Vp();
+//
+//
+//                    grad_fo = Interpolate(r);
+//
+//                }   //For net flux faces
+//
+//
+//                if (corrit <=numcorr)   end=true;
+//                corrit++;
+//            }
+//
+//            return r;
+//        } // End of NonOrthGrad
+
+
+        //FROM NOW ON IS APPLIED FERZINGER-PERIC
+        //CORRECTION
+
         template<class T>
         _CC_Fv_Field
         <typename outerProduct<Vec3D, T>::type >
@@ -500,6 +595,10 @@ namespace FluxSol
             cout <<r.outstr()<<endl;
             return r;
         } // End of NonOrthGrad
+
+
+
+
 
     }//Fin de FvExp
 }//Fin de namespace FluxSol

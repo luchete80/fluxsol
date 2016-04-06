@@ -40,6 +40,10 @@ class _FvFace:public _Face{
 	Vec3D e_pn;											//Vector normalizado entre baricentros
 	double dist_pn;										//Distancia entre baricentros, antes se llamaba l
 
+	double dist_pncorr;                                 //Orthogonal correction.
+                                                        //This is the dist_pn projection to normal direction
+                                                        //Is vec_pn*
+
 
 	std::vector <Vec3D>  vec_pf_LR;				//Distancia del baricentro del cell al de la cara
 	std::vector <Vec3D>	 vec_normal_LR;		    //Vector normalizado y su opuesto, el primero apunta P-L y el otro hacia el vecino N-R

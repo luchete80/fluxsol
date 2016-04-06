@@ -196,6 +196,39 @@ void EqnSystem<T>::Insert (const FluxSol::Eqn <T> &ec)
 //FAST EQN SYSTEM OPERATOR==, THIS SUPPOSE THAT ID's ARE THE SAME
 //
 template <typename T>
+EqnSystem <T> & EqnSystem<T>::operator=(const EqnSystem <T> &right)
+	{
+        clock_t ittime_begin, ittime_end;
+        double ittime_spent;
+        ittime_end = clock();
+
+	    this->eqn.clear();
+	    this->GridPtr=right.GridPtr;
+	    this->eqn.resize(right.EqnV().size());
+
+	    this->nbr_eqn.resize(right.nbr_eqn.size());
+        for (int e=0;e<right.EqnV().size();e++)
+        {
+            //this->eqn.push_back(right.Eqn(e));
+            this->eqn[e]=right.Eqn(e);
+        }
+
+//        for (int f=0;f<right.first_nonzero_column.size();f++)
+//            this->first_nonzero_column.push_back(right.first_nonzero_column[f]);
+//
+//        for (int f=0;f<right.nbr_eqn.size();f++)
+//            this->nbr_eqn.push_back(right.nbr_eqn[f]);
+
+        this->dimension=right.dimension;
+
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        ittime_end = clock();
+        cout << "eqnsys operator ="<<ittime_spent <<endl;
+
+        return *this;
+	}
+
+template <typename T>
 Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right)
 {
 

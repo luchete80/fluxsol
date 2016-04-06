@@ -232,37 +232,7 @@ class EqnSystem{   //Es un vector de ecuaciones
 	EqnSystem <T> & operator==(const EqnSystem <T> &right);
 
 //MUST TO EQUAL ALL
-	EqnSystem <T> & operator=(const EqnSystem <T> &right)
-	{
-        clock_t ittime_begin, ittime_end;
-        double ittime_spent;
-        ittime_end = clock();
-
-	    this->eqn.clear();
-	    this->GridPtr=right.GridPtr;
-	    this->eqn.resize(right.EqnV().size());
-
-	    this->nbr_eqn.resize(right.nbr_eqn.size());
-        for (int e=0;e<right.EqnV().size();e++)
-        {
-            //this->eqn.push_back(right.Eqn(e));
-            this->eqn[e]=right.Eqn(e);
-        }
-
-//        for (int f=0;f<right.first_nonzero_column.size();f++)
-//            this->first_nonzero_column.push_back(right.first_nonzero_column[f]);
-//
-//        for (int f=0;f<right.nbr_eqn.size();f++)
-//            this->nbr_eqn.push_back(right.nbr_eqn[f]);
-
-        this->dimension=right.dimension;
-
-        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
-        ittime_end = clock();
-        cout << "eqnsys operator ="<<ittime_spent <<endl;
-
-        return *this;
-	}
+	EqnSystem <T> & operator=(const EqnSystem <T> &right);
 
 
 	EqnSystem <T> operator- (const EqnSystem <T> &right)
