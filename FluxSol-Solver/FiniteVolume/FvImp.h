@@ -84,6 +84,10 @@ template<typename T>
 EqnSystem < T >
 Div(const _CC_Fv_Field <T> &VolField);
 
+//-- TIME DERIVATIVES
+template<typename T>
+EqnSystem <T> Ddt(_CC_Fv_Field <T> &VolField);
+
 };//Fin de FvImp
 
 }//Fin de FluxSol

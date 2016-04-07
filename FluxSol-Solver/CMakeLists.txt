@@ -167,6 +167,7 @@ add_subdirectory(FiniteVolume/Div)
 add_subdirectory(FiniteVolume/Grad)
 add_subdirectory(FiniteVolume/Laplacian)
 add_subdirectory(FiniteVolume/Mesh)
+add_subdirectory(FiniteVolume/Time)
 add_subdirectory(Input)
 add_subdirectory(Interpolation)
 add_subdirectory(Materials)
@@ -214,6 +215,7 @@ add_library(${NAME}lib SHARED FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 												$<TARGET_OBJECTS:Model>
 												$<TARGET_OBJECTS:FvMesh>
 												$<TARGET_OBJECTS:FvGrad>
+												$<TARGET_OBJECTS:FvTime>
 												$<TARGET_OBJECTS:Output>
 												$<TARGET_OBJECTS:SistEcuac>
 												$<TARGET_OBJECTS:Solver>	
@@ -238,6 +240,7 @@ add_library(${NAME}lib_static STATIC FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 														$<TARGET_OBJECTS:Model>														
 														$<TARGET_OBJECTS:FvMesh>
 														$<TARGET_OBJECTS:FvGrad>
+														$<TARGET_OBJECTS:FvTime>
 														$<TARGET_OBJECTS:Output>
 														$<TARGET_OBJECTS:SistEcuac>
 														$<TARGET_OBJECTS:Solver>	
