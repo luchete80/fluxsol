@@ -1,0 +1,265 @@
+This is XeTeX, Version 3.14159265-2.6-0.99992 (MiKTeX 2.9 64-bit) (preloaded format=xelatex 2016.4.6)  6 APR 2016 20:39
+entering extended mode
+**./manual.tex
+(manual.tex
+LaTeX2e <2015/10/01> patch level 2
+Babel <3.9n> and hyphenation patterns for 69 languages loaded.
+("D:\Programas\MiKTeX 2.9\tex\latex\base\article.cls"
+Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
+("D:\Programas\MiKTeX 2.9\tex\latex\base\size10.clo"
+File: size10.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+("D:\Programas\MiKTeX 2.9\tex\latex\base\inputenc.sty"
+Package: inputenc 2015/03/17 v1.2c Input encoding file
+\inpenc@prehook=\toks14
+\inpenc@posthook=\toks15
+
+
+Package inputenc Warning: inputenc package ignored with utf8 based engines.
+
+) ("D:\Programas\MiKTeX 2.9\tex\generic\babel\babel.sty"
+Package: babel 2016/01/08 3.9n The Babel package
+
+*************************************
+* Local config file bblopts.cfg used
+*
+("D:\Programas\MiKTeX 2.9\tex\latex\00miktex\bblopts.cfg"
+File: bblopts.cfg 2006/07/31 v1.0 MiKTeX 'babel' configuration
+)
+("D:\Programas\MiKTeX 2.9\tex\latex\babel-english\english.ldf"
+Language: english 2012/08/20 v3.3p English support from the babel system
+
+("D:\Programas\MiKTeX 2.9\tex\generic\babel\babel.def"
+File: babel.def 2016/01/08 3.9n Babel common definitions
+\babel@savecnt=\count87
+\U@D=\dimen103
+
+("D:\Programas\MiKTeX 2.9\tex\generic\babel\xebabel.def"))
+\l@canadian = a dialect from \language\l@american 
+\l@australian = a dialect from \language\l@british 
+\l@newzealand = a dialect from \language\l@british 
+))
+("D:\Programas\MiKTeX 2.9\tex\latex\geometry\geometry.sty"
+Package: geometry 2010/09/12 v5.6 Page Geometry
+
+("D:\Programas\MiKTeX 2.9\tex\latex\graphics\keyval.sty"
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks16
+)
+("D:\Programas\MiKTeX 2.9\tex\generic\oberdiek\ifpdf.sty"
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is not detected.
+)
+("D:\Programas\MiKTeX 2.9\tex\generic\oberdiek\ifvtex.sty"
+Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+)
+("D:\Programas\MiKTeX 2.9\tex\generic\ifxetex\ifxetex.sty"
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+\Gm@cnth=\count88
+\Gm@cntv=\count89
+\c@Gm@tempcnt=\count90
+\Gm@bindingoffset=\dimen104
+\Gm@wd@mp=\dimen105
+\Gm@odd@mp=\dimen106
+\Gm@even@mp=\dimen107
+\Gm@layoutwidth=\dimen108
+\Gm@layoutheight=\dimen109
+\Gm@layouthoffset=\dimen110
+\Gm@layoutvoffset=\dimen111
+\Gm@dimlist=\toks17
+
+("D:\Programas\MiKTeX 2.9\tex\xelatex\xetexconfig\geometry.cfg")) (manual.aux)
+\openout1 = `manual.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(56.9055pt, 483.69684pt, 56.90553pt)
+* v-part:(T,H,B)=(113.81102pt, 617.42479pt, 113.81104pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=483.69684pt
+* \textheight=617.42479pt
+* \oddsidemargin=-15.36449pt
+* \evensidemargin=-15.36449pt
+* \topmargin=4.54103pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=10.0pt
+* \footskip=30.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+Requested font "cmcsc10" at 10.0pt
+Requested font "cmcsc10" at 17.28pt
+Requested font "cmr17" at 24.88pt
+Requested font "cmbx12" at 24.88pt
+Requested font "cmr17" at 20.74pt
+Requested font "cmbx12" at 20.74pt
+Requested font "cmr12" at 14.4pt
+Requested font "cmbx12" at 14.4pt
+Requested font "cmti12" at 14.4pt
+Requested font "cmr12" at 12.0pt
+[1
+
+] (manual.toc
+Requested font "cmbx10" at 10.0pt
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 5.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 5.
+)
+\tf@toc=\write3
+\openout3 = `manual.toc'.
+
+ [1]
+Missing character: There is no “ in font cmr10!
+Missing character: There is no ” in font cmr10!
+Missing character: There is no “ in font cmr10!
+Missing character: There is no ” in font cmr10!
+Missing character: There is no “ in font cmr10!
+Missing character: There is no ” in font cmr10!
+Missing character: There is no “ in font cmr10!
+Missing character: There is no ” in font cmr10!
+Missing character: There is no “ in font cmr10!
+Missing character: There is no ” in font cmr10!
+Missing character: There is no “ in font cmr10!
+Missing character: There is no ” in font cmr10!
+Missing character: There is no “ in font cmr10!
+Missing character: There is no ” in font cmr10!
+
+Underfull \hbox (badness 10000) in paragraph at lines 57--58
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 61--75
+
+ []
+
+Missing character: There is no “ in font cmr10!
+Missing character: There is no ” in font cmr10!
+Missing character: There is no “ in font cmr10!
+Missing character: There is no ” in font cmr10!
+Missing character: There is no “ in font cmr10!
+Missing character: There is no ” in font cmr10!
+Missing character: There is no “ in font cmr10!
+Missing character: There is no ” in font cmr10!
+Missing character: There is no “ in font cmr10!
+Missing character: There is no ” in font cmr10!
+Missing character: There is no “ in font cmr10!
+Missing character: There is no ” in font cmr10!
+Missing character: There is no “ in font cmr10!
+Missing character: There is no ” in font cmr10!
+
+Underfull \hbox (badness 10000) in paragraph at lines 76--117
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 76--117
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 76--117
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 76--117
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 76--117
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 76--117
+
+ []
+
+[2]
+Requested font "cmbx12" at 12.0pt
+Missing character: There is no “ in font cmr10!
+Missing character: There is no ” in font cmr10!
+Missing character: There is no “ in font cmr10!
+Missing character: There is no ” in font cmr10!
+Missing character: There is no “ in font cmr10!
+Missing character: There is no ” in font cmr10!
+
+Underfull \hbox (badness 10000) in paragraph at lines 121--131
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 121--131
+
+ []
+
+[3] (manual.lof)
+\tf@lof=\write4
+\openout4 = `manual.lof'.
+
+ (manual.lot)
+\tf@lot=\write5
+\openout5 = `manual.lot'.
+
+ [4] (manual.aux) )
+(\end occurred inside a group at level 1)
+
+### simple group (level 1) entered at line 112 ({)
+### bottom level 
+Here is how much of TeX's memory you used:
+ 1193 strings out of 428721
+ 15167 string characters out of 3164735
+ 84296 words of memory out of 3000000
+ 4594 multiletter control sequences out of 15000+200000
+ 7319 words of font info for 26 fonts, out of 3000000 for 9000
+ 1096 hyphenation exceptions out of 8191
+ 24i,4n,28p,569b,163s stack positions out of 5000i,500n,10000p,200000b,50000s
+
+Output written on manual.pdf (5 pages).

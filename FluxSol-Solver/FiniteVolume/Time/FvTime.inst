@@ -1,0 +1,9 @@
+namespace FluxSol{
+
+template
+EqnSystem <Scalar> FvImp::Ddt(_CC_Fv_Field <Scalar> &VolField);
+
+template
+EqnSystem <Scalar> FvImp::Ddt(_CC_Fv_Field <Scalar> &VolField);
+
+}
