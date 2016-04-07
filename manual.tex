@@ -24,7 +24,7 @@
 	\centering
 	{\scshape\LARGE Numerical Solutions\par}
 	\vspace{1.5cm}
-	{\Huge\bfseries FluxSol\par}
+	{\Huge\bfseries FluxSol \par}
 	\vspace{0.5cm}
 	{\huge\bfseries Version 0.1.0\par}
 	\vspace{2cm}	
@@ -80,27 +80,28 @@ If the operating system is Windows, it is required mingw-w64.
 Once the code containing UDO is written, it must be compiled. 
 An example of a C++ code is presented below. \\
 File “udf\_boundary.cpp”:\\
+\\
 \#include "udf\_boundary.h"\\
 using namespace FluxSol;\\
 void ufield::Calculate()\\
-{\\
+\{
 \\
-    cout << "UDF Calculating"<<endl;
+    cout \textless\textless "UDF Calculating"\textless\textless endl;\\
 	Scalar x;\\
 	double xveloc;\\
 \\
-	for (int f=0;f<this->\_Patch().Num\_Faces();f++)\\
+	for (int f=0;f<this-\textgreater\_Patch().Num\_Faces();f++)\\
 	\\
-		x=this->\_Patch().Face(f).Center()[0]-0.5;\\
+		x=this-\textgreater\_Patch().Face(f).Center()[0]-0.5;\\
 		xveloc=(0.25-(x.Val()*x.Val()))*100.0;\\
-		this->value[f]=Vec3D(xveloc,0.,0.);\\
+		this-\textgreater value[f]=Vec3D(xveloc,0.,0.);\\
 	\\
-}\\
-File “udf\_boundary.h”:
-\#include "FluxSol.h"
-UD\_VelocityPatchField ufield;
-UDO via command line
-\\
+\}\\ \\
+File “udf\_boundary.h”:\\
+\#include "FluxSol.h"\\
+UD\_VelocityPatchField ufield;\\
+\subsection{UDO via Command Line}
+
 It must be compiled UDO file. The way to do that is running “udogen.bat” or “udogen.sh” depending on system. There are two options: it can be run this file without arguments, or either can be assigned the name of the .cpp file, only if this is only one file. //TO MODIFY
 This file runs at first “CodeWriter.exe” followed by the file containing the code. This is a parsing program which creates another c++ file, named “UDOCreator.cpp”, which is compiled to obtain the shared library file. The bachfile output will ask for the confirmation of the user in order to overwrite libUDO shared library in case of successful compilation.
 \\
@@ -114,6 +115,10 @@ Ending\\
 ./udf\_boundary.h: 0
 Including./udf\_boundary.h
 UDO Ids size1
+
+\subsection{UDO via Graphic User Interface}
+To define an UDO by FluxSol GUI, it must be compiled first.
+
 \subsection{UDO Usage}
 Once compiled the UDO, it can be used by the input file. Here is an example of input file. In the example below, object compiled in the previous example is implemented in the Patch named “BC-2”. To implement an UDO, the parameter “def” followed by their value “UDO”, must be present in the patch parameter list. 
 patch\_1 type

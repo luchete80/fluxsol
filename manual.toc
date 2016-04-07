@@ -2,4 +2,6 @@
 \contentsline {section}{\numberline {1}Introduction}{2}
 \contentsline {section}{\numberline {2}Input File}{2}
 \contentsline {section}{\numberline {3}User Defined Objects (UDOs)}{2}
-\contentsline {subsection}{\numberline {3.1}UDO Usage}{3}
+\contentsline {subsection}{\numberline {3.1}UDO via Command Line}{3}
+\contentsline {subsection}{\numberline {3.2}UDO via Graphic User Interface}{3}
+\contentsline {subsection}{\numberline {3.3}UDO Usage}{3}
