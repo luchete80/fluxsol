@@ -33,6 +33,8 @@
 #include <string>
 #include <vector>
 
+#include "Time_.h"
+
 // ATENCION: ESTOS SON LOS EXTREMOS DE LAS CELDAS, ACA NO SE GUARDA INFORMACION
 // DE PRESION NI VELOCIDAD
 
@@ -68,7 +70,6 @@ class _Grid{
 	//Que conviene???
 	//std::ostringstream hola;
     std::ofstream meshlog;
-
     std::stringstream slog;
 
     std::vector <string> imported_patchnames;  //Imported
@@ -81,7 +82,7 @@ class _Grid{
 	bool inicie_nodes;
 	bool bidim_mesh;
 
-
+    Time time;
 
 	//Geometria
 	//En principio esto puede ser elemento, o celda de cualquier tipo
@@ -145,7 +146,8 @@ class _Grid{
     vector <_Vertex> & Verts(vector<int> indvert);
 	//Devuelvo el vertice v
 	const _Vertex & Vertex(const int &v)const {return vert[v];}
-
+    const Time & _Time () const{return this->time;};
+    void AssignTime(const Time &tim){this->time=tim;}
 
 
     //////////

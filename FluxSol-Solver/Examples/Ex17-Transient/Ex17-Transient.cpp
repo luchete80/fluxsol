@@ -23,6 +23,7 @@
 #include <iostream>
 #include "FluxSol.h"
 #include <time.h>
+#include "Time_.h"      //Time imtegration
 
 using namespace std;
 using namespace FluxSol;
@@ -32,6 +33,9 @@ using namespace FluxSol;
 ///////////////////////////
 // TRANSIENT CONVECTION DIFFUSION
 // RUNS SIMPLE PRESSURE - VELOCITY COUPLING ALGORITHM FROM AN INPUT FILE
+
+//d/dt (rho phi) + d/dx (rho U phi ) = d/dx (k d/dx(phi) ) + S
+// 45 x 1 x 1 cells
 
 stringstream reslog;
 
@@ -46,12 +50,18 @@ int main(int argc,char **args)
 
     //Test();
     //cout << "Now Ex3"<<endl;
-    Fv_CC_Grid mesh(45,1,1,
-                    1.5,1.,1.);
+    const int cellnumber=45;
+    Fv_CC_Grid mesh(cellnumber,1,1.5,1.);
+
+    Time time_;  time_.AdjustDeltat(0.1);
+    mesh.AssignTime(time_);
 	mesh.Log("MeshLog.txt");
 
-	int abfacesl[]={2}; //left
-    int abfacesr[]={23};    //right
+	int abfacesl[]={mesh.Cell(0).Id_Face(1)}; //left Face from left cell
+    int abfacesr[]={mesh.Cell(cellnumber-1).Id_Face(3)};    //right
+
+    cout << "[I]"  << "Boundary faces: "<< abfacesl[0] << ", " << abfacesr[0]<<endl;
+
 	list <int> lbfacesl;	for (int i=0;i<1;i++)	lbfacesl.push_back(abfacesl[i]);
 	list <int> lbfacesr;	for (int i=0;i<1;i++)	lbfacesr.push_back(abfacesr[i]);
 
@@ -85,13 +95,9 @@ int main(int argc,char **args)
 	phi.Boundaryfield().PatchField(0).AssignValue(right);
 
 	// Materiales
-	vector<Materials> material=SetMaterials();
+	vector<Materials> material;
+	//=SetMaterials();
 
-	//string inputFileName="Input.in";
-	//InputFile input(inputFileName);
-
-    //cout << "Creating Mesh..."<<endl;
-	//Fv_CC_Grid mesh(input.section("grid",0).get_string("file"));
 
 	_CC_Fv_Field<Vec3D> U(mesh);
 
