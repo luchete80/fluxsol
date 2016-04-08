@@ -1,5 +1,17 @@
 #include "JobWorker.h"
 
+void Worker::Resume()
+{
+    stopped=false;
+    sync.lock();
+    pause = false;
+    sync.unlock();
+    pauseCond.wakeAll();
+
+    this->Solve();
+}
+
+
 //THIS IS THE FUNCTION RELATED TO QThread
 void Worker::Solve()
 {
@@ -10,6 +22,15 @@ void Worker::Solve()
 
     while (!stopped)
     {
+
+         sync.lock();
+         if(pause)
+        {
+             pauseCond.wait(&sync); // in this place, your thread will stop to execute until someone calls resume
+             cout << "job Paused"<<endl;
+        }
+         sync.unlock();
+
         //cout << "inside while"<<endl;
         model->SolveIter();
 
@@ -22,7 +43,10 @@ void Worker::Solve()
         //msgwin->append(QString::fromStdString(model->ItLog()));
         //msgwin->append(QString::fromStdString( model_itlog ) );
 
-        string str="test\n";
+
+        //QString str=ures.outstr();
+        //QString str=model_itlog;
+        //emit AddMsg(str);
         //emit ChgButton(str);
         //QCoreApplication::processEvents();
         model_itlog+="Iter \n";
@@ -36,7 +60,7 @@ void Worker::Solve()
         iter++;
         if (iter>500)
             {   stopped=true;
-                emit AddMsg("Process terminated.\n");
+                //emit AddMsg("Process terminated.\n");
             }
     }
 
@@ -46,7 +70,7 @@ void Worker::Solve()
 
 void Worker::Stop()
 {
-    emit AddMsg("Stopping Process...\n");
+    //emit AddMsg("Stopping Process...\n");
     if (!stopped)
         stopped=true;
 }

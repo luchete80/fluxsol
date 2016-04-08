@@ -46,6 +46,7 @@ void _Field<T>::Resize(const int &i)
     vector <T> temp(i,0.);
     T t(0.);
     value=temp;
+    prev_value=temp;
 
     //value.push_back(t);
     numberofvals=i;
@@ -59,6 +60,7 @@ Vertex_Fv_Field<T>::Vertex_Fv_Field(const Fv_CC_Grid &grid)
 	T val;
 	int nv= grid.Num_Verts();
 	this->value.assign(nv,val);
+	this->prev_value.assign(nv,val);
 }
 
 template <typename T>

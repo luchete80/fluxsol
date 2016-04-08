@@ -1,0 +1,19 @@
+@echo on
+
+REM setvars.bat
+startsetvars.bat
+
+REM "This will start each file and wait for it to complete and then launch the next one."
+start "" /w /b CodeWriter.exe %~1
+
+del %HOME%/UDO-Lib/bin/CMakeCache.txt
+del %HOME%/UDO-Lib/bin/CMakeFiles/TargetDirectories.txt
+copy UDOCreator .cpp	./src/UDO-Lib
+
+cd %HOME%/UDO-Lib/bin
+copy *.dll %HOME%
+cd %HOME%
+
+cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_CXX_FLAGS="-fpermissive -O3 -DNDEBUG" -DUSE_PETSC=ON -G "CodeBlocks - MinGW Makefiles" ../src
+
+mingw32-make.exe

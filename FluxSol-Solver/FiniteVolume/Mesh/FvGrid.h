@@ -99,8 +99,8 @@ private:
     //generada la malla y cargo la malla rectangular
     //Por que la paso como argumento??
     Fv_CC_Grid(const int &nex,const int &ney,const double &lx,const double &ly);
-  	Fv_CC_Grid(const char *name){fileName=name;this->Read_CGNS();};
-	Fv_CC_Grid(string name){fileName=name;this->Read_CGNS();};
+  	Fv_CC_Grid(const char *name);
+	Fv_CC_Grid(string name);
 	//Constructor para leer desde NASTRAN
 	//El boundary deberia salir solo, pero es bueno para colocarle indices
 	//Colocando al boundary me ahorro el trabajo de buscar caras libres
@@ -130,16 +130,20 @@ private:
 
         //El nodo tiene el mismo indice que el cell
 //        cout << "creating nodes"<<endl;
+        cout << "[I] Creating Nodes from Cell Verts" <<endl;
         for (int cellid=0;cellid<this->Num_Cells();cellid++)
         {
             Cell_CC cell=this->Cell(cellid);
             int globvert;
             Node nod(0.);
             //Recorro los vertices del cell
+//            cout << "Id vert"<<endl;
             for (int n=0;n<cell.Num_Vertex();n++)
             {
+                //cout << cell.Id_Vert(n)<<" ";
                 nod+=this->Vertex(cell.Id_Vert(n));
             }
+            //cout << endl;
             //Ahora divido por la cantidad de vertices
             nod/=(double)cell.Num_Vertex();
             nod.Id(cellid);
@@ -200,6 +204,7 @@ private:
     //////////////////////
 
 	virtual const std::string Read_CGNS();
+	virtual const std::string Read_NASTRAN();
 
     void Log_Conect();
 
@@ -208,32 +213,7 @@ private:
 	// OUTPUT //
 	void Write_vtk();
 
-	Fv_CC_Grid & operator=(const Fv_CC_Grid & right)
-	{
-	    this->num_verts=right.num_verts;						//Este Numero no es constante por si modifico la malla
-														//Si voy a tener vertices tipo baffle no lo voy a tener en cuenta
-        this->num_cells_int=right.num_cells_int;				//Numero de celdas efectivas
-        this->num_faces_int=right.num_faces_int;				//Numero de faces efectivas (INTERIORES)
-        this->num_faces=right.num_faces;
-        this->num_cells=right.num_cells;
-        this->num_verts=right.num_verts;
-
-
-        for (int c=0;c<right.num_cells;c++)
-        {
-            this->cell.push_back(right.Cell(c));
-            this->node.push_back(right.Node_(c));
-        }
-        for (int v=0;v<right.num_verts;v++) this->vert.push_back(right.Vertex(v));
-        for (int f=0;f<right.num_faces;f++) this->face.push_back(right.Face(f));
-
-        this->boundary=right.vBoundary();
-
-        this->SetFaceLocalCellNeighbours(); //New
-        this->Create_IntFaces();
-
-        return *this;
-	}
+	Fv_CC_Grid & operator=(const Fv_CC_Grid & right);
 
 
 	const GeomField <Scalar> Vp() const

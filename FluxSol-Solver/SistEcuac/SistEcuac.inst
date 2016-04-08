@@ -8,6 +8,12 @@ template
 int FluxSol::Eqn<Scalar>::MinNeigbourId();
 
 template
+Eqn<Scalar> Eqn<Scalar>::operator-();
+
+template
+Eqn<Vec3D> Eqn<Vec3D>::operator-();
+
+template
 void FluxSol::EqnSystem<Scalar>::Insert (const FluxSol::Eqn <Scalar> &ec);
 
 template
@@ -18,6 +24,12 @@ Eqn<Vec3D> & Eqn<Vec3D>::operator -(const Eqn<Vec3D> &right);
 
 template
 Eqn<Scalar> & Eqn<Scalar>::operator -(const Eqn<Scalar> &right);
+
+template
+Eqn<Vec3D> & Eqn<Vec3D>::operator +(const Eqn<Vec3D> &right);
+
+template
+Eqn<Scalar> & Eqn<Scalar>::operator +(const Eqn<Scalar> &right);
 
 template
 EqnSystem <Scalar> & EqnSystem <Scalar>::operator==(const double &d);
@@ -62,10 +74,22 @@ template
 EqnSystem <Scalar> EqnSystem<Scalar>::operator-(const EqnSystem<Scalar> &);
 
 template
+EqnSystem <Scalar> EqnSystem<Scalar>::operator+(const EqnSystem<Scalar> &);
+
+template
 EqnSystem <Vec3D> & EqnSystem<Vec3D>::operator==(const _CC_Fv_Field<Vec3D> &field);
 
 template
+EqnSystem <Scalar> & EqnSystem<Scalar>::operator=(const EqnSystem <Scalar> &right);
+
+template
+EqnSystem <Vec3D> & EqnSystem<Vec3D>::operator=(const EqnSystem <Vec3D> &right);
+
+template
 EqnSystem <Vec3D> EqnSystem<Vec3D>::operator- (const EqnSystem<Vec3D> &);
+
+template
+EqnSystem <Vec3D> EqnSystem<Vec3D>::operator+ (const EqnSystem<Vec3D> &);
 
 template
 const vector<double> EqnSystem<Vec3D>::GlobalRes()const;

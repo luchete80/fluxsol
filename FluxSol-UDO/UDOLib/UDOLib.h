@@ -28,6 +28,7 @@
 #include "UDO.h"          //InputBaseContainer
 
 using namespace std;
+using namespace FluxSol;
 
 #endif // _FILESEARCH_H_
 

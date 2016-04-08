@@ -1,0 +1,151 @@
+\documentclass{article}     %Tipo de documento
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\setcounter{secnumdepth}{5} % seting level of numbering (default for "report" is 3). With ''-1'' you have non number also for chapters
+ %\setcounter{tocdepth}{5} % if you want all the levels in your table of contents
+
+ \usepackage{geometry}
+ \geometry{
+ a4paper,
+ total={170mm,217mm},
+ left=20mm,
+ top=40mm,
+ }
+ 
+\title{FluxSol User's Guide \texttt{14pt}}
+\date{October 31, 2016}
+\author{Luciano Buglioni}
+
+
+
+\begin{document}              %Inicio del documento
+
+\begin{titlepage}
+	\centering
+	{\scshape\LARGE Numerical Solutions\par}
+	\vspace{1.5cm}
+	{\Huge\bfseries FluxSol \par}
+	\vspace{0.5cm}
+	{\huge\bfseries Version 0.1.0\par}
+	\vspace{2cm}	
+	{\Large\bfseries User's Guide\par}
+	\vspace{3cm}
+	{\Large\itshape Luciano Buglioni\par}
+	\vfill
+	supervised by\par
+	Dr.~Mark \textsc{Brown}
+
+	\vfill
+
+% Bottom of the page
+	{\large \today\par}
+\end{titlepage}
+
+\pagebreak
+
+
+\tableofcontents
+\pagebreak
+
+\pagebreak
+\section{Introduction}
+
+FluxSol is a multiplatform, opensource CFD solver written in C++.
+FluxSol is released under GNU GPL v.3+.
+\section{Input File}
+
+Input file consist of a plain text document which comprises several fields. Each of these fields consists of a name followed by  “=” character. After this, a corresponding value of the field must to follow, ending with a “;” character. Some other fields (like “material”, “BC”, “patch”), whose values are more than one, do not contain “=” character after, they have instead certain parameters between parentheses, all of them with a parameter id followed by “=” and separated between them with a semicolon. An example of input file is presented below: \\
+
+//Example of Input file.
+
+grid\_1 {
+	file = square.cgns;
+	dimension = 2;
+	solution\_scheme = navier-stokes;
+	material 	(
+				k=1.;
+				rho=1.;);
+	//material(dbname=air);	
+	patch\_1(name=top;type=faces;list=[1,2,3];);	\\	
+	BC\_2 (patch=BC-2;type=wall;U=[1.,0.,0.];);\\
+	BC\_1 (patch=BC-4;type=wall;U=[0.,0.,0.];); \\
+	BC\_3 (patch=BC-3;type=wall;U=0.0;); \\
+	BC\_4 (patch=BC-1;type=wall;U=[0.,0.,0.];);\\	
+}
+\section{User Defined Objects (UDOs)}
+UDO (User Defined Object) represents a custom defined  behavior (value, field, algorithm) which can be given to a different part (material, zone, condition) of the model. For this version it is restricted only to boundary conditions. UDO can be defined by two different ways: by CAE or via command line. In both cases a C++ code must be written and compiled in order to describe this behavior. Once it is compiled, it can be linked during runtime with the solver and thus, it can be implemented. 
+To compile an UDO are required the following:
+- cmake
+If the operating system is Windows, it is required mingw-w64.
+Once the code containing UDO is written, it must be compiled. 
+An example of a C++ code is presented below. \\
+File “udf\_boundary.cpp”:\\
+\\
+\#include "udf\_boundary.h"\\
+using namespace FluxSol;\\
+void ufield::Calculate()\\
+\{
+\\
+    cout \textless\textless "UDF Calculating"\textless\textless endl;\\
+	Scalar x;\\
+	double xveloc;\\
+\\
+	for (int f=0;f<this-\textgreater\_Patch().Num\_Faces();f++)\\
+	\\
+		x=this-\textgreater\_Patch().Face(f).Center()[0]-0.5;\\
+		xveloc=(0.25-(x.Val()*x.Val()))*100.0;\\
+		this-\textgreater value[f]=Vec3D(xveloc,0.,0.);\\
+	\\
+\}\\ \\
+File “udf\_boundary.h”:\\
+\#include "FluxSol.h"\\
+UD\_VelocityPatchField ufield;\\
+\subsection{UDO via Command Line}
+
+It must be compiled UDO file. The way to do that is running “udogen.bat” or “udogen.sh” depending on system. There are two options: it can be run this file without arguments, or either can be assigned the name of the .cpp file, only if this is only one file. //TO MODIFY
+This file runs at first “CodeWriter.exe” followed by the file containing the code. This is a parsing program which creates another c++ file, named “UDOCreator.cpp”, which is compiled to obtain the shared library file. The bachfile output will ask for the confirmation of the user in order to overwrite libUDO shared library in case of successful compilation.
+\\
+This is a classic output of “CodeWriter.exe”\newline
+[I] Reading ...\newline
+[I] Found input file ./udf\_boundary.h \newline
+[I] $10$ lines readed ...\newline
+(Inherited) Defined Class Name: ufield\newline
+Base Class Name: UD\_VelocityPatchField{public:ufield():UD\_VelocityPatchField(){}voidCalculate()\\
+Ending\\
+./udf\_boundary.h: 0
+Including./udf\_boundary.h
+UDO Ids size1
+
+\subsection{UDO via Graphic User Interface}
+To define an UDO by FluxSol GUI, it must be compiled first.
+
+\subsection{UDO Usage}
+Once compiled the UDO, it can be used by the input file. Here is an example of input file. In the example below, object compiled in the previous example is implemented in the Patch named “BC-2”. To implement an UDO, the parameter “def” followed by their value “UDO”, must be present in the patch parameter list. 
+patch\_1 type
+
+grid\_$1$
+	file = Mesh\_Dens\_$10$.cgns;\\
+	solution\_scheme = navier-stokes;\\	
+	patch\_1(type=face;);\\
+	material 	(k=1.;rho=1.;);\\
+	\\//Definition default is by constant value 
+	BC\_1 (patch=BC-2;type=wall;def=UDO;udo=ufield;); 	//Here is called UDO named ufield\\
+	BC\_2 (patch=BC-1;type=wall;U=0.0;);\\
+	BC\_3 (patch=BC-3;type=wall;U=0.0;); \\
+	BC\_4 (patch=BC-4;type=wall;U=[0.,0.,0.];);\\
+
+\pagebreak
+	\begin{figure}
+  \caption{Dummy figure}
+\end{figure}
+
+\begin{table}
+  \caption{Dummy table}
+\end{table}
+...
+
+\begin{appendix}
+\listoffigures
+\listoftables
+\end{appendix}
+\end{document}                  %Final del documento

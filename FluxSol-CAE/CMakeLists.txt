@@ -90,7 +90,7 @@ set (LASPACK_LIBRARY_DIR ${FLUXSOL_DIR}/Libs/laspack/bin)
 set (ALGLIB_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/bin)
 
 
-set (FLUXSOL_LIB_DIR ${FLUXSOL_DIR}/Bin/FluxSol)
+set (FLUXSOL_LIB_DIR "$ENV{FLUXSOL_LIB_DIR}")
 
 
 include_directories(${LASPACK_INCLUDE_DIRS})
@@ -195,7 +195,7 @@ link_directories (${ALGLIB_LIBRARY_DIRS})
 set (FLUXSOL_LIB fluxsollib)
 set (EXTRA_LIBS opengl32 glu32 gdi32)
 
-if (USE_PETSC)
+#if (USE_PETSC)
 	find_package (PETSc REQUIRED HINTS "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/conf")
 	include_directories (..)
 	include_directories ("${MY_PETSC_DIR}/include" "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/include" ${PETSC_INCLUDE_PATH})
@@ -207,7 +207,7 @@ if (USE_PETSC)
 
 	link_directories(${MPI_LIB_DIR})
 	include_directories(${MPI_INC_DIR})
-endif()
+#endif()
 
 
 # Instruct CMake to run moc automatically when needed.

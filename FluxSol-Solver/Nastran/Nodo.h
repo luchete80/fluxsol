@@ -15,10 +15,10 @@ public:
 	Nodo();
 	Nodo(const int &i, const int &sc, vector<double> &coord);
 	Nodo(const double &d);
-	int VerId_Nastran();
-	vector <double> Coords();
+	const int & VerId_Nastran()const;
+	vector <double> & Coords();
 	const int Sc();
-	const int Sc_int();
+	const int & Sc_int()const;
 	const int Pos_Nastran();
 	void Nodo_Cargar_Ubic(const int u);
 	void Cargar_IdSc_Int(const int &val);

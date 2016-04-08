@@ -27,6 +27,8 @@
 #include <vtkOpenGLRenderer.h>
 #endif
 
+#include <QString>
+
 #include "ui_JobSubmitDialog.h"
 
 #include "JobWorker.h"

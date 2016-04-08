@@ -33,7 +33,7 @@ Nodo::Nodo(const int &i, const int &sc, vector<double> &coord)
 	SistCoord=sc;
 }
 
-int Nodo::VerId_Nastran()
+const int & Nodo::VerId_Nastran()const
 {
 	return id;
 }
@@ -48,13 +48,13 @@ void Nodo::Iniciar_Coord_cart(vector<double> &coord)
 	Coord_cart=coord;
 }
 
-const int Nodo::Sc_int()
+const int & Nodo::Sc_int()const
 {
 	return SistCoord_int;
 }
 
 
-vector <double> Nodo::Coords()
+vector <double> & Nodo::Coords()
 {
 	return Coord;
 }

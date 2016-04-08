@@ -10,7 +10,7 @@ project(${NAME})
 
 set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
 
-set (FLUXSOL_LIB_DIR ${FLUXSOL_DIR}/Bin/FluxSol)
+set (FLUXSOL_LIB_DIR ${FLUXSOL_LIB_DIR})
 
 set (LASPACK_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/laspack/src)
 set (CGNS_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src)
@@ -41,7 +41,7 @@ link_directories(${ALGLIB_LIBRARY_DIRS})
 link_directories(${LASPACK_LIBRARY_DIRS})
 link_directories (${FLUXSOL_LIB_DIR})
 
-set (FLUXSOL_SRC_DIR "$ENV{FLUXSOL_DIR}/Src/FluxSol-Solver")
+set (FLUXSOL_SRC_DIR "$ENV{FLUXSOL_BIN_DIR}/Src/FluxSol-Solver")
 
 set (FLUXSOL_LIB fluxsollib)
 
@@ -109,7 +109,15 @@ set (NAME UDO)
 set (SOURCES 
 UDOLib.cpp
 UDOCreator.cpp
-udf_boundary.cpp
+#udf_boundary.cpp
+${FLUXSOL_SRC_DIR}/Input/Input.cpp
+${FLUXSOL_SRC_DIR}/Field/Field.cpp
+${FLUXSOL_SRC_DIR}/Field/PatchField.cpp
+${FLUXSOL_SRC_DIR}/Utils/Utils.cpp
+${FLUXSOL_SRC_DIR}/SistEcuac/SistEcuac.cpp
+${FLUXSOL_SRC_DIR}/Field/BoundaryField.cpp
+${FLUXSOL_SRC_DIR}/Type/Scalar.cpp
+${FLUXSOL_SRC_DIR}/Type/Vec3D.cpp
 ${FLUXSOL_DIR}/Src/FluxSol-UDO/CodeWriter/FileSearch.cpp
 )
 

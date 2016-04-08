@@ -132,10 +132,12 @@ include_directories("${PROJECT_SOURCE_DIR}/Interpolation")
 include_directories("${PROJECT_SOURCE_DIR}/Materials")
 include_directories("${PROJECT_SOURCE_DIR}/Mesh")
 include_directories("${PROJECT_SOURCE_DIR}/Model")
+include_directories("${PROJECT_SOURCE_DIR}/Nastran")
 include_directories("${PROJECT_SOURCE_DIR}/Output")
 include_directories("${PROJECT_SOURCE_DIR}/SistEcuac")
 include_directories("${PROJECT_SOURCE_DIR}/Solver")
 include_directories("${PROJECT_SOURCE_DIR}/Tests")
+include_directories("${PROJECT_SOURCE_DIR}/Time")
 include_directories("${PROJECT_SOURCE_DIR}/Type")
 include_directories("${PROJECT_SOURCE_DIR}/UDO")
 include_directories("${PROJECT_SOURCE_DIR}/Utils")
@@ -166,15 +168,18 @@ add_subdirectory(FiniteVolume/Div)
 add_subdirectory(FiniteVolume/Grad)
 add_subdirectory(FiniteVolume/Laplacian)
 add_subdirectory(FiniteVolume/Mesh)
+add_subdirectory(FiniteVolume/Time)
 add_subdirectory(Input)
 add_subdirectory(Interpolation)
 add_subdirectory(Materials)
 add_subdirectory(Mesh)
 add_subdirectory(Model)
+add_subdirectory(Nastran)
 add_subdirectory(Output)
 add_subdirectory(SistEcuac)
 add_subdirectory(Solver)
 add_subdirectory(Tests)
+add_subdirectory(Time)
 add_subdirectory(Type)
 add_subdirectory(UDO)
 add_subdirectory(Utils)
@@ -201,6 +206,7 @@ if (USE_SHARED_LIB)
 #Before creating library
 set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all-symbols")
 add_library(Type_ SHARED $<TARGET_OBJECTS:Type>)
+add_library(Nastran_ SHARED $<TARGET_OBJECTS:Nastran>)
 add_library(${NAME}lib SHARED FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 												$<TARGET_OBJECTS:Boundary>
 												$<TARGET_OBJECTS:Field>
@@ -209,16 +215,19 @@ add_library(${NAME}lib SHARED FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 												$<TARGET_OBJECTS:Materials>
 												$<TARGET_OBJECTS:Mesh>
 												$<TARGET_OBJECTS:Model>
-												$<TARGET_OBJECTS:FvMesh>												
+												$<TARGET_OBJECTS:FvMesh>
+												$<TARGET_OBJECTS:FvGrad>
+												$<TARGET_OBJECTS:FvTime>
 												$<TARGET_OBJECTS:Output>
 												$<TARGET_OBJECTS:SistEcuac>
 												$<TARGET_OBJECTS:Solver>	
 												$<TARGET_OBJECTS:Tests>
+												$<TARGET_OBJECTS:Time>
 												$<TARGET_OBJECTS:Type>
 												$<TARGET_OBJECTS:Utils>
 											)
 #target_link_libraries (${NAME} ${EXTRA_LIBS} ${EXT_LIBS})
-target_link_libraries (${NAME}lib libUDO ${EXTRA_LIBS} ${EXT_LIBS} )
+target_link_libraries (${NAME}lib libUDO ${EXTRA_LIBS} ${EXT_LIBS} Nastran_ Type_)
 else ()
     set (USE_STATIC_LIB ON)
 endif ()
@@ -233,10 +242,13 @@ add_library(${NAME}lib_static STATIC FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
 														$<TARGET_OBJECTS:Mesh>
 														$<TARGET_OBJECTS:Model>														
 														$<TARGET_OBJECTS:FvMesh>
+														$<TARGET_OBJECTS:FvGrad>
+														$<TARGET_OBJECTS:FvTime>
 														$<TARGET_OBJECTS:Output>
 														$<TARGET_OBJECTS:SistEcuac>
 														$<TARGET_OBJECTS:Solver>	
 														$<TARGET_OBJECTS:Tests>
+														$<TARGET_OBJECTS:Time>
 														$<TARGET_OBJECTS:Type>
 														$<TARGET_OBJECTS:Utils>
 											)

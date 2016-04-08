@@ -1,0 +1,9 @@
+@echo on
+
+%~d0
+cd %~dp0
+set HOME=%~dps0
+set HOME=%HOME:~0,-1%
+
+set CXX=x86_64-w64-mingw32-g++.exe
+set CC=x86_64-w64-mingw32-gcc.exe

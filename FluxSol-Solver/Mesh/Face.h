@@ -85,6 +85,7 @@ class _Face
 		const bool & Boundaryface()const {return boundaryface;}
 		void Null_Flux_Face(bool b){null_flux_face=b;}
 		const bool & Is_Null_Flux_Face()const{return null_flux_face;}
+		const Vec3D & Baric()const{return this->sm;}
 
 		~_Face(){};
 

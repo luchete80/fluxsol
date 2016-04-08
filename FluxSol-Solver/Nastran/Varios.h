@@ -24,7 +24,7 @@ int SearchVal(const int &i,const std::vector <int> &v);
 //Deberia ser inline
 //int & NumVecElemFound(std::vector <int> &ind, std::vector <int> &v);
 
-std::vector <int> & CommonValues(std::vector <int> &ind, std::vector <int> &v);
+std::vector <int> CommonValues(std::vector <int> &ind, std::vector <int> &v);
 bool ValueFound(const int &val, std::vector<int> vec);
 
 //POnerlo como inline

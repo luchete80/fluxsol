@@ -105,7 +105,7 @@
 #include "./Nastran/Cadenas.h"
 #include "./Nastran/Nastran.h"
 #include "./Nastran/SistCoord.h"
-#include "./Nastran/Varios.h"
+#include "Utils.h"
 
 //Output
 #include "OutputFile.h"

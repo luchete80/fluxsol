@@ -196,6 +196,39 @@ void EqnSystem<T>::Insert (const FluxSol::Eqn <T> &ec)
 //FAST EQN SYSTEM OPERATOR==, THIS SUPPOSE THAT ID's ARE THE SAME
 //
 template <typename T>
+EqnSystem <T> & EqnSystem<T>::operator=(const EqnSystem <T> &right)
+	{
+        clock_t ittime_begin, ittime_end;
+        double ittime_spent;
+        ittime_end = clock();
+
+	    this->eqn.clear();
+	    this->GridPtr=right.GridPtr;
+	    this->eqn.resize(right.EqnV().size());
+
+	    this->nbr_eqn.resize(right.nbr_eqn.size());
+        for (int e=0;e<right.EqnV().size();e++)
+        {
+            //this->eqn.push_back(right.Eqn(e));
+            this->eqn[e]=right.Eqn(e);
+        }
+
+//        for (int f=0;f<right.first_nonzero_column.size();f++)
+//            this->first_nonzero_column.push_back(right.first_nonzero_column[f]);
+//
+//        for (int f=0;f<right.nbr_eqn.size();f++)
+//            this->nbr_eqn.push_back(right.nbr_eqn[f]);
+
+        this->dimension=right.dimension;
+
+        ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+        ittime_end = clock();
+        cout << "eqnsys operator ="<<ittime_spent <<endl;
+
+        return *this;
+	}
+
+template <typename T>
 Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right)
 {
 
@@ -220,6 +253,25 @@ Eqn<T> & Eqn<T>::operator==(const Eqn<T> &right)
 
 }
 
+template <typename T>
+Eqn<T> Eqn<T>::operator-()
+{
+    Eqn<T> eq;
+    Scalar _ap;
+    _ap=-this->ap;
+    vector <Scalar> _an;
+    _an.assign(this->num_neighbours,0.);
+    for (int n=0;n<this->num_neighbours;n++)
+        //_an.push_back(-this->an[n]);
+        _an[n]=-this->an[n];
+    T _source;
+    _source=-this->source;
+    //cout << ""
+    //return Eqn<T>(_ap,_an,_source);
+    return Eqn<T>(_ap,_an,_source);
+}
+
+// TO MODIFY: THESE + and - operator do not construct new object
 //Assuming same meshes
 template <typename T>
 Eqn<T> &Eqn<T>::operator-(const Eqn<T> &right)
@@ -228,6 +280,25 @@ Eqn<T> &Eqn<T>::operator-(const Eqn<T> &right)
     *this==right;
     return *this;
 }
+
+//Supposing that stencils are the same
+template <typename T>
+Eqn<T> & Eqn<T>::operator+(const Eqn<T> &right)
+{
+
+//    //T _ap=-this->ap;
+//    vector <T> _an;
+//    //BUG, TO MODIFY, CHECK NEIGHBOURS
+//    for (int n=0;n<this->num_neighbours;n++)
+//        _an.push_back(this->an[n]);
+//
+//    T _source=this->source+right.source;
+//    return Eqn<T>(_ap,_an,_source);
+
+    *this==-right;
+    return *this;
+}
+
 
 //template <typename T>
 //Eqn<T> & Eqn<T>::operator-()
@@ -282,6 +353,43 @@ void EqnSystem<T>::Log(std::string str)
 		file<<"Eqn "<<e<<endl;
 		eqn[e].Log(file);
 	}
+}
+
+template <typename T>
+EqnSystem <T> EqnSystem <T>::operator+ (const EqnSystem <T> &right)
+{
+
+clock_t ittime_begin, ittime_end;
+double ittime_spent;
+
+
+ittime_end = clock();
+
+//cout << "Eqn sizes"<< this->Num_Eqn()<< " "<<right.EqnV().size()<<endl;
+int num_eqn=this->eqn.size();
+    //EqnSystem<T> ret(num_eqn);
+    EqnSystem<T> ret=*this;
+    if (EqnV().size() == right.EqnV().size())
+    {
+        //Check if both eqns have same size
+        for (int e = 0; e<EqnV().size(); e++)
+        {
+            ret.eqn[e] = (this->eqn[e] + right.Eqn(e));
+
+        }
+    }
+    else
+    {
+        cout << "Eqn Systems have different size. Operator == fails"<<endl;
+    }
+
+    ittime_spent = (double)(clock() - ittime_end) / CLOCKS_PER_SEC;
+    ittime_end = clock();
+    cout << "eqnsys operator -  "<<ittime_spent <<endl;
+
+
+    return ret;
+
 }
 //
 //template <typename T>
