@@ -127,7 +127,7 @@ int main(int argc,char **args)
 	int it=0;
 
 	vector <double> ures;
-	while (it <1)
+	while (it <100)
 	{
 
 	    cout << "-----------------------------------------------------------------------------------------------"<<endl;

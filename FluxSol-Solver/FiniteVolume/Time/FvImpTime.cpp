@@ -95,6 +95,7 @@ EqnSystem <T> FvImp::Ddt(_CC_Fv_Field <T> &VolField)
     int c;
     for (c=0,VolField.Grid().cellit=VolField.Grid().BeginCell(); VolField.Grid().cellit!=VolField.Grid().EndCell(); VolField.Grid().cellit++,c++)
     {
+        cout << "cell "<<c<<endl;
         ap=VolField.Grid().cellit->Vp()/dt;
         eqnsys.Eqn(c).Source()=ap*VolField.PrevVal(c);
         eqnsys.Eqn(c).Ap()=ap;
