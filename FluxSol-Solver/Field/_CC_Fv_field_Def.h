@@ -87,10 +87,12 @@ void _CC_Fv_Field<T>::Create_IntNetFluxFaces()
 template <typename T>
 _CC_Fv_Field<T>::_CC_Fv_Field(const Fv_CC_Grid &grid)
 {
+        //TO MODIFY: CALL BASE FIELD CONSTRUCTOR
 		this->GridPtr=&grid;
 		this->value.clear();
 		T val;
 		this->value=vector<T>(this->GridPtr->Num_Cells());
+		this->prev_value=vector<T>(this->GridPtr->Num_Cells());
 
 		//Inicio variables PARA TODOS LOS CELLS (ver luego el borde
         //cout << "Cell Number" << GridPtr->Num_Cells()<<endl;

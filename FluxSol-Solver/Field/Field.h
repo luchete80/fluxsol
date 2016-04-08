@@ -95,6 +95,7 @@ class _Field:
 	}
 	const T & Val(const int &i)const{return value[i];};
 	const T & PrevVal(const int &i) const {return this->prev_value[i];}
+	void StorePrevValues();
 	inline void Val (const int &i,const T &v){this->value[i]=v;}
 	const int & Numberofvals()const{return numberofvals;}
 	void  Insert_Idgrid_domain(const int &i){idgrid_domain.push_back(i);}

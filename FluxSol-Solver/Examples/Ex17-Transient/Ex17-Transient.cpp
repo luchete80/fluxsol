@@ -134,28 +134,28 @@ int main(int argc,char **args)
     //CDEqn=FvImp::Laplacian(kdiff, phi) ;
     //CDEqn.Log("Diffusion Eqn Log.txt");
 
+    //Initial conditions:
+
+
     Scalar tottime=0.01;
     for (Scalar t=0.;t<tottime;t+=mesh._Time().Deltat())
     {
-         CDEqn = ( ( /*FvImp::Ddt(phi) + */ FvImp::Div(FluxField,phi) ) == FvImp::Laplacian(kdiff, phi) );
-//        //ANOTHER OPTION IS
-//        //CDEqn = (FvImp::Laplacian(kdiff, phi) == FvImp::Div(U&mesh.Sf(),phi));
-//        //CDEqn = FvImp::Laplacian(k, phi) ;
-//        //EqnSystem <Scalar> CDEqn(FvImp::Laplacian(k, phi) == FvImp::Div(phi,U));
-//
-//        cout << "Writing log.."<<endl;
-//        CDEqn.Log("CDEqLog.txt");
-//
-//        cout<<"Solving system"<<endl;
-//        Solve(CDEqn);
-//        phi=CDEqn.Field();
-//
-//        cout << "Results"<<endl;
-//        for (int e=0;e<CDEqn.Num_Eqn();e++)
-//        {
-//            cout << phi.Val(e).Val()<<endl;
-//        }
-//
+         CDEqn = ( ( FvImp::Ddt(phi) + FvImp::Div(FluxField,phi) ) == FvImp::Laplacian(kdiff, phi) );
+
+        cout << "Writing log.."<<endl;
+        CDEqn.Log("CDEqLog.txt");
+
+        cout<<"Solving system"<<endl;
+        Solve(CDEqn);
+        phi=CDEqn.Field();
+
+        cout << "Results"<<endl;
+        for (int e=0;e<CDEqn.Num_Eqn();e++)
+        {
+            cout << phi.Val(e).Val()<<endl;
+        }
+
+
     }
 //
 //	//CDEqn.Log("EqLog.txt");
