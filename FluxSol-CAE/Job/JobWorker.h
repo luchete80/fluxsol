@@ -32,6 +32,10 @@ class Worker : public QObject
 
     ResWidgetWorker *resworker;
 
+    QMutex sync;
+    QWaitCondition pauseCond;
+    bool pause;
+
 public slots:
     void doWork(const QString &parameter) {
         // ...
@@ -57,15 +61,30 @@ public slots:
 
     Worker()
     {
+        pause=false;
 
     }
     Worker(const CFDModel &mod)
     {
         iter=0;
         model=&mod;
+        pause=false;
         stopped=false;
         model_itlog="";
     }
+
+    void Resume();
+
+    const bool & isPaused()const{return pause;}
+
+    void Pause()
+    {
+        stopped=true;
+        sync.lock();
+        pause = true;
+        sync.unlock();
+    }
+
 
     signals:
     void resultReady(const QString &result);

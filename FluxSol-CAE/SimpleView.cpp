@@ -957,8 +957,8 @@ void SimpleView::slotImportIn()
         //TO Modify, at first is only a CFD Model
         //GraphicCFDModel model(fileName.toStdString());
 
-        string s="inputldc10.in";
-        GraphicCFDModel model(s);
+        //string s="inputldc10.in";
+        GraphicCFDModel model(fileName.toStdString());
 
 
         cout << "Input file has been successfully imported."<<endl;
