@@ -112,16 +112,10 @@ public:
         this->source=val;
     }
 
-	Eqn<T> operator-()
-	{
-	    Eqn<T> eq;
-	    T _ap=-this->ap;
-	    vector <T> _an;
-	    for (int n=0;n<this->num_neighbours;n++)
-            _an.push_back(-this->an[n]);
+	Eqn<T> operator-();
 
-        return Eqn<T>(_ap,_an);
-    }
+        //Supposing that stencils are the same
+    Eqn<T> & operator+(const Eqn<T> &right);
 
 	//Binary operators
 	//Eqn<T> & operator +(const Eqn<T> &right);
@@ -273,6 +267,8 @@ class EqnSystem{   //Es un vector de ecuaciones
         return ret;
 
 	}
+
+    EqnSystem <T> operator+ (const EqnSystem <T> &right);
 
 	EqnSystem <T> & operator==(const _CC_Fv_Field<T> &field);
 
