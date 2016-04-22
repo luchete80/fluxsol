@@ -1,6 +1,12 @@
 namespace FluxSol {
 
 template
+void _Field<Scalar>::StorePrevValues();
+
+template
+void _Field<Vec3D>::StorePrevValues();
+
+template
 void _Field<Scalar>::Resize(const int &i);
 template
 void _Field<Vec3D>::Resize(const int &i);

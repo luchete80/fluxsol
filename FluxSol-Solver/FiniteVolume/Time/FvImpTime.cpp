@@ -91,13 +91,16 @@ EqnSystem <T> FvImp::Ddt(_CC_Fv_Field <T> &VolField)
     int pcellid;
     std::set<int>::iterator it;
 
+    cout << "Obtaining Delta t"<<endl;
     Scalar dt=VolField.Grid()._Time().Deltat();
     int c;
     for (c=0,VolField.Grid().cellit=VolField.Grid().BeginCell(); VolField.Grid().cellit!=VolField.Grid().EndCell(); VolField.Grid().cellit++,c++)
     {
         cout << "cell "<<c<<endl;
         ap=VolField.Grid().cellit->Vp()/dt;
+        cout << "Obtaining previous field value"<<endl;
         eqnsys.Eqn(c).Source()=ap*VolField.PrevVal(c);
+        cout << "Obtaining ap"<<endl;
         eqnsys.Eqn(c).Ap()=ap;
 
     }
