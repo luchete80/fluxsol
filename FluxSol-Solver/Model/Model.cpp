@@ -341,6 +341,8 @@ void CFDModel::SolveIter()
 
             UEqn=FvImp::Div(phi, U)-FvImp::Laplacian(k,U);
 
+            cout << "Previous residuals.."<<endl;
+
             //cout << "Eqn Log"<<endl<<UEqn.outstr()<<endl;
             //cout << "End Log"<<endl;
 
