@@ -223,7 +223,7 @@ namespace FluxSol
             T v;
             this->value.assign(field.Numberofvals(),v);
             this->GridPtr=&field.Grid();
-            this->StorePrevValues();
+            //this->StorePrevValues();
             for (int c=0;c<field.Numberofvals();c++)
                 this->value[c]=field.Val(c);
 
