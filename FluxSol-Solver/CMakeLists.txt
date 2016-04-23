@@ -113,7 +113,7 @@ if (USE_PETSC)
 
 endif ()
 
-set (CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR}/../)
+set (CMAKE_INSTALL_PREFIX ${FLUXSOL_DIR}/bin)
 
 # add to the include search path
 include_directories(.)
@@ -263,7 +263,7 @@ endif()
 
 ### INSTALL ####
 
-install (TARGETS ${NAME}lib DESTINATION lib)
+install (TARGETS ${NAME}lib DESTINATION .)
 install (FILES ${NAME}.h DESTINATION include)
 
 #FLUXSOL EXECUTABLE

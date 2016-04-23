@@ -127,6 +127,7 @@ FILE(GLOB _header
   ${CMAKE_SOURCE_DIR}/${NAME}/*.h
   )
 install (FILES ${NAME}.h DESTINATION include)
+install (install (TARGETS ${NAME}lib DESTINATION UDO-Lib)
 
 set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all-symbols")
 
