@@ -12,7 +12,7 @@ option (USE_PETSC "Enable PETSc support (required for parallel)" ON)
 option (USE_METIS "Enable METIS support	                       " OFF)
 if (${CMAKE_VERSION} VERSION_GREATER "2.8.7") # Compability with older version of cmake
     option (USE_SHARED_LIB "Build shared library" ON)
-    option (USE_STATIC_LIB "Build static library" ON)
+    option (USE_STATIC_LIB "Build static library" OFF)
 endif ()
 option (DEBUG_MODE "Enable FLUXSOL DEBUG" OFF)
 
@@ -174,6 +174,7 @@ add_subdirectory(Interpolation)
 add_subdirectory(Materials)
 add_subdirectory(Mesh)
 add_subdirectory(Model)
+add_subdirectory(model/StatThermoFluidSol)
 add_subdirectory(Nastran)
 add_subdirectory(Output)
 add_subdirectory(SistEcuac)
@@ -195,7 +196,17 @@ set (SOURCES
 FluxSol.cpp
 )
 
-
+add_library(fluxsol-Boundary  SHARED $<TARGET_OBJECTS:Boundary>)
+add_library(fluxsol-Field     SHARED $<TARGET_OBJECTS:Field>)
+add_library(fluxsol-FvMesh    SHARED $<TARGET_OBJECTS:FvMesh> $<TARGET_OBJECTS:Mesh>)
+add_library(fluxsol-IO        SHARED $<TARGET_OBJECTS:Input> $<TARGET_OBJECTS:Output>)
+add_library(fluxsol-Laplacian SHARED $<TARGET_OBJECTS:Laplacian>)
+add_library(fluxsol-FvGrad    SHARED $<TARGET_OBJECTS:FvGrad>)
+add_library(fluxsol-Model     SHARED $<TARGET_OBJECTS:Model>)
+add_library(fluxsol-Solver    SHARED $<TARGET_OBJECTS:Solver>)
+add_library(fluxsol-Type      SHARED $<TARGET_OBJECTS:Type>)
+add_library(fluxsol-Utils     SHARED $<TARGET_OBJECTS:Utils>)
+add_library(fluxsol-EqnSys    SHARED $<TARGET_OBJECTS:SistEcuac>)
 
 #Para cuando agregue las librerias
 #target_link_libraries (fluxsol ${FCFD_LIBS} ${EXTRA_LIBS})
@@ -208,23 +219,10 @@ set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all-symbols")
 add_library(Type_ SHARED $<TARGET_OBJECTS:Type>)
 add_library(Nastran_ SHARED $<TARGET_OBJECTS:Nastran>)
 add_library(${NAME}lib SHARED FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
-												$<TARGET_OBJECTS:Boundary>
-												$<TARGET_OBJECTS:Field>
-												$<TARGET_OBJECTS:Input>
-												$<TARGET_OBJECTS:Laplacian>
 												$<TARGET_OBJECTS:Materials>
-												$<TARGET_OBJECTS:Mesh>
-												$<TARGET_OBJECTS:Model>
-												$<TARGET_OBJECTS:FvMesh>
-												$<TARGET_OBJECTS:FvGrad>
 												$<TARGET_OBJECTS:FvTime>
-												$<TARGET_OBJECTS:Output>
-												$<TARGET_OBJECTS:SistEcuac>
-												$<TARGET_OBJECTS:Solver>	
 												$<TARGET_OBJECTS:Tests>
 												$<TARGET_OBJECTS:Time>
-												$<TARGET_OBJECTS:Type>
-												$<TARGET_OBJECTS:Utils>
 											)
 #target_link_libraries (${NAME} ${EXTRA_LIBS} ${EXT_LIBS})
 target_link_libraries (${NAME}lib libUDO ${EXTRA_LIBS} ${EXT_LIBS} Nastran_ Type_)
@@ -233,40 +231,62 @@ else ()
 endif ()
 
 if (USE_STATIC_LIB)
-add_library(${NAME}lib_static STATIC FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
-														$<TARGET_OBJECTS:Boundary>
-														$<TARGET_OBJECTS:Field>
-														$<TARGET_OBJECTS:Input>
-														$<TARGET_OBJECTS:Laplacian>
-														$<TARGET_OBJECTS:Materials>														
-														$<TARGET_OBJECTS:Mesh>
-														$<TARGET_OBJECTS:Model>														
-														$<TARGET_OBJECTS:FvMesh>
-														$<TARGET_OBJECTS:FvGrad>
-														$<TARGET_OBJECTS:FvTime>
-														$<TARGET_OBJECTS:Output>
-														$<TARGET_OBJECTS:SistEcuac>
-														$<TARGET_OBJECTS:Solver>	
-														$<TARGET_OBJECTS:Tests>
-														$<TARGET_OBJECTS:Time>
-														$<TARGET_OBJECTS:Type>
-														$<TARGET_OBJECTS:Utils>
-											)
+# add_library(${NAME}lib_static STATIC FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
+														# $<TARGET_OBJECTS:Boundary>
+														# $<TARGET_OBJECTS:Field>
+														# $<TARGET_OBJECTS:IO>
+														# $<TARGET_OBJECTS:Laplacian>
+														# $<TARGET_OBJECTS:Materials>														
+														# $<TARGET_OBJECTS:Mesh>														
+														# $<TARGET_OBJECTS:FvGrad>
+														# $<TARGET_OBJECTS:FvTime>
+														# $<TARGET_OBJECTS:SistEcuac>
+														# $<TARGET_OBJECTS:Solver>	
+														# $<TARGET_OBJECTS:Tests>
+														# $<TARGET_OBJECTS:Time>
+														# $<TARGET_OBJECTS:Type>
+														# $<TARGET_OBJECTS:Utils>
+											# )
 
-											## PETSC
+# ## PETSC
 
 #target_link_libraries (${NAME} ${EXTRA_LIBS} ${EXT_LIBS})
-target_link_libraries (${NAME}lib_static ${EXTRA_LIBS} ${EXT_LIBS})
+#target_link_libraries (${NAME}lib_static ${EXTRA_LIBS} ${EXT_LIBS})
 endif()
 
 
 
 ### INSTALL ####
 
-install (TARGETS ${NAME}lib DESTINATION .)
+install (TARGETS ${NAME}lib DESTINATION bin)
+set (LIBEXTEN dll)
+
+# install (FILES libfluxsol-Boundary.${LIBEXTEN}  DESTINATION lib)
+# install (FILES libfluxsol-Field.${LIBEXTEN}     DESTINATION lib)
+# install (FILES libfluxsol-FvMesh.${LIBEXTEN}    DESTINATION lib)
+# install (FILES libfluxsol-IO.${LIBEXTEN}        DESTINATION lib)
+# install (FILES libfluxsol-Laplacian.${LIBEXTEN} DESTINATION lib)
+# install (FILES libfluxsol-FvGrad.${LIBEXTEN}    DESTINATION lib)
+# install (FILES libfluxsol-Model.${LIBEXTEN}     DESTINATION lib)
+# install (FILES libfluxsol-Solver.${LIBEXTEN}    DESTINATION lib)
+# install (FILES libfluxsol-Type.${LIBEXTEN}      DESTINATION lib)
+# install (FILES libfluxsol-Utils.${LIBEXTEN}     DESTINATION lib)
+# install (FILES libfluxsol-EqnSys.${LIBEXTEN}    DESTINATION lib)
+
 install (FILES ${NAME}.h DESTINATION include)
 
 #FLUXSOL EXECUTABLE
 
 add_executable(${NAME} ${SOURCES} UDO)
-target_link_libraries (${NAME} libUDO ${NAME}lib)
+
+target_link_libraries (fluxsol-EqnSys fluxsol-Type)
+target_link_libraries (fluxsol-IO libUDO fluxsol-EqnSys fluxsol-Laplacian fluxsol-Field fluxsol-Type fluxsol-Utils)
+target_link_libraries (fluxsol-Laplacian fluxsol-EqnSys fluxsol-Field)
+target_link_libraries (fluxsol-FvGrad fluxsol-EqnSys fluxsol-Field)
+target_link_libraries (fluxsol-Model fluxsol-FvGrad fluxsol-Solver fluxsol-Field fluxsol-FvMesh fluxsol-IO fluxsol-Field fluxsol-Type)
+target_link_libraries (fluxsol-FvMesh fluxsol-Type fluxsol-Boundary Nastran_ ${EXTRA_LIBS})
+target_link_libraries (fluxsol-Field fluxsol-Type)
+target_link_libraries (fluxsol-Solver ${EXT_LIBS} fluxsol-Type)
+
+target_link_libraries (${NAME}lib libUDO fluxsol-IO fluxsol-FvMesh fluxsol-Model fluxsol-Solver ${NAME}lib)
+target_link_libraries (${NAME}    libUDO fluxsol-IO ${NAME}lib)

@@ -21,9 +21,6 @@
     see <http://www.gnu.org/licenses/>.
 
 *************************************************************************/
-#ifndef _CC_FVFIELD_DEF_H_
-#define _CC_FVFIELD_DEF_H_
-
 #include "FvField.h"
 
 #include <iostream>
@@ -192,5 +189,4 @@ _CC_Fv_Field<T>::_CC_Fv_Field(const Fv_CC_Grid &grid, const _BoundaryField <T> &
 
 }
 
-#endif
-
+#include "_CC_Fv_field.inst"

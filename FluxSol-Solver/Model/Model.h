@@ -151,7 +151,7 @@ class CFDModel:public Model
 	public:
 
 	void Extract_Cells_and_BoundaryFromNastran();
-	void SolveIter();
+	virtual void SolveIter();
     void InitFields();
 
 	//Constructores
