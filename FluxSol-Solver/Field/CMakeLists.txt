@@ -1,7 +1,6 @@
 set (NAME Field)
 
 set (HEADERS 
-_CC_Fv_field_Def.h
 Field.h
 FieldOperations.h
 FvField.h
@@ -12,6 +11,7 @@ set (SOURCES
 BoundaryField.cpp
 PatchField.cpp
 Field.cpp
+_CC_Fv_field.cpp
 )	
 
 FILE(GLOB _header

@@ -518,7 +518,7 @@ void CFDModel::SolveIter()
             //cout << "grad p" <<FvExp::Grad(p).Val(0).outstr()<<endl;
             //cout << "AU Val(0)" <<AU.Val(0).outstr()<<endl;
             //cout << "AU*FvExp::Grad(p)"<<(AU*FvExp::Grad(p)).Val(0).outstr()<<endl;
-            //cout << "U(0) Val: "<<U.Val(0).outstr()<<endl;
+            //cout << "U(0) Val: Ite"<<U.Val(0).outstr()<<endl;
 
             Vec3D maxudiff=0.;
             Scalar maxpdiff=0.;

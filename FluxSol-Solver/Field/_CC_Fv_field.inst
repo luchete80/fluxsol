@@ -1,0 +1,54 @@
+/************************************************************************
+
+	Copyright 2012-2014 Luciano Buglioni - Pablo Zitelli
+
+	Contacts:
+        Luciano Buglioni: luciano.buglioni@gmail.com
+        Pablo Zitelli:    zitelli.pablo@gmail.com
+	This file is a part of FluxSol
+
+	FluxSol is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    any later version.
+
+    FluxSol is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    For a copy of the GNU General Public License,
+    see <http://www.gnu.org/licenses/>.
+
+*************************************************************************/
+
+namespace FluxSol
+{
+template
+void _CC_Fv_Field<Scalar>::Create_IntNetFluxFaces();
+template
+_CC_Fv_Field<Scalar>::_CC_Fv_Field(const Fv_CC_Grid &grid);
+template
+_CC_Fv_Field<Scalar>::_CC_Fv_Field(const Fv_CC_Grid *grid);
+template
+_CC_Fv_Field<Scalar>::_CC_Fv_Field(const Fv_CC_Grid &grid, const vector <Scalar*> vp);
+template
+_CC_Fv_Field<Scalar>::_CC_Fv_Field(const Fv_CC_Grid *grid, const vector <Scalar*> vp);
+template
+_CC_Fv_Field<Scalar>::_CC_Fv_Field(const Fv_CC_Grid &grid, const _BoundaryField <Scalar> &bfield);
+
+template
+void _CC_Fv_Field<Vec3D>::Create_IntNetFluxFaces();
+template
+_CC_Fv_Field<Vec3D>::_CC_Fv_Field(const Fv_CC_Grid &grid);
+template
+_CC_Fv_Field<Vec3D>::_CC_Fv_Field(const Fv_CC_Grid *grid);
+template
+_CC_Fv_Field<Vec3D>::_CC_Fv_Field(const Fv_CC_Grid &grid, const vector <Vec3D*> vp);
+template
+_CC_Fv_Field<Vec3D>::_CC_Fv_Field(const Fv_CC_Grid *grid, const vector <Vec3D*> vp);
+template
+_CC_Fv_Field<Vec3D>::_CC_Fv_Field(const Fv_CC_Grid &grid, const _BoundaryField <Vec3D> &bfield);
+}
+
+
