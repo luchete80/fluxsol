@@ -1062,6 +1062,7 @@ void SimpleView::slotImportIn()
       vjobsubmitdialog.push_back(new JobSubmitDialog (*this->vmodel[0] , this)); //Model and parent
       //vjobsubmitdialog[0]->exec();
       vjobsubmitdialog[0]->show();
+      this->ui->ModelTree->AddJobDialog(vjobsubmitdialog[0]);
 
         AddJobToTree();
 

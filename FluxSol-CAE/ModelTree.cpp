@@ -39,17 +39,19 @@ ModelTreeWidget::ModelTreeWidget(QWidget *parent)
     pdialog=new ParamDialog();
     managebcdlg=new ManageBCDialog(this);
 
+    //QMenu menu;
+    bcmenu=new QMenu();
+    bccreate=new QAction(tr("&Create ..."),bcmenu);
+    QAction *bcmanage=new QAction(tr("&Manage..."),bcmenu);
+    //menu.addAction("Create ...");
+    bcmenu->addAction(bccreate);
+    bcmenu->addAction(bcmanage);
 
-                //QMenu menu;
-            bcmenu=new QMenu();
-            bccreate=new QAction(tr("&Create ..."),bcmenu);
-            QAction *bcmanage=new QAction(tr("&Manage..."),bcmenu);
-            //menu.addAction("Create ...");
-            bcmenu->addAction(bccreate);
-            bcmenu->addAction(bcmanage);
-
-            connect(bccreate, SIGNAL(triggered()), this,SLOT(ShowNewBC()));
-            connect(bcmanage, SIGNAL(triggered()), this,SLOT(ShowManageBC()));
+    jobmenu=new QMenu();
+    jobshowresults=new QAction(tr("&Show Results ..."),bcmenu);
+    jobmenu->addAction(jobshowresults);
+    connect(bccreate, SIGNAL(triggered()), this,SLOT(ShowNewBC()));
+    connect(bcmanage, SIGNAL(triggered()), this,SLOT(ShowManageBC()));
 
 }
 
@@ -59,18 +61,13 @@ void ModelTreeWidget::showContextMenu(const QPoint &pos)
 {
 
       QTreeWidgetItem* item = itemAt(pos);
-      if (item->text(0)=="Jobs") //text from column 0, TO MODIFY; MUST BE ADDED: ITEM LEVEL MUST BE ZERO
+      if (item->text(0)=="Job-1") //text from column 0, TO MODIFY; MUST BE ADDED: ITEM LEVEL MUST BE ZERO
                                  // && Item Level
         {
             QAction *create=new QAction(tr("&Create ..."),this);
-            //menu.addAction("Create ...");
-            cout << "Clicked"<<endl;
-            system("dir");
 
-//            if (vjobsubmitdialog.size()>0)
-//            {
-//                vjobsubmitdialog[0]->show();
-//            }
+            if (vjobdialog.size()>0)
+                jobmenu->exec(mapToGlobal(pos));
 
         }  //  break;
 
@@ -111,19 +108,23 @@ void ModelTreeWidget::DoubleClickItem(QTreeWidgetItem *item, int column)
       //QTreeWidgetItem* item = itemAt(pos);
       if (item->text(0)=="Jobs") //text from column 0, TO MODIFY; MUST BE ADDED: ITEM LEVEL MUST BE ZERO
                                  // && Item Level
-        {
-            //menu.addAction("Create ...");
-            cout << "Double Clicked Jobs"<<endl;
+    {
+        //menu.addAction("Create ...");
+        cout << "Double Clicked Jobs"<<endl;
 
-        }  //  break;
+    }  //  break;
+    else if (item->text(0)=="Job-1")
+    {
+        if (vjobdialog.size()>0)
+            vjobdialog[0]->show();
+    }
+    else if (item->text(0)=="BCs") //text from column 0, TO MODIFY; MUST BE ADDED: ITEM LEVEL MUST BE ZERO
+                                 // && Item Level
+    {
+        //menu.addAction("Create ...");
+        cout << "Double Clicked BCs..."<<endl;
+        this->pdialog->show();
 
-        else if (item->text(0)=="BCs") //text from column 0, TO MODIFY; MUST BE ADDED: ITEM LEVEL MUST BE ZERO
-                                     // && Item Level
-        {
-            //menu.addAction("Create ...");
-            cout << "Double Clicked BCs..."<<endl;
-            this->pdialog->show();
-
-        }  //  break;
+    }  //  break;
 //
 }

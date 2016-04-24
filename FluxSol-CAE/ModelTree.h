@@ -7,6 +7,7 @@
 
 #include "ParamDialog.h"
 #include "ManageBCDialog.h"
+#include "JobSubmitDialog.h"
 
 #include <QFileDialog>
 
@@ -24,20 +25,27 @@ class ModelTreeWidget : public QTreeWidget
     ParamDialog *pdialog;
     QMenu *bcmenu;
     QAction *bccreate;
+    QAction *jobshowresults;
+    QMenu *jobmenu;
+    vector <JobSubmitDialog *> vjobdialog;
 
     ManageBCDialog *managebcdlg;
 
 public:
     ModelTreeWidget(QWidget *parent = 0);
+    void AddJobDialog(JobSubmitDialog *dialog)
+    {
+        this->vjobdialog.push_back(dialog);
+    }
 
 private slots:
     void showContextMenu(const QPoint &pos);    //right click
     void DoubleClickItem(QTreeWidgetItem *item, int column);
 
     void test()
-{
-    cout << "Click"<<endl;
-}
+    {
+        cout << "Click"<<endl;
+    }
 
     void slotOpenFile()
     {
@@ -49,6 +57,9 @@ private slots:
     }
     void ShowNewBC(){pdialog->show();}
     void ShowManageBC(){this->managebcdlg->show();}
+
+    signals:
+    void ShowResults();
 
 };
 #endif // _MODELTREE_H_
