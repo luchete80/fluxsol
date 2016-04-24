@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99992 (MiKTeX 2.9 64-bit) (preloaded format=xelatex 2016.4.6)  22 APR 2016 20:04
+This is XeTeX, Version 3.14159265-2.6-0.99992 (MiKTeX 2.9 64-bit) (preloaded format=xelatex 2016.4.6)  23 APR 2016 09:49
 entering extended mode
 **./manual.tex
 (manual.tex
@@ -146,9 +146,9 @@ Requested font "cmr12" at 12.0pt
 ] (manual.toc
 Requested font "cmbx10" at 10.0pt
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 5.
+(Font)              <7> on input line 7.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 5.
+(Font)              <5> on input line 7.
 )
 \tf@toc=\write3
 \openout3 = `manual.toc'.
@@ -178,55 +178,57 @@ Underfull \hbox (badness 10000) in paragraph at lines 61--75
 
  []
 
+Requested font "cmbx12" at 12.0pt
 Missing character: There is no “ in font cmr10!
 Missing character: There is no ” in font cmr10!
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 87.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 104.
+
 ("D:\Programas\MiKTeX 2.9\tex\latex\base\omscmr.fd"
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 87.
-LaTeX Font Info:    Try loading font information for OML+cmr on input line 89.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 104.
+LaTeX Font Info:    Try loading font information for OML+cmr on input line 106.
+
 
 ("D:\Programas\MiKTeX 2.9\tex\latex\base\omlcmr.fd"
 File: omlcmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <10> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 89.
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 106.
 Missing character: There is no “ in font cmr10!
 Missing character: There is no ” in font cmr10!
 
-Underfull \hbox (badness 10000) in paragraph at lines 76--103
+Underfull \hbox (badness 10000) in paragraph at lines 93--120
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 76--103
+Underfull \hbox (badness 10000) in paragraph at lines 93--120
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 76--103
+Underfull \hbox (badness 10000) in paragraph at lines 93--120
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 76--103
+Underfull \hbox (badness 10000) in paragraph at lines 93--120
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 76--103
+Underfull \hbox (badness 10000) in paragraph at lines 93--120
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 76--103
+Underfull \hbox (badness 10000) in paragraph at lines 93--120
 
  []
 
 [2]
-Requested font "cmbx12" at 12.0pt
 Missing character: There is no “ in font cmr10!
 Missing character: There is no ” in font cmr10!
 Missing character: There is no “ in font cmr10!
@@ -237,6 +239,7 @@ Missing character: There is no “ in font cmr10!
 Missing character: There is no ” in font cmr10!
 Missing character: There is no “ in font cmr10!
 Missing character: There is no ” in font cmr10!
+ [3]
 Missing character: There is no “ in font cmr10!
 Missing character: There is no ” in font cmr10!
 Missing character: There is no “ in font cmr10!
@@ -244,16 +247,16 @@ Missing character: There is no ” in font cmr10!
 Missing character: There is no “ in font cmr10!
 Missing character: There is no ” in font cmr10!
 
-Underfull \hbox (badness 10000) in paragraph at lines 126--136
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 126--136
+Underfull \hbox (badness 10000) in paragraph at lines 143--153
 
  []
 
-[3] (manual.lof)
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--153
+
+ []
+
+[4] (manual.lof)
 \tf@lof=\write4
 \openout4 = `manual.lof'.
 
@@ -261,18 +264,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 126--136
 \tf@lot=\write5
 \openout5 = `manual.lot'.
 
- [4] (manual.aux) )
+ [5] (manual.aux) )
 (\end occurred inside a group at level 1)
 
-### simple group (level 1) entered at line 113 ({)
+### simple group (level 1) entered at line 130 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
  1228 strings out of 428721
  15667 string characters out of 3164735
- 83296 words of memory out of 3000000
+ 84296 words of memory out of 3000000
  4623 multiletter control sequences out of 15000+200000
  7319 words of font info for 26 fonts, out of 3000000 for 9000
  1096 hyphenation exceptions out of 8191
  24i,4n,28p,569b,163s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on manual.pdf (5 pages).
+Output written on manual.pdf (6 pages).

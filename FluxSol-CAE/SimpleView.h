@@ -183,6 +183,7 @@ public slots:
 	protected:
 	    virtual void ImportMesh(const string &filename);
 	    virtual void AddMeshToTree(const Fv_CC_Grid &mesh); //To Modify, specify which model and mesh
+	    virtual void AddJobToTree();
 
 protected slots:
 

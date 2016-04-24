@@ -67,6 +67,11 @@ void ModelTreeWidget::showContextMenu(const QPoint &pos)
             cout << "Clicked"<<endl;
             system("dir");
 
+//            if (vjobsubmitdialog.size()>0)
+//            {
+//                vjobsubmitdialog[0]->show();
+//            }
+
         }  //  break;
 
         else if (item->text(0)=="BCs") //text from column 0, TO MODIFY; MUST BE ADDED: ITEM LEVEL MUST BE ZERO

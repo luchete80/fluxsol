@@ -273,3 +273,27 @@ void SimpleView::AddMeshToTree(const Fv_CC_Grid &mesh)
 
       //ADD PATCHES
 }
+
+//TO MODIFY: MOVE TO IMPORTMODEL
+
+void SimpleView::AddJobToTree()
+{
+    QList<QTreeWidgetItem*> items = this->ui->ModelTree->findItems("Jobs",Qt::MatchContains|Qt::MatchRecursive);
+    //int num = items.count();
+    //items = this->ui->ModelTree->findItems("Jobs",Qt::MatchExactly);
+    if (items.count()>0)
+    {
+        QTreeWidgetItem *partitem ;
+        partitem = new QTreeWidgetItem;
+        QIcon meshicon;
+        meshicon.addFile(QStringLiteral(":/Icons/GridSelectVertex.png"), QSize(), QIcon::Normal, QIcon::Off);
+        partitem->setText( 0, "Job-1" );
+        partitem->setIcon(0,meshicon);
+        items[0]->addChild(partitem);
+    }
+    else
+    {
+        cout << "Parts does not found..."<<endl;
+    }
+    //vjobsubmitdialog[0]->show();
+}

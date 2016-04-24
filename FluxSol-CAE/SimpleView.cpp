@@ -1055,7 +1055,7 @@ void SimpleView::slotImportIn()
 
       //this->vmodel.push_back(new GraphicCFDModel(model));
       this->vmodel.push_back(new GraphicCFDModel(fileName.toStdString()));
-      this->vmodel[0]->SolveIter();
+      //this->vmodel[0]->SolveIter();
       //ui->MsgWin->AddString(this->vmodel[0]->ItLog());
 
 
@@ -1063,6 +1063,7 @@ void SimpleView::slotImportIn()
       //vjobsubmitdialog[0]->exec();
       vjobsubmitdialog[0]->show();
 
+        AddJobToTree();
 
     }//If not filename Empty
 		//loadFile(fileName);

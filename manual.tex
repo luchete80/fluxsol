@@ -54,7 +54,7 @@ FluxSol is a multiplatform, opensource CFD solver written in C++.
 FluxSol is released under GNU GPL v.3+.
 \section{Input File}
 
-Input file consist of a plain text document which comprises several fields. Each of these fields consists of a name followed by  “=” character. After this, a corresponding value of the field must to follow, ending with a “;” character. Some other fields (like “material”, “BC”, “patch”), whose values are more than one, do not contain “=” character after, they have instead certain parameters between parentheses, all of them with a parameter id followed by “=” and separated between them with a semicolon. An example of input file is presented below: \\
+Input file is used by the solver to identify mesh, boundary conditions, schemes, and all the required fields. Format of this file is entirely based on "free-cfd" solver. Input file consist of a plain text document which comprises several fields. Each of these fields consists of a name followed by  “=” character. After this, a corresponding value of the field must to follow, ending with a “;” character. Some other fields (like “material”, “BC”, “patch”), whose values are more than one, do not contain “=” character after, they have instead certain parameters between parentheses, all of them with a parameter id followed by “=” and separated between them with a semicolon. An example of input file is presented below: \\
 
 //Example of Input file.
 
@@ -72,6 +72,23 @@ grid\_1 {
 	BC\_3 (patch=BC-3;type=wall;U=0.0;); \\
 	BC\_4 (patch=BC-1;type=wall;U=[0.,0.,0.];);\\	
 }
+
+\section{Nastran File Format}
+FluxSol allows to import from Nastran file format. In order to include a Nastran mesh in one input file, the importer will check if the file extension is either ".bdf" or ".nas". 
+\section {Input File}
+
+\section{Models}
+In order to organize different type of system to be solved, FluxSol comes with different clasess each one containing different time schemes and equations systems. Each one of these models have an own solver which calls it. Access to these solvers can be done directly by command line, or, can be automatically done by the FluxSol executable. 
+\subsection{StatFluidSol}
+This is an stationary, segregated fluid model solver by the SIMPLE algorithm.
+It can be found as StatFluidSol.
+\subsection{StatFluidModel}
+\subsection{StatThermoFluidSol}
+This is an stationary, segregated SIMPLE fluid model solver and coupled with temperature.
+It can be found as StatFluidSol.
+\subsection{StatFluidModel}
+\section{Models}
+
 \section{User Defined Objects (UDOs)}
 UDO (User Defined Object) represents a custom defined  behavior (value, field, algorithm) which can be given to a different part (material, zone, condition) of the model. For this version it is restricted only to boundary conditions. UDO can be defined by two different ways: by CAE or via command line. In both cases a C++ code must be written and compiled in order to describe this behavior. Once it is compiled, it can be linked during runtime with the solver and thus, it can be implemented. 
 To compile an UDO are required the following:
