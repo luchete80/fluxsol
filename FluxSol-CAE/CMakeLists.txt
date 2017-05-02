@@ -193,7 +193,20 @@ link_directories (${LASPACK_LIBRARY_DIR})
 link_directories (${ALGLIB_LIBRARY_DIRS})
 
 
-set (FLUXSOL_LIB fluxsol-Model fluxsol-IO fluxsol-EqnSys fluxsol-FvMesh fluxsol-Type)
+set (FLUXSOL_LIB 
+		fluxsol-Model 
+		fluxsol-Field 
+		fluxsol-Boundary
+		fluxsol-Laplacian
+		fluxsol-EqnSys
+		fluxsol-FvGrad
+		fluxsol-IO 
+		fluxsol-EqnSys 
+		fluxsol-FvMesh 
+		fluxsol-Solver
+		fluxsol-Type
+		Type_)
+
 set (EXTRA_LIBS opengl32 glu32 gdi32)
 
 #if (USE_PETSC)
