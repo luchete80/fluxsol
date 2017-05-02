@@ -70,6 +70,7 @@ include_directories("${FLUXSOL_SOLVER_DIR}/SistEcuac")
 include_directories("${FLUXSOL_SOLVER_DIR}/Solver")
 include_directories("${FLUXSOL_SOLVER_DIR}/UDO")
 include_directories("${FLUXSOL_SOLVER_DIR}/Tests")
+include_directories("${FLUXSOL_SOLVER_DIR}/Time")
 include_directories("${FLUXSOL_SOLVER_DIR}/Type")
 include_directories("${FLUXSOL_SOLVER_DIR}/Utils")
 
