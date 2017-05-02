@@ -1,0 +1,5 @@
+v0.0.2
+
+Bugs Found
+1 - App Crash when it does not find a mesh.
+2 - InputE from CGNS Example crash
