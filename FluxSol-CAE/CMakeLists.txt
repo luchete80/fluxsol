@@ -18,7 +18,8 @@ SET(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -static-libgcc")
 set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
 
 #link_directories("/cygdrive/c/cygwin64/lib/gcc/x86_64-w64-mingw32/4.8.2")
-set (FLUXSOL_SOLVER_DIR "${FLUXSOL_DIR}/Src/FluxSol-Solver")
+#set (FLUXSOL_SOLVER_DIR "${FLUXSOL_DIR}/Src/FluxSol-Solver")
+set (FLUXSOL_SOLVER_DIR "$ENV{FLUXSOL_SOLVER_DIR}")
 
 set (NAME FluxSolCAE)
 
@@ -83,12 +84,14 @@ set (MPI_INC_DIR "$ENV{MPI_INC_DIR}")
 set (PARMETIS_DIR "$ENV{PARMETIS_DIR}")
 
 
-set (LASPACK_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/laspack/src)
-set (CGNS_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src)
-set (ALGLIB_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/src)
+set (FLUXSOL_EXTLIBS_DIR "$ENV{FLUXSOL_EXTLIBS_DIR}")
 
-set (LASPACK_LIBRARY_DIR ${FLUXSOL_DIR}/Libs/laspack/bin)
-set (ALGLIB_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/bin)
+set (LASPACK_INCLUDE_DIRS ${FLUXSOL_EXTLIBS_DIR}/laspack/src)
+set (CGNS_INCLUDE_DIRS ${FLUXSOL_EXTLIBS_DIR}/cgnslib_3.2.1/src)
+set (ALGLIB_INCLUDE_DIRS ${FLUXSOL_EXTLIBS_DIR}/alglib-3.8.2/src)
+
+set (LASPACK_LIBRARY_DIR ${FLUXSOL_EXTLIBS_DIR}/laspack/bin)
+set (ALGLIB_LIBRARY_DIRS ${FLUXSOL_EXTLIBS_DIR}/alglib-3.8.2/bin)
 
 
 set (FLUXSOL_LIB_DIR "$ENV{FLUXSOL_LIB_DIR}")
@@ -191,6 +194,9 @@ set( QRCs Icons/icons.qrc )
 link_directories (${FLUXSOL_LIB_DIR})
 link_directories (${LASPACK_LIBRARY_DIR})
 link_directories (${ALGLIB_LIBRARY_DIRS})
+
+set (FLUXSOL_BINLIB_DIR "$ENV{FLUXSOL_BINLIB_DIR}")
+link_directories (${FLUXSOL_BINLIB_DIR})
 
 
 set (FLUXSOL_LIB 

@@ -288,5 +288,5 @@ target_link_libraries (fluxsol-FvMesh fluxsol-Type fluxsol-Boundary Nastran_ ${E
 target_link_libraries (fluxsol-Field fluxsol-Type)
 target_link_libraries (fluxsol-Solver ${EXT_LIBS} fluxsol-Type)
 
-target_link_libraries (${NAME}lib libUDO fluxsol-IO fluxsol-FvMesh fluxsol-Model fluxsol-Solver ${NAME}lib)
-target_link_libraries (${NAME}    libUDO fluxsol-IO ${NAME}lib)
+#target_link_libraries (${NAME}lib libUDO fluxsol-IO fluxsol-FvMesh fluxsol-Model fluxsol-Solver fluxsol-Laplacian fluxsol-FvGrad fluxsol-Field fluxsol-EqnSys fluxsol-Type)
+target_link_libraries (${NAME}    libUDO fluxsol-IO fluxsol-FvMesh fluxsol-Model fluxsol-Solver fluxsol-Laplacian fluxsol-FvGrad fluxsol-Field fluxsol-EqnSys fluxsol-Type)
