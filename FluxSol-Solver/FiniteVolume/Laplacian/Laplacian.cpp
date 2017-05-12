@@ -238,7 +238,7 @@ template<typename T>
 EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 {
 
-
+    //cout << "Solving laplacian" <<endl;
     clock_t ittime_begin, ittime_end;
     double ittime_spent;
 
@@ -247,6 +247,7 @@ EqnSystem <T> FvImp::Laplacian(Scalar fi,_CC_Fv_Field <T> &VolField)
 
     //cout << "Defining eqn..."<<endl;
 	EqnSystem <T> eqnsys(VolField.Grid());
+
 	//cout << "Eqn created."<<endl;
 	//EqnSystem <T> eqnsys(VolField);
 	//EqnSystem <T> eqnsys(VolField.Grid().Num_Cells());   //Como no le doy parametros inicia todo en cero, salvo las dimensiones

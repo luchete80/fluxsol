@@ -429,6 +429,7 @@ int num_eqn=this->eqn.size();
 template <typename T>
 EqnSystem<T>::EqnSystem(const Fv_CC_Grid &FvG)
 {
+    cout << "Creating EqnSys"<<endl;
     this->GridPtr=&FvG;
 	dimension=int(pTraits<T>::rank);
     eqn=std::vector < FluxSol::Eqn <T> >(FvG.Num_Cells());
@@ -446,7 +447,7 @@ EqnSystem<T>::EqnSystem(const Fv_CC_Grid &FvG)
 		//cout << "Neighbours number" <<endl;
 		//_Cell cc(FvGrid.Cell(c));
 		//cout << "Assigned"<<endl;
-		//cout << FvGrid.Cell(c).Num_Neighbours()<<endl;
+		//cout << FvG.Cell(c).Num_Neighbours()<<endl;
 		eqn[c].id=c;
 		eqn[c].ap=ap;eqn[c].source=source;eqn[c].x=0.;
 		eqn[c].an=vector<Scalar>(FvG.Cell(c).Num_Neighbours());

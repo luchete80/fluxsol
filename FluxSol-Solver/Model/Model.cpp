@@ -220,7 +220,7 @@ void CFDModel::Solve()
             ittime_begin = clock();
 
 
-//          cout << "Iteration: "<<iternum+1<< endl;
+          cout << "Iteration: "<<it+1<< endl;
                 //1.Restore Iteration
 
 
@@ -234,28 +234,28 @@ void CFDModel::Solve()
             //TO Modify (Simply correct an internal field constant value)
             //Like Update field Boundary Values
 
-//
-//            Vec3D maxudiff=0.;
-//            Scalar maxpdiff=0.;
-//            Scalar maxphidiff=0.;
-//
-//            for (int nu=0;nu<mesh.Num_Cells();nu++)
-//            {
-//                Vec3D diff=(U.Val(nu)-uant[nu])/U.Val(nu).Norm();
-//                for (int dim=0;dim<3;dim++)
-//                    if (diff[dim]>maxudiff[dim])maxudiff[dim]=diff[dim];
-//
-//                Scalar pdiff=(p.Val(nu)-pant[nu])/p.Val(nu).Norm();
-//                if (pdiff.Val()>maxpdiff.Val())maxpdiff=pdiff;
-//            }
-//
-//
-//            for (int nu=0;nu<mesh.Num_Faces();nu++)
-//            {
-//                Scalar diff=(phi.Val(nu)-phiant[nu])/phi.Val(nu).Norm();
-//
-//                if (diff.Val()>maxphidiff.Val())  maxphidiff=diff;
-//            }
+
+            Vec3D maxudiff=0.;
+            Scalar maxpdiff=0.;
+            Scalar maxphidiff=0.;
+
+            for (int nu=0;nu<mesh.Num_Cells();nu++)
+            {
+                Vec3D diff=(U.Val(nu)-uant[nu])/U.Val(nu).Norm();
+                for (int dim=0;dim<3;dim++)
+                    if (diff[dim]>maxudiff[dim])maxudiff[dim]=diff[dim];
+
+                Scalar pdiff=(p.Val(nu)-pant[nu])/p.Val(nu).Norm();
+                if (pdiff.Val()>maxpdiff.Val())maxpdiff=pdiff;
+            }
+
+
+            for (int nu=0;nu<mesh.Num_Faces();nu++)
+            {
+                Scalar diff=(phi.Val(nu)-phiant[nu])/phi.Val(nu).Norm();
+
+                if (diff.Val()>maxphidiff.Val())  maxphidiff=diff;
+            }
 
             SolveIter();
 //
@@ -329,7 +329,6 @@ void CFDModel::SolveIter()
     cout << "Solving iteration..."<<endl;
 
             ittime_end = clock();
-
             U.Boundaryfield().ApplyBC();
             p.Boundaryfield().ApplyBC();
 

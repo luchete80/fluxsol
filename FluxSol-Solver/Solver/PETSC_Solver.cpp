@@ -42,12 +42,17 @@ void PETSC_KSP_Solver<number>::PETSC_Init()
 
 	char help[100];
 
-	argc=0;
-	args=NULL;
+    // NOT TO USE THIS!! IT IS CRASHING
+	//argc=0;
+	//args=NULL;
+	//
 
+	cout << "Initializing PETSC"<<endl;
 	PetscInitialize(&argc,&args,(char *)0,help);
 
     PetscMPIInt size,rank;
+
+    cout << "PETSC Initialized"<<endl;
 	ierr = MPI_Comm_size(PETSC_COMM_WORLD,&size);CHKERRQ(ierr);
 	ierr = MPI_Comm_rank(PETSC_COMM_WORLD,&rank);CHKERRQ(ierr);
 	if (size != 1) SETERRQ(PETSC_COMM_WORLD,1,"This is a uniprocessor example only!");
@@ -75,7 +80,6 @@ void PETSC_KSP_Solver<number>::PETSC_Init()
 	preallocation of matrix memory is crucial for attaining good
 	performance. See the matrix chapter of the users manual for details.
 	*/
-
     //THIS FUNCTIONS MUST NOT BE CALLED (SLOW ACCORDING TO PETSC MANUAL)
 	ierr = MatCreate(PETSC_COMM_WORLD,&A);CHKERRQ(ierr);	//Instead of create Sij
 	ierr = MatSetSizes(A,PETSC_DECIDE,PETSC_DECIDE,n,n);CHKERRQ(ierr);
@@ -139,7 +143,6 @@ void PETSC_KSP_Solver<number>::PETSC_Init()
 	//B	- The matrix-free
 	//nz	- number of nonzeros per row (same for all rows)
 	//nnz	- array containing the number of nonzeros in the various rows (possibly different for each row) or NULL
-
 
 
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -213,7 +216,7 @@ void PETSC_KSP_Solver<number>::PETSC_Init()
     mat_ord_type=MATORDERINGRCM;
     rowperm = NULL,colperm = NULL;
 
-	cout << "Solver Initialized." <<endl;
+	cout << "[I] Solver Initialized." <<endl;
 
 
 }
