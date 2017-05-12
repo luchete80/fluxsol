@@ -1,0 +1,87 @@
+DE LA PAGINA: http://codeisland.org/2013/codeblocks-dark-theme
+
+Code::Blocks dark theme
+
+ide
+coding
+January 19, 2013 »know-how
+
+Ever since I updated to the new IntelliJ 12 / Webstorm 6 versions, I really like the dark theme they come with. It’s even more fun with my new, bigger screen. I’m finally able to set the font-size to 16.
+
+So, when I was back working on some C++ project, I wanted a dark theme for Code::Blocks, too. Turned out it was a bit more work than I thought.
+
+These steps apply to a Linux System with GTK and Gnome 3! Other systems/configurations have not been tested. Please report your findings in the comments below.
+
+Also, if you don’t care about background, feel free to jump right to the conclusion.
+
+Code::Blocks theme support…
+… is not existing. That is due to the fact that (for portability) Code::Blocks GUI is build using wxWidgets, which offers a “native look & feel on every platform”. This is equivalent to whatever the desktop environment thinks is right.
+
+So, to get a dark theme in Code::Blocks, you need a dark-theme for the whole desktop environment? Yes and no.
+
+Code::Blocks for Linux is explicitly created with the wxGTK port, meaning that the wxWidgets API is wrapped around the Gtk API. So, on Linux, Code::Blocks uses Gtk for it’s GUI.
+
+Now, the wxGTK port is not completely up to date, so it doesn’t use Gtk-3, but the (older) Gtk-2. That is important, because the way themes work has slightly changed between those versions.
+
+For applications which use Gtk-3, Gnome 3 offers a gtk-application-prefer-dark-theme-entry in it’s settings.ini-file, which tells all Gtk-3 apps to use the dark version of the currently set theme (if available, for example the Gnome 3 default-theme, “Adwaita”). This does however not affect Gtk-2 applications (like Code::Blocks).
+
+Also, Gtk-3 applications can decide to not use the dark theme or to always use it (like Eye of Gnome):
+
+GtkSettings *settings = gtk_settings_get_default ();
+g_object_set (G_OBJECT (settings),
+    "gtk-application-prefer-dark-theme", TRUE, NULL
+);
+(From the “Eye of Gnome”-source, main.c line 175)
+
+Dark theme for Gtk2
+So, I went over to Gnome-Look.org and searched for a good, dark Gtk-2 theme and found “Elegant Gnome” to be a good match. I then manually copied the theme itself over to ~/.themes/ and it’s icon-theme to ~/.icons/.
+
+Now, to get Code::Blocks to use the theme, you have two options: Make it the default Gtk-2 theme or tell Code::Blocks to explicitly use the theme-files you downloaded.
+
+I choose the later option. After some research, I stumbled across a Blog-post, where I found the following method:
+
+GTK2_RC_FILES=/path/to/your/theme/gtkrc application
+This temporarily sets the environment-variable GTK2_RC_FILES to the theme-path, for the start of application (in our case codeblocks). Code::Blocks should now have a dark look.
+
+Dark Syntax-Highlighting
+Enlarge
+Code::Blocks Dark
+Now for the Editor. I searched the Code::Blocks forums for nice dark editor-themes and found the “Son of Oblivion”-theme.
+
+Information on how to “install” it can be found here. Tip: In the article, sudo cb_share_cofig is used to set the theme system wide. You can also set it only for you (which might be the better idea) by leaving sudo out and just changing your local settings.
+
+Enable everything as default
+Last but not least, I want Code::Blocks to always start with the dark Gtk-2 theme. If you set the theme system-wide, you don’t need to do this.
+
+I put the command with the temporary theme in a shell-script and changed the /usr/share/applications/codeblocks.desktop-file to read:
+
+[Desktop Entry]
+Exec=/home/luke/.codeblocks/start_dark.sh
+# More stuff down here...
+The script looks like this:
+
+# It's important to give the path to the "gtkrc"-file here!
+GTK2_RC_FILES=~/.themes/Elegant-GTK/gtk-2.0/gtkrc codeblocks
+And now, Code::Blocks is dark.
+
+Getting rid of window-decoration
+Now, I had a black editor and GUI theme, but a white window-titlebar. To get rid of that, I installed the “Maximus” extension for GnomeShell.
+
+The future
+This article might not work a very long time! As posted on the start-page of wxWidgets:
+
+2012-07-09
+wxWidgets 2.9.4 has been officially released. […]
+2.9 series bring many improvements compared to 2.8 series […] Compared to the previous 2.9.3 release, the most important change in this release is beta-level support for GTK+ 3 in wxGTK port.
+we believe that 2.9.4 can be used in production environment […]
+So, it’s a madder of time until Code::Blocks will move on and use Gtk-3, which will then not work with the steps described here. I’ll update the article as soon as I run into problems with this.
+
+Conclusion
+Steps to follow:
+
+Get a dark, Gtk-2 supporting theme (Gnome-Look.org)
+Set the theme as the system-theme or use it for Code::Blocks only
+Get a dark syntax-highlighting theme (Code::Blocks Forum)
+If you choose to only use it for Code::Blocks in step 2, update the launcher
+If you care, remove the white window-titlebar
+Happy coding.

@@ -41,7 +41,7 @@ link_directories(${ALGLIB_LIBRARY_DIRS})
 link_directories(${LASPACK_LIBRARY_DIRS})
 link_directories (${FLUXSOL_LIB_DIR})
 
-set (FLUXSOL_SRC_DIR "$ENV{FLUXSOL_BIN_DIR}/Src/FluxSol-Solver")
+set (FLUXSOL_SRC_DIR "$ENV{FLUXSOL_DIR}/Src/FluxSol-Solver")
 
 set (FLUXSOL_LIB fluxsollib)
 
@@ -65,6 +65,7 @@ include_directories("${FLUXSOL_SRC_DIR}/Output")
 include_directories("${FLUXSOL_SRC_DIR}/SistEcuac")
 include_directories("${FLUXSOL_SRC_DIR}/Solver")
 include_directories("${FLUXSOL_SRC_DIR}/Tests")
+include_directories("${FLUXSOL_SRC_DIR}/Time")
 include_directories("${FLUXSOL_SRC_DIR}/Type")
 include_directories("${FLUXSOL_SRC_DIR}/UDO")
 include_directories("${FLUXSOL_SRC_DIR}/Utils")
@@ -116,6 +117,8 @@ ${FLUXSOL_SRC_DIR}/Field/PatchField.cpp
 ${FLUXSOL_SRC_DIR}/Utils/Utils.cpp
 ${FLUXSOL_SRC_DIR}/SistEcuac/SistEcuac.cpp
 ${FLUXSOL_SRC_DIR}/Field/BoundaryField.cpp
+${FLUXSOL_SRC_DIR}/Field/_CC_Fv_field.cpp
+${FLUXSOL_SRC_DIR}/FiniteVolume/Laplacian/Laplacian.cpp
 ${FLUXSOL_SRC_DIR}/Type/Scalar.cpp
 ${FLUXSOL_SRC_DIR}/Type/Vec3D.cpp
 ${FLUXSOL_DIR}/Src/FluxSol-UDO/CodeWriter/FileSearch.cpp
@@ -127,9 +130,9 @@ FILE(GLOB _header
   ${CMAKE_SOURCE_DIR}/${NAME}/*.h
   )
 install (FILES ${NAME}.h DESTINATION include)
-install (install (TARGETS ${NAME}lib DESTINATION UDO-Lib)
+#install (install (TARGETS ${NAME}lib DESTINATION UDO-Lib))
 
-set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all-symbols")
+#set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all-symbols")
 
 add_library(${NAME} SHARED ${SOURCES})
-target_link_libraries (${NAME} fluxsollib)
+#target_link_libraries (${NAME} fluxsollib)
