@@ -168,8 +168,6 @@ void MyFrame::ConstructVTK()
   pConeActor    = vtkActor::New();
   pConeSource   = vtkConeSource::New();
   
-  pConeSource->Update(); //LUCIANO
-  
 }
 
 void MyFrame::ConfigureVTK()
@@ -185,8 +183,7 @@ void MyFrame::ConfigureVTK()
 
   // connect pipeline
   //pConeMapper->SetInput(pConeSource->GetOutput()); //LUCIANO
-  //pConeMapper->SetInputData(pConeSource->GetOutput()); //LUCIANO
-  pConeMapper->SetInputConnection(pConeSource->GetOutputPort());
+  pConeMapper->SetInputData(pConeSource->GetOutput()); //LUCIANO
   pConeActor->SetMapper(pConeMapper);
   pRenderer->AddActor(pConeActor);
 
@@ -196,9 +193,6 @@ void MyFrame::ConfigureVTK()
   pRenderer->GetActiveCamera()->Azimuth(30.0);
   pRenderer->GetActiveCamera()->Zoom(1.0);
   pRenderer->GetActiveCamera()->SetClippingRange(1,1000);
-  
-  //pRenderer->Render();//LUCIANO
-  
 }
 
 void MyFrame::DestroyVTK()

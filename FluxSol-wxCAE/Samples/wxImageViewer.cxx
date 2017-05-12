@@ -18,6 +18,20 @@
 #include "vtkConeSource.h"
 #include "vtkPolyDataMapper.h"
 #include "vtkActor.h"
+#include "vtkPolyDataReader.h"
+
+#include "vtkPNGReader.h"
+#include "vtkImageMapper.h"
+#include "vtkImageShiftScale.h"
+#include "vtkInteractorStyleImage.h"
+#include "vtkActor2D.h"
+
+#include "vtkImageViewer2.h"
+#include "vtkImageData.h"
+#include "vtkTesting.h"
+#include "vtkTestUtilities.h"
+#include "vtkRegressionTestImage.h"
+
 
 // the application icon
 #ifndef __WXMSW__
@@ -63,6 +77,8 @@ private:
   vtkPolyDataMapper *pConeMapper;
   vtkActor          *pConeActor;
   vtkConeSource     *pConeSource;
+  vtkImageViewer2   *viewer;
+  vtkPNGReader      *reader;
 
 private:
     // any class wishing to process wxWindows events must use this macro
@@ -149,8 +165,8 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
 #endif // wxUSE_STATUSBAR
 
     m_pVTKWindow = new wxVTKRenderWindowInteractor(this, MY_VTK_WINDOW);
+    //turn on mouse grabbing if possible
     m_pVTKWindow->UseCaptureMouseOn();
-//    m_pVTKWindow->DebugOn();
     ConstructVTK();
     ConfigureVTK();
 }
@@ -163,55 +179,33 @@ MyFrame::~MyFrame()
 
 void MyFrame::ConstructVTK()
 {
-  pRenderer     = vtkRenderer::New();
-  pConeMapper   = vtkPolyDataMapper::New();
-  pConeActor    = vtkActor::New();
-  pConeSource   = vtkConeSource::New();
-  
-  pConeSource->Update(); //LUCIANO
-  
+  viewer = vtkImageViewer2::New();
 }
 
 void MyFrame::ConfigureVTK()
 {
-  // connect the render window and wxVTK window
-  pRenderWindow = m_pVTKWindow->GetRenderWindow();
+  char* fname = vtkTestUtilities::ExpandDataFileName(0, 0, "Data/fullhead15.png");
 
-  // connect renderer and render window and configure render window
-  pRenderWindow->AddRenderer(pRenderer);
+  //# Image pipeline
+  reader = vtkPNGReader::New();
+  reader->SetDataSpacing (0.8, 0.8, 1.5);
+  reader->SetFileName ( fname );
+  delete[] fname;
 
-  // initialize cone
-  pConeSource->SetResolution(8);
+  viewer->SetInput ( reader->GetOutput());
+  viewer->SetColorWindow ( 150 );
+  viewer->SetColorLevel ( 170 );
 
-  // connect pipeline
-  //pConeMapper->SetInput(pConeSource->GetOutput()); //LUCIANO
-  //pConeMapper->SetInputData(pConeSource->GetOutput()); //LUCIANO
-  pConeMapper->SetInputConnection(pConeSource->GetOutputPort());
-  pConeActor->SetMapper(pConeMapper);
-  pRenderer->AddActor(pConeActor);
+  //Call vtkImageViewer2::SetInput before
+  viewer->SetupInteractor (  m_pVTKWindow );
 
-  // configure renderer
-  pRenderer->SetBackground(1.0,0.333333,0.5);
-  pRenderer->GetActiveCamera()->Elevation(30.0);
-  pRenderer->GetActiveCamera()->Azimuth(30.0);
-  pRenderer->GetActiveCamera()->Zoom(1.0);
-  pRenderer->GetActiveCamera()->SetClippingRange(1,1000);
-  
-  //pRenderer->Render();//LUCIANO
-  
+  reader->Delete();
 }
 
 void MyFrame::DestroyVTK()
 {
-//http://www.vtk.org/pipermail/vtkusers/2003-September/019894.html
-  if (pRenderer != 0)
-    pRenderer->Delete();
-  if (pConeMapper != 0)
-    pConeMapper->Delete();
-  if (pConeActor != 0)
-    pConeActor->Delete();
-  if (pConeSource != 0)
-    pConeSource->Delete();
+  if (viewer != 0)
+    viewer->Delete();
 }
 
 // event handlers

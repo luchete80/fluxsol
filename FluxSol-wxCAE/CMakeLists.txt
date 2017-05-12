@@ -83,7 +83,7 @@ SET(SRCS_Main
   wxVTKRenderWindowInteractor.cxx
   )
 
-link_directories ("D:\Luciano\Libs\VTK-6.3.0-Install\lib")
+link_directories ("D:/Luciano/Libs/VTK-6.3.0-Install/lib")
   
 IF(NOT VTK_USE_RENDERING)
   MESSAGE(FATAL_ERROR "Cannot build wxVTK without vtkRendering (vtkWidgets)")
@@ -98,8 +98,8 @@ LINK_LIBRARIES(
   vtkFiltersSources #Polydata
   )
 
-ADD_EXECUTABLE(${NAME} ${GUI_EXECUTABLE} ${SRCS_Sample})
-GET_TARGET_PROPERTY(wxSample_PATH wxSample LOCATION)
+ADD_EXECUTABLE(${NAME} ${GUI_EXECUTABLE} ${SRCS_Main})
+GET_TARGET_PROPERTY(wxSample_PATH ${NAME} LOCATION)
 
  IF(APPLE)
    FIND_PROGRAM(APPLE_RESOURCE Rez /Developer/Tools)
@@ -109,13 +109,12 @@ GET_TARGET_PROPERTY(wxSample_PATH wxSample LOCATION)
    ENDIF(APPLE_RESOURCE)
  ENDIF(APPLE)
 
-INSTALL(TARGETS
-	wxSplitSample wxSample wxImagePlaneWidget wxImageViewer wxMedical3
-RUNTIME DESTINATION bin
-BUNDLE DESTINATION bin
-LIBRARY DESTINATION lib
-ARCHIVE DESTINATION lib/static
-)
+#INSTALL(TARGETS ${NAME}
+#RUNTIME DESTINATION "."
+#BUNDLE DESTINATION bin
+#LIBRARY DESTINATION lib
+#ARCHIVE DESTINATION lib/static
+#)
 
 
 ELSE(wxWidgets_FOUND)
