@@ -1,31 +1,4 @@
-/*************************************************************************/
-/*  main.cpp                                                             */
-/*************************************************************************/
-/*                       This file is part of:                           */
-/*                           GODOT ENGINE                                */
-/*                    http://www.godotengine.org                         */
-/*************************************************************************/
-/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */
-/*                                                                       */
-/* Permission is hereby granted, free of charge, to any person obtaining */
-/* a copy of this software and associated documentation files (the       */
-/* "Software"), to deal in the Software without restriction, including   */
-/* without limitation the rights to use, copy, modify, merge, publish,   */
-/* distribute, sublicense, and/or sell copies of the Software, and to    */
-/* permit persons to whom the Software is furnished to do so, subject to */
-/* the following conditions:                                             */
-/*                                                                       */
-/* The above copyright notice and this permission notice shall be        */
-/* included in all copies or substantial portions of the Software.       */
-/*                                                                       */
-/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,       */
-/* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF    */
-/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.*/
-/* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY  */
-/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,  */
-/* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
-/* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
-/*************************************************************************/
+
 #include "main.h"
 #include "os/os.h"
 #include "globals.h"
@@ -53,19 +26,12 @@
 #include "scene/resources/packed_scene.h"
 #include "scene/main/viewport.h"
 
-//#ifdef TOOLS_ENABLED
 #include "tools/editor/editor_node.h"
 #include "tools/editor/project_manager.h"
-
-//#include "tools/pck/pck_packer.h"
-//#endif
 
 #include "io/file_access_network.h"
 #include "tools/doc/doc_data.h"
 
-
-//#include "servers/spatial_sound_server.h"
-//#include "servers/spatial_sound_2d_server.h"
 #include "servers/physics_2d_server.h"
 
 
@@ -1361,9 +1327,9 @@ bool Main::start() {
 
 
 				//singletons
-#ifdef TOOLS_ENABLED
+
 			}
-#endif
+
 		}
 
 //LUCIANO
@@ -1404,15 +1370,15 @@ bool Main::start() {
 	return true;
 }//Main::start
 
-uint64_t Main::last_ticks=0;
-uint64_t Main::target_ticks=0;
-float Main::time_accum=0;
-uint32_t Main::frames=0;
-uint32_t Main::frame=0;
-bool Main::force_redraw_requested = false;
+ uint64_t Main::last_ticks=0;
+ uint64_t Main::target_ticks=0;
+ float Main::time_accum=0;
+ uint32_t Main::frames=0;
+ uint32_t Main::frame=0;
+ bool Main::force_redraw_requested = false;
 
-static uint64_t fixed_process_max=0;
-static uint64_t idle_process_max=0;
+ static uint64_t fixed_process_max=0;
+ static uint64_t idle_process_max=0;
 
 
 bool Main::iteration() {
@@ -1440,37 +1406,7 @@ bool Main::iteration() {
 	bool exit=false;
 
 	int iters = 0;
-
-//	while(time_accum>frame_slice) { //LUCIANO
-//
-//		uint64_t fixed_begin = OS::get_singleton()->get_ticks_usec();
-////
-////		PhysicsServer::get_singleton()->sync();
-////		PhysicsServer::get_singleton()->flush_queries();
-////
-////		Physics2DServer::get_singleton()->sync();
-////		Physics2DServer::get_singleton()->flush_queries();
-//
-//		if (OS::get_singleton()->get_main_loop()->iteration( frame_slice*time_scale )) {
-//			exit=true;
-//			break;
-//		}
-//
-//		message_queue->flush();
-//
-////		PhysicsServer::get_singleton()->step(frame_slice*time_scale);
-////
-////		Physics2DServer::get_singleton()->end_sync();
-////		Physics2DServer::get_singleton()->step(frame_slice*time_scale);
-//
-//		time_accum-=frame_slice;
-//		message_queue->flush();
-//		//if (AudioServer::get_singleton())
-//		//	AudioServer::get_singleton()->update();
-//
-//		fixed_process_max=MAX(OS::get_singleton()->get_ticks_usec()-fixed_begin,fixed_process_max);
-//		iters++;
-//	}
+	//LUCIANO: Here were the old frame things.
 
 	uint64_t idle_begin = OS::get_singleton()->get_ticks_usec();
 
@@ -1498,22 +1434,6 @@ bool Main::iteration() {
 			force_redraw_requested = false;
 		}
 	}
-
-	// if (AudioServer::get_singleton())
-		// AudioServer::get_singleton()->update();
-
-	// for(int i=0;i<ScriptServer::get_language_count();i++) {
-		// ScriptServer::get_language(i)->frame();
-	//}
-
-//	idle_process_max=MAX(OS::get_singleton()->get_ticks_usec()-idle_begin,idle_process_max);
-
-	// if (script_debugger)
-		// script_debugger->idle_poll();
-
-
-	//	x11_delay_usec(10000);
-	//frames++;
 
 	if (frame>1000000) {
 

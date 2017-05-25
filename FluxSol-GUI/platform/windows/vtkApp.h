@@ -2,6 +2,12 @@
 #define _VTKAPP_H_
 
 #include "windows.h"
+// first include the required header files for the vtk classes we are using
+#include "vtkConeSource.h"
+#include "vtkPolyDataMapper.h"
+#include "vtkRenderWindow.h"
+#include "vtkRenderWindowInteractor.h"
+#include "vtkRenderer.h"
 
 class myVTKApp
 {
