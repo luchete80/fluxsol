@@ -1413,12 +1413,6 @@ bool Main::iteration() {
 	//OS::get_singleton()->get_main_loop()->idle( step*time_scale ); //CRASHING
 	message_queue->flush();
 
-	// if (SpatialSoundServer::get_singleton())
-		// SpatialSoundServer::get_singleton()->update( step*time_scale );
-	// if (SpatialSound2DServer::get_singleton())
-		// SpatialSound2DServer::get_singleton()->update( step*time_scale );
-
-
 	VisualServer::get_singleton()->sync(); //sync if still drawing from previous frames.
 
 	if (OS::get_singleton()->can_draw()) {

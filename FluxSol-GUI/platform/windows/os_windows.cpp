@@ -2088,7 +2088,7 @@ void OS_Windows::run() {
 	if (!main_loop)
 		return;
 
-	main_loop->init(); //LUCIANO
+	//main_loop->init(); //LUCIANO
 
 	uint64_t last_ticks=get_ticks_usec();
 
