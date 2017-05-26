@@ -71,7 +71,7 @@ add_library(editor SHARED 	$<TARGET_OBJECTS:editor_>
 							
 target_link_libraries (editor scene servers core)
 
-target_link_libraries (main editor servers driverstypes core)
+target_link_libraries (main editor servers driverstypes)
 
 #Shlwapi is for PathFileExistsW
 #target_link_libraries (windows core zlib Shlwapi)
