@@ -26,6 +26,10 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
+#define TOOLS_ENABLED
+#define OPENGL_ENABLED
+#define GLES2_ENABLED
+
 #include "os_windows.h"
 #include "main/main.h"
 #include <stdio.h>

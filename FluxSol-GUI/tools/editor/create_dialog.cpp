@@ -33,8 +33,6 @@
 #include "scene/gui/box_container.h"
 #include "editor_node.h"
 
-#include "ustring.h"
-
 #if 1
 
 #include "os/keyboard.h"

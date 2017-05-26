@@ -4774,8 +4774,8 @@ EditorNode::EditorNode() {
 
 	resource_preview = memnew( EditorResourcePreview );
 	add_child(resource_preview);
-	//progress_dialog = memnew( ProgressDialog );
-	//gui_base->add_child(progress_dialog);
+	progress_dialog = memnew( ProgressDialog );
+	gui_base->add_child(progress_dialog);
 
 	// take up all screen
 	gui_base->set_anchor( MARGIN_RIGHT, Control::ANCHOR_END );
@@ -5569,6 +5569,31 @@ EditorNode::EditorNode() {
 	//progress_hb->set_h_size_flags(Control::SIZE_EXPAND_FILL);
 
 
+
+	/*
+	animation_menu = memnew( ToolButton );
+	animation_menu->set_pos(Point2(500,0));
+	animation_menu->set_size(Size2(20,20));
+	animation_menu->set_toggle_mode(true);
+	animation_menu->set_focus_mode(Control::FOCUS_NONE);
+	menu_panel->add_child(animation_menu);
+	animation_menu->set_icon(gui_base->get_icon("Animation","EditorIcons"));
+	animation_menu->connect("pressed",this,"_animation_visibility_toggle");;
+*/
+
+
+
+
+
+
+
+	call_dialog = memnew( CallDialog );
+	call_dialog->hide();
+	gui_base->add_child( call_dialog );
+
+
+
+
 	orphan_resources = memnew( OrphanResourcesDialog );
 	gui_base->add_child(orphan_resources);
 
@@ -5635,8 +5660,8 @@ EditorNode::EditorNode() {
 	open_recent_confirmation->connect("confirmed",this,"_open_recent_scene_confirm");
 
 
-//	import_settings= memnew(ImportSettingsDialog(this));
-//	gui_base->add_child(import_settings);
+	import_settings= memnew(ImportSettingsDialog(this));
+	gui_base->add_child(import_settings);
 	run_settings_dialog = memnew( RunSettingsDialog );
 	gui_base->add_child( run_settings_dialog );
 
@@ -5749,13 +5774,80 @@ EditorNode::EditorNode() {
 	editor_import_export->add_import_plugin( Ref<EditorTextureImportPlugin>( memnew(EditorTextureImportPlugin(this,EditorTextureImportPlugin::MODE_ATLAS) )));
 	editor_import_export->add_import_plugin( Ref<EditorTextureImportPlugin>( memnew(EditorTextureImportPlugin(this,EditorTextureImportPlugin::MODE_LARGE) )));
 	editor_import_export->add_import_plugin( Ref<EditorTextureImportPlugin>( memnew(EditorTextureImportPlugin(this,EditorTextureImportPlugin::MODE_TEXTURE_3D) )));
+	//Ref<EditorSceneImportPlugin> _scene_import =  memnew(EditorSceneImportPlugin(this) );
+	//Ref<EditorSceneImporterCollada> _collada_import = memnew( EditorSceneImporterCollada);
+	//_scene_import->add_importer(_collada_import);
+//	Ref<EditorSceneImporterFBXConv> _fbxconv_import = memnew( EditorSceneImporterFBXConv);
+//	_scene_import->add_importer(_fbxconv_import);
+	//editor_import_export->add_import_plugin( _scene_import);
+	// TODO: This plugin has no code, it should be either implemented or dropped (GH-3667)
+	// editor_import_export->add_import_plugin( Ref<EditorSceneAnimationImportPlugin>( memnew(EditorSceneAnimationImportPlugin(this))));
+	//editor_import_export->add_import_plugin( Ref<EditorMeshImportPlugin>( memnew(EditorMeshImportPlugin(this))));
+	//LUCIANO: in io import plugin
+	//editor_import_export->add_import_plugin( Ref<EditorFontImportPlugin>( memnew(EditorFontImportPlugin(this))));
+	//editor_import_export->add_import_plugin( Ref<EditorSampleImportPlugin>( memnew(EditorSampleImportPlugin(this))));
+	//editor_import_export->add_import_plugin( Ref<EditorTranslationImportPlugin>( memnew(EditorTranslationImportPlugin(this))));
 
+	//editor_import_export->add_export_plugin( Ref<EditorTextureExportPlugin>( memnew(EditorTextureExportPlugin)));
+	//editor_import_export->add_export_plugin( Ref<EditorSampleExportPlugin>( memnew(EditorSampleExportPlugin)));
+	//editor_import_export->add_export_plugin( Ref<EditorSceneExportPlugin>( memnew(EditorSceneExportPlugin)));
+
+
+	//add_editor_plugin( memnew( AnimationPlayerEditorPlugin(this) ) );
 	add_editor_plugin( memnew( CanvasItemEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( SpatialEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( ScriptEditorPlugin(this) ) );
+
+	//more visually meaningful to have this later
+	//raise_bottom_panel_item(AnimationPlayerEditor::singleton);
+
+	//add_editor_plugin( memnew( ShaderGraphEditorPlugin(this,true) ) );
+	//add_editor_plugin( memnew( ShaderGraphEditorPlugin(this,false) ) );
+	//add_editor_plugin( memnew( ShaderEditorPlugin(this,true) ) );
+	//add_editor_plugin( memnew( ShaderEditorPlugin(this,false) ) );
+	//add_editor_plugin( memnew( CameraEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( SampleEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( SampleLibraryEditorPlugin(this) ) );
 	add_editor_plugin( memnew( ThemeEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( MultiMeshEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( MeshInstanceEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( AnimationTreeEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( SamplePlayerEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( MeshLibraryEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( StreamEditorPlugin(this) ) );
 	add_editor_plugin( memnew( StyleBoxEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( ParticlesEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( ResourcePreloaderEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( ItemListEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( RichTextEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( CollisionPolygonEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( CollisionPolygon2DEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( TileSetEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( TileMapEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( SpriteFramesEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( SpriteRegionEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( Particles2DEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( Path2DEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( PathEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( BakedLightEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( Polygon2DEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( LightOccluder2DEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( NavigationPolygonEditorPlugin(this) ) );
+	//add_editor_plugin( memnew( ColorRampEditorPlugin(this,true) ) );
+	//add_editor_plugin( memnew( ColorRampEditorPlugin(this,false) ) );
+	//add_editor_plugin( memnew( CollisionShape2DEditorPlugin(this) ) );
 
 	for(int i=0;i<EditorPlugins::get_plugin_count();i++)
 		add_editor_plugin( EditorPlugins::create(i,this) );
+
+
+	//resource_preview->add_preview_generator( Ref<EditorTexturePreviewPlugin>( memnew(EditorTexturePreviewPlugin )));
+	//resource_preview->add_preview_generator( Ref<EditorPackedScenePreviewPlugin>( memnew(EditorPackedScenePreviewPlugin )));
+	//resource_preview->add_preview_generator( Ref<EditorMaterialPreviewPlugin>( memnew(EditorMaterialPreviewPlugin )));
+	//resource_preview->add_preview_generator( Ref<EditorScriptPreviewPlugin>( memnew(EditorScriptPreviewPlugin )));
+	//resource_preview->add_preview_generator( Ref<EditorSamplePreviewPlugin>( memnew(EditorSamplePreviewPlugin )));
+	//resource_preview->add_preview_generator( Ref<EditorMeshPreviewPlugin>( memnew(EditorMeshPreviewPlugin )));
+	//resource_preview->add_preview_generator( Ref<EditorBitmapPreviewPlugin>( memnew(EditorBitmapPreviewPlugin )));
 
 	circle_step_msec=OS::get_singleton()->get_ticks_msec();
 	circle_step_frame=OS::get_singleton()->get_frames_drawn();
@@ -5766,7 +5858,14 @@ EditorNode::EditorNode() {
 	editor_plugin_screen=NULL;
 	editor_plugin_over=NULL;
 
+//	force_top_viewport(true);
+//	_edit_current(); //LUCIANO
 	current=NULL;
+
+	//LUCIANO
+//	PhysicsServer::get_singleton()->set_active(false); // no physics by default if editor
+//	Physics2DServer::get_singleton()->set_active(false); // no physics by default if editor
+//	ScriptServer::set_scripting_enabled(false); // no scripting by default if editor
 
 	Globals::get_singleton()->set("debug/indicators_enabled",true);
 	Globals::get_singleton()->set("render/room_cull_enabled",false);
