@@ -19,10 +19,12 @@ ENDIF()
 
 
 #DIRECTORIES
-link_directories ("D:/Luciano/Libs/VTK-6.3.0-Install/lib")
-link_directories ("D:/Luciano/Libs/GodotGUI-Bin")
-
 set (GODOTGUI_SRC_DIR "D:/Luciano/Libs/GodotGUI")
+set (GODOTGUI_BIN_DIR "$ENV{GODOTGUI_BIN_DIR}")
+
+link_directories ("D:/Luciano/Libs/VTK-6.3.0-Install/lib")
+link_directories ("${GODOTGUI_BIN_DIR}")
+
 
 #GODOTGUI
 include_directories("${GODOTGUI_SRC_DIR}")
@@ -67,8 +69,9 @@ add_library(editor SHARED 	$<TARGET_OBJECTS:editor_>
 							$<TARGET_OBJECTS:editorioplugins_>
 							)
 							
-target_link_libraries (main editor servers driverstypes png)
 target_link_libraries (editor scene servers core)
+
+target_link_libraries (main editor servers driverstypes)
 
 #Shlwapi is for PathFileExistsW
 #target_link_libraries (windows core zlib Shlwapi)
@@ -80,7 +83,7 @@ $<TARGET_OBJECTS:app_>
 target_link_libraries (${NAME} 
 driverstypes main core scene 
 windows unix 
-gl_context gles2 
+gl_context gles2
 winmm 
 opengl32
 )
