@@ -589,6 +589,8 @@ Error Main::setup(const char *execpath,int argc, char *argv[],bool p_second_phas
 
 //#ifdef TOOLS_ENABLED
 		editor=false;
+
+		editor=true;//LUCIANO
 //#else
 //		OS::get_singleton()->print("error: Couldn't load game path '%s'\n",game_path.ascii().get_data());
 //

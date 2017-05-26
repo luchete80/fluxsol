@@ -2095,12 +2095,12 @@ void OS_Windows::run() {
 	int frames=0;
 	uint64_t frame=0;
     //Main::iteration(); //THIS CRASHES
-	while (!force_quit) { //LUCIANO
+	//while (!force_quit) { //LUCIANO
 
 		process_events(); // get rid of pending events
 		//if (Main::iteration()==true)
 		//	break;
-	}; //LUCIANO
+	//}; //LUCIANO
 
 	main_loop->finish(); //LUCIANO
 
