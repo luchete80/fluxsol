@@ -9,6 +9,8 @@
 #include "vtkRenderWindowInteractor.h"
 #include "vtkRenderer.h"
 
+LRESULT CALLBACK vtk_WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+
 class myVTKApp
 {
 public:

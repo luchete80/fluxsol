@@ -42,17 +42,12 @@
 
 
 #include "servers/visual/visual_server_raster.h"
-//#include "servers/audio/audio_server_sw.h"
-#include "servers/visual/visual_server_wrap_mt.h"
 
-//#include "tcp_server_winsock.h"
-//#include "packet_peer_udp_winsock.h"
-//#include "stream_peer_winsock.h"
+#include "servers/visual/visual_server_wrap_mt.h"
 #include "lang_table.h"
 #include "os/memory_pool_dynamic_prealloc.h"
 #include "globals.h"
 #include "io/marshalls.h"
-//#include "joystick.h"
 
 #include "shlobj.h"
 #include <regstr.h>
@@ -67,6 +62,7 @@
 #ifdef HIDPI_SUPPORT
 #include <ShellScalingAPI.h>
 #endif
+
 static const WORD MAX_CONSOLE_LINES = 1500;
 
 extern "C" {
@@ -84,6 +80,8 @@ extern "C" {
 //#define STDOUT_FILE
 
 extern HINSTANCE godot_hinstance;
+
+
 
 void RedirectIOToConsole() {
 
@@ -312,29 +310,31 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 		case WM_PAINT:
 
 			Main::force_redraw();
+			//Main::iteration(); //LUCIANO, WAS NOT HERE
 			break;
-//
-//		case WM_SYSCOMMAND:							// Intercept System Commands
-//		{
-//			switch (wParam)							// Check System Calls
-//			{
-//				case SC_SCREENSAVE:					// Screensaver Trying To Start?
-//				case SC_MONITORPOWER:				// Monitor Trying To Enter Powersave?
-//				return 0;							// Prevent From Happening
-//				case SC_KEYMENU:
-//					if ((lParam>>16)<=0)
-//						return 0;
-//			}
-//			break;									// Exit
-//		}
+
+		case WM_SYSCOMMAND:							// Intercept System Commands
+		{
+			switch (wParam)							// Check System Calls
+			{
+				case SC_SCREENSAVE:					// Screensaver Trying To Start?
+				case SC_MONITORPOWER:				// Monitor Trying To Enter Powersave?
+				return 0;							// Prevent From Happening
+				case SC_KEYMENU:
+					if ((lParam>>16)<=0)
+						return 0;
+			}
+			break;									// Exit
+		}
 
 		case WM_CLOSE:								// Did We Receive A Close Message?
 		{
-//			if (main_loop)
-//				main_loop->notification(MainLoop::NOTIFICATION_WM_QUIT_REQUEST);
+			if (main_loop)
+				main_loop->notification(MainLoop::NOTIFICATION_WM_QUIT_REQUEST);
 			force_quit=true;
 			return 0;								// Jump Back
 		}
+
 //		case WM_MOUSELEAVE: {
 //
 //			old_invalid=true;
@@ -1000,6 +1000,28 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 
 
 	};
+	///////////////// THIS MUST BE PUT BEFORE
+	    HINSTANCE vtk_hinstance;
+      vtkwin = CreateWindow ( "Test",
+                        "Draw Window",
+                        WS_CHILD | WS_VISIBLE | SS_CENTER,
+                          100,100, //xy pos
+                        400,
+                        480,
+                        hWnd,
+                        (HMENU)2,
+                        vtk_hinstance,
+                        NULL);
+////
+////    //LUCIANO: END
+//int nCmdShow;
+//  ShowWindow (vtkwin, nCmdShow);
+//  UpdateWindow (vtkwin);
+    //theVTKApp = new myVTKApp(vtkwin);
+
+    theVTKApp = new myVTKApp(hWnd);
+
+	///////////////////// END LUCIANO //////////////////////////
 
 	gl_context = memnew( ContextGL_Win(hWnd,false) );
 	gl_context->initialize();
@@ -1010,7 +1032,7 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 	visual_server = memnew( VisualServerRaster(rasterizer) );
 	 if (get_render_thread_mode()!=RENDER_THREAD_UNSAFE) {
 
-//		 visual_server =memnew(VisualServerWrapMT(visual_server,get_render_thread_mode()==RENDER_SEPARATE_THREAD));
+		 visual_server =memnew(VisualServerWrapMT(visual_server,get_render_thread_mode()==RENDER_SEPARATE_THREAD));
 	 }
 
 	//
@@ -1043,6 +1065,28 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 
 	DragAcceptFiles(hWnd,true);
     print_line("ENDING OS_INITIALIZE()");
+    //////////////////////////////////
+    //LUCIANO
+    ////////////////////////////////
+
+//
+//    //theVTKApp =NULL;
+//    WNDCLASS	wndclass;
+//       static char szAppName[] = "Win32Cone";
+//
+//     wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+//     wndclass.lpfnWndProc   = vtk_WndProc ;
+//     wndclass.cbClsExtra    = 0 ;
+//     wndclass.cbWndExtra    = 0 ;
+//     wndclass.hInstance     = hInstance;
+//     wndclass.hIcon         = LoadIcon(NULL,IDI_APPLICATION);
+//     wndclass.hCursor       = LoadCursor (NULL, IDC_ARROW);
+//     wndclass.lpszMenuName  = NULL;
+//     wndclass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+//     wndclass.lpszClassName = szAppName;
+//     RegisterClass (&wndclass);
+//
+
 
 }
 
@@ -1791,7 +1835,7 @@ void OS_Windows::process_events() {
 
 		TranslateMessage(&msg);
 		DispatchMessageW(&msg);
-		Main::iteration(); //ESTO ES MIO
+		//Main::iteration(); //ESTO ES MIO
 
 	}
 
@@ -2094,13 +2138,13 @@ void OS_Windows::run() {
 
 	int frames=0;
 	uint64_t frame=0;
-    //Main::iteration(); //THIS CRASHES
-	//while (!force_quit) { //LUCIANO
+    Main::iteration(); //THIS CRASHES
+	while (!force_quit) { //LUCIANO
 
 		process_events(); // get rid of pending events
-		//if (Main::iteration()==true)
-		//	break;
-	//}; //LUCIANO
+//		if (Main::iteration()==true)
+//            break;
+	}; //LUCIANO
 
 	main_loop->finish(); //LUCIANO
 

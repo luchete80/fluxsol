@@ -1,0 +1,142 @@
+From Searching in google: vtk main loop
+ http://public.kitware.com/pipermail/vtkusers/2004-October/027169.html
+ Also can be useful: http://www.vtk.org/Wiki/VTK/Examples/Cxx/Utilities/AnimationScene
+ 
+
+[vtkusers] interactor in a main loop
+
+Clinton Stimpson clinton at elemtech.com 
+Wed Oct 6 10:51:16 EDT 2004
+Previous message: [vtkusers] Unicode && vtkObjectBase
+Next message: [vtkusers] interactor in a main loop
+Messages sorted by: [ date ] [ thread ] [ subject ] [ author ]
+>
+> Message: 2
+> Date: Wed, 06 Oct 2004 09:45:10 +0200
+> From: francesco caruso <guernika_devel at yahoo.it>
+> Subject: [vtkusers] interactor in a main loop
+> To: vtkusers at vtk.org
+> Message-ID: <4163A286.1030508 at yahoo.it>
+> Content-Type: text/plain; charset=us-ascii; format=flowed
+>
+> Hello
+>
+> In my VTK application, there is a main loop in which
+> frames are grabbed continuously.
+>
+> I'd like add an interactor, but when I do it the main loop stops
+> because interactor is waiting for an event.
+>
+> How can I resolve this?
+>
+> Thanks in advance
+>
+
+You might be able to use a timer to do the frame grabbing.  The
+vtkRenderWindowInteractor classes can make timers and they work with the
+interactor start method.
+
+Or ..
+
+Have your existing event loop control the VTK windows as well as do the
+frame grabbing.
+
+This sample was originally made to show how to do multiple graphics windows
+with multiple interactors without putting each window on a separate thread,
+which makes it more complicated.
+
+Clint
+
+============================================
+
+#include "vtkRenderWindow.h"
+#include "vtkRenderer.h"
+
+#include "vtkActor.h"
+#include "vtkPolyDataMapper.h"
+#include "vtkCylinderSource.h"
+#include "vtkToolkits.h"
+
+#ifdef VTK_USE_X
+#include <X11/Intrinsic.h>
+#include "vtkXRenderWindowInteractor.h"
+#else
+#include "vtkRenderWindowInteractor.h"
+#include <windows.h>
+#endif
+
+int main(int, char**)
+{
+#ifdef VTK_USE_X
+  XtToolkitInitialize();
+  // create X11 application context
+  XtAppContext app_context = XtCreateApplicationContext();
+#endif
+
+  // create two renderers
+  vtkRenderer* ren1 = vtkRenderer::New();
+  vtkRenderer* ren2 = vtkRenderer::New();
+
+  // create 2 windows and hook the renderers up to them
+  vtkRenderWindow* win1 = vtkRenderWindow::New();
+  win1->AddRenderer(ren1);
+  vtkRenderWindow* win2 = vtkRenderWindow::New();
+  win2->AddRenderer(ren2);
+
+#ifdef VTK_USE_X
+  // create the X11 interactors and hook our X11 stuff up to them
+  vtkXRenderWindowInteractor* iren1 = vtkXRenderWindowInteractor::New();
+  iren1->SetRenderWindow(win1);
+  iren1->Initialize(app_context);
+  vtkXRenderWindowInteractor* iren2 = vtkXRenderWindowInteractor::New();
+  iren2->SetRenderWindow(win2);
+  iren2->Initialize(app_context);
+#else
+  // create the win32 interactors
+  vtkRenderWindowInteractor* iren1 = vtkRenderWindowInteractor::New();
+  iren1->SetRenderWindow(win1);
+  iren1->Initialize();
+  vtkRenderWindowInteractor* iren2 = vtkRenderWindowInteractor::New();
+  iren2->SetRenderWindow(win2);
+  iren2->Initialize();
+#endif
+
+  // put something in the windows so we know we can interact with it
+  vtkActor* actor = vtkActor::New();
+  vtkMapper::GlobalImmediateModeRenderingOn(); // allow the same actor in
+multiple renderers, but slower
+  vtkPolyDataMapper* mapper = vtkPolyDataMapper::New();
+  actor->SetMapper(mapper);
+  vtkCylinderSource* cyl = vtkCylinderSource::New();
+  mapper->SetInput(cyl->GetOutput());
+
+  ren1->AddProp(actor);
+  ren2->AddProp(actor);
+
+  // reset the view
+  ren1->ResetCamera();
+  ren2->ResetCamera();
+
+
+// there are more things you can do below for more advanced stuff
+// (e.g. integrate console input, network sockets, etc..
+// to event loop without dealing with threads)
+
+#ifdef VTK_USE_X
+  // the main X11 event loop
+  XtAppMainLoop(app_context);
+#else
+  MSG  msg;
+  int status;
+  while ((status = ::GetMessage (&msg, 0, 0, 0)) != 0)
+  {
+    if (status == -1)
+      return -1;
+    ::TranslateMessage (&msg);
+    ::DispatchMessage (&msg);
+  }
+#endif
+
+  return 0;
+
+}

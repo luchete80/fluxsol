@@ -63,6 +63,9 @@
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
 */
+
+#include "vtkApp.h"
+
 class joystick_windows;
 class OS_Windows : public OS {
 
@@ -115,6 +118,9 @@ class OS_Windows : public OS {
 	MainLoop *main_loop;
 
 	WNDPROC user_proc;
+
+    myVTKApp* theVTKApp;
+    HWND vtkwin;
 
 	//AudioServerSW *audio_server;
 	//SampleManagerMallocSW *sample_manager;

@@ -24,6 +24,7 @@ set (GODOTGUI_BIN_DIR "$ENV{GODOTGUI_BIN_DIR}")
 
 link_directories ("D:/Luciano/Libs/VTK-6.3.0-Install/lib")
 link_directories ("${GODOTGUI_BIN_DIR}")
+link_directories ("D:/Luciano/Libs/VTK-6.3.0-Install/lib")
 
 
 #GODOTGUI
@@ -88,4 +89,6 @@ windows unix
 gl_context gles2
 winmm 
 opengl32
+stdc++
+${VTK_LIBRARIES}
 )

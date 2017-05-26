@@ -157,6 +157,7 @@ int widechar_main(int argc, wchar_t** argv) {
 	delete[] argv_utf8;
     print_line("fail"); //LUCIANO
 	return os.get_exit_code();
+
 };
 
 int main(int _argc, char** _argv) {
