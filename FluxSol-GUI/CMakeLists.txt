@@ -63,7 +63,7 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/tools/editor/io_plugins")
 add_subdirectory("${PROJECT_SOURCE_DIR}/tools/editor/plugins")
 
 
-add_library(main 			$<TARGET_OBJECTS:main_>)
+add_library(main SHARED			$<TARGET_OBJECTS:main_>)
 add_library(editor SHARED 	$<TARGET_OBJECTS:editor_>
 							$<TARGET_OBJECTS:editorplugins_>
 							$<TARGET_OBJECTS:editorioplugins_>

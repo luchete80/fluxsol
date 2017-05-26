@@ -1483,7 +1483,7 @@ bool Main::iteration() {
 		// SpatialSound2DServer::get_singleton()->update( step*time_scale );
 
 
-	VisualServer::get_singleton()->sync(); //sync if still drawing from previous frames.
+	//VisualServer::get_singleton()->sync(); //sync if still drawing from previous frames.
 
 	if (OS::get_singleton()->can_draw()) {
 
