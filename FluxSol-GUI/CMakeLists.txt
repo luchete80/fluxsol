@@ -66,7 +66,8 @@ add_library(editor SHARED 	$<TARGET_OBJECTS:editor_>
 							$<TARGET_OBJECTS:editorplugins_>
 							$<TARGET_OBJECTS:editorioplugins_>
 							)
-
+							
+target_link_libraries (main editor servers driverstypes png)
 target_link_libraries (editor scene servers core)
 
 #Shlwapi is for PathFileExistsW
@@ -77,10 +78,9 @@ $<TARGET_OBJECTS:app_>
 )
 
 target_link_libraries (${NAME} 
-main editor servers driverstypes
-stdc++
+driverstypes main core scene 
 windows unix 
 gl_context gles2 
-winmm opengl32
-png
-${VTK_LIBRARIES})
+winmm 
+opengl32
+)

@@ -1428,45 +1428,45 @@ bool Main::iteration() {
 			force_redraw_requested = false;
 		}
 	}
-
-	if (frame>1000000) {
-
-		if (GLOBAL_DEF("debug/print_fps", OS::get_singleton()->is_stdout_verbose())) {
-			print_line("FPS: "+itos(frames));
-		};
-
-		OS::get_singleton()->_fps=frames;
-		performance->set_process_time(idle_process_max/1000000.0);
-		performance->set_fixed_process_time(fixed_process_max/1000000.0);
-		idle_process_max=0;
-		fixed_process_max=0;
-
-		if (GLOBAL_DEF("debug/print_metrics", false)) {
-
-			//PerformanceMetrics::print();
-		};
-
-		frame%=1000000;
-		frames=0;
-	}
-
-	if (OS::get_singleton()->is_in_low_processor_usage_mode() || !OS::get_singleton()->can_draw())
-		OS::get_singleton()->delay_usec(25000); //apply some delay to force idle time
-	else {
-		uint32_t frame_delay = OS::get_singleton()->get_frame_delay();
-		if (frame_delay)
-			OS::get_singleton()->delay_usec( OS::get_singleton()->get_frame_delay()*1000 );
-	}
-
-	int target_fps = OS::get_singleton()->get_target_fps();
-	if (target_fps>0) {
-		uint64_t time_step = 1000000L/target_fps;
-		target_ticks += time_step;
-		uint64_t current_ticks = OS::get_singleton()->get_ticks_usec();
-		if (current_ticks<target_ticks) OS::get_singleton()->delay_usec(target_ticks-current_ticks);
-		current_ticks = OS::get_singleton()->get_ticks_usec();
-		target_ticks = MIN(MAX(target_ticks,current_ticks-time_step),current_ticks+time_step);
-	}
+//
+//	if (frame>1000000) {
+//
+//		if (GLOBAL_DEF("debug/print_fps", OS::get_singleton()->is_stdout_verbose())) {
+//			print_line("FPS: "+itos(frames));
+//		};
+//
+//		OS::get_singleton()->_fps=frames;
+//		performance->set_process_time(idle_process_max/1000000.0);
+//		performance->set_fixed_process_time(fixed_process_max/1000000.0);
+//		idle_process_max=0;
+//		fixed_process_max=0;
+//
+//		if (GLOBAL_DEF("debug/print_metrics", false)) {
+//
+//			//PerformanceMetrics::print();
+//		};
+//
+//		frame%=1000000;
+//		frames=0;
+//	}
+//
+//	if (OS::get_singleton()->is_in_low_processor_usage_mode() || !OS::get_singleton()->can_draw())
+//		OS::get_singleton()->delay_usec(25000); //apply some delay to force idle time
+//	else {
+//		uint32_t frame_delay = OS::get_singleton()->get_frame_delay();
+//		if (frame_delay)
+//			OS::get_singleton()->delay_usec( OS::get_singleton()->get_frame_delay()*1000 );
+//	}
+//
+//	int target_fps = OS::get_singleton()->get_target_fps();
+//	if (target_fps>0) {
+//		uint64_t time_step = 1000000L/target_fps;
+//		target_ticks += time_step;
+//		uint64_t current_ticks = OS::get_singleton()->get_ticks_usec();
+//		if (current_ticks<target_ticks) OS::get_singleton()->delay_usec(target_ticks-current_ticks);
+//		current_ticks = OS::get_singleton()->get_ticks_usec();
+//		target_ticks = MIN(MAX(target_ticks,current_ticks-time_step),current_ticks+time_step);
+//	}
 
 	return exit;
 }
