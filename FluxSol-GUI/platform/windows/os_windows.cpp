@@ -1001,17 +1001,17 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 
 	};
 	///////////////// THIS MUST BE PUT BEFORE
-	    HINSTANCE vtk_hinstance;
-      vtkwin = CreateWindow ( "Test",
-                        "Draw Window",
-                        WS_CHILD | WS_VISIBLE | SS_CENTER,
-                          100,100, //xy pos
-                        400,
-                        480,
-                        hWnd,
-                        (HMENU)2,
-                        vtk_hinstance,
-                        NULL);
+//	    HINSTANCE vtk_hinstance;
+//      vtkwin = CreateWindow ( "Test",
+//                        "Draw Window",
+//                        WS_CHILD | WS_VISIBLE | SS_CENTER,
+//                          100,100, //xy pos
+//                        400,
+//                        480,
+//                        hWnd,
+//                        (HMENU)2,
+//                        vtk_hinstance,
+//                        NULL);
 ////
 ////    //LUCIANO: END
 //int nCmdShow;
@@ -1019,7 +1019,7 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //  UpdateWindow (vtkwin);
     //theVTKApp = new myVTKApp(vtkwin);
 
-    theVTKApp = new myVTKApp(hWnd);
+    //theVTKApp = new myVTKApp(hWnd);
 
 	///////////////////// END LUCIANO //////////////////////////
 
@@ -1030,10 +1030,10 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //	//TOMODIFY!!!
 //	//COLOCAR VTK
 	visual_server = memnew( VisualServerRaster(rasterizer) );
-	 if (get_render_thread_mode()!=RENDER_THREAD_UNSAFE) {
-
-		 visual_server =memnew(VisualServerWrapMT(visual_server,get_render_thread_mode()==RENDER_SEPARATE_THREAD));
-	 }
+//	 if (get_render_thread_mode()!=RENDER_THREAD_UNSAFE) {
+//
+//		 visual_server =memnew(VisualServerWrapMT(visual_server,get_render_thread_mode()==RENDER_SEPARATE_THREAD));
+//	 }
 
 	//
 	// physics_server = memnew( PhysicsServerSW );
@@ -1193,14 +1193,14 @@ void OS_Windows::finalize() {
 
 	visual_server->finish();
 	memdelete(visual_server);
-#ifdef OPENGL_ENABLED
+//#ifdef OPENGL_ENABLED
 	if (gl_context)
 		memdelete(gl_context);
-#endif
+//#endif
 
 	//TOMODIFY: CERRAR EL RASTERIZER
-	// if (rasterizer)
-		// memdelete(rasterizer);
+	 if (rasterizer)
+		 memdelete(rasterizer);
 
 	if (user_proc) {
 		SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)user_proc);
@@ -1835,7 +1835,7 @@ void OS_Windows::process_events() {
 
 		TranslateMessage(&msg);
 		DispatchMessageW(&msg);
-		//Main::iteration(); //ESTO ES MIO
+		Main::iteration(); //ESTO ES MIO
 
 	}
 

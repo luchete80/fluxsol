@@ -89,6 +89,6 @@ windows unix
 gl_context gles2
 winmm 
 opengl32
-stdc++
+#stdc++
 ${VTK_LIBRARIES}
 )

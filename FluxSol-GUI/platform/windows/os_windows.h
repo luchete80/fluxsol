@@ -119,8 +119,8 @@ class OS_Windows : public OS {
 
 	WNDPROC user_proc;
 
-    myVTKApp* theVTKApp;
-    HWND vtkwin;
+    //myVTKApp* theVTKApp;
+    //HWND vtkwin;
 
 	//AudioServerSW *audio_server;
 	//SampleManagerMallocSW *sample_manager;

@@ -573,7 +573,7 @@ Error Main::setup(const char *execpath,int argc, char *argv[],bool p_second_phas
 	}
 
     //LUCIANO: ALL ScriptDebugger Things: deleted
-    editor=true; //LUCIANO
+    //editor=true; //LUCIANO
     //LUCIANO
 
 //#ifdef TOOLS_ENABLED
@@ -590,7 +590,7 @@ Error Main::setup(const char *execpath,int argc, char *argv[],bool p_second_phas
 //#ifdef TOOLS_ENABLED
 		editor=false;
 
-		editor=true;//LUCIANO
+		//editor=true;//LUCIANO
 //#else
 //		OS::get_singleton()->print("error: Couldn't load game path '%s'\n",game_path.ascii().get_data());
 //
@@ -1401,7 +1401,7 @@ bool Main::start() {
 //#endif
 	}
     print_line("Setting Main Loop."); //LUCIANO
-	OS::get_singleton()->set_main_loop( main_loop );
+    OS::get_singleton()->set_main_loop( main_loop );
 
 	return true;
 }//Main::start
