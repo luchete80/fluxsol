@@ -1009,8 +1009,8 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //	//COLOCAR VTK
 	visual_server = memnew( VisualServerRaster(rasterizer) );
 	 if (get_render_thread_mode()!=RENDER_THREAD_UNSAFE) {
-
-//		 visual_server =memnew(VisualServerWrapMT(visual_server,get_render_thread_mode()==RENDER_SEPARATE_THREAD));
+        print_line("Render Thread unsafe");
+		 //visual_server =memnew(VisualServerWrapMT(visual_server,get_render_thread_mode()==RENDER_SEPARATE_THREAD));
 	 }
 
 	//
