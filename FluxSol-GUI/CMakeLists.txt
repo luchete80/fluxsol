@@ -54,6 +54,7 @@ include_directories("${PROJECT_SOURCE_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/main")
 include_directories("${PROJECT_SOURCE_DIR}/platform/windows")
 include_directories("${PROJECT_SOURCE_DIR}/tools/editor")
+include_directories("${GODOTGUI_SRC_DIR}/qvtk")
 
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/main")
@@ -69,12 +70,12 @@ add_library(editor SHARED 	$<TARGET_OBJECTS:editor_>
 							$<TARGET_OBJECTS:editorioplugins_>
 							)
 
-add_library(gVTK $<TARGET_OBJECTS:gVTK_>)							
+add_library(gVTK SHARED $<TARGET_OBJECTS:gVTK_>)							
 target_link_libraries (editor scene servers core)
 
 target_link_libraries (main editor servers driverstypes core)
 
-target_link_libraries (gVTK editor scene core)
+target_link_libraries (gVTK editor scene core ${VTK_LIBRARIES})
 
 
 #Shlwapi is for PathFileExistsW

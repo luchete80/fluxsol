@@ -60,6 +60,8 @@
 
 #include <fcntl.h>
 #include <stdio.h>
+
+//#include "gvtk/vtkFrame.h" //LUCIANO, THIS MUST BE CHANGED TO VIEWPORT AND PUT IN EDITOR
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
 */
@@ -113,6 +115,8 @@ class OS_Windows : public OS {
 	VideoMode video_mode;
 
 	MainLoop *main_loop;
+
+	//MyFrame *MyFrame;
 
 	WNDPROC user_proc;
 

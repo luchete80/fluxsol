@@ -314,24 +314,24 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 			Main::force_redraw();
 			break;
 
-		case WM_SYSCOMMAND:							// Intercept System Commands
-		{
-			switch (wParam)							// Check System Calls
-			{
-				case SC_SCREENSAVE:					// Screensaver Trying To Start?
-				case SC_MONITORPOWER:				// Monitor Trying To Enter Powersave?
-				return 0;							// Prevent From Happening
-				case SC_KEYMENU:
-					if ((lParam>>16)<=0)
-						return 0;
-			}
-			break;									// Exit
-		}
+//		case WM_SYSCOMMAND:							// Intercept System Commands
+//		{
+//			switch (wParam)							// Check System Calls
+//			{
+//				case SC_SCREENSAVE:					// Screensaver Trying To Start?
+//				case SC_MONITORPOWER:				// Monitor Trying To Enter Powersave?
+//				return 0;							// Prevent From Happening
+//				case SC_KEYMENU:
+//					if ((lParam>>16)<=0)
+//						return 0;
+//			}
+//			break;									// Exit
+//		}
 
 		case WM_CLOSE:								// Did We Receive A Close Message?
 		{
-			if (main_loop)
-				main_loop->notification(MainLoop::NOTIFICATION_WM_QUIT_REQUEST);
+//			if (main_loop)
+//				main_loop->notification(MainLoop::NOTIFICATION_WM_QUIT_REQUEST);
 			force_quit=true;
 			return 0;								// Jump Back
 		}
@@ -370,6 +370,7 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 //
 //			}
 //
+//            //LUCIANO: ESTO YA ESTABA COMENTADO
 //			/*
 //			LPARAM extra = GetMessageExtraInfo();
 //			if (IsPenEvent(extra)) {

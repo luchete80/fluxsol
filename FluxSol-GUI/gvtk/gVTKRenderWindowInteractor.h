@@ -78,7 +78,7 @@ public vtkRenderWindowInteractor
                                 long style, //= wxWANTS_CHARS | wxNO_FULL_REPAINT_ON_RESIZE,
                                 //const wxString &name = wxPanelNameStr);
                                 const String &name = "Test");
-    //vtkTypeRevisionMacro(gVTKRenderWindowInteractor,vtkRenderWindowInteractor);
+    vtkTypeRevisionMacro(gVTKRenderWindowInteractor,vtkRenderWindowInteractor);
     static gVTKRenderWindowInteractor * New();
     void PrintSelf(ostream& os, vtkIndent indent);
 
