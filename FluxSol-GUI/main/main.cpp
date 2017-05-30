@@ -34,7 +34,6 @@
 #include "scene/register_scene_types.h"
 #include "drivers/register_driver_types.h"
 #include "servers/register_server_types.h"
-//#include "modules/register_module_types.h"
 #include "script_debugger_local.h"
 #include "script_debugger_remote.h"
 #include "message_queue.h"
@@ -1584,7 +1583,7 @@ void Main::cleanup() {
 
 	unregister_driver_types();
 	//unregister_module_types();
-	//unregister_scene_types();
+	unregister_scene_types();
 	unregister_server_types();
 
 	OS::get_singleton()->finalize();
