@@ -226,6 +226,9 @@ int gVTKRenderWindowInteractor::CreateTimer(int timertype)
   //if (!timer.start(10, TRUE)) //LUCIANO
   //if (!timer.start())
   //  return 0;
+
+  timer->set_wait_time(0.01);
+  timer->set_one_shot(true);
   timer->start();
   return 1;
 

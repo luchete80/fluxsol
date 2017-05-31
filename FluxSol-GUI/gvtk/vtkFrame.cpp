@@ -80,6 +80,8 @@ MyFrame::MyFrame(HWND hWnd) //the parent
 //    m_pVTKWindow->DebugOn();
     ConstructVTK();
     ConfigureVTK();
+
+    ShowWindow(hWnd,SW_SHOW);   //LUCIANO
 }
 
 MyFrame::~MyFrame()

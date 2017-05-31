@@ -311,7 +311,7 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 
 		case WM_PAINT:
 
-//			Main::force_redraw();
+			Main::force_redraw();
 			break;
 
 //		case WM_SYSCOMMAND:							// Intercept System Commands
@@ -330,10 +330,10 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 
 		case WM_CLOSE:								// Did We Receive A Close Message?
 		{
-//			if (main_loop)
-//				main_loop->notification(MainLoop::NOTIFICATION_WM_QUIT_REQUEST);
-//			force_quit=true;
-//			return 0;								// Jump Back
+			if (main_loop)
+				main_loop->notification(MainLoop::NOTIFICATION_WM_QUIT_REQUEST);
+			force_quit=true;
+			return 0;								// Jump Back
 		}
 //		case WM_MOUSELEAVE: {
 //
@@ -1008,10 +1008,12 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 ////	//TOMODIFY!!!
 ////	//COLOCAR VTK
 	visual_server = memnew( VisualServerRaster(rasterizer) );
-	 if (get_render_thread_mode()!=RENDER_THREAD_UNSAFE) {
-        print_line("Render Thread unsafe");
-        //visual_server =memnew(VisualServerWrapMT(visual_server,get_render_thread_mode()==RENDER_SEPARATE_THREAD));
-	 }
+
+// // NOT CONNECT THIS WITH VTK; DOES NOT WORK TO USE ANOTHER THREAD TO RENDER
+//	 if (get_render_thread_mode()!=RENDER_THREAD_UNSAFE) {
+//        print_line("Render Thread unsafe");
+//        //visual_server =memnew(VisualServerWrapMT(visual_server,get_render_thread_mode()==RENDER_SEPARATE_THREAD));
+//	 }
 
 
 	if (!is_no_window_mode_enabled()) {
@@ -1022,7 +1024,8 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 	print_line("Initializing Visual Server");
 	visual_server->init();
 
-    //This must be called after create visual server.
+    //This must be called after itinialize visual server.
+    //Otherwise, it crashes
     gvtk_viewport=new MyFrame(hWnd);
 
 	print_line("Visual Server initiated");
@@ -1130,7 +1133,7 @@ void OS_Windows::delete_main_loop() {
 
 void OS_Windows::set_main_loop( MainLoop * p_main_loop ) {
 
-	input->set_main_loop(p_main_loop);
+	//input->set_main_loop(p_main_loop); //LUCIANO
 	main_loop=p_main_loop;
 }
 
@@ -1788,7 +1791,7 @@ void OS_Windows::process_events() {
 
 		TranslateMessage(&msg);
 		DispatchMessageW(&msg);
-		//Main::iteration(); //ESTO ES MIO
+		Main::iteration(); //ESTO ES MIO
                //
 
 	}
@@ -2085,20 +2088,20 @@ void OS_Windows::run() {
     //print_line("Os Run"); //LUCIANO
 //	if (!main_loop)
 //		return;
-//
-//	main_loop->init(); //LUCIANO
+
+	main_loop->init(); //LUCIANO
 
 	//uint64_t last_ticks=get_ticks_usec();
 
 	int frames=0;
 	uint64_t frame=0;
-    //Main::iteration(); //THIS CRASHES
-//	while (!force_quit) { //LUCIANO
+    Main::iteration(); //THIS CRASHES
+	while (!force_quit) { //LUCIANO
 
 		process_events(); // get rid of pending events
 //		if (Main::iteration()==true)
 //			break;
-//	}; //LUCIANO
+	}; //LUCIANO
 
 	//main_loop->finish(); //LUCIANO
 

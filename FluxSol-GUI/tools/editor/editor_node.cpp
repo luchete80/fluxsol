@@ -5348,32 +5348,7 @@ EditorNode::EditorNode() {
 	scene_tree_dock->set_name("Scene");
 	//top_pallete->add_child(scene_tree_dock);
 	dock_slot[DOCK_SLOT_LEFT_UR]->add_child(scene_tree_dock);
-#if 0
-	resources_dock = memnew( ResourcesDock(this) );
-	resources_dock->set_name("Resources");
-	//top_pallete->add_child(resources_dock);
-	dock_slot[DOCK_SLOT_RIGHT_BL]->add_child(resources_dock);
-	//top_pallete->set_v_size_flags(Control::SIZE_EXPAND_FILL);
-#endif
 	dock_slot[DOCK_SLOT_RIGHT_BL]->hide();
-	/*Control *editor_spacer = memnew( Control );
-	editor_spacer->set_custom_minimum_size(Size2(260,200));
-	editor_spacer->set_v_size_flags(Control::SIZE_EXPAND_FILL);
-	editor_vsplit->add_child( editor_spacer );
-	editor_spacer->add_child( top_pallete );
-	top_pallete->set_area_as_parent_rect();*/
-
-
-	//prop_pallete = memnew( TabContainer );
-
-	//prop_pallete->set_v_size_flags(Control::SIZE_EXPAND_FILL);
-
-	/*editor_spacer = memnew( Control );
-	editor_spacer->set_custom_minimum_size(Size2(260,200));
-	editor_spacer->set_v_size_flags(Control::SIZE_EXPAND_FILL);
-	editor_vsplit->add_child( editor_spacer );
-	editor_spacer->add_child( prop_pallete );
-	prop_pallete->set_area_as_parent_rect();*/
 
 	VBoxContainer *prop_editor_base = memnew( VBoxContainer );
 	prop_editor_base->set_name("Inspector"); // Properties?
@@ -5475,18 +5450,6 @@ EditorNode::EditorNode() {
 	search_bar->add_child(clear_button);
 	clear_button->connect("pressed",this,"_clear_search_box");
 
-//	property_editor = memnew( PropertyEditor );
-//	property_editor->set_autoclear(true);
-//	property_editor->set_show_categories(true);
-//	property_editor->set_v_size_flags(Control::SIZE_EXPAND_FILL);
-//	property_editor->set_use_doc_hints(true);
-//
-//	property_editor->hide_top_label();
-//	property_editor->register_text_enter(search_box);
-//
-//	prop_editor_base->add_child( property_editor );
-//	property_editor->set_undo_redo(&editor_data.get_undo_redo());
-
 
 	scenes_dock = memnew( ScenesDock(this) );
 	scenes_dock->set_name("FileSystem");
@@ -5537,40 +5500,9 @@ EditorNode::EditorNode() {
 	center_split->connect("resized",this,"_vp_resized");
 
 
-	/*PanelContainer *bottom_pc = memnew( PanelContainer );
-	srt->add_child(bottom_pc);
-	bottom_hb = memnew( HBoxContainer );
-	bottom_pc->add_child(bottom_hb);*/
-
-
-//	center_vb->add_child( log->get_button() );
-//	log->get_button()->set_h_size_flags(Control::SIZE_EXPAND_FILL);
-
-
-	//progress_hb->set_h_size_flags(Control::SIZE_EXPAND_FILL);
-
-
-
-	/*
-	animation_menu = memnew( ToolButton );
-	animation_menu->set_pos(Point2(500,0));
-	animation_menu->set_size(Size2(20,20));
-	animation_menu->set_toggle_mode(true);
-	animation_menu->set_focus_mode(Control::FOCUS_NONE);
-	menu_panel->add_child(animation_menu);
-	animation_menu->set_icon(gui_base->get_icon("Animation","EditorIcons"));
-	animation_menu->connect("pressed",this,"_animation_visibility_toggle");;
-*/
-
-
-
-
-
-
-
-	call_dialog = memnew( CallDialog );
-	call_dialog->hide();
-	gui_base->add_child( call_dialog );
+//	call_dialog = memnew( CallDialog );
+//	call_dialog->hide();
+//	gui_base->add_child( call_dialog );
 
 
 
@@ -5591,42 +5523,12 @@ EditorNode::EditorNode() {
 	accept->connect("confirmed", this,"_menu_confirm_current");
 
 
-
-
-
-//	optimized_save = memnew( OptimizedSaveDialog(&editor_data) );
-	//gui_base->add_child(optimized_save);
-	//optimized_save->connect("confirmed",this,"_save_optimized");
-
-	/// ALL THIS 4 lines are commented by luciano
-//	project_export = memnew( ProjectExport(&editor_data) );
-//	gui_base->add_child(project_export);
-//
-//	project_export_settings = memnew( ProjectExportDialog(this) );
-//	gui_base->add_child(project_export_settings);
-
-	//optimized_presets = memnew( OptimizedPresetsDialog(&editor_data) );
-	//gui_base->add_child(optimized_presets);
-	//optimized_presets->connect("confirmed",this,"_presets_optimized");
-
-
-
-	//import_subscene = memnew( EditorSubScene );
-	//gui_base->add_child(import_subscene);
-
-
-
 	dependency_error = memnew( DependencyErrorDialog );
 	gui_base->add_child(dependency_error);
 
 	dependency_fixer = memnew( DependencyEditor );
 	gui_base->add_child( dependency_fixer );
 
-//	settings_config_dialog = memnew( EditorSettingsDialog );
-//	gui_base->add_child(settings_config_dialog);
-
-//	project_settings = memnew( ProjectSettings(&editor_data) );
-//	gui_base->add_child(project_settings);
 
 	import_confirmation = memnew( ConfirmationDialog );
 	import_confirmation->get_ok()->set_text("Re-Import");

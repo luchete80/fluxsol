@@ -1011,82 +1011,85 @@ bool Main::start() {
 //		game_path=GLOBAL_DEF("application/main_scene","");
 //	}
 
+    //LUCIANO
+    editor=true;
+
     print_line("Allocating Main Loop"); //LUCIANO
 	MainLoop *main_loop=NULL;
-//	if (editor) {
+	if (editor) {
 		main_loop = memnew(SceneTree);
-//	};
+	};
     print_line("Main Loop allocated"); //LUCIANO
-//	if (test!="") {
-//#ifdef DEBUG_ENABLED
-//		main_loop = test_main(test,args);
-//
-//		if (!main_loop)
-//			return false;
-//
-//#endif
-//
-//	} else if (script!="") {
-//		Ref<Script> script_res = ResourceLoader::load(script);
-//		ERR_EXPLAIN("Can't load script: "+script);
-//		ERR_FAIL_COND_V(script_res.is_null(),false);
-//
-//		if( script_res->can_instance() /*&& script_res->inherits_from("SceneTreeScripted")*/) {
-//
-//
-//			StringName instance_type=script_res->get_instance_base_type();
-//			Object *obj = ObjectTypeDB::instance(instance_type);
-//			MainLoop *script_loop = obj?obj->cast_to<MainLoop>():NULL;
-//			if (!script_loop) {
-//				if (obj)
-//					memdelete(obj);
-//				ERR_EXPLAIN("Can't load script '"+script+"', it does not inherit from a MainLoop type");
-//				ERR_FAIL_COND_V(!script_loop,false);
-//			}
-//
-//
-//			script_loop->set_init_script(script_res);
-//			main_loop=script_loop;
-//		} else {
-//
-//			return false;
-//		}
-//
-//	} else {
-//		main_loop_type=GLOBAL_DEF("application/main_loop_type","");
-//	} //if test
+	if (test!="") {
+#ifdef DEBUG_ENABLED
+		main_loop = test_main(test,args);
 
-//	if (!main_loop && main_loop_type=="")
+		if (!main_loop)
+			return false;
+
+#endif
+
+	} else if (script!="") {
+		Ref<Script> script_res = ResourceLoader::load(script);
+		ERR_EXPLAIN("Can't load script: "+script);
+		ERR_FAIL_COND_V(script_res.is_null(),false);
+
+		if( script_res->can_instance() /*&& script_res->inherits_from("SceneTreeScripted")*/) {
+
+
+			StringName instance_type=script_res->get_instance_base_type();
+			Object *obj = ObjectTypeDB::instance(instance_type);
+			MainLoop *script_loop = obj?obj->cast_to<MainLoop>():NULL;
+			if (!script_loop) {
+				if (obj)
+					memdelete(obj);
+				ERR_EXPLAIN("Can't load script '"+script+"', it does not inherit from a MainLoop type");
+				ERR_FAIL_COND_V(!script_loop,false);
+			}
+
+
+			script_loop->set_init_script(script_res);
+			main_loop=script_loop;
+		} else {
+
+			return false;
+		}
+
+	} else {
+		main_loop_type=GLOBAL_DEF("application/main_loop_type","");
+	} //if test
+
+	if (!main_loop && main_loop_type=="")
 		main_loop_type="SceneTree";
-//
-//	if (!main_loop) {
-//        print_line("NO Main Loop"); //LUCIANO
-//		if (!ObjectTypeDB::type_exists(main_loop_type)) {
-//            print_line("Main Loop typw does not exist"); //LUCIANO
-//			OS::get_singleton()->alert("godot: error: MainLoop type doesn't exist: "+main_loop_type);
-//			return false;
-//		} else {
-//            print_line("DB is main_loop_type"); //LUCIANO
-//			Object *ml = ObjectTypeDB::instance(main_loop_type);
-//            print_line("isntanced"); //LUCIANO
-//			if (!ml) {
-//				ERR_EXPLAIN("Can't instance MainLoop type");
-//				ERR_FAIL_V(false);
-//			}
-//
-//			main_loop=ml->cast_to<MainLoop>();
-//			if (!main_loop) {
-//
-//				memdelete(ml);
-//				ERR_EXPLAIN("Invalid MainLoop type");
-//				ERR_FAIL_V(false);
-//
-//			}
-//		}
-//	}
+
+	if (!main_loop) {
+        print_line("NO Main Loop"); //LUCIANO
+		if (!ObjectTypeDB::type_exists(main_loop_type)) {
+            print_line("Main Loop typw does not exist"); //LUCIANO
+			OS::get_singleton()->alert("godot: error: MainLoop type doesn't exist: "+main_loop_type);
+			return false;
+		} else {
+            print_line("DB is main_loop_type"); //LUCIANO
+			Object *ml = ObjectTypeDB::instance(main_loop_type);
+            print_line("isntanced"); //LUCIANO
+			if (!ml) {
+				ERR_EXPLAIN("Can't instance MainLoop type");
+				ERR_FAIL_V(false);
+			}
+
+			main_loop=ml->cast_to<MainLoop>();
+			if (!main_loop) {
+
+				memdelete(ml);
+				ERR_EXPLAIN("Invalid MainLoop type");
+				ERR_FAIL_V(false);
+
+			}
+		}
+	}
 
 
-//    print_line("Chacking if Main Loop is scene Tree"); //LUCIANO
+    print_line("Chacking if Main Loop is scene Tree"); //LUCIANO
 	if (main_loop->is_type("SceneTree")) {
         print_line("Main Loop is scene Tree"); //LUCIANO
 		SceneTree *sml = main_loop->cast_to<SceneTree>();
@@ -1188,8 +1191,7 @@ bool Main::start() {
 			}
 
 			local_game_path=Globals::get_singleton()->localize_path(local_game_path);
-//LUCIANO
-//#ifdef TOOLS_ENABLED
+
 			if (editor) {
 
 
@@ -1344,7 +1346,9 @@ bool Main::start() {
 
 	}
     print_line("Setting Main Loop."); //LUCIANO
-	//OS::get_singleton()->set_main_loop( main_loop );
+    if (OS::get_singleton()==NULL)
+        print_line("OS Main Loop Null");
+	OS::get_singleton()->set_main_loop( main_loop );
 
 	return true;
 }//Main::start
@@ -1389,12 +1393,6 @@ bool Main::iteration() {
 //	while(time_accum>frame_slice) { //LUCIANO
 //
 //		uint64_t fixed_begin = OS::get_singleton()->get_ticks_usec();
-////
-////		PhysicsServer::get_singleton()->sync();
-////		PhysicsServer::get_singleton()->flush_queries();
-////
-////		Physics2DServer::get_singleton()->sync();
-////		Physics2DServer::get_singleton()->flush_queries();
 //
 //		if (OS::get_singleton()->get_main_loop()->iteration( frame_slice*time_scale )) {
 //			exit=true;
@@ -1403,15 +1401,8 @@ bool Main::iteration() {
 //
 //		message_queue->flush();
 //
-////		PhysicsServer::get_singleton()->step(frame_slice*time_scale);
-////
-////		Physics2DServer::get_singleton()->end_sync();
-////		Physics2DServer::get_singleton()->step(frame_slice*time_scale);
-//
 //		time_accum-=frame_slice;
 //		message_queue->flush();
-//		//if (AudioServer::get_singleton())
-//		//	AudioServer::get_singleton()->update();
 //
 //		fixed_process_max=MAX(OS::get_singleton()->get_ticks_usec()-fixed_begin,fixed_process_max);
 //		iters++;
@@ -1421,12 +1412,6 @@ bool Main::iteration() {
 
 	//OS::get_singleton()->get_main_loop()->idle( step*time_scale ); //CRASHING
 	message_queue->flush();
-
-	// if (SpatialSoundServer::get_singleton())
-		// SpatialSoundServer::get_singleton()->update( step*time_scale );
-	// if (SpatialSound2DServer::get_singleton())
-		// SpatialSound2DServer::get_singleton()->update( step*time_scale );
-
 
 	//VisualServer::get_singleton()->sync(); //sync if still drawing from previous frames.
 
@@ -1444,18 +1429,7 @@ bool Main::iteration() {
 		}
 	}
 
-	// if (AudioServer::get_singleton())
-		// AudioServer::get_singleton()->update();
-
-	// for(int i=0;i<ScriptServer::get_language_count();i++) {
-		// ScriptServer::get_language(i)->frame();
-	//}
-
 //	idle_process_max=MAX(OS::get_singleton()->get_ticks_usec()-idle_begin,idle_process_max);
-
-	// if (script_debugger)
-		// script_debugger->idle_poll();
-
 
 	//	x11_delay_usec(10000);
 	//frames++;
