@@ -46,5 +46,6 @@ mingw32-make.exe
 ///////////////////////////////////////////////////////////////
 BUGS AND CRASHES
 ///////////////////////////////////////////////////////////////
-1. For the new GUI libstdc++-6.dll must be put in the folder.
+1. For the new GUI libstdc++-6.dll must be put in the folder. But still crash when run from DOS
+2. when vtk is linked, crahses.
 

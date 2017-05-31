@@ -34,6 +34,8 @@
 
 #define ID_gVTKRenderWindowInteractor_TIMER 1001
 
+#include "./scene/gui/control.h"
+
 //Keep this for compatibilty reason, this was introduced in wxGTK 2.4.0
 // #if (!wxCHECK_VERSION(2, 4, 0))
 // wxWindow* wxGetTopLevelParent(wxWindow *win)
@@ -67,7 +69,7 @@ static int gVTK_attributes[]={
 //gVTKRenderWindowInteractor::gVTKRenderWindowInteractor() : wxWindow(), vtkRenderWindowInteractor()
 //#endif //__WXGTK__
 gVTKRenderWindowInteractor::gVTKRenderWindowInteractor() :
-    //CanvasItem(),
+    Control(),
      vtkRenderWindowInteractor()
       , timer()//timer(this, ID_gVTKRenderWindowInteractor_TIMER)
       , ActiveButton(0)//ActiveButton(wxEVT_NULL)
@@ -83,6 +85,9 @@ gVTKRenderWindowInteractor::gVTKRenderWindowInteractor() :
   this->RenderWindow = NULL;
   this->SetRenderWindow(vtkRenderWindow::New());
   this->RenderWindow->Delete();
+
+  this->timer=memnew(Timer);
+  timer->connect("timeout",this,"OnTimer");
 }
 
 //---------------------------------------------------------------------------
@@ -97,7 +102,7 @@ gVTKRenderWindowInteractor::gVTKRenderWindowInteractor(HWND *parent,//wxWindow *
 //#else
 //      : wxWindow(parent, id, pos, size, style, name), vtkRenderWindowInteractor()
 //#endif //__WXGTK__
-    : //CanvasItem(),
+    : Control(),
      vtkRenderWindowInteractor()
      ,  timer()//timer(this, ID_gVTKRenderWindowInteractor_TIMER)
       , ActiveButton(0)//ActiveButton(wxEVT_NULL)
@@ -118,6 +123,11 @@ gVTKRenderWindowInteractor::gVTKRenderWindowInteractor(HWND *parent,//wxWindow *
   // so we update the size information of the interactor/renderwindow here
   this->UpdateSize(size.x, size.y);
 #endif
+
+  this->timer=memnew(Timer);
+  timer->connect("timeout",this,"OnTimer");
+  //add_child(timer);
+
 }
 //---------------------------------------------------------------------------
 gVTKRenderWindowInteractor::~gVTKRenderWindowInteractor()
@@ -132,6 +142,7 @@ gVTKRenderWindowInteractor * gVTKRenderWindowInteractor::New()
   return new gVTKRenderWindowInteractor;
 }
 //---------------------------------------------------------------------------
+//LUCIANO: vtkOverride
 void gVTKRenderWindowInteractor::Initialize()
 {
   int *size = RenderWindow->GetSize();
@@ -140,6 +151,7 @@ void gVTKRenderWindowInteractor::Initialize()
   //RenderWindow->Start();
 
   // set the size in the render window interactor
+  //These are values of vtk
   Size[0] = size[0];
   Size[1] = size[1];
 
@@ -210,16 +222,11 @@ void gVTKRenderWindowInteractor::UpdateSize(int x, int y)
 //---------------------------------------------------------------------------
 int gVTKRenderWindowInteractor::CreateTimer(int timertype)
 {
-//    //Extracted from godot
-//    range_click_timer = memnew( Timer );
-//	range_click_timer->connect("timeout",this,"_range_click_timeout");
-//	add_child(range_click_timer);
-
   // it's a one shot timer
   //if (!timer.start(10, TRUE)) //LUCIANO
   //if (!timer.start())
   //  return 0;
-  timer.start();
+  timer->start();
   return 1;
 
 }
@@ -233,13 +240,13 @@ int gVTKRenderWindowInteractor::InternalCreateTimer(int timerId, int timerType,
 //  if (!timer.start(duration, timerType == OneShotTimer))
 //  if (!timer.start)
 //        return 0;
-  timer.start();
+  timer->start();
   return ID_gVTKRenderWindowInteractor_TIMER;
 }
 //------------------------------------------------------------------
 int gVTKRenderWindowInteractor::InternalDestroyTimer(int platformTimerId)
 {
-  timer.stop();
+  timer->stop();
   return 1;
 }
 #endif
@@ -250,6 +257,27 @@ int gVTKRenderWindowInteractor::DestroyTimer()
   return 1;
 }
 //---------------------------------------------------------------------------
+
+//void SpinBox::_range_click_timeout() {
+//
+//	if (!drag.enabled && Input::get_singleton()->is_mouse_button_pressed(BUTTON_LEFT)) {
+//
+//		bool up = get_local_mouse_pos().y < (get_size().height/2);
+//		set_val( get_val() + (up?get_step():-get_step()));
+//
+//		if (range_click_timer->is_one_shot()) {
+//			range_click_timer->set_wait_time(0.075);
+//			range_click_timer->set_one_shot(false);
+//			range_click_timer->start();
+//		}
+//
+//	} else {
+//		range_click_timer->stop();
+//	}
+//}
+//In the original was
+//EVT_TIMER       (ID_wxVTKRenderWindowInteractor_TIMER, wxVTKRenderWindowInteractor::OnTimer)
+//And wxWidgets has a function named
 void gVTKRenderWindowInteractor::OnTimer()
 {
   if (!Enabled)

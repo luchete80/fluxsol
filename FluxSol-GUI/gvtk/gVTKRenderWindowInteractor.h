@@ -47,6 +47,7 @@
 #include "windows.h"
 #include "./scene/main/timer.h"
 #include "./core/os/input_event.h"
+#include "scene/gui/control.h"
 
 // wx forward declarations
 // class wxPaintEvent;
@@ -61,9 +62,11 @@
 // class godVTKRenderWindowInteractor : public wxWindow, public vtkRenderWindowInteractor
 // #endif //__WXGTK__
 class gVTKRenderWindowInteractor :
-//public CanvasItem,
+public Control,
 public vtkRenderWindowInteractor
 {
+
+    //OBJ_TYPE(GraphEdit,Control);
   //DECLARE_DYNAMIC_CLASS(gVTKRenderWindowInteractor)
 
   public:
@@ -155,7 +158,7 @@ public vtkRenderWindowInteractor
 
   protected:
     //wxTimer timer;
-    Timer timer; //Godot
+    Timer *timer; //Godot
     int ActiveButton;
     long GetHandleHack();
     int Stereo;

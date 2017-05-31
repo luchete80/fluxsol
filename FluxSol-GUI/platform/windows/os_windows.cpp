@@ -881,7 +881,6 @@ BOOL CALLBACK OS_Windows::MonitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPR
 void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_audio_driver) {
 
 
-
     main_loop=NULL;
     outside=true;
 
@@ -1029,6 +1028,9 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 	print_line("Initializing Visual Server");
 	visual_server->init();
 
+    //This must be called after create visual server.
+    gvtk_viewport=new MyFrame(hWnd);
+
 	print_line("Visual Server initiated");
 
 	TRACKMOUSEEVENT tme;
@@ -1045,7 +1047,7 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 	DragAcceptFiles(hWnd,true);
     print_line("ENDING OS_INITIALIZE()");
 
-}
+}//Initialize
 
 void OS_Windows::set_clipboard(const String& p_text) {
 
