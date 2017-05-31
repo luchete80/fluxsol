@@ -279,35 +279,35 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 
 		switch (uMsg)									// Check For Windows Messages
 	{
-		case WM_ACTIVATE:							// Watch For Window Activate Message
-		{
-			minimized = HIWORD(wParam) != 0;
-			if (!main_loop) {
-				return 0;
-			};
-			if (LOWORD(wParam) == WA_ACTIVE || LOWORD(wParam) == WA_CLICKACTIVE) {
-
-				main_loop->notification(MainLoop::NOTIFICATION_WM_FOCUS_IN);
-				alt_mem=false;
-				control_mem=false;
-				shift_mem=false;
-				if (mouse_mode==MOUSE_MODE_CAPTURED) {
-					RECT clipRect;
-					GetClientRect(hWnd, &clipRect);
-					ClientToScreen(hWnd, (POINT*) &clipRect.left);
-					ClientToScreen(hWnd, (POINT*) &clipRect.right);
-					ClipCursor(&clipRect);
-					SetCapture(hWnd);
-
-				}
-			} else {
-				main_loop->notification(MainLoop::NOTIFICATION_WM_FOCUS_OUT);
-				alt_mem=false;
-
-			};
-
-			return 0;								// Return To The Message Loop
-		}break;
+//		case WM_ACTIVATE:							// Watch For Window Activate Message
+//		{
+//			minimized = HIWORD(wParam) != 0;
+//			if (!main_loop) {
+//				return 0;
+//			};
+//			if (LOWORD(wParam) == WA_ACTIVE || LOWORD(wParam) == WA_CLICKACTIVE) {
+//
+//				main_loop->notification(MainLoop::NOTIFICATION_WM_FOCUS_IN);
+//				alt_mem=false;
+//				control_mem=false;
+//				shift_mem=false;
+//				if (mouse_mode==MOUSE_MODE_CAPTURED) {
+//					RECT clipRect;
+//					GetClientRect(hWnd, &clipRect);
+//					ClientToScreen(hWnd, (POINT*) &clipRect.left);
+//					ClientToScreen(hWnd, (POINT*) &clipRect.right);
+//					ClipCursor(&clipRect);
+//					SetCapture(hWnd);
+//
+//				}
+//			} else {
+//				main_loop->notification(MainLoop::NOTIFICATION_WM_FOCUS_OUT);
+//				alt_mem=false;
+//
+//			};
+//
+//			return 0;								// Return To The Message Loop
+//		}break;
 
 		case WM_PAINT:
 
@@ -330,8 +330,8 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 
 		case WM_CLOSE:								// Did We Receive A Close Message?
 		{
-//			if (main_loop)
-//				main_loop->notification(MainLoop::NOTIFICATION_WM_QUIT_REQUEST);
+			if (main_loop)
+				main_loop->notification(MainLoop::NOTIFICATION_WM_QUIT_REQUEST);
 			force_quit=true;
 			return 0;								// Jump Back
 		}
@@ -1010,15 +1010,9 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 	visual_server = memnew( VisualServerRaster(rasterizer) );
 	 if (get_render_thread_mode()!=RENDER_THREAD_UNSAFE) {
         print_line("Render Thread unsafe");
-		 //visual_server =memnew(VisualServerWrapMT(visual_server,get_render_thread_mode()==RENDER_SEPARATE_THREAD));
+        visual_server =memnew(VisualServerWrapMT(visual_server,get_render_thread_mode()==RENDER_SEPARATE_THREAD));
 	 }
 
-	//
-	// physics_server = memnew( PhysicsServerSW );
-	// physics_server->init();
-
-	// physics_2d_server = Physics2DServerWrapMT::init_server<Physics2DServerSW>();
-	// physics_2d_server->init();
 
 	if (!is_no_window_mode_enabled()) {
 		ShowWindow(hWnd,SW_SHOW);						// Show The Window
@@ -1029,7 +1023,7 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 	visual_server->init();
 
     //This must be called after create visual server.
-    gvtk_viewport=new MyFrame(hWnd);
+    //gvtk_viewport=new MyFrame(hWnd);
 
 	print_line("Visual Server initiated");
 
@@ -1794,7 +1788,8 @@ void OS_Windows::process_events() {
 
 		TranslateMessage(&msg);
 		DispatchMessageW(&msg);
-		Main::iteration(); //ESTO ES MIO
+		//Main::iteration(); //ESTO ES MIO
+               //
 
 	}
 
@@ -2088,24 +2083,24 @@ void OS_Windows::swap_buffers() {
 
 void OS_Windows::run() {
     print_line("Os Run"); //LUCIANO
-	if (!main_loop)
-		return;
-
-	main_loop->init(); //LUCIANO
+//	if (!main_loop)
+//		return;
+//
+//	main_loop->init(); //LUCIANO
 
 	uint64_t last_ticks=get_ticks_usec();
 
 	int frames=0;
 	uint64_t frame=0;
     //Main::iteration(); //THIS CRASHES
-	//while (!force_quit) { //LUCIANO
+//	while (!force_quit) { //LUCIANO
 
 		process_events(); // get rid of pending events
-		//if (Main::iteration()==true)
-		//	break;
-	//}; //LUCIANO
+//		if (Main::iteration()==true)
+//			break;
+//	}; //LUCIANO
 
-	main_loop->finish(); //LUCIANO
+	//main_loop->finish(); //LUCIANO
 
 }
 

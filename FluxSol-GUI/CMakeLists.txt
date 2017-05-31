@@ -75,7 +75,7 @@ target_link_libraries (editor scene servers core)
 
 target_link_libraries (main editor servers driverstypes core)
 
-target_link_libraries (gVTK scene core ${VTK_LIBRARIES})
+target_link_libraries (gVTK scene core stdc++ ${VTK_LIBRARIES})
 
 
 #Shlwapi is for PathFileExistsW
@@ -91,8 +91,10 @@ $<TARGET_OBJECTS:app_>
 target_link_libraries (${NAME} 
 servers driverstypes main core scene
 windows unix 
-gVTK
+#gVTK
 gl_context gles2
 winmm 
 opengl32
+stdc++
+#${VTK_LIBRARIES}
 )

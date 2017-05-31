@@ -1400,7 +1400,7 @@ bool Main::start() {
 //#endif
 	}
     print_line("Setting Main Loop."); //LUCIANO
-	OS::get_singleton()->set_main_loop( main_loop );
+	//OS::get_singleton()->set_main_loop( main_loop );
 
 	return true;
 }//Main::start
