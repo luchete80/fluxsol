@@ -995,122 +995,98 @@ bool Main::start() {
 
 
 	String main_loop_type;
-#ifdef TOOLS_ENABLED
-//	if(doc_tool!="") {
 //
-//		// DocData doc;
-//		// doc.generate(doc_base);
-//
-//		// DocData docsrc;
-//		// if (docsrc.load(doc_tool)==OK) {
-//			// print_line("Doc exists. Merging..");
-//			// doc.merge_from(docsrc);
-//		// } else {
-//			// print_line("No Doc exists. Generating empty.");
-//
-//		// }
-//
-//		// doc.save(doc_tool);
-//
-//		return false;
+//	if (_export_platform!="") {
+//		if (game_path=="") {
+//			String err="Command line param ";
+//			err+=export_debug?"-export_debug":"-export";
+//			err+=" passed but no destination path given.\n";
+//			err+="Please specify the binary's file path to export to. Aborting export.";
+//			ERR_PRINT(err.utf8().get_data());
+//			return false;
+//		}
 //	}
-
-	if (optimize!="")
-		editor=true; //need editor
-
-
-
-#endif
-
-	if (_export_platform!="") {
-		if (game_path=="") {
-			String err="Command line param ";
-			err+=export_debug?"-export_debug":"-export";
-			err+=" passed but no destination path given.\n";
-			err+="Please specify the binary's file path to export to. Aborting export.";
-			ERR_PRINT(err.utf8().get_data());
-			return false;
-		}
-	}
-
-	if(script=="" && game_path=="" && String(GLOBAL_DEF("application/main_scene",""))!="") {
-		game_path=GLOBAL_DEF("application/main_scene","");
-	}
+//
+//	if(script=="" && game_path=="" && String(GLOBAL_DEF("application/main_scene",""))!="") {
+//		game_path=GLOBAL_DEF("application/main_scene","");
+//	}
 
     print_line("Allocating Main Loop"); //LUCIANO
 	MainLoop *main_loop=NULL;
-	if (editor) {
+//	if (editor) {
 		main_loop = memnew(SceneTree);
-	};
+//	};
     print_line("Main Loop allocated"); //LUCIANO
-	if (test!="") {
-#ifdef DEBUG_ENABLED
-		main_loop = test_main(test,args);
+//	if (test!="") {
+//#ifdef DEBUG_ENABLED
+//		main_loop = test_main(test,args);
+//
+//		if (!main_loop)
+//			return false;
+//
+//#endif
+//
+//	} else if (script!="") {
+//		Ref<Script> script_res = ResourceLoader::load(script);
+//		ERR_EXPLAIN("Can't load script: "+script);
+//		ERR_FAIL_COND_V(script_res.is_null(),false);
+//
+//		if( script_res->can_instance() /*&& script_res->inherits_from("SceneTreeScripted")*/) {
+//
+//
+//			StringName instance_type=script_res->get_instance_base_type();
+//			Object *obj = ObjectTypeDB::instance(instance_type);
+//			MainLoop *script_loop = obj?obj->cast_to<MainLoop>():NULL;
+//			if (!script_loop) {
+//				if (obj)
+//					memdelete(obj);
+//				ERR_EXPLAIN("Can't load script '"+script+"', it does not inherit from a MainLoop type");
+//				ERR_FAIL_COND_V(!script_loop,false);
+//			}
+//
+//
+//			script_loop->set_init_script(script_res);
+//			main_loop=script_loop;
+//		} else {
+//
+//			return false;
+//		}
+//
+//	} else {
+//		main_loop_type=GLOBAL_DEF("application/main_loop_type","");
+//	} //if test
 
-		if (!main_loop)
-			return false;
-
-#endif
-
-	} else if (script!="") {
-		Ref<Script> script_res = ResourceLoader::load(script);
-		ERR_EXPLAIN("Can't load script: "+script);
-		ERR_FAIL_COND_V(script_res.is_null(),false);
-
-		if( script_res->can_instance() /*&& script_res->inherits_from("SceneTreeScripted")*/) {
-
-
-			StringName instance_type=script_res->get_instance_base_type();
-			Object *obj = ObjectTypeDB::instance(instance_type);
-			MainLoop *script_loop = obj?obj->cast_to<MainLoop>():NULL;
-			if (!script_loop) {
-				if (obj)
-					memdelete(obj);
-				ERR_EXPLAIN("Can't load script '"+script+"', it does not inherit from a MainLoop type");
-				ERR_FAIL_COND_V(!script_loop,false);
-			}
-
-
-			script_loop->set_init_script(script_res);
-			main_loop=script_loop;
-		} else {
-
-			return false;
-		}
-
-	} else {
-		main_loop_type=GLOBAL_DEF("application/main_loop_type","");
-	}
-
-	if (!main_loop && main_loop_type=="")
+//	if (!main_loop && main_loop_type=="")
 		main_loop_type="SceneTree";
+//
+//	if (!main_loop) {
+//        print_line("NO Main Loop"); //LUCIANO
+//		if (!ObjectTypeDB::type_exists(main_loop_type)) {
+//            print_line("Main Loop typw does not exist"); //LUCIANO
+//			OS::get_singleton()->alert("godot: error: MainLoop type doesn't exist: "+main_loop_type);
+//			return false;
+//		} else {
+//            print_line("DB is main_loop_type"); //LUCIANO
+//			Object *ml = ObjectTypeDB::instance(main_loop_type);
+//            print_line("isntanced"); //LUCIANO
+//			if (!ml) {
+//				ERR_EXPLAIN("Can't instance MainLoop type");
+//				ERR_FAIL_V(false);
+//			}
+//
+//			main_loop=ml->cast_to<MainLoop>();
+//			if (!main_loop) {
+//
+//				memdelete(ml);
+//				ERR_EXPLAIN("Invalid MainLoop type");
+//				ERR_FAIL_V(false);
+//
+//			}
+//		}
+//	}
 
-	if (!main_loop) {
-        print_line("NO Main Loop"); //LUCIANO
-		if (!ObjectTypeDB::type_exists(main_loop_type)) {
-            print_line("Main Loop typw does not exist"); //LUCIANO
-			OS::get_singleton()->alert("godot: error: MainLoop type doesn't exist: "+main_loop_type);
-			return false;
-		} else {
-            print_line("DB is main_loop_type"); //LUCIANO
-			Object *ml = ObjectTypeDB::instance(main_loop_type);
-            print_line("isntanced"); //LUCIANO
-			if (!ml) {
-				ERR_EXPLAIN("Can't instance MainLoop type");
-				ERR_FAIL_V(false);
-			}
 
-			main_loop=ml->cast_to<MainLoop>();
-			if (!main_loop) {
-
-				memdelete(ml);
-				ERR_EXPLAIN("Invalid MainLoop type");
-				ERR_FAIL_V(false);
-
-			}
-		}
-	}
-    print_line("Chacking if Main Loop is scene Tree"); //LUCIANO
+//    print_line("Chacking if Main Loop is scene Tree"); //LUCIANO
 	if (main_loop->is_type("SceneTree")) {
         print_line("Main Loop is scene Tree"); //LUCIANO
 		SceneTree *sml = main_loop->cast_to<SceneTree>();
@@ -1121,9 +1097,6 @@ bool Main::start() {
 		if (debug_navigation) {
 			sml->set_debug_navigation_hint(true);
 		}
-//LUCIANO
-//#ifdef TOOLS_ENABLED
-
 
 		EditorNode *editor_node=NULL;
 		if (editor) {
@@ -1140,7 +1113,6 @@ bool Main::start() {
 				game_path=""; //no load anything
 			}
 		}
-//#endif
 
 		if (!editor) {
 			//standard helpers that can be changed from main config
@@ -1360,36 +1332,9 @@ bool Main::start() {
 						OS::get_singleton()->set_icon(icon);
 				}
 
-
-				//singletons
-//#ifdef TOOLS_ENABLED
 			}
-//#endif
 		}
 
-//LUCIANO
-//#ifdef TOOLS_ENABLED
-
-		/*if (_export_platform!="") {
-
-			sml->quit();
-		}*/
-
-		/*
-		if (sml->get_root_node()) {
-
-			Console *console = memnew( Console );
-
-			sml->get_root_node()->cast_to<RootNode>()->set_console(console);
-			if (GLOBAL_DEF("console/visible_default",false).operator bool()) {
-
-				console->show();
-			} else {P
-
-				console->hide();
-			};
-		}
-*/
 		if (script=="" && test=="" && game_path=="" && !editor) {
 
 			ProjectManager *pmanager = memnew( ProjectManager );
@@ -1397,7 +1342,6 @@ bool Main::start() {
 			OS::get_singleton()->set_context(OS::CONTEXT_PROJECTMAN);
 		}
 
-//#endif
 	}
     print_line("Setting Main Loop."); //LUCIANO
 	//OS::get_singleton()->set_main_loop( main_loop );

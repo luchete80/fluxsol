@@ -61,13 +61,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-//#include "gvtk/vtkFrame.h" //LUCIANO, THIS MUST BE CHANGED TO VIEWPORT AND PUT IN EDITOR
-#include "vtkCamera.h"
-//#include "vtkRenderer.h"
-//#include "vtkRenderWindow.h"
-//#include "vtkConeSource.h"
-//#include "vtkPolyDataMapper.h"
-//#include "vtkActor.h"
+#include "gvtk/vtkFrame.h" //LUCIANO, THIS MUST BE CHANGED TO VIEWPORT AND PUT IN EDITOR
 
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
@@ -123,7 +117,7 @@ class OS_Windows : public OS {
 
 	MainLoop *main_loop;
 
-	//MyFrame * gvtk_viewport;
+	MyFrame * gvtk_viewport;
 
 	WNDPROC user_proc;
 

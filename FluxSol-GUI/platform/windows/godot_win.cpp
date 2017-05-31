@@ -148,15 +148,15 @@ int widechar_main(int argc, wchar_t** argv) {
 
 	if (Main::start())
 		os.run();
-	Main::cleanup();
+//	Main::cleanup();
 
-
-	for (int i=0; i<argc; ++i) {
-		delete[] argv_utf8[i];
-	}
-	delete[] argv_utf8;
-    print_line("fail"); //LUCIANO
-	return os.get_exit_code();
+//
+//	for (int i=0; i<argc; ++i) {
+//		delete[] argv_utf8[i];
+//	}
+//	delete[] argv_utf8;
+//    print_line("fail"); //LUCIANO
+//	return os.get_exit_code();
 };
 
 int main(int _argc, char** _argv) {

@@ -91,10 +91,9 @@ $<TARGET_OBJECTS:app_>
 target_link_libraries (${NAME} 
 servers driverstypes main core scene
 windows unix 
-#gVTK
+gVTK
 gl_context gles2
 winmm 
 opengl32
 stdc++
-#${VTK_LIBRARIES}
 )

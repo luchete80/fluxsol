@@ -311,7 +311,7 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 
 		case WM_PAINT:
 
-			Main::force_redraw();
+//			Main::force_redraw();
 			break;
 
 //		case WM_SYSCOMMAND:							// Intercept System Commands
@@ -330,10 +330,10 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 
 		case WM_CLOSE:								// Did We Receive A Close Message?
 		{
-			if (main_loop)
-				main_loop->notification(MainLoop::NOTIFICATION_WM_QUIT_REQUEST);
-			force_quit=true;
-			return 0;								// Jump Back
+//			if (main_loop)
+//				main_loop->notification(MainLoop::NOTIFICATION_WM_QUIT_REQUEST);
+//			force_quit=true;
+//			return 0;								// Jump Back
 		}
 //		case WM_MOUSELEAVE: {
 //
@@ -614,11 +614,11 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 //
 //		} break;
 
-		case WM_SIZE: {
-			video_mode.width=LOWORD(lParam);
-			video_mode.height=HIWORD(lParam);
-			//return 0;								// Jump Back
-		} break;
+//		case WM_SIZE: {
+//			video_mode.width=LOWORD(lParam);
+//			video_mode.height=HIWORD(lParam);
+//			//return 0;								// Jump Back
+//		} break;
 //		case WM_SYSKEYDOWN:
 //		case WM_SYSKEYUP:
 //		case WM_KEYUP:
@@ -1004,13 +1004,13 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 	gl_context = memnew( ContextGL_Win(hWnd,false) );
 	gl_context->initialize();
 	rasterizer = memnew( RasterizerGLES2 );
-//
-//	//TOMODIFY!!!
-//	//COLOCAR VTK
+////
+////	//TOMODIFY!!!
+////	//COLOCAR VTK
 	visual_server = memnew( VisualServerRaster(rasterizer) );
 	 if (get_render_thread_mode()!=RENDER_THREAD_UNSAFE) {
         print_line("Render Thread unsafe");
-        visual_server =memnew(VisualServerWrapMT(visual_server,get_render_thread_mode()==RENDER_SEPARATE_THREAD));
+        //visual_server =memnew(VisualServerWrapMT(visual_server,get_render_thread_mode()==RENDER_SEPARATE_THREAD));
 	 }
 
 
@@ -1023,7 +1023,7 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 	visual_server->init();
 
     //This must be called after create visual server.
-    //gvtk_viewport=new MyFrame(hWnd);
+    gvtk_viewport=new MyFrame(hWnd);
 
 	print_line("Visual Server initiated");
 
@@ -2082,13 +2082,13 @@ void OS_Windows::swap_buffers() {
 
 
 void OS_Windows::run() {
-    print_line("Os Run"); //LUCIANO
+    //print_line("Os Run"); //LUCIANO
 //	if (!main_loop)
 //		return;
 //
 //	main_loop->init(); //LUCIANO
 
-	uint64_t last_ticks=get_ticks_usec();
+	//uint64_t last_ticks=get_ticks_usec();
 
 	int frames=0;
 	uint64_t frame=0;
