@@ -30,7 +30,7 @@ enum
 //}
 
 // frame constructor
-MyFrame::MyFrame(HWND hWnd) //the parent
+MyFrame::MyFrame(const HWND &hWnd) //the parent
 {
 // #ifdef __WXMAC__
     // // we need this in order to allow the about menu relocation, since ABOUT is
@@ -63,7 +63,20 @@ MyFrame::MyFrame(HWND hWnd) //the parent
 //    CreateStatusBar(2);
 //    SetStatusText(_T("Drag the mouse here! (wxWindows 2.4.0)"));
 //#endif // wxUSE_STATUSBAR
-	HINSTANCE vtk_hinstance;
+
+	//LUCIANO: only for test, if is a separate windows.
+//	  vtkwinsep = CreateWindow ( "Test",
+//                        "Draw Window",
+//                        WS_OVERLAPPEDWINDOW,
+//                        CW_USEDEFAULT,
+//                        CW_USEDEFAULT,
+//                        400,
+//                        480,
+//                        NULL,
+//                        NULL,
+//                        vtk_hinstance,
+//                        NULL);
+//
     vtkwin = CreateWindow ( "Test",
                        "Draw Window",
                        WS_CHILD | WS_VISIBLE | SS_CENTER,
@@ -71,17 +84,20 @@ MyFrame::MyFrame(HWND hWnd) //the parent
                        400,
                        480,
                        hWnd,
-                       (HMENU)2,
+                       NULL,
                        vtk_hinstance,
                        NULL);
 
-    m_pVTKWindow = new gVTKRenderWindowInteractor();//(this, MY_VTK_WINDOW);
-    m_pVTKWindow->UseCaptureMouseOn();
-//    m_pVTKWindow->DebugOn();
+//    ShowWindow (vtkwinsep, SW_SHOW);
+//    SetForegroundWindow(vtkwinsep);						// Slightly Higher Priority
+//	SetFocus(vtkwinsep);									// Sets Keyboard Focus To
+//
+    m_pVTKWindow = new gVTKRenderWindowInteractor(hWnd,1);//(this, MY_VTK_WINDOW);
+//    m_pVTKWindow->UseCaptureMouseOn();
+////    m_pVTKWindow->DebugOn();
     ConstructVTK();
     ConfigureVTK();
 
-    ShowWindow(hWnd,SW_SHOW);   //LUCIANO
 }
 
 MyFrame::~MyFrame()
@@ -126,6 +142,8 @@ void MyFrame::ConfigureVTK()
   pRenderer->GetActiveCamera()->Zoom(1.0);
   pRenderer->GetActiveCamera()->SetClippingRange(1,1000);
 
+  //THIS IS COMMENTED ORIGINALLY!
+  //IS CRASHING!
   //pRenderer->Render();//LUCIANO
 
 }

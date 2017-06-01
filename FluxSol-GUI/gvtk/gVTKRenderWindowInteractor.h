@@ -74,13 +74,12 @@ public vtkRenderWindowInteractor
     gVTKRenderWindowInteractor();
 
     gVTKRenderWindowInteractor(//wxWindow *parent,
-                                HWND *parent,
-                                int id,//wxWindowID id,
-                                const POINT &pos,//const wxPoint &pos = wxDefaultPosition,
+                                const HWND &parent,
+                                int id//wxWindowID id,
+                                /*,const POINT &pos=POINT(0,0),//const wxPoint &pos = wxDefaultPosition,
                                 const Vector2 &size, //const wxSize &size = wxDefaultSize,
-                                long style, //= wxWANTS_CHARS | wxNO_FULL_REPAINT_ON_RESIZE,
-                                //const wxString &name = wxPanelNameStr);
-                                const String &name = "Test");
+                                long style= WANTS_CHARS | NO_FULL_REPAINT_ON_RESIZE,
+                                const String &name = "Test"*/);
     vtkTypeRevisionMacro(gVTKRenderWindowInteractor,vtkRenderWindowInteractor);
     static gVTKRenderWindowInteractor * New();
     void PrintSelf(ostream& os, vtkIndent indent);
@@ -157,6 +156,9 @@ public vtkRenderWindowInteractor
 #endif
 
   protected:
+      HWND *parent;  //LUCIANO
+
+
     //wxTimer timer;
     Timer *timer; //Godot
     int ActiveButton;

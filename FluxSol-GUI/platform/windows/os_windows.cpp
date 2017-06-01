@@ -1028,6 +1028,22 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
     //Otherwise, it crashes
     gvtk_viewport=new MyFrame(hWnd);
 
+
+    //This is only for testing
+//    HINSTANCE vtk_hinstance;
+//   vtkwin = CreateWindow ( "Test",
+//                     "Draw Window",
+//                     WS_OVERLAPPEDWINDOW,
+//                     CW_USEDEFAULT,
+//                     CW_USEDEFAULT,
+//                     400,
+//                     480,
+//                     NULL,
+//                     NULL,
+//                     vtk_hinstance,
+//                     NULL);
+//    theVTKApp = new myVTKApp(vtkwin);
+
 	print_line("Visual Server initiated");
 
 	TRACKMOUSEEVENT tme;
@@ -2095,7 +2111,7 @@ void OS_Windows::run() {
 
 	int frames=0;
 	uint64_t frame=0;
-    Main::iteration(); //THIS CRASHES
+    //Main::iteration(); //THIS CRASHES
 	while (!force_quit) { //LUCIANO
 
 		process_events(); // get rid of pending events

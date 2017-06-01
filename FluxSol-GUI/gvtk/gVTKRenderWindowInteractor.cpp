@@ -91,12 +91,12 @@ gVTKRenderWindowInteractor::gVTKRenderWindowInteractor() :
 }
 
 //---------------------------------------------------------------------------
-gVTKRenderWindowInteractor::gVTKRenderWindowInteractor(HWND *parent,//wxWindow *parent,
-                                                         int id,//wxWindowID id,
-                                                         const POINT &pos,
+gVTKRenderWindowInteractor::gVTKRenderWindowInteractor(const HWND &parent,//wxWindow *parent,
+                                                         int id//wxWindowID id,
+                                                         /*,const POINT &pos,
                                                          const Vector2 &size,
                                                          long style,
-                                                         const String &name)
+                                                         const String &name*/)
 //#if defined(__WXGTK__) && defined(USE_WXGLCANVAS)
 //      : wxGLCanvas(parent, id, pos, size, style, name, gVTK_attributes), vtkRenderWindowInteractor()
 //#else
@@ -128,6 +128,15 @@ gVTKRenderWindowInteractor::gVTKRenderWindowInteractor(HWND *parent,//wxWindow *
   timer->connect("timeout",this,"OnTimer");
   //add_child(timer);
 
+  //LUCIANO
+  timer->set_wait_time(0.01);
+  timer->set_one_shot(true);
+  timer->start();
+  Enabled=true;
+
+  Initialize();
+  OnTimer();
+  OnPaint();
 }
 //---------------------------------------------------------------------------
 gVTKRenderWindowInteractor::~gVTKRenderWindowInteractor()

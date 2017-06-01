@@ -62,6 +62,7 @@
 #include <stdio.h>
 
 #include "gvtk/vtkFrame.h" //LUCIANO, THIS MUST BE CHANGED TO VIEWPORT AND PUT IN EDITOR
+#include "vtkApp.h" //Just for testing
 
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
@@ -109,6 +110,10 @@ class OS_Windows : public OS {
 	HDC		hDC;	// Private GDI Device Context
 	HINSTANCE	hInstance;		// Holds The Instance Of The Application
 	HWND hWnd;
+
+	//LUCIANO, just for test
+    myVTKApp *theVTKApp ;
+    HWND vtkwin;
 
 	HCURSOR hCursor;
 

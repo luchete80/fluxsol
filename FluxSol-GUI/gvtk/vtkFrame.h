@@ -31,7 +31,7 @@ class MyFrame //: public wxFrame
 public:
    // ctor(s)
    //MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
-	MyFrame(HWND hWnd=NULL);
+	MyFrame(const HWND &hWnd=NULL);
    ~MyFrame();
 
    // event handlers (these functions should _not_ be virtual)
@@ -39,13 +39,16 @@ public:
    // void OnAbout(wxCommandEvent& event);
 
 protected:
+
    void ConstructVTK();
    void ConfigureVTK();
    void DestroyVTK();
 
 private:
+ HINSTANCE vtk_hinstance;
  gVTKRenderWindowInteractor *m_pVTKWindow;
  HWND vtkwin;
+ HWND vtkwinsep; //ONLY FOR TESTING
  HWND *parent;
 
  // vtk classes

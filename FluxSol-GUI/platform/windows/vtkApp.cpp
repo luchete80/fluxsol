@@ -18,8 +18,6 @@
 
 #include "vtkApp.h"
 
-static HANDLE hinst;
-LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 // define the vtk part as a simple c++ class
 
 
@@ -68,44 +66,44 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
   // return msg.wParam;
 // }
 
-// LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
-// {
-  // static HWND ewin;
-  // static myVTKApp *theVTKApp;
+ LRESULT CALLBACK vtk_WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+ {
+   static HWND ewin;
+   static myVTKApp *theVTKApp;
 
-  // switch (message)
-  // {
-    // case WM_CREATE:
-    // {
-      // ewin = CreateWindow("button","Exit",
-                          // WS_CHILD | WS_VISIBLE | SS_CENTER,
-                          // 0,400,400,60,
-                          // hwnd,(HMENU)2,
-                          // (HINSTANCE)vtkGetWindowLong(hwnd,vtkGWL_HINSTANCE),
-                          // NULL);
-      // theVTKApp = new myVTKApp(hwnd);
-      // return 0;
-    // }
+   switch (message)
+   {
+     case WM_CREATE:
+     {
+       ewin = CreateWindow("button","Exit",
+                           WS_CHILD | WS_VISIBLE | SS_CENTER,
+                           0,400,400,60,
+                           hwnd,(HMENU)2,
+                           (HINSTANCE)vtkGetWindowLong(hwnd,vtkGWL_HINSTANCE),
+                           NULL);
+       theVTKApp = new myVTKApp(hwnd);
+       return 0;
+     }
 
-    // case WM_COMMAND:
-      // switch (wParam)
-      // {
-        // case 2:
-          // PostQuitMessage (0);
-          // delete theVTKApp;
-          // theVTKApp = NULL;
-          // break;
-      // }
-      // return 0;
+     case WM_COMMAND:
+       switch (wParam)
+       {
+         case 2:
+           PostQuitMessage (0);
+           delete theVTKApp;
+           theVTKApp = NULL;
+           break;
+       }
+       return 0;
 
-    // case WM_DESTROY:
-      // PostQuitMessage (0);
-      // delete theVTKApp;
-      // theVTKApp = NULL;
-      // return 0;
-  // }
-  // return DefWindowProc (hwnd, message, wParam, lParam);
-// }
+     case WM_DESTROY:
+       PostQuitMessage (0);
+       delete theVTKApp;
+       theVTKApp = NULL;
+       return 0;
+   }
+   return DefWindowProc (hwnd, message, wParam, lParam);
+ }
 
 myVTKApp::myVTKApp(HWND hwnd)
 {
@@ -131,7 +129,7 @@ myVTKApp::myVTKApp(HWND hwnd)
 
   this->renderer->AddActor(this->coneActor);
   this->renderer->SetBackground(0.2,0.4,0.3);
-  this->renWin->SetSize(400,400);
+  this->renWin->SetSize(200,200);
 
   // Finally we start the interactor so that event will be handled
   this->renWin->Render();
