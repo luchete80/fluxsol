@@ -82,14 +82,15 @@ target_link_libraries (gVTK scene core stdc++ ${VTK_LIBRARIES})
 #target_link_libraries (windows core zlib Shlwapi)
 
 add_executable (${NAME} 
-$<TARGET_OBJECTS:app_>	
+$<TARGET_OBJECTS:app_>	$<TARGET_OBJECTS:main_>
 #$<TARGET_OBJECTS:gVTK_>
 )
 
 #BESIDES MAIN AND CORE HAVE IT,
 #SERVER LIBRARY MUST BE LINKED ALSO IN ORDER TO LINK VISUAL SERVER GLES2
 target_link_libraries (${NAME} 
-servers driverstypes main core scene
+main
+servers driverstypes core scene
 windows unix 
 gVTK
 gl_context gles2

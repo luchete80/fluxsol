@@ -442,177 +442,177 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 //
 //
 //		} break;
-//		case WM_LBUTTONDOWN:
-//		case WM_LBUTTONUP:
-//		case WM_MBUTTONDOWN:
-//		case WM_MBUTTONUP:
-//		case WM_RBUTTONDOWN:
-//		case WM_RBUTTONUP:
-//		case WM_MOUSEWHEEL:
-//		case WM_MOUSEHWHEEL:
-//		case WM_LBUTTONDBLCLK:
-//		case WM_RBUTTONDBLCLK:
-//		/*case WM_XBUTTONDOWN:
-//		case WM_XBUTTONUP: */{
-//
-//			/*
-//			LPARAM extra = GetMessageExtraInfo();
-//			if (IsPenEvent(extra)) {
-//
-//				int idx = extra & 0x7f;
-//				_touch_event(idx, uMsg, wParam, lParam);
-//				if (idx != 0) {
-//					return 0;
-//				};
-//				// fallthrough for mouse event
-//			};
-//			*/
-//
-//			InputEvent event;
-//			event.type=InputEvent::MOUSE_BUTTON;
-//			event.ID=++last_id;
-//			InputEventMouseButton &mb=event.mouse_button;
-//
-//			switch (uMsg) {
-//				case WM_LBUTTONDOWN: {
-//					mb.pressed=true;
-//					mb.button_index=1;
-//				} break;
-//				case WM_LBUTTONUP: {
-//					mb.pressed=false;
-//					mb.button_index=1;
-//				} break;
-//				case WM_MBUTTONDOWN: {
-//					mb.pressed=true;
-//					mb.button_index=3;
-//
-//				} break;
-//				case WM_MBUTTONUP: {
-//					mb.pressed=false;
-//					mb.button_index=3;
-//				} break;
-//				case WM_RBUTTONDOWN: {
-//					mb.pressed=true;
-//					mb.button_index=2;
-//				} break;
-//				case WM_RBUTTONUP: {
-//					mb.pressed=false;
-//					mb.button_index=2;
-//				} break;
-//				case WM_LBUTTONDBLCLK: {
-//
-//					mb.pressed=true;
-//					mb.button_index=1;
-//					mb.doubleclick = true;
-//				} break;
-//				case WM_RBUTTONDBLCLK: {
-//
-//					mb.pressed=true;
-//					mb.button_index=2;
-//					mb.doubleclick = true;
-//				} break;
-//				case WM_MOUSEWHEEL: {
-//
-//					mb.pressed=true;
-//					int motion = (short)HIWORD(wParam);
-//					if (!motion)
-//						return 0;
-//
-//
-//					if (motion>0)
-//						mb.button_index= BUTTON_WHEEL_UP;
-//					else
-//						mb.button_index= BUTTON_WHEEL_DOWN;
-//
-//
-//				} break;
-//				case WM_MOUSEHWHEEL: {
-//
-//					mb.pressed = true;
-//					int motion = (short)HIWORD(wParam);
-//					if (!motion)
-//						return 0;
-//
-//					if (motion<0)
-//						mb.button_index = BUTTON_WHEEL_LEFT;
-//					else
-//						mb.button_index = BUTTON_WHEEL_RIGHT;
-//				} break;
-//					/*
-//				case WM_XBUTTONDOWN: {
-//					mb.pressed=true;
-//					mb.button_index=(HIWORD(wParam)==XBUTTON1)?6:7;
-//				} break;
-//				case WM_XBUTTONUP:
-//					mb.pressed=true;
-//					mb.button_index=(HIWORD(wParam)==XBUTTON1)?6:7;
-//				} break;*/
-//				default: { return 0; }
-//			}
-//
-//
-//			mb.mod.control=(wParam&MK_CONTROL)!=0;
-//			mb.mod.shift=(wParam&MK_SHIFT)!=0;
-//			mb.mod.alt=alt_mem;
-//			//mb.mod.alt=(wParam&MK_MENU)!=0;
-//			mb.button_mask|=(wParam&MK_LBUTTON)?(1<<0):0;
-//			mb.button_mask|=(wParam&MK_RBUTTON)?(1<<1):0;
-//			mb.button_mask|=(wParam&MK_MBUTTON)?(1<<2):0;
-//
-//			last_button_state=mb.button_mask;
-//			/*
-//			mb.button_mask|=(wParam&MK_XBUTTON1)?(1<<5):0;
-//			mb.button_mask|=(wParam&MK_XBUTTON2)?(1<<6):0;*/
-//			mb.x=GET_X_LPARAM(lParam);
-//			mb.y=GET_Y_LPARAM(lParam);
-//
-//			if (mouse_mode==MOUSE_MODE_CAPTURED) {
-//
-//				mb.x=old_x;
-//				mb.y=old_y;
-//			}
-//
-//			mb.global_x=mb.x;
-//			mb.global_y=mb.y;
-//
-//
-//			if (uMsg != WM_MOUSEWHEEL) {
-//				if (mb.pressed) {
-//
-//					if (++pressrc>0)
-//						SetCapture(hWnd);
-//				} else {
-//
-//
-//					if (--pressrc<=0) {
-//						ReleaseCapture();
-//						pressrc=0;
-//					}
-//
-//				}
-//			} else if (mouse_mode!=MOUSE_MODE_CAPTURED) {
-//				// for reasons unknown to mankind, wheel comes in screen cordinates
-//				RECT rect;
-//				GetWindowRect(hWnd,&rect);
-//				mb.x-=rect.left;
-//				mb.y-=rect.top;
-//
-//			}
-//
-//			if (main_loop) {
-//				input->parse_input_event(event);
-//				if (mb.pressed && mb.button_index>3) {
-//					//send release for mouse wheel
-//					mb.pressed=false;
-//					event.ID=++last_id;
-//					input->parse_input_event(event);
-//
-//				}
-//			}
-//
-//
-//
-//		} break;
+		case WM_LBUTTONDOWN:
+		case WM_LBUTTONUP:
+		case WM_MBUTTONDOWN:
+		case WM_MBUTTONUP:
+		case WM_RBUTTONDOWN:
+		case WM_RBUTTONUP:
+		case WM_MOUSEWHEEL:
+		case WM_MOUSEHWHEEL:
+		case WM_LBUTTONDBLCLK:
+		case WM_RBUTTONDBLCLK:
+		/*case WM_XBUTTONDOWN:
+		case WM_XBUTTONUP: */{
+
+			/*
+			LPARAM extra = GetMessageExtraInfo();
+			if (IsPenEvent(extra)) {
+
+				int idx = extra & 0x7f;
+				_touch_event(idx, uMsg, wParam, lParam);
+				if (idx != 0) {
+					return 0;
+				};
+				// fallthrough for mouse event
+			};
+			*/
+
+			InputEvent event;
+			event.type=InputEvent::MOUSE_BUTTON;
+			event.ID=++last_id;
+			InputEventMouseButton &mb=event.mouse_button;
+
+			switch (uMsg) {
+				case WM_LBUTTONDOWN: {
+					mb.pressed=true;
+					mb.button_index=1;
+				} break;
+				case WM_LBUTTONUP: {
+					mb.pressed=false;
+					mb.button_index=1;
+				} break;
+				case WM_MBUTTONDOWN: {
+					mb.pressed=true;
+					mb.button_index=3;
+
+				} break;
+				case WM_MBUTTONUP: {
+					mb.pressed=false;
+					mb.button_index=3;
+				} break;
+				case WM_RBUTTONDOWN: {
+					mb.pressed=true;
+					mb.button_index=2;
+				} break;
+				case WM_RBUTTONUP: {
+					mb.pressed=false;
+					mb.button_index=2;
+				} break;
+				case WM_LBUTTONDBLCLK: {
+
+					mb.pressed=true;
+					mb.button_index=1;
+					mb.doubleclick = true;
+				} break;
+				case WM_RBUTTONDBLCLK: {
+
+					mb.pressed=true;
+					mb.button_index=2;
+					mb.doubleclick = true;
+				} break;
+				case WM_MOUSEWHEEL: {
+
+					mb.pressed=true;
+					int motion = (short)HIWORD(wParam);
+					if (!motion)
+						return 0;
+
+
+					if (motion>0)
+						mb.button_index= BUTTON_WHEEL_UP;
+					else
+						mb.button_index= BUTTON_WHEEL_DOWN;
+
+
+				} break;
+				case WM_MOUSEHWHEEL: {
+
+					mb.pressed = true;
+					int motion = (short)HIWORD(wParam);
+					if (!motion)
+						return 0;
+
+					if (motion<0)
+						mb.button_index = BUTTON_WHEEL_LEFT;
+					else
+						mb.button_index = BUTTON_WHEEL_RIGHT;
+				} break;
+					/*
+				case WM_XBUTTONDOWN: {
+					mb.pressed=true;
+					mb.button_index=(HIWORD(wParam)==XBUTTON1)?6:7;
+				} break;
+				case WM_XBUTTONUP:
+					mb.pressed=true;
+					mb.button_index=(HIWORD(wParam)==XBUTTON1)?6:7;
+				} break;*/
+				default: { return 0; }
+			}
+
+
+			mb.mod.control=(wParam&MK_CONTROL)!=0;
+			mb.mod.shift=(wParam&MK_SHIFT)!=0;
+			mb.mod.alt=alt_mem;
+			//mb.mod.alt=(wParam&MK_MENU)!=0;
+			mb.button_mask|=(wParam&MK_LBUTTON)?(1<<0):0;
+			mb.button_mask|=(wParam&MK_RBUTTON)?(1<<1):0;
+			mb.button_mask|=(wParam&MK_MBUTTON)?(1<<2):0;
+
+			last_button_state=mb.button_mask;
+			/*
+			mb.button_mask|=(wParam&MK_XBUTTON1)?(1<<5):0;
+			mb.button_mask|=(wParam&MK_XBUTTON2)?(1<<6):0;*/
+			mb.x=GET_X_LPARAM(lParam);
+			mb.y=GET_Y_LPARAM(lParam);
+
+			if (mouse_mode==MOUSE_MODE_CAPTURED) {
+
+				mb.x=old_x;
+				mb.y=old_y;
+			}
+
+			mb.global_x=mb.x;
+			mb.global_y=mb.y;
+
+
+			if (uMsg != WM_MOUSEWHEEL) {
+				if (mb.pressed) {
+
+					if (++pressrc>0)
+						SetCapture(hWnd);
+				} else {
+
+
+					if (--pressrc<=0) {
+						ReleaseCapture();
+						pressrc=0;
+					}
+
+				}
+			} else if (mouse_mode!=MOUSE_MODE_CAPTURED) {
+				// for reasons unknown to mankind, wheel comes in screen cordinates
+				RECT rect;
+				GetWindowRect(hWnd,&rect);
+				mb.x-=rect.left;
+				mb.y-=rect.top;
+
+			}
+
+			if (main_loop) {
+				input->parse_input_event(event);
+				if (mb.pressed && mb.button_index>3) {
+					//send release for mouse wheel
+					mb.pressed=false;
+					event.ID=++last_id;
+					input->parse_input_event(event);
+
+				}
+			}
+
+
+
+		} break;
 
 //		case WM_SIZE: {
 //			video_mode.width=LOWORD(lParam);
@@ -1015,7 +1015,6 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //        //visual_server =memnew(VisualServerWrapMT(visual_server,get_render_thread_mode()==RENDER_SEPARATE_THREAD));
 //	 }
 
-
 	if (!is_no_window_mode_enabled()) {
 		ShowWindow(hWnd,SW_SHOW);						// Show The Window
 		SetForegroundWindow(hWnd);						// Slightly Higher Priority
@@ -1024,9 +1023,9 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 	print_line("Initializing Visual Server");
 	visual_server->init();
 
-    //This must be called after itinialize visual server.
-    //Otherwise, it crashes
-    gvtk_viewport=new MyFrame(hWnd);
+//    //This must be called after itinialize visual server.
+//    //Otherwise, it crashes
+//    gvtk_viewport=new MyFrame(hWnd);
 
 
     //This is only for testing
@@ -1059,6 +1058,13 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 
 	DragAcceptFiles(hWnd,true);
     print_line("ENDING OS_INITIALIZE()");
+
+    //LUCIANO
+    controltest=memnew(Control);
+    timer_controltest=memnew(Timer);
+//    timer_controltest->connect("timeout",this,"OnTimer");
+//    controltest->add_child(timer_controltest);
+
 
 }//Initialize
 
@@ -1149,7 +1155,7 @@ void OS_Windows::delete_main_loop() {
 
 void OS_Windows::set_main_loop( MainLoop * p_main_loop ) {
 
-	//input->set_main_loop(p_main_loop); //LUCIANO
+	input->set_main_loop(p_main_loop); //LUCIANO
 	main_loop=p_main_loop;
 }
 
@@ -2112,6 +2118,7 @@ void OS_Windows::run() {
 	int frames=0;
 	uint64_t frame=0;
     //Main::iteration(); //THIS CRASHES
+    //gvtk_viewport=new MyFrame(hWnd);
 	while (!force_quit) { //LUCIANO
 
 		process_events(); // get rid of pending events

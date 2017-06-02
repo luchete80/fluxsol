@@ -126,7 +126,7 @@ gVTKRenderWindowInteractor::gVTKRenderWindowInteractor(const HWND &parent,//wxWi
 
   this->timer=memnew(Timer);
   timer->connect("timeout",this,"OnTimer");
-  //add_child(timer);
+  add_child(timer);
 
   //LUCIANO
   timer->set_wait_time(0.01);
@@ -308,6 +308,7 @@ void gVTKRenderWindowInteractor::OnTimer()
   // old style
   InteractorStyle->OnTimer();
 #endif
+printf("test\n");
 }
 
 //---------------------------------------------------------------------------

@@ -115,6 +115,11 @@ class OS_Windows : public OS {
     myVTKApp *theVTKApp ;
     HWND vtkwin;
 
+    Control *controltest; //TEST TIMER
+    Timer *timer_controltest;
+
+    //END LUCIANO
+
 	HCURSOR hCursor;
 
 	Size2 window_rect;

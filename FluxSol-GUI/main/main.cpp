@@ -1368,12 +1368,12 @@ bool Main::iteration() {
 
 	uint64_t ticks=OS::get_singleton()->get_ticks_usec();
 	uint64_t ticks_elapsed=ticks-last_ticks;
-
+//
 	double step=(double)ticks_elapsed / 1000000.0;
 	float frame_slice=1.0/OS::get_singleton()->get_iterations_per_second();
 
-//	if (time_accum+step < frame_slice)
-//		return false;
+	if (time_accum+step < frame_slice)
+		return false;
 
 	frame+=ticks_elapsed;
 
@@ -1390,30 +1390,12 @@ bool Main::iteration() {
 
 	int iters = 0;
 
-//	while(time_accum>frame_slice) { //LUCIANO
-//
-//		uint64_t fixed_begin = OS::get_singleton()->get_ticks_usec();
-//
-//		if (OS::get_singleton()->get_main_loop()->iteration( frame_slice*time_scale )) {
-//			exit=true;
-//			break;
-//		}
-//
-//		message_queue->flush();
-//
-//		time_accum-=frame_slice;
-//		message_queue->flush();
-//
-//		fixed_process_max=MAX(OS::get_singleton()->get_ticks_usec()-fixed_begin,fixed_process_max);
-//		iters++;
-//	}
-
 	uint64_t idle_begin = OS::get_singleton()->get_ticks_usec();
-
-	//OS::get_singleton()->get_main_loop()->idle( step*time_scale ); //CRASHING
+//
+//	//OS::get_singleton()->get_main_loop()->idle( step*time_scale ); //CRASHING
 	message_queue->flush();
 
-	//VisualServer::get_singleton()->sync(); //sync if still drawing from previous frames.
+	VisualServer::get_singleton()->sync(); //sync if still drawing from previous frames.
 
 	if (OS::get_singleton()->can_draw()) {
 
@@ -1429,31 +1411,10 @@ bool Main::iteration() {
 		}
 	}
 
-//	idle_process_max=MAX(OS::get_singleton()->get_ticks_usec()-idle_begin,idle_process_max);
+	idle_process_max=MAX(OS::get_singleton()->get_ticks_usec()-idle_begin,idle_process_max);
 
-	//	x11_delay_usec(10000);
-	//frames++;
-
-	if (frame>1000000) {
-
-		if (GLOBAL_DEF("debug/print_fps", OS::get_singleton()->is_stdout_verbose())) {
-			print_line("FPS: "+itos(frames));
-		};
-
-		OS::get_singleton()->_fps=frames;
-		performance->set_process_time(idle_process_max/1000000.0);
-		performance->set_fixed_process_time(fixed_process_max/1000000.0);
-		idle_process_max=0;
-		fixed_process_max=0;
-
-		if (GLOBAL_DEF("debug/print_metrics", false)) {
-
-			//PerformanceMetrics::print();
-		};
-
-		frame%=1000000;
-		frames=0;
-	}
+		//x11_delay_usec(10000);
+	frames++;
 
 	if (OS::get_singleton()->is_in_low_processor_usage_mode() || !OS::get_singleton()->can_draw())
 		OS::get_singleton()->delay_usec(25000); //apply some delay to force idle time

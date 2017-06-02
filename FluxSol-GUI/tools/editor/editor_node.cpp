@@ -4172,6 +4172,7 @@ void EditorNode::_save_docks() {
 
 	config->save(EditorSettings::get_singleton()->get_project_settings_path().plus_file("editor_layout.cfg"));
 
+    //print_line("LUCIANO");
 }
 
 void EditorNode::_save_docks_to_config(Ref<ConfigFile> p_layout, const String& p_section) {
@@ -4917,8 +4918,9 @@ EditorNode::EditorNode() {
 	dock_drag_timer = memnew( Timer );
 	add_child(dock_drag_timer);
 	dock_drag_timer->set_wait_time(0.5);
-	dock_drag_timer->set_one_shot(true);
+	dock_drag_timer->set_one_shot(true); //LUCIANO
 	dock_drag_timer->connect("timeout",this,"_save_docks");
+	//dock_drag_timer->start(); //LUCIANO
 
 	top_split = memnew( VSplitContainer );
 	center_split->add_child(top_split);
