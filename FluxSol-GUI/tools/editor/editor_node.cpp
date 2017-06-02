@@ -32,14 +32,11 @@
 #include "editor_icons.h"
 #include "editor_fonts.h"
 
-//#include "editor_help.h"
 #include "core/io/resource_saver.h"
 #include "core/io/resource_loader.h"
-#include "servers/physics_2d_server.h"
 #include "scene/resources/packed_scene.h"
 #include "editor_settings.h"
 #include "io_plugins/editor_import_collada.h"
-//#include "io_plugins/editor_scene_importer_fbxconv.h"
 #include "globals.h"
 #include <stdio.h>
 #include "object_type_db.h"
@@ -61,40 +58,9 @@
 //#include "plugins/sprite_frames_editor_plugin.h"
 //#include "plugins/sprite_region_editor_plugin.h"
 #include "plugins/canvas_item_editor_plugin.h"
-//#include "plugins/spatial_editor_plugin.h"
-//#include "plugins/sample_editor_plugin.h"
-//#include "plugins/sample_library_editor_plugin.h"
-//#include "plugins/sample_player_editor_plugin.h"
-#include "plugins/camera_editor_plugin.h"
 #include "plugins/style_box_editor_plugin.h"
 #include "plugins/resource_preloader_editor_plugin.h"
-//#include "plugins/item_list_editor_plugin.h"
-//#include "plugins/stream_editor_plugin.h"
-//#include "plugins/multimesh_editor_plugin.h"
-//#include "plugins/mesh_editor_plugin.h"
 #include "plugins/theme_editor_plugin.h"
-
-//#include "plugins/tile_map_editor_plugin.h"
-//#include "plugins/cube_grid_theme_editor_plugin.h"
-//#include "plugins/shader_editor_plugin.h"
-//#include "plugins/shader_graph_editor_plugin.h"
-//#include "plugins/path_editor_plugin.h"
-//#include "plugins/rich_text_editor_plugin.h"
-//#include "plugins/collision_polygon_editor_plugin.h"
-//#include "plugins/collision_polygon_2d_editor_plugin.h"
-//#include "plugins/script_editor_plugin.h"
-//#include "plugins/path_2d_editor_plugin.h"
-//#include "plugins/particles_editor_plugin.h"
-//#include "plugins/particles_2d_editor_plugin.h"
-//#include "plugins/animation_tree_editor_plugin.h"
-//#include "plugins/tile_set_editor_plugin.h"
-//#include "plugins/animation_player_editor_plugin.h"
-//#include "plugins/baked_light_editor_plugin.h"
-//#include "plugins/polygon_2d_editor_plugin.h"
-//#include "plugins/navigation_polygon_editor_plugin.h"
-//#include "plugins/light_occluder_2d_editor_plugin.h"
-//#include "plugins/color_ramp_editor_plugin.h"
-//#include "plugins/collision_shape_2d_editor_plugin.h"
 #include "main/input_default.h"
 // end
 #include "tools/editor/io_plugins/editor_texture_import_plugin.h"
@@ -108,6 +74,7 @@
 //#include "plugins/editor_preview_plugins.h"
 
 #include "script_editor_debugger.h"
+#include "scene/main/viewport.h"
 
 EditorNode *EditorNode::singleton=NULL;
 
@@ -3555,9 +3522,9 @@ void EditorNode::_property_keyed(const String& p_keyed,const Variant& p_value,bo
 
 void EditorNode::_transform_keyed(Object *sp,const String& p_sub,const Transform& p_key) {
 
-	Spatial *s=sp->cast_to<Spatial>();
-	if (!s)
-		return;
+	// Spatial *s=sp->cast_to<Spatial>();
+	// if (!s)
+		// return;
 	//AnimationPlayerEditor::singleton->get_key_editor()->insert_transform_key(s,p_sub,p_key);
 }
 

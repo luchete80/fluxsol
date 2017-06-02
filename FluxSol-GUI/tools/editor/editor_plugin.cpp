@@ -28,7 +28,7 @@
 /*************************************************************************/
 #include "editor_plugin.h"
 #include "plugins/canvas_item_editor_plugin.h"
-#include "plugins/spatial_editor_plugin.h"
+
 
 void EditorPlugin::add_custom_type(const String& p_type, const String& p_base,const Ref<Script>& p_script, const Ref<Texture>& p_icon) {
 
