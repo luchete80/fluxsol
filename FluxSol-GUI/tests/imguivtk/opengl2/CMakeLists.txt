@@ -17,6 +17,6 @@ include_directories ("${GLFW_DIR}/include")
 link_directories ("${IMGUI_DIR}/bin")
 link_directories ("${GLFW_DIR}/lib")
 
-add_executable(${NAME} main.cpp imgui_impl_glfw.cpp timer.cpp)
+add_executable(${NAME} main.cpp imgui_impl_glfw.cpp)
 
 target_link_libraries (${NAME} imgui glfw3 opengl32)

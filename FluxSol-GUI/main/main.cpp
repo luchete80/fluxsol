@@ -1342,7 +1342,7 @@ bool Main::start() {
     print_line("Setting Main Loop."); //LUCIANO
     if (OS::get_singleton()==NULL)
         print_line("OS Main Loop Null");
-	OS::get_singleton()->set_main_loop( main_loop );
+	//OS::get_singleton()->set_main_loop( main_loop ); //LUCIANO
 
 	return true;
 }//Main::start
