@@ -1,13 +1,12 @@
-cmake_minimum_required(VERSION 2.8.4)
-include (CheckSymbolExists)
-include (CheckCXXSymbolExists)
-include (CheckIncludeFiles)
-include (CheckIncludeFileCXX)
-include (CheckCXXSourceCompiles)
-
-set (NAME FluxSol-GUI)
-project(${NAME})
-
+# Set the name and the supported language of the project
+project(hello-world)
+# Set the minimum version of cmake required to build this project
+cmake_minimum_required(VERSION 2.6)
+# Use the package PkgConfig to detect GTK+ headers/library files
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
+# Setup CMake to use GTK+, tell the compiler where to look for headers
+# and to the linker where to look for libraries
 #VTK
 IF(NOT VTK_BINARY_DIR)
 FIND_PACKAGE(VTK)
@@ -18,77 +17,13 @@ INCLUDE(${VTK_USE_FILE})
 ENDIF()
 
 
-#DIRECTORIES
-set (GODOTGUI_SRC_DIR "D:/Luciano/Libs/GodotGUI")
-set (GODOTGUI_BIN_DIR "$ENV{GODOTGUI_BIN_DIR}")
-
-link_directories ("D:/Luciano/Libs/VTK-6.3.0-Install/lib")
-link_directories ("${GODOTGUI_BIN_DIR}")
+include_directories(${GTK3_INCLUDE_DIRS})
+link_directories(${GTK3_LIBRARY_DIRS})
 link_directories ("D:/Luciano/Libs/VTK-6.3.0-Install/lib")
 
-
-#GODOTGUI
-include_directories("${GODOTGUI_SRC_DIR}")
-include_directories("${GODOTGUI_SRC_DIR}/core")
-include_directories("${GODOTGUI_SRC_DIR}/core/math")
-include_directories("${GODOTGUI_SRC_DIR}/core/io")
-include_directories("${GODOTGUI_SRC_DIR}/core/os")
-include_directories("${GODOTGUI_SRC_DIR}/drivers")
-include_directories("${GODOTGUI_SRC_DIR}/drivers/freetype")
-include_directories("${GODOTGUI_SRC_DIR}/drivers/freetype/freetype/include")
-include_directories("${GODOTGUI_SRC_DIR}/drivers/png")
-include_directories("${GODOTGUI_SRC_DIR}/drivers/windows")
-include_directories("${GODOTGUI_SRC_DIR}/tools/editor")
-include_directories("${GODOTGUI_SRC_DIR}/tools/editor/plugins")
-include_directories("${GODOTGUI_SRC_DIR}/tools/editor/io_plugins")
-include_directories("${GODOTGUI_SRC_DIR}/scene/2d")
-include_directories("${GODOTGUI_SRC_DIR}/scene/gui")
-include_directories("${GODOTGUI_SRC_DIR}/platform/windows")
-include_directories("${GODOTGUI_SRC_DIR}/servers")
-include_directories("${GODOTGUI_SRC_DIR}/servers/physics_2d")
-include_directories("${GODOTGUI_SRC_DIR}/servers/visual")
-
-
-#FLUXSOL
-include_directories(".")
-include_directories("${PROJECT_SOURCE_DIR}")
-include_directories("${PROJECT_SOURCE_DIR}/main")
-include_directories("${PROJECT_SOURCE_DIR}/platform/windows")
-include_directories("${PROJECT_SOURCE_DIR}/tools/editor")
-
-
-add_subdirectory("${PROJECT_SOURCE_DIR}/main")
-add_subdirectory("${PROJECT_SOURCE_DIR}/platform/windows")
-add_subdirectory("${PROJECT_SOURCE_DIR}/tools/editor")
-add_subdirectory("${PROJECT_SOURCE_DIR}/tools/editor/io_plugins")
-add_subdirectory("${PROJECT_SOURCE_DIR}/tools/editor/plugins")
-
-
-add_library(main SHARED			$<TARGET_OBJECTS:main_>)
-add_library(editor SHARED 	$<TARGET_OBJECTS:editor_>
-							$<TARGET_OBJECTS:editorplugins_>
-							$<TARGET_OBJECTS:editorioplugins_>
-							)
-							
-target_link_libraries (editor scene servers core)
-
-target_link_libraries (main editor servers driverstypes core)
-
-#Shlwapi is for PathFileExistsW
-#target_link_libraries (windows core zlib Shlwapi)
-
-add_executable (${NAME} 
-$<TARGET_OBJECTS:app_>
-)
-
-#BESIDES MAIN AND CORE HAVE IT,
-#SERVER LIBRARY MUST BE LINKED ALSO IN ORDER TO LINK VISUAL SERVER GLES2
-target_link_libraries (${NAME} 
-servers driverstypes main core scene
-windows unix 
-gl_context gles2
-winmm 
-opengl32
-#stdc++
-${VTK_LIBRARIES}
-)
+# Add other flags to the compiler
+add_definitions(${GTK3_CFLAGS_OTHER})
+# Add an executable compiled from hello.c
+add_executable(hello vtkGtkRenderWindowInteractor.cpp creating-sphere-and-cube.cpp)
+# Link the target to the GTK+ libraries
+target_link_libraries(hello ${GTK3_LIBRARIES} ${VTK_LIBRARIES})
