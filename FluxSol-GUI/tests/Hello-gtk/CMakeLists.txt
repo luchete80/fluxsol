@@ -1,5 +1,5 @@
 # Set the name and the supported language of the project
-project(hello-world C)
+project(hello-world)
 # Set the minimum version of cmake required to build this project
 cmake_minimum_required(VERSION 2.6)
 # Use the package PkgConfig to detect GTK+ headers/library files
@@ -12,6 +12,6 @@ link_directories(${GTK3_LIBRARY_DIRS})
 # Add other flags to the compiler
 add_definitions(${GTK3_CFLAGS_OTHER})
 # Add an executable compiled from hello.c
-add_executable(hello main.c)
+add_executable(hello Hello.cpp)
 # Link the target to the GTK+ libraries
 target_link_libraries(hello ${GTK3_LIBRARIES})
