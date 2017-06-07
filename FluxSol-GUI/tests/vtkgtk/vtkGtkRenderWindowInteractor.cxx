@@ -81,7 +81,8 @@ vtkGtkRenderWindowInteractor::vtkGtkRenderWindowInteractor()
   GdkGLConfig *glconfig;
 
   drawing_area = gtk_drawing_area_new();
-  GTK_WIDGET_SET_FLAGS (drawing_area, GTK_CAN_FOCUS);
+  //GTK_WIDGET_SET_FLAGS (drawing_area, GTK_CAN_FOCUS); //LUCIANO
+  gtk_widget_set_can_focus(drawing_area,true);
 
   gtk_widget_set_events(GTK_WIDGET(drawing_area),
 			GDK_EXPOSURE_MASK
@@ -223,7 +224,8 @@ int vtkGtkRenderWindowInteractor::DestroyTimer()
 long vtkGtkRenderWindowInteractor::GetHandle()
 {
 #ifdef G_OS_WIN32
-  return (long)GDK_WINDOW_HWND(drawing_area->window);
+  //return (long)GDK_WINDOW_HWND(drawing_area->window
+  return (long)GDK_WINDOW_HWND( gtk_widget_get_window(GTK_WIDGET(drawing_area))); //LUCIANO
 #else
   return (long)GDK_WINDOW_XWINDOW(drawing_area->window);
 #endif
@@ -251,7 +253,8 @@ void vtkGtkRenderWindowInteractor::Render()
 void vtkGtkRenderWindowInteractor::update_mouse_pos()
 {
   GdkModifierType mask;
-  gdk_window_get_pointer(drawing_area->window,
+  //gdk_window_get_pointer(drawing_area->window, //LUCIANO, ESTO CAMBIO
+  gdk_window_get_pointer(gtk_widget_get_window(GTK_WIDGET(drawing_area)),
 			 &last_xpos,
 			 &last_ypos,
 			 &mask);

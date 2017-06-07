@@ -12,9 +12,7 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
 # Use the package PkgConfig to detect GTK+ headers/library files
 find_package(PkgConfig REQUIRED)
 #pkg_check_modules(GTK2 REQUIRED gtk+-2.0)
-#pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
-pkg_check_modules(GTKMM REQUIRED gtkmm-3.0)
-pkg_check_modules(GLIBMM REQUIRED glibmm-2.4)
+pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 #pkg_check_modules(GTKGLEXT REQUIRED gtkglext-1.0)
 # Setup CMake to use GTK+, tell the compiler where to look for headers
 # and to the linker where to look for libraries
@@ -28,17 +26,13 @@ INCLUDE(${VTK_USE_FILE})
 ENDIF()
 
 include_directories("${PROJECT_SOURCE_DIR}")
-#include_directories(${GTK3_INCLUDE_DIRS})
-include_directories(${GTKMM_INCLUDE_DIRS})
-include_directories(${GLIBMM_INCLUDE_DIRS})
+include_directories(${GTK3_INCLUDE_DIRS})
 include_directories(${GTKGLEXT_INCLUDE_DIRS})
 include_directories ("D:/Luciano/Libs/gtkglext3-install/include")
 include_directories ("D:/Luciano/Libs/gtkglext3-install/include/gdk")
 include_directories ("D:/Luciano/Libs/gtkglext3-install/include/gtk")
 
-#link_directories(${GTK3_LIBRARY_DIRS})
-link_directories(${GTKMM_LIBRARY_DIRS})
-link_directories(${GLIBMM_INCLUDE_DIRS})
+link_directories(${GTK3_LIBRARY_DIRS})
 link_directories(${GTKGLEXT_LIBRARY_DIRS})
 link_directories ("D:/Luciano/Libs/VTK-6.3.0-Install/lib")
 link_directories ("D:/Luciano/Libs/gtkglext3-install/lib")
@@ -46,6 +40,6 @@ link_directories ("D:/Luciano/Libs/gtkglext3-install/lib")
 # Add other flags to the compiler
 add_definitions(${GTK3_CFLAGS_OTHER})
 # Add an executable compiled from hello.c
-add_executable(${NAME} e1.cpp vtkmm/renderingarea.cpp)
+add_executable(${NAME} creating-sphere-and-cube.cxx vtkGtkRenderWindowInteractor.cxx)
 # Link the target to the GTK+ libraries
-target_link_libraries(${NAME} ${GLIBMM_LIBRARIES} gtkglext-3.0 gdkglext-3.0 ${VTK_LIBRARIES} ${GTKMM_LIBRARIES} ${GTK3_LIBRARIES})
+target_link_libraries(${NAME} gtkglext-3.0 gdkglext-3.0 ${VTK_LIBRARIES}  ${GTK3_LIBRARIES})

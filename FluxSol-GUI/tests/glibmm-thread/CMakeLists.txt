@@ -1,5 +1,5 @@
 # Set the name and the supported language of the project
-set (NAME FluxSol-GUI)
+set (NAME glibmm-thread)
 project(${NAME})
 
 # Set the minimum version of cmake required to build this project
@@ -13,7 +13,7 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
 find_package(PkgConfig REQUIRED)
 #pkg_check_modules(GTK2 REQUIRED gtk+-2.0)
 #pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
-pkg_check_modules(GTKMM REQUIRED gtkmm-3.0)
+#pkg_check_modules(GTKMM REQUIRED gtkmm-3.0)
 pkg_check_modules(GLIBMM REQUIRED glibmm-2.4)
 #pkg_check_modules(GTKGLEXT REQUIRED gtkglext-1.0)
 # Setup CMake to use GTK+, tell the compiler where to look for headers
@@ -29,23 +29,19 @@ ENDIF()
 
 include_directories("${PROJECT_SOURCE_DIR}")
 #include_directories(${GTK3_INCLUDE_DIRS})
-include_directories(${GTKMM_INCLUDE_DIRS})
+#include_directories(${GTKMM_INCLUDE_DIRS})
 include_directories(${GLIBMM_INCLUDE_DIRS})
-include_directories(${GTKGLEXT_INCLUDE_DIRS})
-include_directories ("D:/Luciano/Libs/gtkglext3-install/include")
-include_directories ("D:/Luciano/Libs/gtkglext3-install/include/gdk")
-include_directories ("D:/Luciano/Libs/gtkglext3-install/include/gtk")
+#include_directories(${GTKGLEXT_INCLUDE_DIRS})
+
 
 #link_directories(${GTK3_LIBRARY_DIRS})
 link_directories(${GTKMM_LIBRARY_DIRS})
-link_directories(${GLIBMM_INCLUDE_DIRS})
-link_directories(${GTKGLEXT_LIBRARY_DIRS})
+#link_directories(${GLIBMM_INCLUDE_DIRS})
+#link_directories(${GTKGLEXT_LIBRARY_DIRS})
 link_directories ("D:/Luciano/Libs/VTK-6.3.0-Install/lib")
-link_directories ("D:/Luciano/Libs/gtkglext3-install/lib")
+#link_directories ("D:/Luciano/Libs/gtkglext3-install/lib")
 
-# Add other flags to the compiler
-add_definitions(${GTK3_CFLAGS_OTHER})
 # Add an executable compiled from hello.c
-add_executable(${NAME} e1.cpp vtkmm/renderingarea.cpp)
+add_executable(${NAME} thread.cpp)
 # Link the target to the GTK+ libraries
-target_link_libraries(${NAME} ${GLIBMM_LIBRARIES} gtkglext-3.0 gdkglext-3.0 ${VTK_LIBRARIES} ${GTKMM_LIBRARIES} ${GTK3_LIBRARIES})
+target_link_libraries(${NAME} ${GLIBMM_LIBRARIES})

@@ -30,7 +30,8 @@
 #include "vtkRenderWindow.h"
 #include "gtk/gtk.h"
 
-class VTK_RENDERING_EXPORT vtkGtkRenderWindowInteractor : public vtkRenderWindowInteractor
+class //VTK_RENDERING_EXPORT 
+vtkGtkRenderWindowInteractor : public vtkRenderWindowInteractor
 {
 public:
   // Constructor

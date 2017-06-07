@@ -26,7 +26,8 @@ vtkRenderer *create_scene()
 
   // map to graphics library
   vtkPolyDataMapper *sphere_map = vtkPolyDataMapper::New();
-  sphere_map->SetInput(sphere->GetOutput());
+  //sphere_map->SetInput(sphere->GetOutput()); //LUCIANO
+  sphere_map->SetInputConnection(sphere->GetOutputPort());
 
   // actor coordinates geometry, properties, transformation
   vtkActor *sphere_actor = vtkActor::New();
@@ -41,7 +42,8 @@ vtkRenderer *create_scene()
 
   // map to graphics library
   vtkPolyDataMapper *cube_map = vtkPolyDataMapper::New();
-  cube_map->SetInput(cube->GetOutput());
+  //cube_map->SetInput(cube->GetOutput());
+  cube_map->SetInputConnection(cube->GetOutputPort());
 
   // actor coordinates geometry, properties, transformation
   vtkActor *cube_actor = vtkActor::New();
@@ -66,7 +68,7 @@ void build_gui(GtkWidget *vtk_area)
   GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   GtkWidget *vbox = gtk_vbox_new(0,0);
 
-  gtk_window_set_policy(GTK_WINDOW(window), TRUE, TRUE, TRUE);
+  //gtk_window_set_policy(GTK_WINDOW(window), TRUE, TRUE, TRUE);
 
   gtk_container_add (GTK_CONTAINER (window),
 		     vbox);
