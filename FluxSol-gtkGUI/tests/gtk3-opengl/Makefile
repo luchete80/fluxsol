@@ -10,7 +10,7 @@ CFLAGS	+= $(shell pkg-config --cflags gtk+-3.0)
 CFLAGS	+= -std=c99
 
 LIBS	+= $(shell pkg-config --libs gtk+-3.0)
-LIBS	+= -lGLEW -lGL -lm
+LIBS	+= -lopengl32 -lglew32 -lm
 
 OBJS	 = $(patsubst %.c,%.o,$(wildcard *.c))
 OBJS	+= $(patsubst %.glsl,%.o,$(wildcard shaders/*/*.glsl))

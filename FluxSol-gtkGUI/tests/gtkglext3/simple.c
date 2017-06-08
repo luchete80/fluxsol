@@ -5,6 +5,7 @@
  * written by Naofumi Yasufuku  <naofumi@users.sourceforge.net>
  */
 
+#define G_OS_WIN32
 #include <stdlib.h>
 
 #include <gtk/gtk.h>

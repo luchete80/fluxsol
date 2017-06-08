@@ -35,6 +35,7 @@ include_directories(${GTK3_INCLUDE_DIRS})
 include_directories ("D:/Luciano/Libs/gtkglext3-install/include")
 include_directories ("D:/Luciano/Libs/gtkglext3-install/include/gdk")
 include_directories ("D:/Luciano/Libs/gtkglext3-install/include/gtk")
+include_directories ("D:/Luciano/Libs/glew-master/include")
 
 link_directories(${GTK3_LIBRARY_DIRS})
 #link_directories(${GTKMM_LIBRARY_DIRS})
@@ -42,6 +43,7 @@ link_directories(${GTK3_LIBRARY_DIRS})
 #link_directories(${GTKGLEXT_LIBRARY_DIRS})
 #link_directories ("D:/Luciano/Libs/VTK-6.3.0-Install/lib")
 link_directories ("D:/Luciano/Libs/gtkglext3-install/lib")
+link_directories ("D:/Luciano/Libs/glew-master/lib")
 
 
 
@@ -62,5 +64,7 @@ add_definitions(${GTK3_CFLAGS_OTHER})
     # target_link_libraries( ${testname} gtkglext-3.0 gdkglext-3.0 ${GTK3_LIBRARIES})
 # endforeach( testsourcefile ${APP_SOURCES} )
 
-add_executable( simple background.c gui.c main.c matrix.c model.c program.c view.c)
-target_link_libraries( simple ${GTK3_LIBRARIES} opengl32 glu32)
+add_executable( simple background.c gui.c main.c matrix.c model.c program.c view.c
+shaders/bkgd/vertex.glsl
+shaders/bkgd/vertex.glsl)
+target_link_libraries( simple ${GTK3_LIBRARIES} opengl32 glu32 glew32)

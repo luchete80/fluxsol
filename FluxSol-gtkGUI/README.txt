@@ -47,6 +47,7 @@ For configure gtkglext; SE HACE EN MSYS (EN CYGWIN HAY PROBLEMAS RECONOCIENDO EL
 export PKG_CONFIG_PATH="/d/Luciano/Programas/msys64/mingw64/lib/pkgconfig"
 export PATH=/d/Luciano/Programas/x86_64-5.3.0-posix-seh-rt_v4-rev0/mingw64/bin:$PATH
 export PATH=/d/Luciano/Programas/msys64/mingw64/bin:$PATH
+export PATH=/d/Luciano/Libs/glew-master/include:$PATH
 
 NOT THIS : ln -s /cygdrive/d/Luciano/Programas/msys64/mingw64 /target
 
