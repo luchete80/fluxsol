@@ -44,3 +44,8 @@ cmake CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=%QT_DIR%/lib/cmake -D VTK
 mingw32-make.exe
 
 ///////////////////////////////////////////////////////////////
+BUGS AND CRASHES
+///////////////////////////////////////////////////////////////
+1. For the new GUI libstdc++-6.dll must be put in the folder. But still crash when run from DOS
+2. when vtk is linked, crahses.
+
