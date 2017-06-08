@@ -22,6 +22,7 @@
 
 #include <vtkmm/renderingarea.h>
 
+//#include <vtkptr.h>
 #include <vtkConeSource.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkImplicitFunction.h>
@@ -37,27 +38,27 @@ class Function : public vtkImplicitFunction
 	public:
 	static Function* New();
 		
-	virtual double EvaluateFunction(double x[3]);		
-	virtual void EvaluateGradient(double x[3], double g[3]);
+	virtual float EvaluateFunction(float x[3]);		
+	virtual void EvaluateGradient(float x[3], float g[3]);
 	
-	void setKoefficents(const double koeff[3])
+	void setKoefficents(const float koeff[3])
 	{ std::copy(koeff, koeff+3, koeff_); Modified(); }
 	
-	void getKoefficients(double koeff[3]) const
+	void getKoefficients(float koeff[3]) const
 	{ std::copy(koeff_, koeff_+3, koeff); }
 
-	void setPowers(const double powers[3])
+	void setPowers(const float powers[3])
 	{ std::copy(powers, powers+3, pow_); Modified(); }
 	
-	void getPowers(double powers[3]) const
+	void getPowers(float powers[3]) const
 	{ std::copy(pow_, pow_+3, powers); }	
 		
 	protected:
 	Function();		
 	
 	private:
-	double koeff_[3];
-	double pow_[3];	
+	float koeff_[3];
+	float pow_[3];	
 };	
 
 
@@ -127,13 +128,13 @@ class MainWindow : public Gtk::Window
 	
 	vtkCubeAxesActor2D *_p_cubeAxesActor2D;
 	
-	double _a_k[3], _a_p[3];
-	double _a_range[2];
+	float _a_k[3], _a_p[3];
+	float _a_range[2];
 	int _values;
 	
-	static const double _sc_kx=1, _sc_ky=1, _sc_kz=1;
-	static const double _sc_px=2, _sc_py=2, _sc_pz=2;
-	static const double _sc_min=0, _sc_max=1;
+	static const float _sc_kx=1, _sc_ky=1, _sc_kz=1;
+	static const float _sc_px=2, _sc_py=2, _sc_pz=2;
+	static const float _sc_min=0, _sc_max=1;
 	static const int _sc_values=5;	
 };
 

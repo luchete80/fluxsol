@@ -94,6 +94,7 @@ class MainWindow : public Gtk::Window
 	vtkActor *_p_coneActor;
 	vtkConeSource *_p_coneSource;
 	vtkPolyDataMapper *_p_coneDataMapper;
+	
 	/////////////////////////////////
 	//static constant data
 	static const int _sc_coneRes = 6, _sc_phiRes = 8, _sc_thetaRes = 8;

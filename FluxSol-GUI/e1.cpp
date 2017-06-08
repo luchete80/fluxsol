@@ -172,6 +172,7 @@ void MainWindow::vtkInit()
   _p_coneSource->SetHeight( 3.0 );
   _p_coneSource->SetRadius( 1.0 );
 	_p_coneSource->SetResolution(_sc_coneRes);
+	_p_coneSource->Update();
 
 _p_coneDataMapper=vtkPolyDataMapper::New();
 _p_coneDataMapper->SetInputConnection(_p_coneSource->GetOutputPort());
@@ -183,6 +184,8 @@ _p_coneDataMapper->SetInputConnection(_p_coneSource->GetOutputPort());
 	//THIS WAS ORIGINAL
 	vtkRenderer *p_renderer = _vtkArea.get_vtk_renderer();
 	p_renderer->AddActor(_p_coneActor);
+	p_renderer->SetBackground(.3, .2, .1);
+	//p_renderer->ResetCamera();
 
 
 }
@@ -270,15 +273,16 @@ void MainWindow::cb_animate()
 
 bool MainWindow::cb_timeout()
 {
-	if(_bStop.is_sensitive())
-	{
+    //cout << "test"<<endl;
+//	if(_bStop.is_sensitive())
+	//{
 		vtkCamera *p_cam = _vtkArea.get_vtk_renderer()->GetActiveCamera();
 		p_cam->Azimuth(1);
 		_vtkArea.get_vtk_renderer()->ResetCameraClippingRange();
 		//p_cam->Elevation(1);
 		p_cam->OrthogonalizeViewUp();
 		_vtkArea.get_vtk_window()->Render();
-	}
+	//}
 	return true;
 }
 
