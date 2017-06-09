@@ -23,7 +23,7 @@ include (CheckCXXSourceCompiles)
 SET (KIT FLTK)
 SET (UKIT FLTK)
 
-set (NAME FluxSol-GUI)
+set (NAME vtkfltk-0.6.1)
 project(${NAME})
 
 #VTK
@@ -40,14 +40,15 @@ set (FLTK_DIR "D:/Luciano/Libs/FLTK-1.3.4-1-install")
 include_directories("${FLTK_DIR}/include")
 
 link_directories ("D:/Luciano/Libs/VTK-6.3.0-Install/lib")
-link_directories ("${FLTK_DIR}/lib")
 
 #
 # vtkFLTK source files
 #
 SET (Kit_SRCS
-vtkFlRenderWindowInteractor.cxx
-Cone3.cxx
+  Fl_VTK_Window.cxx
+  vtkFLTKObjectFactory.cxx
+  vtkFLTKOpenGLRenderWindow.cxx
+  vtkFLTKRenderWindowInteractor.cxx
 )
 
 # SET_SOURCE_FILES_PROPERTIES (
@@ -60,7 +61,7 @@ Cone3.cxx
 #
 SET (Kit_LIBS
   ${VTK_LIBRARIES}
-  fltk_forms_SHARED fltk_gl_SHARED fltk_images_SHARED fltk_jpeg_SHARED fltk_png_SHARED fltk_SHARED fltk_z_SHARED
+  ${FLTK_LIBRARIES}
   ${OPENGL_LIBRARIES}
 )
 
@@ -68,7 +69,7 @@ SET (Kit_LIBS
 #
 # Create the vtkFLTK C++ library.
 #
-ADD_EXECUTABLE (${NAME} ${Kit_SRCS} ${KitInstantiator_SRCS})
+ADD_LIBRARY (${NAME} ${Kit_SRCS} ${KitInstantiator_SRCS})
 LINK_DIRECTORIES (${VTK_FLTK_LIBRARY_DIRS_CONFIG})
 TARGET_LINK_LIBRARIES (${NAME} ${Kit_LIBS})
 #INSTALL_TARGETS (/lib/vtk vtk${KIT})

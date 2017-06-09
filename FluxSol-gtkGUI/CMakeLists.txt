@@ -11,7 +11,7 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
 
 # Use the package PkgConfig to detect GTK+ headers/library files
 find_package(PkgConfig REQUIRED)
-#pkg_check_modules(GTK2 REQUIRED gtk+-2.0)
+pkg_check_modules(GTK2 REQUIRED gtk+-2.0)
 #pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 pkg_check_modules(GTKMM REQUIRED gtkmm-3.0)
 pkg_check_modules(GLIBMM REQUIRED glibmm-2.4)
@@ -48,4 +48,4 @@ add_definitions(${GTK3_CFLAGS_OTHER})
 # Add an executable compiled from hello.c
 add_executable(${NAME} e1.cpp vtkmm/renderingarea.cpp)
 # Link the target to the GTK+ libraries
-target_link_libraries(${NAME} ${GLIBMM_LIBRARIES} gtkglext-3.0 gdkglext-3.0 ${VTK_LIBRARIES} ${GTKMM_LIBRARIES} ${GTK3_LIBRARIES})
+target_link_libraries(${NAME} ${GLIBMM_LIBRARIES} gtkglext-win32-1.0 gdkglext-win32-1.0 ${VTK_LIBRARIES} ${GTKMM_LIBRARIES} ${GTK3_LIBRARIES})

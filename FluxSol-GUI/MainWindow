@@ -1,0 +1,24 @@
+# data file for the Fltk User Interface Designer (fluid)
+version 1.0304
+header_name {.h}
+code_name {.cxx}
+class CubeViewUI {open
+} {
+  Function {CubeViewUI()} {open
+  } {
+    Fl_Window {} {open selected
+      xywh {471 56 852 613} type Double color 24 visible
+    } {
+      Fl_Box {} {
+        label label
+        xywh {235 100 1060 545}
+      }
+      Fl_Tabs {} {open
+        xywh {25 25 375 79} color 41
+      } {}
+      Fl_Tree {} {
+        xywh {20 121 186 534}
+      }
+    }
+  }
+}

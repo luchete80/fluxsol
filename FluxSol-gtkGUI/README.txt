@@ -53,7 +53,7 @@ NOT THIS : ln -s /cygdrive/d/Luciano/Programas/msys64/mingw64 /target
 
 cd /cygdrive/d/Luciano/Libs/gtkglext3-master
  
- env CC='x86_64-w64-mingw32-gcc' AR=/cygdrive/d/Luciano/Programas/x86_64-5.3.0-posix-seh-rt_v4-rev0/mingw64/bin/ar.exe ./configure --prefix=/cygdrive/d/Luciano/Libs/gtkglext-1.2.0 --build=i386-pc-mingw32 --disable-static --disable-debug --enable-win32-backend --disable-x11-backend
+ env CC='x86_64-w64-mingw32-gcc' AR=/d/Luciano/Programas/x86_64-5.3.0-posix-seh-rt_v4-rev0/mingw64/bin/ar.exe ./configure --prefix=/cygdrive/d/Luciano/Libs/gtkglext-1.2.0 --build=i386-pc-mingw32 --disable-static --disable-debug --enable-win32-backend --disable-x11-backend
 					
 /cygdrive/d/Luciano/Programas/x86_64-5.3.0-posix-seh-rt_v4-rev0/mingw64/bin
 
