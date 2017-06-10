@@ -51,7 +51,8 @@ class vtkObjectFactory;
  * vtkRenderWindowInteractor vtkRenderWindow Fl_Gl_Window
  */
 
-class VTK_FLTK_EXPORT Fl_VTK_Window : public Fl_Gl_Window
+class VTK_FLTK_EXPORT 
+Fl_VTK_Window : public Fl_Gl_Window
 {
   // constructor internals
   void Fl_VTK_Window_ (vtkRenderWindowInteractor* = 0);

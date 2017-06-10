@@ -46,6 +46,7 @@ link_directories ("${FLTK_DIR}/lib")
 # vtkFLTK source files
 #
 SET (Kit_SRCS
+MainWindow.cxx
 vtkFlRenderWindowInteractor.cxx
 Cone3.cxx
 )

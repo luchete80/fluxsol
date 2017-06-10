@@ -1,0 +1,38 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+  <qresource prefix="/Icons">
+    <!-- Typical file operations. -->
+    <file>fileopen.png</file>
+    <file>filesave.png</file>
+	<file>save.png</file>
+    <file>print.png</file>
+	<file>ImportMesh.png</file>
+	<file>zoomext.png</file>
+	<file>cae.png</file>
+	<file>view+Z.png</file>
+	<file>import_in.png</file>
+	<file>save_in.png</file>
+	<file>meshprop.png</file>
+	<file>view+Z-2.png</file>
+	<file>New.png</file>
+	<file>OpenResults.png</file>
+	<file>Materials.png</file>
+	<file>view-Z.png</file>
+	<file>Job.png</file>
+	<file>JobFromInput.png</file>
+	<file>view+Y.png</file>
+	<file>view-Y.png</file>
+	<file>view+X.png</file>
+	<file>view-X.png</file>
+	<file>parts.png</file>
+	<file>GridSelectVertex2.png</file>
+	<file>Arrow.png</file>
+	<file>GridSelectVertex.png</file>
+	<file>GridSelectFace.png</file>
+	<file>GridSelectCell.png</file>
+	<file>MeshTransparency.png</file>
+	<file>Results.png</file>
+    <!-- Help -->
+    <file>help.png</file>
+  </qresource>
+</RCC>

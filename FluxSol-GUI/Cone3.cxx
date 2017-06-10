@@ -13,6 +13,7 @@
 
 // and here we have the famous vtkFlRenderWindowInteractor class
 #include "vtkFlRenderWindowInteractor.h"
+#include "MainWindow.h"
 
 // and of course some fltk stuff
 #include <Fl/Fl_Box.H>
@@ -33,19 +34,19 @@ void quit_cb(Fl_Widget*, void*)
 // surrounding logic.
 void non_main_window_callback(Fl_Widget *w, void *flrwi)
 {
-   // this is a pre-VTK 5.0 kludge to get rid of the RenderWindow
-   // see below for the correct VTK 5.0 (and after) way (::Finalize())
-   ((vtkFlRenderWindowInteractor*)flrwi)->GetRenderWindow()->WindowRemap();
-   // if this was the last ref to the RWI, everything (including the RW)
-   // should be destroyed
-   ((vtkFlRenderWindowInteractor*)flrwi)->Delete();
-   // also take care of the FLTK part
-   delete w;
+   // // this is a pre-VTK 5.0 kludge to get rid of the RenderWindow
+   // // see below for the correct VTK 5.0 (and after) way (::Finalize())
+   // ((vtkFlRenderWindowInteractor*)flrwi)->GetRenderWindow()->WindowRemap();
+   // // if this was the last ref to the RWI, everything (including the RW)
+   // // should be destroyed
+   // ((vtkFlRenderWindowInteractor*)flrwi)->Delete();
+   // // also take care of the FLTK part
+   // delete w;
 
    // in VTK 5.0 and newer, do it like this (recommended):
-   //((vtkFlRenderWindowInteractor*)flrwi)->GetRenderWindow()->Finalize();
-   //((vtkFlRenderWindowInteractor*)flrwi)->Delete();
-   //delete w;
+   ((vtkFlRenderWindowInteractor*)flrwi)->GetRenderWindow()->Finalize();
+   ((vtkFlRenderWindowInteractor*)flrwi)->Delete();
+   delete w;
 }
 
 /**
@@ -92,63 +93,6 @@ void create_cone_pipeline(vtkFlRenderWindowInteractor *flrwi)
   cone->Delete();
   coneMapper->Delete();
   coneActor->Delete();
-}
-
-
-/**
- * This will build a VTK pipeline (given a correctly setup vtkFlRWI)
- * for visualising a superquadric.
- */
-void create_superquadric_pipeline(vtkFlRenderWindowInteractor *flrwi)
-{
-  // create a rendering window and renderer
-  vtkRenderer *ren = vtkRenderer::New();
-  ren->SetBackground(0.5,0.5,0.5);
-  
-  vtkRenderWindow *renWindow = vtkRenderWindow::New();
-  renWindow->AddRenderer(ren);
-  // uncomment the statement below if things aren't rendering 100% on your
-  // configuration; the debug output could give you clues as to why
-  //renWindow->DebugOn();
-   
-  // NB: here we treat the vtkFlRenderWindowInteractor just like any other
-  // old vtkRenderWindowInteractor
-  flrwi->SetRenderWindow(renWindow);
-  // just like with any other vtkRenderWindowInteractor(), you HAVE to call
-  // Initialize() before the interactor will function.  See the docs in
-  // vtkRenderWindowInteractor.h
-  flrwi->Initialize();
-
-  // create an actor and give it cone geometry
-  vtkSuperquadricSource *sqs = vtkSuperquadricSource::New();
-
-  // some parameters for an interesting result
-  sqs->SetToroidal(1);
-  sqs->SetThickness(0.3333);
-  sqs->SetPhiRoundness(0.2);
-  sqs->SetThetaRoundness(0.8);
-  sqs->SetSize(0.5);
-  sqs->SetThetaResolution(64);
-  sqs->SetPhiResolution(64);
-  
-  vtkPolyDataMapper *sqMapper = vtkPolyDataMapper::New();
-  sqMapper->SetInputConnection(sqs->GetOutputPort());
-  vtkActor *sqActor = vtkActor::New();
-  sqActor->SetMapper(sqMapper);
-
-  sqActor->GetProperty()->SetColor(0.0, 1.0, 0.0);
-
-  // assign our actor to the renderer
-  ren->AddActor(sqActor);
-
-  // We can now delete all our references to the VTK pipeline (except for
-  // our reference to the vtkFlRenderWindowInteractor) as the objects
-  // themselves will stick around until we dereference fl_vtk_window
-  ren->Delete();
-  renWindow->Delete();
-  sqs->Delete();
-  sqMapper->Delete();
-  sqActor->Delete();
 }
 
   
@@ -200,6 +144,9 @@ int main( int argc, char *argv[] )
   // ============================================================  
   vtkFlRenderWindowInteractor *fl_vtk_window = NULL;
   Fl_Window *main_window = NULL;
+  
+  CubeViewUI cube;
+  cube.show(argc,argv);
 
   create_window_with_rwi(fl_vtk_window, main_window,
                          "Cone3.cxx Main Window");
@@ -216,44 +163,6 @@ int main( int argc, char *argv[] )
   // now we get to setup our VTK rendering pipeline
   create_cone_pipeline(fl_vtk_window);
 
-
-  // let's create the SECOND window with a SuperQuadric =========
-  // ============================================================
- 
-  
-  vtkFlRenderWindowInteractor *fl_vtk_window2 = NULL;
-  Fl_Window *main_window2 = NULL;
-
-  create_window_with_rwi(fl_vtk_window2, main_window2,
-                         "Cone3.cxx Second Window");
-
-  // these two steps are VERY IMPORTANT, you have to show() the fltk window
-  // containing the vtkFlRenderWindowInteractor, and then the
-  // vtkFlRenderWindowInteractor itself
-  main_window2->show();
-  fl_vtk_window2->show();
-   
-  // now we get to setup our VTK rendering pipeline
-  create_superquadric_pipeline(fl_vtk_window2);
-   
-  // let's create the THIRD window with a SuperQuadric =========
-  // ============================================================
- 
-  
-  vtkFlRenderWindowInteractor *fl_vtk_window3 = NULL;
-  Fl_Window *main_window3 = NULL;
-
-  create_window_with_rwi(fl_vtk_window3, main_window3,
-                         "Cone3.cxx Third Window");
-
-  // these two steps are VERY IMPORTANT, you have to show() the fltk window
-  // containing the vtkFlRenderWindowInteractor, and then the
-  // vtkFlRenderWindowInteractor itself
-  main_window3->show();
-  fl_vtk_window3->show();
-   
-  // now we get to setup our VTK rendering pipeline
-  create_superquadric_pipeline(fl_vtk_window3);
 
   // Now that everything's ready, we can finally start the app ==
   // ============================================================

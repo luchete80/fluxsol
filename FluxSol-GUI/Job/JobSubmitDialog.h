@@ -27,24 +27,48 @@
 #include <vtkOpenGLRenderer.h>
 #endif
 
-#include "Job.h"
+#include <QString>
 
+#include "ui_JobSubmitDialog.h"
+
+#include "JobWorker.h"
+#include "Model.h"
+#include "JobThread.h"
+
+#include <vector>
+#include <QString>
+
+//This is repeated on ui_JobSubmitDialog
 class JobSubmitDialog:
-public QDialog
+public QDialog,
+private Ui::JobSubmitDialog
 {
 	Q_OBJECT
 
     public:
-        JobSubmitDialog();
+        JobSubmitDialog(const CFDModel &model_,QWidget *parent = 0 );
+        MsgWindow& ResMsgWindow() {return *ResidualMsg;}
+        vtkPlot & LinePlot(){return *line;}
+        //Ui_JobSubmitDialog *ui;
 
     private slots:
         void StartStopJob();
+
+    public slots:
+        void AddString(const QString &str){
+            ResidualMsg->AddString(str.toStdString());
+            //cout << str<<endl;
+            this->update();}
+        void ChangeStartStopButton (const string &str){StartStopButton->setText(QString::fromUtf8(str.c_str()));}
 
     private:
 
     protected:
 
-        Job *job;
+
+        bool stopped;
+        int iter;
+        //Job *job;     //WHIS IS OLD
         // Create a table with some points in it
       vtkSmartPointer<vtkTable> table;
       vtkSmartPointer<vtkFloatArray> arrX;
@@ -53,11 +77,17 @@ public QDialog
 
       vtkPlot *line;
 
-        // Add multiple line plots, setting the colors etc
-      vtkSmartPointer<vtkChartXY> chart;
-    void InitResChart();
+      CFDModel *model;
 
-    void DrawResChart();
+      QThread *thread;
+
+      JobThread *jobthread;
+
+      Worker *worker;                   //MAIN WORKER
+      ResWidgetWorker *resworker;       //To draw residuals, this is created with NEW
+
+        // Add multiple line plots, setting the colors etc
+
 
     vtkSmartPointer<vtkOpenGLRenderer> ren; //TO MODIFY, create chart object
     vtkSmartPointer<vtkRenderWindow> renderWindow;
@@ -65,6 +95,13 @@ public QDialog
 
     vtkSmartPointer<vtkContextView> view;       //Chart View
 
+
+
 };
+
+//// This macro call should be put in one of your .h files
+//Q_DECLARE_METATYPE(std::string)
+//Q_DECLARE_METATYPE(std::vector)
+
 
 #endif

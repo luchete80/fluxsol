@@ -2,14 +2,18 @@
 #define _JOBWORKER_H
 
 #include <QtCore>
+#include <string>
 //#include "Job.h"
 //#include "JobClasses.h"
 #include "Model.h"
 #include "MsgWindow.h"
 #include "ui_JobSubmitDialog.h"
 
+#include "ResWidgetWorker.h"        //To Draw residuals
+#include <QString>
 //#include "JobSubmitDialog.h"
 
+using namespace std;
 
 //From http://doc.qt.io/qt-4.8/qthread.html
 
@@ -24,7 +28,13 @@ class Worker : public QObject
     bool stopped;
     int iter;
     MsgWindow *msgwin;
-    string model_itlog;
+    std::string model_itlog;
+
+    ResWidgetWorker *resworker;
+
+    QMutex sync;
+    QWaitCondition pauseCond;
+    bool pause;
 
 public slots:
     void doWork(const QString &parameter) {
@@ -47,24 +57,40 @@ public slots:
 
     void AddMsgWin(MsgWindow &mw){msgwin=&mw;}
     void AddUi(Ui_JobSubmitDialog &ui_){ui=&ui_;}
+    void AddResWorker(const ResWidgetWorker &rw){resworker=&rw;}
 
     Worker()
     {
+        pause=false;
 
     }
     Worker(const CFDModel &mod)
     {
         iter=0;
         model=&mod;
+        pause=false;
         stopped=false;
         model_itlog="";
     }
 
+    void Resume();
+
+    const bool & isPaused()const{return pause;}
+
+    void Pause()
+    {
+        stopped=true;
+        sync.lock();
+        pause = true;
+        sync.unlock();
+    }
+
+
     signals:
     void resultReady(const QString &result);
     void DrawChart();
-    void ChgButton();
-    void AddMsg(const string &str);
+    void ChgButton(const string &str);
+    void AddMsg(const QString &str);
     void statusChanged( const string &str);
 };
 
