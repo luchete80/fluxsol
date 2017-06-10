@@ -31,6 +31,7 @@
 // #include <FL/Fl_Gl_Window.H>
 //#include <GLFW/glfw3.h>
 #include <imgui.h>
+#include <imgui_Internal.h>
 #include <vtkRenderWindowInteractor.h>
 
 class vtkFlRenderWindowInteractor : 

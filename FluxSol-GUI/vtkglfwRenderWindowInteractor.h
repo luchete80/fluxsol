@@ -1,5 +1,5 @@
 /*
- * vtkFlRenderWindowInteractor - class to enable VTK to render to and interact
+ * vtkglfwRenderWindowInteractor - class to enable VTK to render to and interact
  * with a FLTK window.
  * 
  * Copyright (c) 2002-2006 Charl P. Botha http://cpbotha.net/
@@ -21,21 +21,21 @@
  * 
  * See the .cxx for more notes.
  * 
- * $Id: vtkFlRenderWindowInteractor.h,v 1.12 2006/03/13 08:50:53 cpbotha Exp $
+ * $Id: vtkglfwRenderWindowInteractor.h,v 1.12 2006/03/13 08:50:53 cpbotha Exp $
  */
 
-#ifndef _vtkFlRenderWindowInteractor_h
-#define _vtkFlRenderWindowInteractor_h
+#ifndef _vtkglfwRenderWindowInteractor_h
+#define _vtkglfwRenderWindowInteractor_h
 
 // #include <FL/Fl.H>
 // #include <FL/Fl_Gl_Window.H>
-//#include <GLFW/glfw3.h>
-#include <imgui.h>
+#include <GLFW/glfw3.h>
+//include <imgui.h>
 #include <vtkRenderWindowInteractor.h>
 
-class vtkFlRenderWindowInteractor : 
+class vtkglfwRenderWindowInteractor : 
 //public Fl_Gl_Window, 
-public ImGuiWindow,
+public GLFWwindow,
 public vtkRenderWindowInteractor {
  protected:
    // Fl_Gl_Window overrides
@@ -46,12 +46,12 @@ public vtkRenderWindowInteractor {
 
  public:
    // ctors
-   vtkFlRenderWindowInteractor();
-   vtkFlRenderWindowInteractor( int x, int y, int w, int h, const char *l="");
+   vtkglfwRenderWindowInteractor();
+   vtkglfwRenderWindowInteractor( int x, int y, int w, int h, const char *l="");
    // vtk ::New()
-   static vtkFlRenderWindowInteractor * New();
+   static vtkglfwRenderWindowInteractor * New();
    // dtor
-   ~vtkFlRenderWindowInteractor( void );
+   ~vtkglfwRenderWindowInteractor( void );
 
    // vtkRenderWindowInteractor overrides
    void Initialize();

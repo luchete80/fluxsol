@@ -1,5 +1,5 @@
 /*
- * vtkFlRenderWindowInteractor - class to enable VTK to render to and interact
+ * vtkglfwRenderWindowInteractor - class to enable VTK to render to and interact
  * with a FLTK window.
  * 
  * Copyright (c) 2002-2006 Charl P. Botha http://cpbotha.net/
@@ -19,7 +19,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
  * 
- * $Id: vtkFlRenderWindowInteractor.cxx,v 1.25 2006/03/13 08:50:53 cpbotha Exp $
+ * $Id: vtkglfwRenderWindowInteractor.cxx,v 1.25 2006/03/13 08:50:53 cpbotha Exp $
  */
 
 /*  
@@ -40,7 +40,7 @@
 #include <vtkCommand.h>
 
 //---------------------------------------------------------------------------
-vtkFlRenderWindowInteractor::vtkFlRenderWindowInteractor() : 
+vtkglfwRenderWindowInteractor::vtkglfwRenderWindowInteractor() : 
 //Fl_Gl_Window( 0, 0, 300, 300, "" ), vtkRenderWindowInteractor()
 ImGuiWindow
 {
@@ -48,14 +48,14 @@ ImGuiWindow
     this->end();
 }
 //---------------------------------------------------------------------------
-vtkFlRenderWindowInteractor::vtkFlRenderWindowInteractor( int x, int y, int w, int h, const char *l ) : 
+vtkglfwRenderWindowInteractor::vtkglfwRenderWindowInteractor( int x, int y, int w, int h, const char *l ) : 
 Fl_Gl_Window( x, y, w, h, l ), vtkRenderWindowInteractor()
 {
     // this is a subclass of Fl_Group, call end so children cant be added
     this->end();
 }
 //---------------------------------------------------------------------------
-vtkFlRenderWindowInteractor::~vtkFlRenderWindowInteractor()
+vtkglfwRenderWindowInteractor::~vtkglfwRenderWindowInteractor()
 {
     // according to the fltk docs, destroying a widget does NOT remove it from
     // its parent, so we have to do that explicitly at destruction
@@ -66,19 +66,19 @@ vtkFlRenderWindowInteractor::~vtkFlRenderWindowInteractor()
     }
 }
 //---------------------------------------------------------------------------
-vtkFlRenderWindowInteractor * vtkFlRenderWindowInteractor::New()
+vtkglfwRenderWindowInteractor * vtkglfwRenderWindowInteractor::New()
 {
     // we don't make use of the objectfactory, because we're not registered
-    return new vtkFlRenderWindowInteractor;
+    return new vtkglfwRenderWindowInteractor;
 }
 
 //---------------------------------------------------------------------------
-void vtkFlRenderWindowInteractor::Initialize()
+void vtkglfwRenderWindowInteractor::Initialize()
 {
     // if don't have render window then we can't do anything yet
     if (!RenderWindow)
     {
-	vtkErrorMacro(<< "vtkFlRenderWindowInteractor::Initialize has no render window");
+	vtkErrorMacro(<< "vtkglfwRenderWindowInteractor::Initialize has no render window");
 	return;
     }
 
@@ -98,7 +98,7 @@ void vtkFlRenderWindowInteractor::Initialize()
     Initialized = 1;
 }
 //---------------------------------------------------------------------------
-void vtkFlRenderWindowInteractor::Enable()
+void vtkglfwRenderWindowInteractor::Enable()
 {
     // if already enabled then done
     if (Enabled)
@@ -109,7 +109,7 @@ void vtkFlRenderWindowInteractor::Enable()
     Modified();
 }
 //---------------------------------------------------------------------------
-void vtkFlRenderWindowInteractor::Disable()
+void vtkglfwRenderWindowInteractor::Disable()
 {
     // if already disabled then done
     if (!Enabled)
@@ -120,16 +120,16 @@ void vtkFlRenderWindowInteractor::Disable()
     Modified();
 }
 //---------------------------------------------------------------------------
-void vtkFlRenderWindowInteractor::Start()
+void vtkglfwRenderWindowInteractor::Start()
 {
     // the interactor cannot control the event loop
-    vtkErrorMacro(<<"vtkFlRenderWindowInteractor::Start() interactor cannot control event loop.");
+    vtkErrorMacro(<<"vtkglfwRenderWindowInteractor::Start() interactor cannot control event loop.");
 }
 //---------------------------------------------------------------------------
-void vtkFlRenderWindowInteractor::SetRenderWindow(vtkRenderWindow *aren)
+void vtkglfwRenderWindowInteractor::SetRenderWindow(vtkRenderWindow *aren)
 {
    vtkRenderWindowInteractor::SetRenderWindow(aren);
-   // if a vtkFlRenderWindowInteractor has been shown already, and one
+   // if a vtkglfwRenderWindowInteractor has been shown already, and one
    // re-sets the RenderWindow, neither UpdateSize nor draw is called,
    // so we have to force the dimensions of the NEW RenderWindow to match
    // the our (vtkFlRWI) dimensions
@@ -138,7 +138,7 @@ void vtkFlRenderWindowInteractor::SetRenderWindow(vtkRenderWindow *aren)
 }
 //---------------------------------------------------------------------------
 // this gets called during FLTK window draw()s and resize()s
-void vtkFlRenderWindowInteractor::UpdateSize(int W, int H)
+void vtkglfwRenderWindowInteractor::UpdateSize(int W, int H)
 {
     if (RenderWindow != NULL)
     {
@@ -167,11 +167,11 @@ void vtkFlRenderWindowInteractor::UpdateSize(int W, int H)
 void OnTimerGlobal(void *p)
 {
     if (p)
-      ((vtkFlRenderWindowInteractor *)p)->OnTimer();
+      ((vtkglfwRenderWindowInteractor *)p)->OnTimer();
 }
 
 //---------------------------------------------------------------------------
-int vtkFlRenderWindowInteractor::CreateTimer(int timertype)
+int vtkglfwRenderWindowInteractor::CreateTimer(int timertype)
 {
     // to be called every 10 milliseconds, one shot timer
     // we pass "this" so that the correct OnTimer instance will be called
@@ -186,13 +186,13 @@ int vtkFlRenderWindowInteractor::CreateTimer(int timertype)
     // elapsed.
 }
 //---------------------------------------------------------------------------
-int vtkFlRenderWindowInteractor::DestroyTimer()
+int vtkglfwRenderWindowInteractor::DestroyTimer()
 {
     // do nothing
     return 1;
 }
 
-void vtkFlRenderWindowInteractor::OnTimer(void)
+void vtkglfwRenderWindowInteractor::OnTimer(void)
 {
     if (!Enabled)
       return;
@@ -211,7 +211,7 @@ void vtkFlRenderWindowInteractor::OnTimer(void)
 
 
 //---------------------------------------------------------------------------
-void vtkFlRenderWindowInteractor::TerminateApp()
+void vtkglfwRenderWindowInteractor::TerminateApp()
 {
     ;
 }
@@ -219,7 +219,7 @@ void vtkFlRenderWindowInteractor::TerminateApp()
 //---------------------------------------------------------------------------
 // FLTK event handlers
 //---------------------------------------------------------------------------
-void vtkFlRenderWindowInteractor::flush(void)
+void vtkglfwRenderWindowInteractor::flush(void)
 {
     // err, we don't want to do any fansy pansy Fl_Gl_Window stuff, so we
     // bypass all of it (else we'll get our front and back buffers in all
@@ -228,7 +228,7 @@ void vtkFlRenderWindowInteractor::flush(void)
 }
 
 //---------------------------------------------------------------------------
-void vtkFlRenderWindowInteractor::draw(void){
+void vtkglfwRenderWindowInteractor::draw(void){
     if (RenderWindow!=NULL)
     {
 	// make sure the vtk part knows where and how large we are
@@ -249,7 +249,7 @@ void vtkFlRenderWindowInteractor::draw(void){
     }
 }
 //---------------------------------------------------------------------------
-void vtkFlRenderWindowInteractor::resize( int x, int y, int w, int h ) {
+void vtkglfwRenderWindowInteractor::resize( int x, int y, int w, int h ) {
     // make sure VTK knows about the new situation
     UpdateSize( w, h );
     // resize the FLTK window by calling ancestor method
@@ -257,7 +257,7 @@ void vtkFlRenderWindowInteractor::resize( int x, int y, int w, int h ) {
 }
 //---------------------------------------------------------------------------
 // main FLTK event handler
-int vtkFlRenderWindowInteractor::handle( int event ) {
+int vtkglfwRenderWindowInteractor::handle( int event ) {
     if( !Enabled ) return 0;
     
 #if (VTK_MAJOR_VERSION >= 4)
@@ -383,9 +383,9 @@ int vtkFlRenderWindowInteractor::handle( int event ) {
 //---------------------------------------------------------------------------
 
 static char const rcsid[] =
-  "$Id: vtkFlRenderWindowInteractor.cxx,v 1.25 2006/03/13 08:50:53 cpbotha Exp $";
+  "$Id: vtkglfwRenderWindowInteractor.cxx,v 1.25 2006/03/13 08:50:53 cpbotha Exp $";
 
-const char *vtkFlRenderWindowInteractor_rcsid(void)
+const char *vtkglfwRenderWindowInteractor_rcsid(void)
 {
     return rcsid;
 }
