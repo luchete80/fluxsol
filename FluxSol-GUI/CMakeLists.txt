@@ -33,8 +33,7 @@ link_directories ("${IMGUI_DIR}/bin")
 SET (Kit_SRCS
 Main.cpp
 imgui_impl_glfw.cpp
-#vtkImRenderWindowInteractor.cpp
-vtkglfwRenderWindowInteractor.cpp
+vtkImRenderWindowInteractor.cpp
 )
 
 #

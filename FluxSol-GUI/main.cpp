@@ -6,6 +6,59 @@
 #include <stdio.h>
 #include <GLFW/glfw3.h>
 
+#include <vtkRenderer.h>
+#include <vtkRenderWindow.h>
+#include <vtkConeSource.h>
+#include <vtkSuperquadricSource.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkProperty.h>
+#include <vtkActor.h>
+
+
+#include "vtkImRenderWindowInteractor.h"
+
+void create_cone_pipeline(vtkImRenderWindowInteractor *flrwi)
+{
+  // create a rendering window and renderer
+  vtkRenderer *ren = vtkRenderer::New();
+  ren->SetBackground(0.5,0.5,0.5);
+
+  vtkRenderWindow *renWindow = vtkRenderWindow::New();
+  renWindow->AddRenderer(ren);
+  // uncomment the statement below if things aren't rendering 100% on your
+  // configuration; the debug output could give you clues as to why
+  //renWindow->DebugOn();
+
+  // NB: here we treat the vtkFlRenderWindowInteractor just like any other
+  // old vtkRenderWindowInteractor
+  flrwi->SetRenderWindow(renWindow);
+  // just like with any other vtkRenderWindowInteractor(), you HAVE to call
+  // Initialize() before the interactor will function.  See the docs in
+  // vtkRenderWindowInteractor.h
+  flrwi->Initialize();
+
+  // create an actor and give it cone geometry
+  vtkConeSource *cone = vtkConeSource::New();
+  cone->SetResolution(8);
+  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
+  coneMapper->SetInputConnection(cone->GetOutputPort());
+  vtkActor *coneActor = vtkActor::New();
+  coneActor->SetMapper(coneMapper);
+  coneActor->GetProperty()->SetColor(1.0, 0.0, 1.0);
+
+  // assign our actor to the renderer
+  ren->AddActor(coneActor);
+
+  // We can now delete all our references to the VTK pipeline (except for
+  // our reference to the vtkFlRenderWindowInteractor) as the objects
+  // themselves will stick around until we dereference fl_vtk_window
+  ren->Delete();
+  renWindow->Delete();
+  cone->Delete();
+  coneMapper->Delete();
+  coneActor->Delete();
+}
+
 static void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error %d: %s\n", error, description);
@@ -35,7 +88,15 @@ int main(int, char**)
 
     bool show_test_window = true;
     bool show_another_window = false;
+	bool show_model_window=true;
     ImVec4 clear_color = ImColor(114, 144, 154);
+
+
+    //////////////////
+    /// LUCIANO: BEFORE MAIN LOOP
+    vtkImRenderWindowInteractor *im_vtk_window = NULL;
+    im_vtk_window=vtkImRenderWindowInteractor::New();
+    create_cone_pipeline(im_vtk_window);
 
     // Main loop
     while (!glfwWindowShouldClose(window))
@@ -71,6 +132,21 @@ int main(int, char**)
             ImGui::ShowTestWindow(&show_test_window);
         }
 
+		/////////////////////////////////////////////
+		//Test Luciano Window
+		// NUEVOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+		////////////////////////////////////////////
+
+		//After whowing and all
+
+
+		ImGui::SetNextWindowSize(ImVec2(350,560), ImGuiSetCond_FirstUseEver);
+		ImGui::Begin("Model", &show_model_window);
+		ImVec2 size = ImGui::GetContentRegionAvail();
+        // ImGui::Image(&m_texture_handle, size, ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::End();
+
+
         // Rendering
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
@@ -79,6 +155,8 @@ int main(int, char**)
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui::Render();
         glfwSwapBuffers(window);
+
+        im_vtk_window->Render();
     }
 
     // Cleanup
@@ -87,3 +165,12 @@ int main(int, char**)
 
     return 0;
 }
+
+// En void SceneView::onGUI()
+
+//According with Lumix Engine
+//		auto size = ImGui::GetContentRegionAvail();
+//		auto* fb = m_pipeline->getFramebuffer("default");
+// m_texture_handle = fb->getRenderbufferHandle(0);
+// ImGui::Image(&m_texture_handle, size, ImVec2(0, 1), ImVec2(1, 0));
+// m_pipeline->render();
