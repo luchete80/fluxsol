@@ -23,7 +23,7 @@
 #define Fl_Timer_H
 
 #ifndef Fl_Widget_H
-#include "Fl_Widget.H"
+//#include "Fl_Widget.H"
 #endif
 
 // values for type():
@@ -35,10 +35,13 @@
   This is provided only to emulate the Forms Timer widget.  It works by
   making a timeout callback every 1/5 second.  This is wasteful and
   inaccurate if you just want something to happen a fixed time in the
-  future.  You should directly call 
+  future.  You should directly call
   Fl::add_timeout() instead.
 */
-class FL_EXPORT Fl_Timer : public Fl_Widget {
+class //FL_EXPORT
+Fl_Timer
+//: public Fl_Widget
+{
   static void stepcb(void *);
   void step();
   char on, direction_;
@@ -48,7 +51,7 @@ protected:
   void draw();
 public:
   int handle(int);
-  Fl_Timer(uchar t,int x,int y,int w,int h, const char *l);
+//  Fl_Timer(uchar t,int x,int y,int w,int h, const char *l);
   ~Fl_Timer();
   void value(double);
   /** See void Fl_Timer::value(double)  */
@@ -69,6 +72,10 @@ public:
   char suspended() const {return !on;}
   void suspended(char d);
 };
+
+/** Signature of some timeout callback functions passed as parameters */
+typedef void (*Fl_Timeout_Handler)(void *data);
+
 
 #endif
 

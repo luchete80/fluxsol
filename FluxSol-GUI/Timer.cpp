@@ -18,18 +18,20 @@
 
 // Emulate the Forms Timer object
 // You don't want to use this if you just want a timeout, call
-// Fl::add_timeout directly!
+// add_timeout directly!
 
 // #include <FL/Fl.H>
 // #include <FL/Fl_Timer.H>
 // #include <FL/fl_draw.H>
 // #include <FL/forms.H>
+#include "Timer.h"
+#include "Timer_win32.h"
 
 #ifdef WIN32
 #  ifdef __MWERKS__
 #    include <time.h>
 #  else
-#    include <sys/types.h> 
+#    include <sys/types.h>
 #    include <sys/timeb.h>
 #  endif
 #else
@@ -61,32 +63,32 @@ void fl_gettime(long* sec, long* usec) {
   *usec = tp.tv_usec;
 #endif
 }
-
-void Fl_Timer::draw() {
-  int tt;
-  Fl_Color col;
-  char str[32];
-  if (!on || delay>0.0)
-    col = color();
-  else if ((int) (delay / FL_TIMER_BLINKRATE) % 2)
-    col = color();
-  else
-    col = selection_color();
-  draw_box(box(), col);
-  if (type() == FL_VALUE_TIMER && delay>0.0) {
-    double d = direction_ ? total-delay : delay;
-    if (d < 60.0)
-      sprintf(str, "%.1f", d);
-    else {
-      tt = (int) ((d+0.05) / 60.0);
-      sprintf(str, "%d:%04.1f", tt, d - 60.0 * tt);
-    }
-    fl_font(labelfont(), labelsize());
-    fl_color(labelcolor());
-    fl_draw(str, x(), y(), w(), h(), FL_ALIGN_CENTER);
-  } else
-    draw_label();
-}
+//
+//void Fl_Timer::draw() {
+//  int tt;
+//  Fl_Color col;
+//  char str[32];
+//  if (!on || delay>0.0)
+//    col = color();
+//  else if ((int) (delay / FL_TIMER_BLINKRATE) % 2)
+//    col = color();
+//  else
+//    col = selection_color();
+//  draw_box(box(), col);
+//  if (type() == FL_VALUE_TIMER && delay>0.0) {
+//    double d = direction_ ? total-delay : delay;
+//    if (d < 60.0)
+//      sprintf(str, "%.1f", d);
+//    else {
+//      tt = (int) ((d+0.05) / 60.0);
+//      sprintf(str, "%d:%04.1f", tt, d - 60.0 * tt);
+//    }
+//    fl_font(labelfont(), labelsize());
+//    fl_color(labelcolor());
+//    fl_draw(str, x(), y(), w(), h(), FL_ALIGN_CENTER);
+//  } else
+//    draw_label();
+//}
 
 void Fl_Timer::stepcb(void* v) {
   ((Fl_Timer*)v)->step();
@@ -104,13 +106,13 @@ void Fl_Timer::step() {
       delay = 0;
     } else {
       redraw();
-      Fl::add_timeout(FL_TIMER_BLINKRATE, stepcb, this);
+      add_timeout(FL_TIMER_BLINKRATE, stepcb, this);
     }
     set_changed();
     do_callback();
   } else {
     if (type() == FL_VALUE_TIMER) redraw();
-     
+
   }
 }
 
@@ -123,7 +125,7 @@ int Fl_Timer::handle(int event) {
  Destroys the timer and removes the timeout.
 */
 Fl_Timer::~Fl_Timer() {
-  Fl::remove_timeout(stepcb, this);
+  remove_timeout(stepcb, this);
 }
 
 /**
@@ -156,8 +158,8 @@ Fl_Timer::~Fl_Timer() {
   // on = (d > 0.0);
   // fl_gettime(&(lastsec), &(lastusec));
   // if (type() != FL_HIDDEN_TIMER) redraw();
-  // Fl::remove_timeout(stepcb, this);
-  // if (on) Fl::add_timeout(FL_TIMER_BLINKRATE, stepcb, this);
+  // remove_timeout(stepcb, this);
+  // if (on) add_timeout(FL_TIMER_BLINKRATE, stepcb, this);
 // }
 
 /** Gets or sets whether the timer is suspended.*/
@@ -166,11 +168,11 @@ void Fl_Timer::suspended(char d) {
     if (on) return;
     on = (delay > 0.0);
     fl_gettime(&(lastsec), &(lastusec));
-    if (on) Fl::add_timeout(FL_TIMER_BLINKRATE, stepcb, this);
+    if (on) add_timeout(FL_TIMER_BLINKRATE, stepcb, this);
   } else {
     if (!on) return;
     on = 0;
-    Fl::remove_timeout(stepcb, this);
+    remove_timeout(stepcb, this);
   }
 }
 

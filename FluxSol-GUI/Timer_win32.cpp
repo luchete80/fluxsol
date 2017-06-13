@@ -1,9 +1,40 @@
-
+#include "Timer_win32.h"
 
 /////////////////////////////////////////////////////////////////////////////
 /// Win32 timers
 ///
+struct Win32Timer
+{
+  UINT_PTR handle;
+  Fl_Timeout_Handler callback;
+  void *data;
+};
 
+static Win32Timer* win32_timers;
+static int win32_timer_alloc;
+static int win32_timer_used;
+static HWND s_TimerWnd;
+
+static void realloc_timers()
+{
+  if (win32_timer_alloc == 0) {
+    win32_timer_alloc = 8;
+  }
+  win32_timer_alloc *= 2;
+  Win32Timer* new_timers = new Win32Timer[win32_timer_alloc];
+  memset(new_timers, 0, sizeof(Win32Timer) * win32_timer_used);
+  memcpy(new_timers, win32_timers, sizeof(Win32Timer) * win32_timer_used);
+  Win32Timer* delete_me = win32_timers;
+  win32_timers = new_timers;
+  delete [] delete_me;
+}
+
+
+static void delete_timer(Win32Timer& t)
+{
+  KillTimer(s_TimerWnd, t.handle);
+  memset(&t, 0, sizeof(Win32Timer));
+}
 
 static LRESULT CALLBACK s_TimerProc(HWND hwnd, UINT msg,
                                     WPARAM wParam, LPARAM lParam)
@@ -30,12 +61,12 @@ static LRESULT CALLBACK s_TimerProc(HWND hwnd, UINT msg,
   return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-void Fl::add_timeout(double time, Fl_Timeout_Handler cb, void* data)
+void add_timeout(double time, Fl_Timeout_Handler cb, void* data)
 {
   repeat_timeout(time, cb, data);
 }
 
-void Fl::repeat_timeout(double time, Fl_Timeout_Handler cb, void* data)
+void repeat_timeout(double time, Fl_Timeout_Handler cb, void* data)
 {
   int timer_id = -1;
   for (int i = 0;  i < win32_timer_used;  ++i) {
@@ -85,7 +116,7 @@ void Fl::repeat_timeout(double time, Fl_Timeout_Handler cb, void* data)
     SetTimer(s_TimerWnd, timer_id + 1, elapsed, NULL);
 }
 
-int Fl::has_timeout(Fl_Timeout_Handler cb, void* data)
+int has_timeout(Fl_Timeout_Handler cb, void* data)
 {
   for (int i = 0;  i < win32_timer_used;  ++i) {
     Win32Timer& t = win32_timers[i];
@@ -96,7 +127,7 @@ int Fl::has_timeout(Fl_Timeout_Handler cb, void* data)
   return 0;
 }
 
-void Fl::remove_timeout(Fl_Timeout_Handler cb, void* data)
+void remove_timeout(Fl_Timeout_Handler cb, void* data)
 {
   int i;
   for (i = 0;  i < win32_timer_used;  ++i) {

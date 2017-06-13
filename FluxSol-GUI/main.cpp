@@ -14,8 +14,29 @@
 #include <vtkProperty.h>
 #include <vtkActor.h>
 
+#include <glib.h>
+
+
+#include "Timer_win32.h"
+
 
 #include "vtkImRenderWindowInteractor.h"
+
+gboolean timeout_callback(gpointer data)
+{
+    static int i = 0;
+
+    i++;
+    g_print("timeout_callback called %d times\n", i);
+    if (100 == i)
+    {
+        g_main_loop_quit( (GMainLoop*)data );
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
 
 void create_cone_pipeline(vtkImRenderWindowInteractor *flrwi)
 {
@@ -96,11 +117,22 @@ int main(int, char**)
     /// LUCIANO: BEFORE MAIN LOOP
     vtkImRenderWindowInteractor *im_vtk_window = NULL;
     im_vtk_window=vtkImRenderWindowInteractor::New();
-    create_cone_pipeline(im_vtk_window);
+    //create_cone_pipeline(im_vtk_window);
+
+    //For timers
+    GMainLoop *loop;
+    loop = g_main_loop_new ( NULL , FALSE );
+    g_timeout_add (100 , timeout_callback , loop);
+//    g_main_loop_run (loop);
+//    g_main_loop_unref(loop);
+
+    HINSTANCE hinst;
+    fl_display=hinst;
 
     // Main loop
     while (!glfwWindowShouldClose(window))
     {
+
         glfwPollEvents();
         ImGui_ImplGlfw_NewFrame();
 
@@ -156,12 +188,14 @@ int main(int, char**)
         ImGui::Render();
         glfwSwapBuffers(window);
 
-        im_vtk_window->Render();
+        //im_vtk_window->Render();
     }
 
     // Cleanup
     ImGui_ImplGlfw_Shutdown();
     glfwTerminate();
+
+    im_vtk_window=NULL; //If not put this is crashing
 
     return 0;
 }
