@@ -14,7 +14,6 @@
 #include <vtkProperty.h>
 #include <vtkActor.h>
 
-#include <glib.h>
 
 
 #include "Timer_win32.h"
@@ -22,20 +21,6 @@
 
 #include "vtkImRenderWindowInteractor.h"
 
-gboolean timeout_callback(gpointer data)
-{
-    static int i = 0;
-
-    i++;
-    g_print("timeout_callback called %d times\n", i);
-    if (100 == i)
-    {
-        g_main_loop_quit( (GMainLoop*)data );
-        return FALSE;
-    }
-
-    return TRUE;
-}
 
 
 void create_cone_pipeline(vtkImRenderWindowInteractor *flrwi)
@@ -120,11 +105,6 @@ int main(int, char**)
     //create_cone_pipeline(im_vtk_window);
 
     //For timers
-    GMainLoop *loop;
-    loop = g_main_loop_new ( NULL , FALSE );
-    g_timeout_add (100 , timeout_callback , loop);
-//    g_main_loop_run (loop);
-//    g_main_loop_unref(loop);
 
     HINSTANCE hinst;
     fl_display=hinst;

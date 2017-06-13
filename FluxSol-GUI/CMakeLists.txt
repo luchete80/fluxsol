@@ -22,13 +22,15 @@ set (IMGUI_DIR "D:/Luciano/Libs/imgui-v1.5")
 
 include_directories("${GLFW_DIR}/include")
 include_directories("${IMGUI_DIR}")
-include_directories("D:/Luciano/Programas/msys64/mingw64/include/glib-2.0")
-include_directories("D:/Luciano/Programas/msys64/mingw64/lib/glib-2.0/include")
+# include_directories("D:/Luciano/Programas/msys64/mingw64/include/glib-2.0")
+# include_directories("D:/Luciano/Programas/msys64/mingw64/lib/glib-2.0/include")
+# include_directories("D:/Luciano/Programas/msys64/mingw64/lib/sigc++-2.0/include")
+# include_directories("D:/Luciano/Programas/msys64/mingw64/include/sigc++-2.0")
 
 link_directories ("D:/Luciano/Libs/VTK-6.3.0-Install/lib")
 link_directories("${GLFW_DIR}/lib")
 link_directories ("${IMGUI_DIR}/bin")
-link_directories ("D:/Luciano/Programas/msys64/mingw64/lib")
+# link_directories ("D:/Luciano/Programas/msys64/mingw64/lib")
 
 #
 # vtkFLTK source files
@@ -40,6 +42,7 @@ vtkImRenderWindowInteractor.cpp
 #Timer.cpp
 #ifdef WIN32
 Timer_win32.cpp
+sigev_thread.cpp
 #endif
 )
 
