@@ -15,7 +15,11 @@ pkg_check_modules(GTK2 REQUIRED gtk+-2.0)
 #pkg_check_modules(GTK3 REQUIRED gtk+-3.0)
 #pkg_check_modules(GTKMM REQUIRED gtkmm-3.0)
 #pkg_check_modules(GLIBMM REQUIRED glibmm-2.4)
+<<<<<<< HEAD
+pkg_check_modules(GTKGLEXT REQUIRED gtkglext-1.0)
+=======
 #pkg_check_modules(GTKGLEXT REQUIRED gtkglext-1.0)
+>>>>>>> 083b3352b2b933f80ef323fbf2b4a357b5062f96
 # Setup CMake to use GTK+, tell the compiler where to look for headers
 # and to the linker where to look for libraries
 #VTK
@@ -29,17 +33,39 @@ ENDIF()
 
 include_directories("${PROJECT_SOURCE_DIR}")
 include_directories(${GTK2_INCLUDE_DIRS})
+<<<<<<< HEAD
+#	include_directories("${GTK2_INCLUDE_DIRS}/gtk-2.0")
+#include_directories(${GTKMM_INCLUDE_DIRS})
+#include_directories(${GLIBMM_INCLUDE_DIRS})
+include_directories(${GTKGLEXT_INCLUDE_DIRS})
+include_directories ("D:/Luciano/Libs/gtkglext3-install/include")
+include_directories ("D:/Luciano/Libs/gtkglext3-install/include/gdk")
+include_directories ("D:/Luciano/Libs/gtkglext3-install/include/gtk")
+
+link_directories(${GTK2_LIBRARY_DIRS})
+#link_directories(${GTKMM_LIBRARY_DIRS})
+#link_directories(${GLIBMM_INCLUDE_DIRS})
+link_directories(${GTKGLEXT_LIBRARY_DIRS})
+#link_directories ("D:/Luciano/Libs/VTK-6.3.0-Install/lib")
+link_directories ("D:/Luciano/Libs/gtkglext3-install/lib")
+link_directories ("D:/Luciano/Libs/gtk-2.24-bundle/lib")
+=======
 include_directories("D:/Luciano/Libs/gtkglext-1.2.0")
 include_directories("D:/Luciano/Libs/gtkglext-1.2.0/gtk")
 include_directories("D:/Luciano/Libs/gtkglext-1.2.0/gdk")
 
 link_directories(${GTK2_LIBRARY_DIRS})
+>>>>>>> 083b3352b2b933f80ef323fbf2b4a357b5062f96
 
 
 
 
 # Add other flags to the compiler
+<<<<<<< HEAD
+add_definitions(${GTK3_CFLAGS_OTHER})
+=======
 #add_definitions(${GTK3_CFLAGS_OTHER})
+>>>>>>> 083b3352b2b933f80ef323fbf2b4a357b5062f96
 
 # If necessary, use the RELATIVE flag, otherwise each source file may be listed 
 # with full pathname. RELATIVE may makes it easier to extract an executable name
@@ -55,4 +81,8 @@ link_directories(${GTK2_LIBRARY_DIRS})
 # endforeach( testsourcefile ${APP_SOURCES} )
 
 add_executable( ${NAME} gears.c)
+<<<<<<< HEAD
+target_link_libraries( ${NAME} gtkglext-3.0 gdkglext-3.0 ${GTK2_LIBRARIES} opengl32 glu32)
+=======
 target_link_libraries( ${NAME}  ${GTK2_LIBRARIES} gtkglext-win32-1.0 gdkglext-win32-1.0 opengl32 glu32)
+>>>>>>> 083b3352b2b933f80ef323fbf2b4a357b5062f96
