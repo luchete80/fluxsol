@@ -61,12 +61,12 @@ static LRESULT CALLBACK s_TimerProc(HWND hwnd, UINT msg,
   return DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
-void add_timeout(double time, Fl_Timeout_Handler cb, void* data)
+void add_timeout(double time, Fl_Timeout_Handler cb, void* data, HINSTANCE *hinst)
 {
-  repeat_timeout(time, cb, data);
+  repeat_timeout(time, cb, data, hinst);
 }
 
-void repeat_timeout(double time, Fl_Timeout_Handler cb, void* data)
+void repeat_timeout(double time, Fl_Timeout_Handler cb, void* data, HINSTANCE* hinst)
 {
   int timer_id = -1;
   for (int i = 0;  i < win32_timer_used;  ++i) {
@@ -90,7 +90,7 @@ void repeat_timeout(double time, Fl_Timeout_Handler cb, void* data)
     wc.cbSize = sizeof (wc);
     wc.style = CS_CLASSDC;
     wc.lpfnWndProc = (WNDPROC)s_TimerProc;
-    wc.hInstance = fl_display;
+    wc.hInstance = (HINSTANCE) hinst;
     wc.lpszClassName = timer_class;
     /*ATOM atom =*/ RegisterClassEx(&wc);
     // create a zero size window to handle timer events
@@ -98,14 +98,14 @@ void repeat_timeout(double time, Fl_Timeout_Handler cb, void* data)
                                 timer_class, "",
                                 WS_POPUP,
                                 0, 0, 0, 0,
-                                NULL, NULL, fl_display, NULL);
+                                NULL, NULL, *hinst, NULL);
     // just in case this OS won't let us create a 0x0 size window:
     if (!s_TimerWnd)
       s_TimerWnd = CreateWindowEx(WS_EX_LEFT | WS_EX_TOOLWINDOW,
 				  timer_class, "",
 				  WS_POPUP,
 				  0, 0, 1, 1,
-				  NULL, NULL, fl_display, NULL);
+				  NULL, NULL, *hinst, NULL);
     ShowWindow(s_TimerWnd, SW_SHOWNOACTIVATE);
   }
 

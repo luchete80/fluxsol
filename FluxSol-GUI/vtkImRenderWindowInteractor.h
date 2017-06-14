@@ -34,6 +34,10 @@
 #include <imgui_Internal.h>
 #include <vtkRenderWindowInteractor.h>
 
+
+//LUCIANO
+#include <windows.h>
+
 class vtkImRenderWindowInteractor :
 //public Fl_Gl_Window,
 //public ImGuiWindow,
@@ -44,6 +48,8 @@ public vtkRenderWindowInteractor {
    void draw( void );
    void resize( int x, int y, int w, int h );
    int  handle( int event );
+
+   HINSTANCE* hinst;
 
  public:
    // ctors
@@ -65,6 +71,9 @@ public vtkRenderWindowInteractor {
    int DestroyTimer();
    void OnTimer(void);
    void TerminateApp();
+
+   //LUCIANO
+   void addInstance(HINSTANCE *hinstance){this->hinst=hinstance;}
   };
 
 #endif

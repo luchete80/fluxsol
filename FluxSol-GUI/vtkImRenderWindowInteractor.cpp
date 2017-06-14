@@ -39,6 +39,8 @@
 #include <vtkVersion.h>
 #include <vtkCommand.h>
 
+#include "Timer_win32.h"
+
 //---------------------------------------------------------------------------
 vtkImRenderWindowInteractor::vtkImRenderWindowInteractor() :
 //Fl_Gl_Window( 0, 0, 300, 300, "" ),
@@ -178,10 +180,10 @@ int vtkImRenderWindowInteractor::CreateTimer(int timertype)
 {
     // to be called every 10 milliseconds, one shot timer
     // we pass "this" so that the correct OnTimer instance will be called
-//    if (timertype == VTKI_TIMER_FIRST)
-//      Fl::add_timeout(0.01, OnTimerGlobal, (void *)this);
-//    else
-//      Fl::repeat_timeout(0.01, OnTimerGlobal, (void *)this);
+    if (timertype == VTKI_TIMER_FIRST)
+      add_timeout(0.01, OnTimerGlobal, (void *)this,this->hinst);
+    else
+      repeat_timeout(0.01, OnTimerGlobal, (void *)this, this->hinst);
 
     return 1;
     // Fl::repeat_timer() is more correct, it doesn't measure the timeout
@@ -209,6 +211,7 @@ void vtkImRenderWindowInteractor::OnTimer(void)
     // old style
     InteractorStyle->OnTimer();
 #endif
+this->draw();
 
 }
 
@@ -243,9 +246,11 @@ void vtkImRenderWindowInteractor::draw(void){
         // see Fl_Gl_Window::show()
 //        make_current();
 
+	//RenderWindow->SetWindowId( (void *)fl_xid( this ) );
+	//THIS IS FROM VTK
 //	RenderWindow->SetWindowId( (void *)fl_xid( this ) );
 //#if !defined(WIN32) && !defined(__APPLE__)
-//	RenderWindow->SetDisplayId( fl_display );
+	RenderWindow->SetDisplayId( *hinst );
 //#endif
 	// get vtk to render to the Fl_Gl_Window
 	Render();

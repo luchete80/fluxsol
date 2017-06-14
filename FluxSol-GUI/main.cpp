@@ -16,7 +16,8 @@
 
 
 
-#include "Timer_win32.h"
+#include "Timer.h"
+#include <windows.h>
 
 
 #include "vtkImRenderWindowInteractor.h"
@@ -70,6 +71,8 @@ static void error_callback(int error, const char* description)
     fprintf(stderr, "Error %d: %s\n", error, description);
 }
 
+
+
 int main(int, char**)
 {
     // Setup window
@@ -81,6 +84,7 @@ int main(int, char**)
 
     // Setup ImGui binding
     ImGui_ImplGlfw_Init(window, true);
+
 
     // Load Fonts
     // (there is a default font, this is only if you want to change it. see extra_fonts/README.txt for more details)
@@ -102,12 +106,15 @@ int main(int, char**)
     /// LUCIANO: BEFORE MAIN LOOP
     vtkImRenderWindowInteractor *im_vtk_window = NULL;
     im_vtk_window=vtkImRenderWindowInteractor::New();
-    //create_cone_pipeline(im_vtk_window);
+
+    HINSTANCE hinst;
+    im_vtk_window->addInstance(&hinst);
+    create_cone_pipeline(im_vtk_window);
+    im_vtk_window->CreateTimer(VTKI_TIMER_FIRST);
 
     //For timers
 
-    HINSTANCE hinst;
-    fl_display=hinst;
+
 
     // Main loop
     while (!glfwWindowShouldClose(window))

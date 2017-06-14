@@ -42,7 +42,7 @@ vtkImRenderWindowInteractor.cpp
 #Timer.cpp
 #ifdef WIN32
 Timer_win32.cpp
-sigev_thread.cpp
+#sigev_thread.cpp
 #endif
 )
 
@@ -50,4 +50,4 @@ sigev_thread.cpp
 # Create the vtkFLTK C++ library.
 #
 ADD_EXECUTABLE (${NAME} ${Kit_SRCS} )
-TARGET_LINK_LIBRARIES (${NAME} glfw3 imgui ${VTK_LIBRARIES} glib-2.0)
+TARGET_LINK_LIBRARIES (${NAME} glfw3 imgui ${VTK_LIBRARIES})
