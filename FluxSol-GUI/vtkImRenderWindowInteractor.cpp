@@ -173,6 +173,7 @@ void OnTimerGlobal(void *p)
 {
     if (p)
       ((vtkImRenderWindowInteractor *)p)->OnTimer();
+      cout << "On timer global"<<endl;
 }
 
 //---------------------------------------------------------------------------

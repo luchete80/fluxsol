@@ -111,6 +111,7 @@ int main(int, char**)
     im_vtk_window->addInstance(&hinst);
     create_cone_pipeline(im_vtk_window);
     im_vtk_window->CreateTimer(VTKI_TIMER_FIRST);
+    //im_vtk_window->Start();
 
     //For timers
 
