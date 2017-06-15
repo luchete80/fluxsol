@@ -1972,9 +1972,6 @@ void EditorNode::_menu_option_confirm(int p_option,bool p_confirmed) {
 			_update_scene_tabs();
 			current_option = -1;
 		} break;
-		case FILE_IMPORT_MODEL: {
-            print_line("Import Scene");
-		} break;
 		case FILE_SAVE_SCENE: {
 
 
@@ -4968,11 +4965,11 @@ EditorNode::EditorNode() {
 	file_menu->set_tooltip("Operations with scene files.");
 	p=file_menu->get_popup();
 	p->add_item("New Project",FILE_NEW_SCENE);
+	p->add_item("New Inherited Scene..",FILE_NEW_INHERITED_SCENE);
 	p->add_item("Open Project..",FILE_OPEN_SCENE,KEY_MASK_CMD+KEY_O);
 	p->add_separator();
-    p->add_item("Import Model",FILE_IMPORT_MODEL); //Any ShortCut??
-	p->add_separator();
-	p->add_item("Save Project",FILE_SAVE_SCENE,KEY_MASK_CMD+KEY_S);
+	p->add_item("Save Scene",FILE_SAVE_SCENE,KEY_MASK_CMD+KEY_S);
+	p->add_item("Save Scene As..",FILE_SAVE_AS_SCENE,KEY_MASK_SHIFT+KEY_MASK_CMD+KEY_S);
 	p->add_separator();
 	p->add_item("Close Scene",FILE_CLOSE,KEY_MASK_SHIFT+KEY_MASK_CTRL+KEY_W);
 	p->add_separator();
@@ -5347,6 +5344,14 @@ EditorNode::EditorNode() {
 	old_split_ofs=0;
 
 	center_split->connect("resized",this,"_vp_resized");
+
+
+//	call_dialog = memnew( CallDialog );
+//	call_dialog->hide();
+//	gui_base->add_child( call_dialog );
+
+
+
 
 	orphan_resources = memnew( OrphanResourcesDialog );
 	gui_base->add_child(orphan_resources);
