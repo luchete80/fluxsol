@@ -22,6 +22,11 @@
 
 #include "vtkImRenderWindowInteractor.h"
 
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+
+void ShowMainWindow();
 
 
 void create_cone_pipeline(vtkImRenderWindowInteractor *flrwi)
@@ -38,32 +43,32 @@ void create_cone_pipeline(vtkImRenderWindowInteractor *flrwi)
 
   // NB: here we treat the vtkFlRenderWindowInteractor just like any other
   // old vtkRenderWindowInteractor
-  flrwi->SetRenderWindow(renWindow);
+//  flrwi->SetRenderWindow(renWindow);
   // just like with any other vtkRenderWindowInteractor(), you HAVE to call
   // Initialize() before the interactor will function.  See the docs in
   // vtkRenderWindowInteractor.h
-  flrwi->Initialize();
+//  flrwi->Initialize();
 
   // create an actor and give it cone geometry
-  vtkConeSource *cone = vtkConeSource::New();
-  cone->SetResolution(8);
-  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
-  coneMapper->SetInputConnection(cone->GetOutputPort());
-  vtkActor *coneActor = vtkActor::New();
-  coneActor->SetMapper(coneMapper);
-  coneActor->GetProperty()->SetColor(1.0, 0.0, 1.0);
-
-  // assign our actor to the renderer
-  ren->AddActor(coneActor);
-
-  // We can now delete all our references to the VTK pipeline (except for
-  // our reference to the vtkFlRenderWindowInteractor) as the objects
-  // themselves will stick around until we dereference fl_vtk_window
-  ren->Delete();
-  renWindow->Delete();
-  cone->Delete();
-  coneMapper->Delete();
-  coneActor->Delete();
+//  vtkConeSource *cone = vtkConeSource::New();
+//  cone->SetResolution(8);
+//  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
+//  coneMapper->SetInputConnection(cone->GetOutputPort());
+//  vtkActor *coneActor = vtkActor::New();
+//  coneActor->SetMapper(coneMapper);
+//  coneActor->GetProperty()->SetColor(1.0, 0.0, 1.0);
+//
+//  // assign our actor to the renderer
+//  ren->AddActor(coneActor);
+//
+//  // We can now delete all our references to the VTK pipeline (except for
+//  // our reference to the vtkFlRenderWindowInteractor) as the objects
+//  // themselves will stick around until we dereference fl_vtk_window
+//  ren->Delete();
+//  renWindow->Delete();
+//  cone->Delete();
+//  coneMapper->Delete();
+//  coneActor->Delete();
 }
 
 static void error_callback(int error, const char* description)
@@ -99,22 +104,30 @@ int main(int, char**)
     bool show_test_window = true;
     bool show_another_window = false;
 	bool show_model_window=true;
+	bool show_menu_window=true;
     ImVec4 clear_color = ImColor(114, 144, 154);
 
 
     //////////////////
     /// LUCIANO: BEFORE MAIN LOOP
-    vtkImRenderWindowInteractor *im_vtk_window = NULL;
-    im_vtk_window=vtkImRenderWindowInteractor::New();
-
-    HINSTANCE hinst;
-    im_vtk_window->addInstance(&hinst);
-    create_cone_pipeline(im_vtk_window);
-    im_vtk_window->CreateTimer(VTKI_TIMER_FIRST);
+//    vtkImRenderWindowInteractor *im_vtk_window = NULL;
+//    im_vtk_window=vtkImRenderWindowInteractor::New();
+//
+//    HINSTANCE hinst;
+//    im_vtk_window->addInstance(&hinst);
+//    //create_cone_pipeline(im_vtk_window);
+    //im_vtk_window->CreateTimer(VTKI_TIMER_FIRST);
     //im_vtk_window->Start();
 
     //For timers
 
+
+//    clock_t startTime = clock(); //Start timer
+//    double secondsPassed;
+//    double secondsToDelay = 0.1;
+//    std::cout << "Time to delay: " << secondsToDelay << std::endl;
+
+    ///////////////////////// FIN LUCIANO
 
 
     // Main loop
@@ -124,40 +137,8 @@ int main(int, char**)
         glfwPollEvents();
         ImGui_ImplGlfw_NewFrame();
 
-        // 1. Show a simple window
-        // Tip: if we don't call ImGui::Begin()/ImGui::End() the widgets appears in a window automatically called "Debug"
-        {
-            static float f = 0.0f;
-            ImGui::Text("Hello, world!");
-            ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
-            ImGui::ColorEdit3("clear color", (float*)&clear_color);
-            if (ImGui::Button("Test Window")) show_test_window ^= 1;
-            if (ImGui::Button("Another Window")) show_another_window ^= 1;
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-        }
 
-        // 2. Show another simple window, this time using an explicit Begin/End pair
-        if (show_another_window)
-        {
-            ImGui::SetNextWindowSize(ImVec2(200,100), ImGuiSetCond_FirstUseEver);
-            ImGui::Begin("Another Window", &show_another_window);
-            ImGui::Text("Hello");
-            ImGui::End();
-        }
-
-        // 3. Show the ImGui test window. Most of the sample code is in ImGui::ShowTestWindow()
-        if (show_test_window)
-        {
-            ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiSetCond_FirstUseEver);
-            ImGui::ShowTestWindow(&show_test_window);
-        }
-
-		/////////////////////////////////////////////
-		//Test Luciano Window
-		// NUEVOOOOOOOOOOOOOOOOOOOOOOOOOOOO
-		////////////////////////////////////////////
-
-		//After whowing and all
+		ShowMainWindow();
 
 
 		ImGui::SetNextWindowSize(ImVec2(350,560), ImGuiSetCond_FirstUseEver);
@@ -176,6 +157,16 @@ int main(int, char**)
         ImGui::Render();
         glfwSwapBuffers(window);
 
+//        secondsPassed = (clock() - startTime) / CLOCKS_PER_SEC;
+//        if(secondsPassed >= secondsToDelay)
+//        {
+//            startTime=clock();
+//            im_vtk_window->Render();
+//            im_vtk_window->OnTimer();
+//            //im_vtk_window->draw();
+//            cout << "timeout"<<endl;
+//        }
+
         //im_vtk_window->Render();
     }
 
@@ -183,7 +174,7 @@ int main(int, char**)
     ImGui_ImplGlfw_Shutdown();
     glfwTerminate();
 
-    im_vtk_window=NULL; //If not put this is crashing
+    //im_vtk_window=NULL; //If not put this is crashing
 
     return 0;
 }
@@ -196,3 +187,91 @@ int main(int, char**)
 // m_texture_handle = fb->getRenderbufferHandle(0);
 // ImGui::Image(&m_texture_handle, size, ImVec2(0, 1), ImVec2(1, 0));
 // m_pipeline->render();
+
+//http://public.kitware.com/pipermail/vtkusers/2009-May/051890.html
+//
+//Hello,
+//
+//We want to render multiple renderscreen with help of different camera angles and save them in different vtkTextures. We managed it, to render them and save them on the harddisk. But in the moment we render them, and give these rendered screens different vtkTextures, the last in vtkTextures rendered screen, override all other prerendered vtkTextures. For the renderings we use the class vtkWindowToImageFilter. Some code:
+//
+//thanks
+//maxim
+//
+//code:
+////x,y,z direction of view
+//vtkTexture* getImageFromWindow(vtkRenderer *ren,vtkRenderWindow *win, vtkActor *ac, double x, double y, double z)
+//{
+//vtkCamera *c= vtkCamera::New();
+//double *richt = ac->GetCenter();
+//c->SetPosition(richt[0],richt[1],richt[2]);
+//c->SetFocalPoint(richt[0]+x,richt[1]+y,richt[2]+z);
+//ren->SetActiveCamera(c);
+//
+//win->Render();
+//
+//vtkWindowToImageFilter *wti= vtkWindowToImageFilter::New();
+//wti->SetInput(win);
+//
+//vtkTexture *t = vtkTexture::New();
+//t->SetInput( wti->GetOutput());
+//t->InterpolateOn();
+//return t;
+//}
+//
+////use of the function:
+//vtkTexture *id2 = vtkTexture::New();
+//id2 = getImageFromWindow(renderer,renWin,actor,1,0,0);
+//vtkTexture *id1 = vtkTexture::New();
+//id1 = getImageFromWindow(renderer,renWin,actor,-1,0,0);
+//
+//actor->SetTexture(id2);
+//
+////actor don't get the texture from id2, but the actor get the texture from id1. although id2 was rendered first and was given to the actor.
+//thanks for any suggestions.
+//maxim
+
+void ShowMainWindow()
+{
+    bool p_open=true;
+
+    static bool no_titlebar = false;
+    static bool no_border = true;
+    static bool no_resize = false;
+    static bool no_move = false;
+    static bool no_scrollbar = false;
+    static bool no_collapse = false;
+    static bool no_menu = false;
+
+    // Demonstrate the various window flags. Typically you would just use the default.
+    ImGuiWindowFlags window_flags = 0;
+    if (no_titlebar)  window_flags |= ImGuiWindowFlags_NoTitleBar;
+    if (!no_border)   window_flags |= ImGuiWindowFlags_ShowBorders;
+    if (no_resize)    window_flags |= ImGuiWindowFlags_NoResize;
+    if (no_move)      window_flags |= ImGuiWindowFlags_NoMove;
+    if (no_scrollbar) window_flags |= ImGuiWindowFlags_NoScrollbar;
+    if (no_collapse)  window_flags |= ImGuiWindowFlags_NoCollapse;
+    if (!no_menu)     window_flags |= ImGuiWindowFlags_MenuBar;
+
+        ImGui::SetNextWindowSize(ImVec2(550,680), ImGuiSetCond_FirstUseEver);
+        ImGui::PushItemWidth(-140);                                 // Right align, keep 140 pixels for labels
+
+       if (!ImGui::Begin("ImGui Demo", &p_open,window_flags))
+       {
+            ImGui::End();
+            return;
+       }
+        if (ImGui::BeginMenuBar())
+        {
+            if (ImGui::BeginMenu("File"))
+            {
+                    ImGui::MenuItem("(dummy menu)", NULL, false, false);
+                    if (ImGui::MenuItem("New")) {}
+                    if (ImGui::MenuItem("Open Model", "Ctrl+O")) {}
+                    if (ImGui::MenuItem("Import Mesh", "Ctrl+M")) {}
+                //ShowExampleMenuFile();
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenuBar();
+        }
+        ImGui::End();
+}

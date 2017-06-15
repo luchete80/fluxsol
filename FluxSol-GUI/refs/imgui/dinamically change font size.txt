@@ -1,0 +1,77 @@
+IMGUI issue
+
+Dynamically changing font size #797
+ Open	b1tc0der opened this issue on Aug 24 2016 · 4 comments Comments
+Assignees
+No one assigned
+Labels
+font
+Projects
+None yet
+Milestone
+No milestone
+Notifications
+  Subscribe
+You’re not receiving notifications from this thread.
+2 participants
+@b1tc0der @ocornut
+ @b1tc0der
+ 
+b1tc0der commented on Aug 24 2016
+I have an application that I am currently porting from NanoVG to ImGui. The application allows for (an unlimited amount of) different text sections and each section can have a different font size.
+As far as i understand NanoVG retrieves each glyph on demand and creates it at the requested font size which makes for really crisp output for large fonts.
+In ImGui it seems that I have to reload the font from the ttf file whenever I want to change the font size.
+The ImGui sample app shows how to use the in-built font scaling, but even at x2 the font becomes really blurry; is there any way around that?
+Reloading the font dynamically works fine if there are not many text sections that use a different font sizes, but loading the same font for each used font size is not manageable.
+
+This is not meant as criticizing ImGui; far from it; I love ImGui and I'll be using it for all my projects from now on. Just wondering how I could implement this.
+Thanks :-)
+ @ocornut
+ Owner
+ocornut commented on Aug 24 2016
+Sorry this is not yet handled by the atlas system. It will eventually be added but it's not a high-priority task (and yes, I have heard a million times of FontStash :).
+
+Workarounds
+
+Bake multiple sizes into the atlas and select the best one+appropriate scale in your app (I realize this is quite annoying).
+Note that you can enable Oversampling during baking + bilinear mag/min on your texture sampler, scaling will be a little better with both. But of course you are still scaling bitmaps there, no magic. Baking at 30px and using that at 0.5 and 1 scale will obviously be better than baking at 15px and using at scale 1 and 2.
+ @b1tc0der
+ 
+b1tc0der commented on Aug 24 2016
+I'll try your suggestions in the mean time, thanks :-)
+Has anyone offered to help implement fontstash? Or do you prefer to do it yourself?
+This is a semi-urgent issue for me and I might have to do it for my code base anyway.
+I'd be happy to help.
+ @ocornut
+ Owner
+ocornut commented on Aug 25 2016
+Fontstash isn't appropriate because it does too many things and I would like to finetune the code for perfs because CalcTextSize calculation loop is a bottleneck for large ui.
+
+Basically the code in ImFontAtlas::Build() has to be refactored, parts extracted so packing/rasterizing can occur iteratively. While refactoring this we could also make it easier to integrate external font loader e.g. #618
+
+In CalcTextSize() we can replace lines such as const float char_width = ((int)c < IndexXAdvance.Size) ? IndexXAdvance[(int)c] * scale : FallbackXAdvance; to handle missing glyphs according to font size. This code is quite bottleneck (this is why there is a hot-dense IndexXAdvance[] array instead of poking in Glyphs). ImFont probably needs to be also reworked to store multiple sizes? I'm not sure where all this data will go yet.
+
+If you are eager to look into it feel free to do so and I can help (but I'll be quite tedious :)
+
+It's not that much work, I think I could do it the way I'd like in 2 days but I don't have that time right now.
+ @ocornut
+ Owner
+ocornut commented on Sep 5 2016 • edited
+Also see @thedmd hack here. Not exactly trivial nor cheap but might be worth trying if other workarounds are satisfactory for now.
+#772 (comment)
+#772 (comment)
+
+node_preview_4
+ImGui can be bend to handle zooming while keeping crisp details.
+image
+  ocornut added the font label on May 1
+@luchete80
+  
+            
+ 
+Write  Preview
+
+Leave a comment
+Attach files by dragging & dropping,  Elegir archivos selecting them, or pasting from the clipboard.
+ Styling with Markdown is supported
+Comment

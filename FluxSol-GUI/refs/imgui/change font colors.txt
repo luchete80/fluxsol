@@ -1,0 +1,273 @@
+https://github.com/ocornut/imgui/issues/902
+
+Change color within text #902
+ Open	JLFSL opened this issue on Nov 11 2016 · 25 comments Comments
+Assignees
+No one assigned
+Labels
+enhancement
+Projects
+None yet
+Milestone
+No milestone
+Notifications
+  Subscribe
+You’re not receiving notifications from this thread.
+11 participants
+@JLFSL @ocornut @pdoane @ratchetfreak @ratzlaff @vivienneanthony @aiekick @David20321 @bluebear94 @chadlyb @ldecarufel
+ @JLFSL
+ 
+JLFSL commented on Nov 11 2016
+Hi there, I was wondering if there was any way to change from color while still using the ::Text function, e.g:
+ImGui::Text("Please fill in your #FF0000 to #0000FFlogin.");
+
+Thanks.
+ :+1: 1  
+ @ocornut
+ Owner
+ocornut commented on Nov 11 2016 • edited
+You'd need to write a custom function that does some sort of mark-down-ish parsing and render as it goes.
+We don't have one, when we have one it'll most probably be a separate function.
+ @ocornut
+ Owner
+ocornut commented on Nov 11 2016 • edited
+I have a simple one I made for my own use on a project but it's not really fit for use elsewhere.
+
+You can grab here but it'd need fixing/reworking/finishing if you want to use it in your own project.
+ui_richtext.h.txt
+ui_richtext.cpp.txt
+ @pdoane
+ 
+pdoane commented on Nov 11 2016
+The difficulty with it as a separate top-level function is that many ImGui functions take text as an argument (e.g. buttons, trees). I think that ImGui needs some kind of standard escape mechanism even if the particulars are left up to the application to interpret the content.
+ @ocornut
+ Owner
+ocornut commented on Nov 12 2016
+That's a good point, we could have an escape mecanism for simple stuff (such as color change?), maybe with the possibility of enabling/disabling/setting a custom one.
+
+What sort of feature would you want to use and in what sort of context?
+ @ocornut
+ Owner
+ocornut commented on Nov 12 2016 • edited
+Also worth reminding that text size calculation can be a noticeable bottleneck for large UI and therefore this has to be handled properly to not affect perfs too much.
+
+If the marking/escaping mechanism is optional it gives more flexibility there (because we aren't concerned by performances as much anymore).
+
+Related because closely related: the shortcut system (#456) will also needs a way to render underscore, probably tagged Windows-style where "&File" will render an underscore under the F, potentially optional (for regular buttons, modern Windows tends to hide the underscore using ALT is held).
+That probably means the system would need to accommodate for optional features.
+ @ratchetfreak
+ 
+ratchetfreak commented on Nov 12 2016
+About text size calc maybe worth doing some caching. Most of the strings being rendered will be fixed and be rendered again every frame.
+ @ocornut
+ Owner
+ocornut commented on Nov 12 2016
+Would be worth it.
+
+Font, font size, text wrapping (+pos) needs to be included in key.
+A highly populated map with lots of insertion needs better code than current key-value map we use (which isn't insertion-friendly and doesn't clean up).
+Hashing would lead to a worst worse case (maybe not a problem?)
+So that's some work and a different feature that discussed here. Something to keep in mind.
+
+For now implementing the marking/escaping would go first.
+ @ocornut
+ Owner
+ocornut commented on Nov 12 2016
+Note that current text size computation is already fairly lightweight (inner loop pulling from a hot-only dense array of XAdvance values), so replacing it with Hash + Lookup isn't going to be trivial massive win.
+  ocornut added the enhancement label on Nov 12 2016
+ @pdoane
+ 
+pdoane commented on Nov 14 2016
+What sort of feature would you want to use and in what sort of context?
+The main one I want has been highlighting a search substring in lists/trees. The escape mechanism feels like it fits in the best with ImGui design because so many entrypoints take strings as parameters.
+ @ocornut
+ Owner
+ocornut commented on Nov 15 2016
+Possible features:
+
+Change colors using values encoded in string e.g. [col=FF00000]test[/col]
+Change colors using high-level semantic e.g. [b]test[/b] and we have a color for Text and a color for TestHighlight. The same way we currently have TextDisabled. I feel this would be simplest and a rather sane thing to do.
+Set a background color (essentially filling behind characters).
+Enable/disable underline (would that be an hardcoded concept in term of drawing?)
+Changing font (to e.g. get actual bold/italic). Feels a bit hairy to get right
+And what would be the syntax? Feels like using [] would collide too much with normal strings and lead to parsing problems, so \ would be a better start and we can have a push/pop system to enable/disable escaping.
+ :+1: 2  
+ @pdoane
+ 
+pdoane commented on Nov 15 2016
+ANSI escape codes cover that feature set so that's one possibility.
+
+If some other syntax is used, I'd prefer some non-printable character so that all existing strings continue to work without change.
+ :+1: 2  
+ @JLFSL
+ 
+JLFSL commented on Nov 15 2016
+Having something similar to BBCode would be amazing.
+ @pdoane
+ 
+pdoane commented on Nov 16 2016
+Having something similar to BBCode would be amazing.
+Are you suggesting you would want it applied pervasively or as a separate entrypoint? I'd be concerned if something like BBCode/Markdown/HTML were applied at the lowest level of string formatting as escaping source data is a lot more annoying/expensive with an immediate mode API.
+ @ratzlaff
+ 
+ratzlaff commented on Nov 16 2016
+since I am familiar with ANSI escape codes, that one gets my vote
+https://conemu.github.io/en/AnsiEscapeCodes.html#SGR_Select_Graphic_Rendition_parameters
+ @vivienneanthony
+ 
+vivienneanthony commented on Dec 25 2016
+I am curious. Is there any update about this topic?
+ @ocornut
+ Owner
+ocornut commented on Jan 1
+None. Someone may want to get ahead toward a proof of concept. I know it'll take me too much time (several full days) to do it totally properly and with perf/options I'm happy with, so I'm not looking into it at all now.
+ @ocornut
+ Owner
+ocornut commented on Jan 19
+Note that #986 is suggesting using a similar feature during text edition.
+
+i just need word coloring in the text multi line control.
+
+I hope i can have a string with information about word start, word end, and word color to pass to the multi-line control. like that maybe "start : end : color" => "10:22:#99ccff"
+
+So before the multi-line control i imagine analyse the text and format a special string for it in the ImGuiTextEditCallback
+
+Finally i imagine pass this buffer to a modified version of ImFont::RenderText.
+
+Do you think i may be heavy , maybe you have another way ?
+
+Thanks for your help
+I don't think the suggested solution would be appropriate, but we can keep in mind and consider how coloring might work in text edition in the future.
+  ocornut referenced this issue on Jan 19
+ Open
+Add Word Coloring to Multi-Line Control #986
+ @aiekick
+ 
+aiekick commented on Jan 19 • edited
+Finally for the moment i use a special buffer who have the same length as the buffer of the text multi line control. and each char corresponding to a color settings in an array in ImGuiStyle.
+
+struct ImGuiStyle { ImVec4 SyntaxColors[255]; }
+
+So i have 254 possibility of coloration.
+
+My function analyse the buffer by the callback when i edit some things and format the color of words in the special buffer passed to the multi-line control.
+
+and in void ImFont::RenderText, i do that :
+
+the buffer is a 'const char* syncol'
+
+ImGuiStyle& style = ImGui::GetStyle();
+
+ImU32 defaultCol = col;
+
+    while (s < text_end)
+    {
+    	if (syncol != 0)
+    	{
+    		col = defaultCol;
+    		char c = *(syncol + (s - text_begin));
+    		if (c != '\0')
+    			col = ImColor(style.SyntaxColors[c]);
+    	}
+It work like a charm. so now i need to write a good syntax coloring func for my needs :)
+
+screenhunter_284
+ @David20321
+ 
+David20321 commented on Feb 1 • edited
+In Overgrowth I added the ##FFFFFFFF style coloring like this: https://gist.github.com/David20321/9e349d197b19e4919614652e4c0d175b
+
+Doesn't work for editable text, just for display.
+ @bluebear94
+ 
+bluebear94 commented on Feb 1
+Actually, I was going to implement this myself with my own copy. ;)
+
+Perhaps along with embedding icons inside text, but I doubt that would ever be added.
+ @ocornut
+ Owner
+ocornut commented on Feb 2
+@David20321
+
+In Overgrowth
+Your game looks amazing! Would be nice if you could post some shots showcasing your use of imgui in the screenshots threads sometime.
+
+@bluebear94
+
+Perhaps along with embedding icons inside text, but I doubt that would ever be added.
+Merging an icon font such as FontAwesome into the main font is very easy and very very useful. Read the documentation in extra_font. I am using https://github.com/juliettef/IconFontCppHeaders as a helper to get #define for the various icons.
+ @bluebear94
+ 
+bluebear94 commented on Feb 2
+@ocornut That's possible, but then you can't have icons using multiple colours, can you? But then, I'm not sure why anyone would want full-colour icons outside of development tools.
+ @ocornut
+ Owner
+ocornut commented on Feb 7
+@bluebear94 You can't indeed. Give it a try someday, using FontAwesome merged within ImGui default font, it's really super convenient. Considering adding it to the demo app.
+ @chadlyb
+ 
+chadlyb commented on Mar 21 • edited
+I have a bit of a hack I'm using that works alright for my purposes (a read-only multiline buffer.) Not industrial-grade, but here goes:
+
+void ImFont::RenderText(ImDrawList* draw_list, float size, ImVec2 pos, ImU32 col, const ImVec4& clip_rect, const char* text_begin, const char* text_end, float wrap_width, bool cpu_fine_clip) const
+{
+	const ImU32 originalCol = col;
+
+	...
+      		if (c == '\r')
+            		continue;
+	}
+
+	if (c >= 0x100000 && c <= 0x10FFFD )
+	{
+		if ( c == 0x108000 )
+		{
+			col = originalCol;
+		}
+		else
+		{
+			col =   0xFF000000
+				  + ((c >> 8) & 0x0F) * 0x00000011
+				  + ((c >> 4) & 0x0F) * 0x00001100
+				  + ((c     ) & 0x0F) * 0x00110000;
+		}
+		continue;
+	}
+
+	float char_width = 0.0f;
+	if (const Glyph* glyph = FindGlyph((unsigned short)c))
+	{
+	...
+Then, use Unicode 0x100rgb to represent your color (0x108000 resets to default color.)
+Seems to work well enough for read-only buffers, including cursor navigation and selection, for my purposes.
+ :+1: 1  
+ @ldecarufel
+ 
+ldecarufel commented on Apr 3 • edited
+Hi there! I just wanted to share my simple solution to embed colors in ImGui text.
+
+I basically parse the string while accumulating characters and looking for inline color blocks. When found I extract the color, then I simply use ImGui::Text() and ImGui::SameLine(0,0) to print the accumulated text, I push the new color using ImGui::PushStyleColor(), and I start to accumulate text again. I also use ImGui::PopStyleColor() before pushing a new color if one was pushed before.
+
+The code supports 6-char colors (RGB), and 8-char colors (ARGB). Using an empty color block simply returns to the default color.
+
+You can find the code here on PasteBin.
+
+Here's how it's used, using "{" and "}" to mark colors:
+
+const float colPos = 220.0f;
+ImGui::TextWithColors( "{77ff77}(A)" ); ImGui::SameLine( colPos ); ImGui::Text( "Press buttons, toggle items" );
+ImGui::TextWithColors( "{77ff77}(A){} + DPad Left/Right" ); ImGui::SameLine( colPos ); ImGui::Text( "Manipulate items" );
+ImGui::TextWithColors( "{ff7777}(B)" ); ImGui::SameLine( colPos ); ImGui::Text( "Close popups, go to parent, clear focus" );
+ImGui::TextWithColors( "{7777ff}(X)" ); ImGui::SameLine( colPos ); ImGui::Text( "Access menus" );
+That's a pretty simple solution that works only for regular text, but that's all we really needed for now.
+ :+1: 1  
+@luchete80
+  
+            
+ 
+Write  Preview
+
+Leave a comment
+Attach files by dragging & dropping,  Elegir archivos selecting them, or pasting from the clipboard.
+ Styling with Markdown is supported
+Comment
