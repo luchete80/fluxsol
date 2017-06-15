@@ -310,7 +310,19 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 //		}break;
 
 		case WM_PAINT:
-
+		        glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glTranslatef(0.0f, 0.0f, -3.0f);
+    glBegin(GL_TRIANGLES);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex2i(0,  1);
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex2i(-1, -1);
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex2i(1, -1);
+    glEnd();
+    glFlush();
+    SwapBuffers(hDC);
 			Main::force_redraw();
 			break;
 
@@ -914,6 +926,18 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 		return;											// Return
 	}
 
+    glwin = CreateWindow ( "Test",
+                     "Draw Window",
+                     WS_OVERLAPPEDWINDOW |
+			WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
+                     0,
+                     0,
+                     100,
+                     100,
+                     NULL,//hWnd,
+                     NULL,
+                     glhinstance,
+                     NULL);
 
 	EnumDisplayMonitors(NULL,NULL,MonitorEnumProc,0);
 
@@ -1001,6 +1025,8 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 
 	};
 
+
+
 	gl_context = memnew( ContextGL_Win(hWnd,false) );
 	gl_context->initialize();
 	rasterizer = memnew( RasterizerGLES2 );
@@ -1042,6 +1068,8 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //                     vtk_hinstance,
 //                     NULL);
 //    theVTKApp = new myVTKApp(vtkwin);
+
+
 
 	print_line("Visual Server initiated");
 
@@ -2124,6 +2152,25 @@ void OS_Windows::run() {
 		process_events(); // get rid of pending events
 //		if (Main::iteration()==true)
 //			break;
+glClearColor(1,0,0,1);
+            glClear(GL_COLOR_BUFFER_BIT);
+                glViewport(0, 0, 100, 100);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    //gluPerspective(60.0, (float)width/height, 0.001, 100.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glTranslatef(0.0f, 0.0f, -3.0f);
+    glBegin(GL_TRIANGLES);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex2i(0,  1);
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex2i(-1, -1);
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex2i(1, -1);
+    glEnd();
+    glFlush();
+    SwapBuffers(hDC);
 	}; //LUCIANO
 
 	//main_loop->finish(); //LUCIANO

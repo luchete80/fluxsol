@@ -102,6 +102,8 @@ class OS_Windows : public OS {
 	HDC		hDC;	// Private GDI Device Context
 	HINSTANCE	hInstance;		// Holds The Instance Of The Application
 	HWND hWnd;
+	HWND glwin;
+	HINSTANCE	glhinstance;
 
 	//LUCIANO, just for test
     //myVTKApp *theVTKApp ;

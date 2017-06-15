@@ -78,7 +78,8 @@ target_link_libraries (main editor servers driverstypes core)
 #target_link_libraries (windows core zlib Shlwapi)
 
 add_executable (${NAME} 
-$<TARGET_OBJECTS:app_>	$<TARGET_OBJECTS:main_>
+$<TARGET_OBJECTS:app_>	
+#$<TARGET_OBJECTS:main_>
 #$<TARGET_OBJECTS:gVTK_>
 )
 
