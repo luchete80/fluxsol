@@ -32,14 +32,11 @@
 #include "editor_icons.h"
 #include "editor_fonts.h"
 
-//#include "editor_help.h"
 #include "core/io/resource_saver.h"
 #include "core/io/resource_loader.h"
-#include "servers/physics_2d_server.h"
 #include "scene/resources/packed_scene.h"
 #include "editor_settings.h"
 #include "io_plugins/editor_import_collada.h"
-//#include "io_plugins/editor_scene_importer_fbxconv.h"
 #include "globals.h"
 #include <stdio.h>
 #include "object_type_db.h"
@@ -55,46 +52,12 @@
 #include "bind/core_bind.h"
 #include "io/zip_io.h"
 #include "io/config_file.h"
-//#include "animation_editor.h"
 
-// plugins
-//#include "plugins/sprite_frames_editor_plugin.h"
-//#include "plugins/sprite_region_editor_plugin.h"
+
 #include "plugins/canvas_item_editor_plugin.h"
-//#include "plugins/spatial_editor_plugin.h"
-//#include "plugins/sample_editor_plugin.h"
-//#include "plugins/sample_library_editor_plugin.h"
-//#include "plugins/sample_player_editor_plugin.h"
-#include "plugins/camera_editor_plugin.h"
 #include "plugins/style_box_editor_plugin.h"
 #include "plugins/resource_preloader_editor_plugin.h"
-//#include "plugins/item_list_editor_plugin.h"
-//#include "plugins/stream_editor_plugin.h"
-//#include "plugins/multimesh_editor_plugin.h"
-//#include "plugins/mesh_editor_plugin.h"
 #include "plugins/theme_editor_plugin.h"
-
-//#include "plugins/tile_map_editor_plugin.h"
-//#include "plugins/cube_grid_theme_editor_plugin.h"
-//#include "plugins/shader_editor_plugin.h"
-//#include "plugins/shader_graph_editor_plugin.h"
-//#include "plugins/path_editor_plugin.h"
-//#include "plugins/rich_text_editor_plugin.h"
-//#include "plugins/collision_polygon_editor_plugin.h"
-//#include "plugins/collision_polygon_2d_editor_plugin.h"
-//#include "plugins/script_editor_plugin.h"
-//#include "plugins/path_2d_editor_plugin.h"
-//#include "plugins/particles_editor_plugin.h"
-//#include "plugins/particles_2d_editor_plugin.h"
-//#include "plugins/animation_tree_editor_plugin.h"
-//#include "plugins/tile_set_editor_plugin.h"
-//#include "plugins/animation_player_editor_plugin.h"
-//#include "plugins/baked_light_editor_plugin.h"
-//#include "plugins/polygon_2d_editor_plugin.h"
-//#include "plugins/navigation_polygon_editor_plugin.h"
-//#include "plugins/light_occluder_2d_editor_plugin.h"
-//#include "plugins/color_ramp_editor_plugin.h"
-//#include "plugins/collision_shape_2d_editor_plugin.h"
 #include "main/input_default.h"
 // end
 #include "tools/editor/io_plugins/editor_texture_import_plugin.h"
@@ -108,6 +71,7 @@
 //#include "plugins/editor_preview_plugins.h"
 
 #include "script_editor_debugger.h"
+#include "scene/main/viewport.h"
 
 EditorNode *EditorNode::singleton=NULL;
 
@@ -430,15 +394,15 @@ void EditorNode::_vp_resized() {
 
 void EditorNode::_rebuild_import_menu()
 {
-	PopupMenu* p = import_menu->get_popup();
-	p->clear();
-	p->add_item("Node from scene", FILE_IMPORT_SUBSCENE);
-	p->add_separator();
-	for (int i = 0; i < editor_import_export->get_import_plugin_count(); i++) {
-		p->add_item(editor_import_export->get_import_plugin(i)->get_visible_name(), IMPORT_PLUGIN_BASE + i);
-	}
-	p->add_separator();
-	p->add_item("Re-Import..", SETTINGS_IMPORT);
+//	PopupMenu* p = import_menu->get_popup();
+//	p->clear();
+//	p->add_item("Node from scene", FILE_IMPORT_SUBSCENE);
+//	p->add_separator();
+//	for (int i = 0; i < editor_import_export->get_import_plugin_count(); i++) {
+//		p->add_item(editor_import_export->get_import_plugin(i)->get_visible_name(), IMPORT_PLUGIN_BASE + i);
+//	}
+//	p->add_separator();
+//	p->add_item("Re-Import..", SETTINGS_IMPORT);
 }
 
 void EditorNode::_node_renamed() {
@@ -2610,20 +2574,6 @@ void EditorNode::_menu_option_confirm(int p_option,bool p_confirmed) {
 			run_native->set_deploy_debug_remote(!ischecked);
 
 		} break;
-		case RUN_DEBUG_COLLISONS: {
-
-			bool ischecked = debug_button->get_popup()->is_item_checked( debug_button->get_popup()->get_item_index(RUN_DEBUG_COLLISONS));
-			debug_button->get_popup()->set_item_checked( debug_button->get_popup()->get_item_index(RUN_DEBUG_COLLISONS),!ischecked);
-			run_native->set_debug_collisions(!ischecked);
-			editor_run.set_debug_collisions(!ischecked);
-		} break;
-		case RUN_DEBUG_NAVIGATION: {
-
-			bool ischecked = debug_button->get_popup()->is_item_checked( debug_button->get_popup()->get_item_index(RUN_DEBUG_NAVIGATION));
-			debug_button->get_popup()->set_item_checked( debug_button->get_popup()->get_item_index(RUN_DEBUG_NAVIGATION),!ischecked);
-			run_native->set_debug_navigation(!ischecked);
-			editor_run.set_debug_navigation(!ischecked);
-		} break;
 		case SETTINGS_UPDATE_ALWAYS: {
 
 			update_menu->get_popup()->set_item_checked(0,true);
@@ -3555,9 +3505,9 @@ void EditorNode::_property_keyed(const String& p_keyed,const Variant& p_value,bo
 
 void EditorNode::_transform_keyed(Object *sp,const String& p_sub,const Transform& p_key) {
 
-	Spatial *s=sp->cast_to<Spatial>();
-	if (!s)
-		return;
+	// Spatial *s=sp->cast_to<Spatial>();
+	// if (!s)
+		// return;
 	//AnimationPlayerEditor::singleton->get_key_editor()->insert_transform_key(s,p_sub,p_key);
 }
 
@@ -4172,6 +4122,7 @@ void EditorNode::_save_docks() {
 
 	config->save(EditorSettings::get_singleton()->get_project_settings_path().plus_file("editor_layout.cfg"));
 
+    //print_line("LUCIANO");
 }
 
 void EditorNode::_save_docks_to_config(Ref<ConfigFile> p_layout, const String& p_section) {
@@ -4917,8 +4868,9 @@ EditorNode::EditorNode() {
 	dock_drag_timer = memnew( Timer );
 	add_child(dock_drag_timer);
 	dock_drag_timer->set_wait_time(0.5);
-	dock_drag_timer->set_one_shot(true);
+	dock_drag_timer->set_one_shot(true); //LUCIANO
 	dock_drag_timer->connect("timeout",this,"_save_docks");
+	dock_drag_timer->start(); //LUCIANO
 
 	top_split = memnew( VSplitContainer );
 	center_split->add_child(top_split);
@@ -5073,35 +5025,6 @@ EditorNode::EditorNode() {
 	editor_region->add_child(main_editor_button_vb);
 	menu_hb->add_child(editor_region);
 
-	//menu_hb->add_spacer();
-#if 0
-	node_menu = memnew( MenuButton );
-	node_menu->set_text("Node");
-	node_menu->set_pos( Point2( 50,0) );;
-	menu_panel->add_child( node_menu );
-
-	p=node_menu->get_popup();
-	p->add_item("Create",NODE_CREATE);
-	p->add_item("Instance",NODE_INSTANCE);
-	p->add_separator();
-	p->add_item("Reparent",NODE_REPARENT);
-	p->add_item("Move Up",NODE_MOVE_UP);
-	p->add_item("Move Down",NODE_MOVE_DOWN);
-	p->add_separator();
-	p->add_item("Duplicate",NODE_DUPLICATE);
-	p->add_separator();
-	p->add_item("Remove (Branch)",NODE_REMOVE_BRANCH);
-	p->add_item("Remove (Element)",NODE_REMOVE_ELEMENT);
-	p->add_separator();
-	p->add_item("Edit Subscriptions..",NODE_CONNECTIONS);
-	p->add_item("Edit Groups..",NODE_GROUPS);
-
-	resource_menu = memnew( MenuButton );
-	resource_menu->set_text("Resource");
-	resource_menu->set_pos( Point2( 90,0) );
-	menu_panel->add_child( resource_menu );
-#endif
-
 	import_menu = memnew( MenuButton );
 	import_menu->set_tooltip("Import assets to the project.");
 	import_menu->set_text("Import");
@@ -5122,12 +5045,6 @@ EditorNode::EditorNode() {
 	p->connect("item_pressed",this,"_menu_option");
 	p->add_item("Orphan Resource Explorer",TOOLS_ORPHAN_RESOURCES);
 
-	export_button = memnew( ToolButton );
-	export_button->set_tooltip("Export the project to many platforms.");
-	export_button->set_text("Export");
-	export_button->connect("pressed",this,"_menu_option",varray(FILE_EXPORT_PROJECT));
-	export_button->set_focus_mode(Control::FOCUS_NONE);
-	left_menu_hb->add_child(export_button);
 
 	menu_hb->add_spacer();
 
@@ -5160,15 +5077,6 @@ EditorNode::EditorNode() {
 	play_button->set_tooltip("Play the project (F5).");
 
 
-
-	/*pause_button = memnew( ToolButton );
-	//menu_panel->add_child(pause_button); - not needed for now?
-	pause_button->set_toggle_mode(true);
-	pause_button->set_icon(gui_base->get_icon("Pause","EditorIcons"));
-	pause_button->set_focus_mode(Control::FOCUS_NONE);
-	pause_button->connect("pressed", this,"_menu_option",make_binds(RUN_PAUSE));
-	pause_button->set_tooltip("Pause the scene (F7).");
-*/
 	stop_button = memnew( ToolButton );
 	play_hb->add_child(stop_button);
 	//stop_button->set_toggle_mode(true);
@@ -5205,16 +5113,7 @@ EditorNode::EditorNode() {
 	play_custom_scene_button->connect("pressed", this,"_menu_option",make_binds(RUN_PLAY_CUSTOM_SCENE));
 	play_custom_scene_button->set_tooltip("Play custom scene ("+keycode_get_string(KEY_MASK_CMD|KEY_MASK_SHIFT|KEY_F5)+").");
 
-	debug_button = memnew( MenuButton );
-	debug_button->set_flat(true);
-	play_hb->add_child(debug_button);
-	//debug_button->set_toggle_mode(true);
-	debug_button->set_focus_mode(Control::FOCUS_NONE);
-	debug_button->set_icon(gui_base->get_icon("Remote","EditorIcons"));
-	//debug_button->connect("pressed", this,"_menu_option",make_binds(RUN_LIVE_DEBUG));
-	debug_button->set_tooltip("Debug Options");
 
-	p=debug_button->get_popup();
 	p->add_check_item("Live Editing",RUN_LIVE_DEBUG);
 	p->add_check_item("File Server",RUN_FILE_SERVER);
 	p->add_separator();
@@ -5225,23 +5124,6 @@ EditorNode::EditorNode() {
 	p->add_check_item("Visible Navigation",RUN_DEBUG_NAVIGATION);
 	p->connect("item_pressed",this,"_menu_option");
 
-	/*
-	run_settings_button = memnew( ToolButton );
-	//menu_hb->add_child(run_settings_button);
-	//run_settings_button->set_toggle_mode(true);
-	run_settings_button->set_focus_mode(Control::FOCUS_NONE);
-	run_settings_button->set_icon(gui_base->get_icon("Run","EditorIcons"));
-	run_settings_button->connect("pressed", this,"_menu_option",make_binds(RUN_SCENE_SETTINGS));
-*/
-
-	/*
-	run_settings_button = memnew( ToolButton );
-	menu_panel->add_child(run_settings_button);
-	run_settings_button->set_pos(Point2(305,0));
-	run_settings_button->set_focus_mode(Control::FOCUS_NONE);
-	run_settings_button->set_icon(gui_base->get_icon("Run","EditorIcons"));
-	run_settings_button->connect("pressed", this,"_menu_option",make_binds(RUN_SETTINGS));
-*/
 
 
 	progress_hb = memnew( BackgroundProgress );
@@ -5257,17 +5139,6 @@ EditorNode::EditorNode() {
 	PanelContainer *vu_cont = memnew( PanelContainer );
 	vu_cont->add_style_override("panel",gui_base->get_stylebox("hover","Button"));
 	menu_hb->add_child(vu_cont);
-
-	audio_vu = memnew( TextureProgress );
-	CenterContainer *vu_cc = memnew( CenterContainer );
-	vu_cc->add_child(audio_vu);
-	vu_cont->add_child(vu_cc);
-	audio_vu->set_under_texture(gui_base->get_icon("VuEmpty","EditorIcons"));
-	audio_vu->set_progress_texture(gui_base->get_icon("VuFull","EditorIcons"));
-	audio_vu->set_max(24);
-	audio_vu->set_min(-80);
-	audio_vu->set_step(0.01);
-	audio_vu->set_val(0);
 
 	{
 		Control *sp = memnew( Control );
@@ -5325,25 +5196,7 @@ EditorNode::EditorNode() {
 	p->add_check_item("Update Changes",SETTINGS_UPDATE_CHANGES);
 	p->set_item_checked(1,true);
 
-	//sources_button->connect();
 
-/*
-	Separator *s2 = memnew( VSeparator );
-	menu_panel->add_child(s2);
-	s2->set_pos(Point2(338,4));
-	s2->set_size(Point2(10,15));
-*/
-
-
-
-	//editor_hsplit = memnew( HSplitContainer );
-	//main_split->add_child(editor_hsplit);
-	//editor_hsplit->set_v_size_flags(Control::SIZE_EXPAND_FILL);
-
-	//editor_vsplit = memnew( VSplitContainer );
-	//editor_hsplit->add_child(editor_vsplit);
-
-	//top_pallete = memnew( TabContainer );
 	scene_tree_dock = memnew( SceneTreeDock(this,scene_root,editor_selection,editor_data) );
 	scene_tree_dock->set_name("Scene");
 	//top_pallete->add_child(scene_tree_dock);
@@ -5451,13 +5304,6 @@ EditorNode::EditorNode() {
 	clear_button->connect("pressed",this,"_clear_search_box");
 
 
-	scenes_dock = memnew( ScenesDock(this) );
-	scenes_dock->set_name("FileSystem");
-	scenes_dock->set_use_thumbnails(int(EditorSettings::get_singleton()->get("file_dialog/display_mode"))==EditorFileDialog::DISPLAY_THUMBNAILS);
-	dock_slot[DOCK_SLOT_LEFT_BR]->add_child(scenes_dock);
-	//prop_pallete->add_child(scenes_dock);
-	scenes_dock->connect("open",this,"open_request");
-	scenes_dock->connect("instance",this,"_instance_request");
 
 	const String docks_section = "docks";
 
@@ -5763,27 +5609,6 @@ EditorNode::EditorNode() {
 
 	set_process(true);
 	OS::get_singleton()->set_low_processor_usage_mode(true);
-
-
-	if (0) { //not sure if i want this to happen after all
-
-		//store project name in ssettings
-		String project_name;
-		//figure it out from path
-		project_name=Globals::get_singleton()->get_resource_path().replace("\\","/");
-		print_line("path: "+project_name);
-		if (project_name.length() && project_name[project_name.length()-1]=='/')
-			project_name=project_name.substr(0,project_name.length()-1);
-
-		project_name=project_name.replace("/","::");
-
-		if (project_name!="") {
-			EditorSettings::get_singleton()->set("projects/"+project_name,Globals::get_singleton()->get_resource_path());
-			EditorSettings::get_singleton()->raise_order("projects/"+project_name);
-			EditorSettings::get_singleton()->save();
-		}
-	}
-
 
 	//edited_scene=NULL;
 	saved_version=1;

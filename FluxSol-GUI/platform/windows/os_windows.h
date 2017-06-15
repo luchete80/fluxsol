@@ -39,16 +39,9 @@
 #include "context_gl_win.h"
 #include "servers/visual_server.h"
 #include "servers/visual/rasterizer.h"
-#include "servers/physics/physics_server_sw.h"
+#include "scene/main/timer.h"
 
-//#include "servers/audio/audio_server_sw.h"
-//#include "servers/audio/sample_manager_sw.h"
-#include "drivers/rtaudio/audio_driver_rtaudio.h"
-//#include "servers/spatial_sound/spatial_sound_server_sw.h"
-//#include "servers/spatial_sound_2d/spatial_sound_2d_server_sw.h"
 #include "drivers/unix/ip_unix.h"
-#include "servers/physics_2d/physics_2d_server_sw.h"
-#include "servers/physics_2d/physics_2d_server_wrap_mt.h"
 
 #include "main/input_default.h"
 
@@ -61,7 +54,8 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-#include "gvtk/vtkFrame.h" //LUCIANO, THIS MUST BE CHANGED TO VIEWPORT AND PUT IN EDITOR
+//#include "gvtk/vtkFrame.h" //LUCIANO, THIS MUST BE CHANGED TO VIEWPORT AND PUT IN EDITOR
+//#include "vtkApp.h" //Just for testing
 
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
@@ -103,12 +97,20 @@ class OS_Windows : public OS {
 #endif
 	VisualServer *visual_server;
 	Rasterizer *rasterizer;
-	PhysicsServer *physics_server;
-	Physics2DServer *physics_2d_server;
+
 	int pressrc;
 	HDC		hDC;	// Private GDI Device Context
 	HINSTANCE	hInstance;		// Holds The Instance Of The Application
 	HWND hWnd;
+
+	//LUCIANO, just for test
+    //myVTKApp *theVTKApp ;
+    //HWND vtkwin;
+
+    Control *controltest; //TEST TIMER
+    Timer *timer_controltest;
+
+    //END LUCIANO
 
 	HCURSOR hCursor;
 
@@ -117,7 +119,7 @@ class OS_Windows : public OS {
 
 	MainLoop *main_loop;
 
-	MyFrame * gvtk_viewport;
+	//MyFrame * gvtk_viewport;
 
 	WNDPROC user_proc;
 
