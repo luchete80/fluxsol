@@ -4699,7 +4699,7 @@ EditorNode::EditorNode() {
 	gui_base->set_theme( theme );
 
 	//LUCIANO TOMODIFY
-	//editor_register_icons(theme);
+	editor_register_icons(theme);
 	//editor_register_fonts(theme);
 
 	//theme->set_icon("folder","EditorFileDialog",Theme::get_default()->get_icon("folder","EditorFileDialog"));
