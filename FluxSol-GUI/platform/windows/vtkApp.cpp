@@ -75,13 +75,13 @@
    {
      case WM_CREATE:
      {
-       ewin = CreateWindow("button","Exit",
-                           WS_CHILD | WS_VISIBLE | SS_CENTER,
-                           0,400,400,60,
-                           hwnd,(HMENU)2,
-                           (HINSTANCE)vtkGetWindowLong(hwnd,vtkGWL_HINSTANCE),
-                           NULL);
-       theVTKApp = new myVTKApp(hwnd);
+//       ewin = CreateWindow("button","Exit",
+//                           WS_CHILD | WS_VISIBLE | SS_CENTER,
+//                           0,400,400,60,
+//                           hwnd,(HMENU)2,
+//                           (HINSTANCE)vtkGetWindowLong(hwnd,vtkGWL_HINSTANCE),
+//                           NULL);
+//       theVTKApp = new myVTKApp(hwnd);
        return 0;
      }
 
@@ -132,7 +132,7 @@ myVTKApp::myVTKApp(HWND hwnd)
   this->renWin->SetSize(200,200);
 
   // Finally we start the interactor so that event will be handled
-  this->renWin->Render();
+  //this->renWin->Render();
 }
 
 myVTKApp::~myVTKApp()

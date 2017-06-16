@@ -1054,21 +1054,20 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //    gvtk_viewport=new MyFrame(hWnd);
 
 
-    //This is only for testing
-//    HINSTANCE vtk_hinstance;
-//   vtkwin = CreateWindow ( "Test",
-//                     "Draw Window",
-//                     WS_OVERLAPPEDWINDOW,
-//                     CW_USEDEFAULT,
-//                     CW_USEDEFAULT,
-//                     400,
-//                     480,
-//                     NULL,
-//                     NULL,
-//                     vtk_hinstance,
-//                     NULL);
-//    theVTKApp = new myVTKApp(vtkwin);
-
+     vtkwin = CreateWindow("button","Exit",
+                      WS_CHILD | WS_VISIBLE | SS_CENTER,
+                      0,400,400,400,
+                      hWnd,(HMENU)2,
+                      (HINSTANCE)vtkGetWindowLong(hWnd,vtkGWL_HINSTANCE),
+                      NULL);
+//HINSTANCE hi;
+//         vtkwin = CreateWindow("button","Exit",
+//                      WS_OVERLAPPEDWINDOW,//WS_CHILD | WS_VISIBLE | SS_CENTER,
+//                      0,400,400,400,
+//                      NULL,(HMENU)2,
+//                      godot_hinstance,
+//                      NULL);
+//   theVTKApp = new myVTKApp(vtkwin);
 
 
 	print_line("Visual Server initiated");

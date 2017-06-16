@@ -79,8 +79,6 @@ target_link_libraries (main editor servers driverstypes core)
 
 add_executable (${NAME} 
 $<TARGET_OBJECTS:app_>	
-#$<TARGET_OBJECTS:main_>
-#$<TARGET_OBJECTS:gVTK_>
 )
 
 #BESIDES MAIN AND CORE HAVE IT,

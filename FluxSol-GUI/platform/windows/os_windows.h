@@ -54,8 +54,8 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-//#include "gvtk/vtkFrame.h" //LUCIANO, THIS MUST BE CHANGED TO VIEWPORT AND PUT IN EDITOR
-//#include "vtkApp.h" //Just for testing
+#include "gvtk/vtkFrame.h" //LUCIANO, THIS MUST BE CHANGED TO VIEWPORT AND PUT IN EDITOR
+#include "vtkApp.h" //Just for testing
 
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
@@ -106,8 +106,8 @@ class OS_Windows : public OS {
 	HINSTANCE	glhinstance;
 
 	//LUCIANO, just for test
-    //myVTKApp *theVTKApp ;
-    //HWND vtkwin;
+    myVTKApp *theVTKApp ;
+    HWND vtkwin;
 
     Control *controltest; //TEST TIMER
     Timer *timer_controltest;

@@ -4700,9 +4700,9 @@ EditorNode::EditorNode() {
 
 	//LUCIANO TOMODIFY
 	editor_register_icons(theme);
-	//editor_register_fonts(theme);
+	editor_register_fonts(theme);
 
-	//theme->set_icon("folder","EditorFileDialog",Theme::get_default()->get_icon("folder","EditorFileDialog"));
+	theme->set_icon("folder","EditorFileDialog",Theme::get_default()->get_icon("folder","EditorFileDialog"));
 	//theme->set_color("files_disabled","EditorFileDialog",Color(0,0,0,0.7));
 
 	String global_font = EditorSettings::get_singleton()->get("global/font");
