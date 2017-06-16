@@ -5,6 +5,9 @@ include (CheckIncludeFiles)
 include (CheckIncludeFileCXX)
 include (CheckCXXSourceCompiles)
 
+include (../defs.cmake)
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver.h")
+
 set (NAME FluxSol-GUI)
 project(${NAME})
 
@@ -21,6 +24,7 @@ ENDIF()
 #DIRECTORIES
 set (GODOTGUI_SRC_DIR "D:/Luciano/Libs/GodotGUI")
 set (GODOTGUI_BIN_DIR "$ENV{GODOTGUI_BIN_DIR}")
+set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
 
 link_directories ("D:/Luciano/Libs/VTK-6.3.0-Install/lib")
 link_directories ("${GODOTGUI_BIN_DIR}")
@@ -62,7 +66,6 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/tools/editor")
 add_subdirectory("${PROJECT_SOURCE_DIR}/tools/editor/io_plugins")
 add_subdirectory("${PROJECT_SOURCE_DIR}/tools/editor/plugins")
 
-
 add_library(main SHARED		$<TARGET_OBJECTS:main_>)
 add_library(editor SHARED 	$<TARGET_OBJECTS:editor_>
 							$<TARGET_OBJECTS:editorplugins_>
@@ -79,6 +82,7 @@ target_link_libraries (main editor servers driverstypes core)
 
 add_executable (${NAME} 
 $<TARGET_OBJECTS:app_>	
+GraphicModel.cpp
 )
 
 #BESIDES MAIN AND CORE HAVE IT,
