@@ -6,7 +6,7 @@ include (CheckIncludeFileCXX)
 include (CheckCXXSourceCompiles)
 
 include (../defs.cmake)
-include_directories("${FLUXSOL_DIR}/FluxSol-Solver.h")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver")
 
 set (NAME FluxSol-GUI)
 project(${NAME})
@@ -76,14 +76,25 @@ target_link_libraries (editor scene servers core)
 
 target_link_libraries (main editor servers driverstypes core)
 
+###############################################
+###############################################
+add_subdirectory(Graphics)
+
+
+
+
+
+
+################################################
 
 #Shlwapi is for PathFileExistsW
 #target_link_libraries (windows core zlib Shlwapi)
 
 add_executable (${NAME} 
-$<TARGET_OBJECTS:app_>	
-GraphicModel.cpp
+$<TARGET_OBJECTS:app_>
 )
+
+add_library (Graphics SHARED $<TARGET_OBJECTS:Graphics_>)
 
 #BESIDES MAIN AND CORE HAVE IT,
 #SERVER LIBRARY MUST BE LINKED ALSO IN ORDER TO LINK VISUAL SERVER GLES2
@@ -95,5 +106,7 @@ gl_context gles2
 winmm 
 opengl32
 stdc++
+Graphics
 ${VTK_LIBRARIES}
 )
+

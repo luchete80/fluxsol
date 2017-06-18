@@ -9,7 +9,7 @@ set (GODOTGUI_SRC_DIR "D:/Luciano/Libs/GodotGUI")
 set (GODOTGUI_BIN_DIR "$ENV{GODOTGUI_BIN_DIR}")
 set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
 
-#set (FLUXSOL_DIR ${PROJECT_SOURCE_DIR}/../)
+#set (FLUXSOL_DIR ${FLUXSOL_DIR}/../)
 
 #set (LASPACK_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/laspack/src)
 set (CGNS_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src)
@@ -54,3 +54,32 @@ if (USE_PETSC)
 	
 
 endif ()
+
+#FLUXSOL DEPENDENCIES
+
+# add to the include search path
+include_directories(.)
+include_directories("${FLUXSOL_DIR}")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/Analysis")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/Boundary")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/Field")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/FiniteVolume")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/FiniteVolume/Div")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/FiniteVolume/Grad")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/FiniteVolume/Laplacian")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/FiniteVolume/Mesh")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/Input")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/Interpolation")
+#include_directories("${FLUXSOL_DIR}/Libs/Laspack")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/Materials")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/Mesh")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/Model")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/Nastran")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/Output")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/SistEcuac")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/Solver")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/Tests")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/Time")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/Type")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/UDO")
+include_directories("${FLUXSOL_DIR}/FluxSol-Solver/Utils")

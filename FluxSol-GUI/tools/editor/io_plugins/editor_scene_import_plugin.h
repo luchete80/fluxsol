@@ -38,7 +38,7 @@
 #include "scene/gui/progress_bar.h"
 #include "scene/gui/slider.h"
 #include "scene/gui/spin_box.h"
-#include "scene/resources/mesh.h"
+//#include "scene/resources/mesh.h"
 #include "tools/editor/editor_file_system.h"
 #include "tools/editor/editor_dir_dialog.h"
 #include "tools/editor/editor_import_export.h"
@@ -107,7 +107,7 @@ class EditorSceneImportPlugin : public EditorImportPlugin {
 	};
 
 	void _find_resources(const Variant& p_var,Map<Ref<ImageTexture>,TextureRole >& image_map,int p_flags);
-	Node* _fix_node(Node *p_node,Node *p_root,Map<Ref<Mesh>,Ref<Shape> > &collision_map,uint32_t p_flags,Map<Ref<ImageTexture>,TextureRole >& image_map);
+//	Node* _fix_node(Node *p_node,Node *p_root,Map<Ref<Mesh>,Ref<Shape> > &collision_map,uint32_t p_flags,Map<Ref<ImageTexture>,TextureRole >& image_map);
 	void _create_clips(Node *scene, const Array& p_clips, bool p_bake_all);
 	void _filter_anim_tracks(Ref<Animation> anim,Set<String> &keep);
 	void _filter_tracks(Node *scene, const String& p_text);
@@ -117,8 +117,8 @@ class EditorSceneImportPlugin : public EditorImportPlugin {
 	void _optimize_animations(Node *scene, float p_max_lin_error,float p_max_ang_error,float p_max_angle);
 
 	void _merge_scenes(Node *p_node, Node *p_imported);
-	void _scan_materials(Node*p_base,Node *p_node,Map<String,Ref<Material> > &mesh_materials,Map<String,Ref<Material> >& override_materials);
-	void _apply_materials(Node*p_base,Node *p_node,Map<String,Ref<Material> > &mesh_materials,Map<String,Ref<Material> >& override_materials,Set<Ref<Mesh> >& meshes_processed);
+//	void _scan_materials(Node*p_base,Node *p_node,Map<String,Ref<Material> > &mesh_materials,Map<String,Ref<Material> >& override_materials);
+//	void _apply_materials(Node*p_base,Node *p_node,Map<String,Ref<Material> > &mesh_materials,Map<String,Ref<Material> >& override_materials,Set<Ref<Mesh> >& meshes_processed);
 	void _merge_materials(Node *p_node,Node *p_imported);
 
 	void _tag_import_paths(Node *p_scene,Node *p_node);
