@@ -56,6 +56,10 @@
 
 #include "gvtk/vtkFrame.h" //LUCIANO, THIS MUST BE CHANGED TO VIEWPORT AND PUT IN EDITOR
 #include "vtkApp.h" //Just for testing
+#include <iostream>
+#include <ctime>
+#include <cstdlib>
+
 
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
@@ -124,6 +128,11 @@ class OS_Windows : public OS {
 	//MyFrame * gvtk_viewport;
 
 	WNDPROC user_proc;
+
+	// LUCIANO, temporal timer
+    clock_t startTime;; //Start timer
+    double secondsPassed;
+    double secondsToDelay ;
 
 	//AudioServerSW *audio_server;
 	//SampleManagerMallocSW *sample_manager;

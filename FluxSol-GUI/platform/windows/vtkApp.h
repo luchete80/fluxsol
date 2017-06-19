@@ -11,18 +11,35 @@
 
 LRESULT CALLBACK vtk_WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-class myVTKApp
+class myVTKApp:
+    public vtkRenderWindowInteractor
 {
+    protected:
+              myVTKApp * New();
+              myVTKApp();
 public:
   myVTKApp(HWND parent);
   ~myVTKApp();
 private:
   vtkRenderWindow *renWin;
   vtkRenderer *renderer;
-  vtkRenderWindowInteractor *iren;
   vtkConeSource *cone;
   vtkPolyDataMapper *coneMapper;
   vtkActor *coneActor;
+
+
+  public:
+     // vtkRenderWindowInteractor overrides
+//   void Initialize();
+//   void Enable();
+//   void Disable();
+//   void Start();
+//   void SetRenderWindow(vtkRenderWindow *aren);
+//   void UpdateSize(int x, int y);
+//   int CreateTimer(int timertype);
+//   int DestroyTimer();
+   void OnTimer(void);
+//   void TerminateApp();
 };
 
 #endif

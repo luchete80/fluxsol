@@ -17,6 +17,11 @@
 //
 
 #include "vtkApp.h"
+#include <vtkRenderWindow.h>
+#include <vtkRenderer.h>
+#include <vtkInteractorStyle.h>
+#include <vtkVersion.h>
+#include <vtkCommand.h>
 
 // define the vtk part as a simple c++ class
 
@@ -105,7 +110,19 @@
    return DefWindowProc (hwnd, message, wParam, lParam);
  }
 
+myVTKApp * myVTKApp::New()
+{
+    // we don't make use of the objectfactory, because we're not registered
+    return new myVTKApp;
+}
+
+myVTKApp::myVTKApp()
+:vtkRenderWindowInteractor()
+{
+
+}
 myVTKApp::myVTKApp(HWND hwnd)
+:vtkRenderWindowInteractor()
 {
   // Similar to Examples/Tutorial/Step1/Cxx/Cone.cxx
   // We create the basic parts of a pipeline and connect them
@@ -115,9 +132,10 @@ myVTKApp::myVTKApp(HWND hwnd)
 
   // setup the parent window
   this->renWin->SetParentId(hwnd);
-  this->iren = vtkRenderWindowInteractor::New();
-  this->iren->SetRenderWindow(this->renWin);
-
+//  this->iren = vtkRenderWindowInteractor::New();
+//  this->iren->SetRenderWindow(this->renWin);
+    //this->SetRenderWindow(this->renWin);
+    vtkRenderWindowInteractor::SetRenderWindow(this->renWin);
   this->cone = vtkConeSource::New();
   this->cone->SetHeight( 3.0 );
   this->cone->SetRadius( 1.0 );
@@ -135,11 +153,32 @@ myVTKApp::myVTKApp(HWND hwnd)
   //this->renWin->Render();
 }
 
+void myVTKApp::OnTimer(void)
+{
+    if (!Enabled)
+      return;
+    // this is all we need to do, InteractorStyle is stateful and will
+    // continue with whatever it's busy
+
+#if (VTK_MAJOR_VERSION >= 4)
+    // new style
+    this->InvokeEvent(vtkCommand::TimerEvent, NULL);
+#else
+    // old style
+    InteractorStyle->OnTimer();
+#endif
+//this->draw();
+
+this->Render();
+
+}
+
+
 myVTKApp::~myVTKApp()
 {
     renWin->Delete();
     renderer->Delete();
-    iren->Delete();
+    //iren->Delete();
     cone->Delete();
     coneMapper->Delete();
     coneActor->Delete();

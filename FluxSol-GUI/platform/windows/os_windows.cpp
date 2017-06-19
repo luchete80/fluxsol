@@ -939,6 +939,8 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
                      glhinstance,
                      NULL);
 
+    secondsToDelay = 0.1;
+
 	EnumDisplayMonitors(NULL,NULL,MonitorEnumProc,0);
 
 	print_line("DETECTED MONITORS: "+itos(monitor_info.size()));
@@ -1067,7 +1069,7 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //                      NULL,(HMENU)2,
 //                      godot_hinstance,
 //                      NULL);
-//   theVTKApp = new myVTKApp(vtkwin);
+   theVTKApp = new myVTKApp(vtkwin);
 
 
 	print_line("Visual Server initiated");
@@ -1841,6 +1843,16 @@ void OS_Windows::process_events() {
 		TranslateMessage(&msg);
 		DispatchMessageW(&msg);
 		Main::iteration(); //ESTO ES MIO
+
+        secondsPassed = (clock() - startTime) / CLOCKS_PER_SEC;
+        if(secondsPassed >= secondsToDelay)
+        {
+            startTime=clock();
+            //theVTKApp->Render();
+            //theVTKApp->OnTimer();
+            //im_vtk_window->draw();
+            cout << "timeout"<<endl;
+        }
                //
 
 	}
