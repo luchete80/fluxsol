@@ -1,3 +1,5 @@
+set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
+include ("${FLUXSOL_DIR}/Src/defs.cmake")
 #Depending on vtk
 include_directories ("${MY_PETSC_DIR}/include" "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/include")
 	link_directories(${MPI_LIB_DIR})
@@ -10,6 +12,16 @@ set (ALGLIB_INCLUDE_DIRS "D:/Luciano/Numerico/MecSol/FluxSol/Libs/alglib-3.8.2/s
 	include_directories(${CGNS_INCLUDE_DIRS})
 #include_directories(${LASPACK_INCLUDE_DIRS})
 include_directories(${ALGLIB_INCLUDE_DIRS})
+
+IF(NOT VTK_BINARY_DIR)
+FIND_PACKAGE(VTK)
+IF(NOT VTK_DIR)
+  MESSAGE(FATAL_ERROR "Please set VTK_DIR.")
+ENDIF()
+INCLUDE(${VTK_USE_FILE})
+ENDIF()
+
+link_directories ("D:/Luciano/Libs/VTK-6.3.0-Install/lib")
 
 #if (USE_PETSC)
 	find_package (PETSc REQUIRED HINTS "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/conf")
@@ -51,3 +63,15 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
 set (NAME Graphics_)
 set (sources GraphicModel.cpp)
 add_library (${NAME} OBJECT ${sources})
+add_library (Graphics SHARED ${sources})
+
+target_link_libraries (Graphics ${VTK_LIBRARIES})
+
+
+target_link_libraries (Graphics
+${VTK_LIBRARIES}
+fluxsol-IO
+fluxsol-Type
+fluxsol-Solver
+fluxsol-FvMesh
+fluxsol-Model)

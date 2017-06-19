@@ -5,6 +5,7 @@ include (CheckIncludeFiles)
 include (CheckIncludeFileCXX)
 include (CheckCXXSourceCompiles)
 
+include (../defs.cmake)
 #######################################################################
 ######################## Options ######################################
 #######################################################################
@@ -38,34 +39,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
 set (NAME fluxsol)
 
 project(${NAME})
-
-set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
-#set (FLUXSOL_DIR ${PROJECT_SOURCE_DIR}/../)
-
-#set (LASPACK_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/laspack/src)
-set (CGNS_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src)
-set (ALGLIB_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/src)
-
-set (CGNS_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src/lib)
-set (ALGLIB_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/bin)
-#set (LASPACK_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/laspack/bin)
-
-
-
-set (MY_PETSC_DIR "$ENV{PETSC_DIR}")
-set (MPI_LIB_DIR "$ENV{MPI_LIB_DIR}")
-set (MPI_INC_DIR "$ENV{MPI_INC_DIR}")
-set (MY_PETSC_ARCH "$ENV{PETSC_ARCH}")
-
-set (PARMETIS_DIR "$ENV{PARMETIS_DIR}")
-
-#if(DEBUG_MODE)
-#set (MY_PETSC_ARCH arch-mswin-c-debug-shared-mpi0-fc0)
-#else ()
-#set (MY_PETSC_ARCH arch-mswin-c-release-mpi0-fc0)
-#endif ()
-
-
 
 #set (fluxsol_VERSION_MAJOR 2)
 #set (fluxsol_VERSION_MINOR 0)
@@ -280,7 +253,7 @@ install (FILES ${NAME}.h DESTINATION include)
 add_executable(${NAME} ${SOURCES} UDO)
 
 target_link_libraries (fluxsol-EqnSys fluxsol-Type)
-target_link_libraries (fluxsol-IO libUDO fluxsol-EqnSys fluxsol-Laplacian fluxsol-Field fluxsol-Type fluxsol-Utils)
+target_link_libraries (fluxsol-IO UDO fluxsol-EqnSys fluxsol-Laplacian fluxsol-Field fluxsol-Type fluxsol-Utils)
 target_link_libraries (fluxsol-Laplacian fluxsol-EqnSys fluxsol-Field)
 target_link_libraries (fluxsol-FvGrad fluxsol-EqnSys fluxsol-Field)
 target_link_libraries (fluxsol-Model fluxsol-FvGrad fluxsol-Solver fluxsol-Field fluxsol-FvMesh fluxsol-IO fluxsol-Field fluxsol-Type)
@@ -289,5 +262,5 @@ target_link_libraries (fluxsol-Field fluxsol-Type)
 target_link_libraries (fluxsol-Solver ${EXT_LIBS} fluxsol-Type)
 
 #target_link_libraries (${NAME}lib libUDO fluxsol-IO fluxsol-FvMesh fluxsol-Model fluxsol-Solver fluxsol-Laplacian fluxsol-FvGrad fluxsol-Field fluxsol-EqnSys fluxsol-Type)
-target_link_libraries (${NAME}    libUDO fluxsol-IO fluxsol-FvMesh fluxsol-Model fluxsol-Solver fluxsol-Laplacian fluxsol-FvGrad fluxsol-Field fluxsol-EqnSys fluxsol-Type)
+target_link_libraries (${NAME}    UDO fluxsol-IO fluxsol-FvMesh fluxsol-Model fluxsol-Solver fluxsol-Laplacian fluxsol-FvGrad fluxsol-Field fluxsol-EqnSys fluxsol-Type)
 #target_link_libraries (${NAME}lib libUDO ${EXTRA_LIBS} ${EXT_LIBS} Nastran_ Type_)

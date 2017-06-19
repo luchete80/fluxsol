@@ -5,7 +5,7 @@ include (CheckIncludeFiles)
 include (CheckIncludeFileCXX)
 include (CheckCXXSourceCompiles)
 
-set (NAME UDOLib)
+set (NAME UDO)
 project(${NAME})
 
 set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
@@ -104,9 +104,6 @@ if (USE_PETSC)
 
 endif ()
 
-
-
-set (NAME UDO)
 set (SOURCES 
 UDOLib.cpp
 UDOCreator.cpp

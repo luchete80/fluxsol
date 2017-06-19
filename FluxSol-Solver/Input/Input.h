@@ -38,7 +38,6 @@
 #include "FvImp.h"
 #include "FvField.h"
 #include "Laplacian.h"
-#include "Laplacian.h"
 
 #include "UDO.h"
 

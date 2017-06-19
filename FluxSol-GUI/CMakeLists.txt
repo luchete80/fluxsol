@@ -6,7 +6,7 @@ include (CheckIncludeFileCXX)
 include (CheckCXXSourceCompiles)
 
 include (../defs.cmake)
-include_directories("${FLUXSOL_DIR}/FluxSol-Solver")
+include_directories("${FLUXSOL_DIR}/Src/FluxSol-Solver")
 
 set (NAME FluxSol-GUI)
 project(${NAME})
@@ -94,7 +94,7 @@ add_executable (${NAME}
 $<TARGET_OBJECTS:app_>
 )
 
-add_library (Graphics SHARED $<TARGET_OBJECTS:Graphics_>)
+#add_library (Graphics SHARED $<TARGET_OBJECTS:Graphics_>)
 
 #BESIDES MAIN AND CORE HAVE IT,
 #SERVER LIBRARY MUST BE LINKED ALSO IN ORDER TO LINK VISUAL SERVER GLES2

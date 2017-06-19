@@ -9,8 +9,7 @@ FluxSol is generated with the Following Libraries:
  BUILDING PROCESS
 
 1 - At first mut be generated CodeWriter project.
-	However, this build calls fluxsollib
-2 - Run CodeWriter Will Generate UDO Creator
+2 - Run CodeWriter Will Generate UDO Creator.
 3 - These two steps can be overriden by copying the original UDOCreator
 
 
