@@ -57,6 +57,8 @@
 #include "shlobj.h"
 #include <regstr.h>
 #include <process.h>
+#include <vtkProperty.h>
+#include <vtkCallbackCommand.h>
 
 #include <direct.h>	//LUCIANO _wchdir EN MINGW
 
@@ -81,7 +83,84 @@ extern "C" {
 #define WM_MOUSEHWHEEL 0x020e
 #endif
 
+#include <vtkOpenGLRenderer.h>
 //#define STDOUT_FILE
+
+
+////////////////////// VTK STUFF
+
+
+///////////// IS THIS BELONGS TO OS_WinDOWS THE PROGRAM CRASHES
+///////////// WHEN RETURNING SINGLETON
+extern  vtkRenderWindowInteractor *vtkriw;
+extern vtkRenderWindow *renWindow;
+extern vtkOpenGLRenderer *ren;
+
+static void CameraModifiedCallback(vtkObject* caller,
+                                   long unsigned int vtkNotUsed(eventId),
+                                   void* vtkNotUsed(clientData),
+                                   void* vtkNotUsed(callData) )
+{
+//  std::cout << caller->GetClassName() << " modified" << std::endl;
+
+  vtkCamera* camera = static_cast<vtkCamera*>(caller);
+  // print the interesting stuff
+//  std::cout << "\tPosition: "
+//            << camera->GetPosition()[0] << ", "
+//            << camera->GetPosition()[1] << ", "
+//            << camera->GetPosition()[2] << std::endl;
+//  std::cout << "\tFocal point: "
+//            << camera->GetFocalPoint()[0] << ", "
+//            << camera->GetFocalPoint()[1] << ", "
+//            << camera->GetFocalPoint()[2] << std::endl;
+}
+
+
+void WindowModifiedCallback( vtkObject*
+                      caller, long unsigned int vtkNotUsed(eventId), void* vtkNotUsed(clientData), void* vtkNotUsed(callData))
+{
+  std::cout << "Window modified" << std::endl;
+  std::cout << caller->GetClassName() << std::endl;
+
+  vtkRenderWindow* window = static_cast<vtkRenderWindow*>(caller); //Observer is put in renderwindow
+
+
+  vtkSmartPointer<vtkOpenGLRenderer>  renderer =
+    vtkSmartPointer<vtkOpenGLRenderer>::New();
+
+  int* windowSize = window->GetSize();
+  std::cout << "Size: " << windowSize[0] << " " << windowSize[1] << std::endl;
+
+  //if(windowSize[0] > 400)
+    {
+    //window->SetSize(400, windowSize[1]);
+    //window->Render();
+    //window->Modified();
+    //window->Render();
+
+    }
+
+
+   double xpos,ypos;
+//
+//  //GetRenderWindow()->GetSize()
+////  cout << "xsize: "<<this->ui->qvtkWidget->GetRenderWindow()->GetSize()[0]<<endl;
+//  //cout << "ysize: "<<this->ui->qvtkWidget->GetRenderWindow()->GetSize()[1]<<endl;
+//
+//    //double xsize=(double)(this->ui->qvtkWidget->GetRenderWindow()->GetSize()[0]);
+//    double xsize=windowSize[0];
+//    xpos=xsize*0.95;
+//  cout << "xsize" << xsize << "xpos" <<xpos<<endl;
+// textActor ->SetPosition ( xpos, 200);
+//
+    //window->Modified();
+    //window->AddRenderer(renderer);
+    //renderer->AddActor(textActor);
+//
+    //window->Render();
+
+}
+/////////////////////////////////
 
 extern HINSTANCE godot_hinstance;
 
@@ -926,18 +1005,18 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 		return;											// Return
 	}
 
-    glwin = CreateWindow ( "Test",
-                     "Draw Window",
-                     WS_OVERLAPPEDWINDOW |
-			WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
-                     0,
-                     0,
-                     100,
-                     100,
-                     NULL,//hWnd,
-                     NULL,
-                     glhinstance,
-                     NULL);
+//    glwin = CreateWindow ( "Test",
+//                     "Draw Window",
+//                     WS_OVERLAPPEDWINDOW |
+//			WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
+//                     0,
+//                     0,
+//                     100,
+//                     100,
+//                     NULL,//hWnd,
+//                     NULL,
+//                     glhinstance,
+//                     NULL);
 
     secondsToDelay = 0.1;
 
@@ -1027,11 +1106,10 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 
 	};
 
-
-
 	gl_context = memnew( ContextGL_Win(hWnd,false) );
 	gl_context->initialize();
 	rasterizer = memnew( RasterizerGLES2 );
+
 ////
 ////	//TOMODIFY!!!
 ////	//COLOCAR VTK
@@ -1056,21 +1134,79 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //    gvtk_viewport=new MyFrame(hWnd);
 
 
-     vtkwin = CreateWindow("button","Exit",
-                      WS_CHILD | WS_VISIBLE | SS_CENTER,
-                      0,400,400,400,
-                      hWnd,(HMENU)2,
-                      (HINSTANCE)vtkGetWindowLong(hWnd,vtkGWL_HINSTANCE),
-                      NULL);
-//HINSTANCE hi;
+//     vtkwin = CreateWindow("button","Exit",
+//                      WS_CHILD | WS_VISIBLE | SS_CENTER,
+//                      0,0,1,1,
+//                      hWnd,(HMENU)2,
+//                      (HINSTANCE)vtkGetWindowLong(hWnd,vtkGWL_HINSTANCE),
+//                      NULL);
+HINSTANCE hi;
 //         vtkwin = CreateWindow("button","Exit",
 //                      WS_OVERLAPPEDWINDOW,//WS_CHILD | WS_VISIBLE | SS_CENTER,
 //                      0,400,400,400,
 //                      NULL,(HMENU)2,
 //                      godot_hinstance,
 //                      NULL);
-   theVTKApp = new myVTKApp(vtkwin);
+   //theVTKApp = new myVTKApp(vtkwin);
 
+
+  renWindow = vtkRenderWindow::New();
+  //renWindow->SetParentId(hWnd);
+  renWindow->SetSize(600,600);
+
+
+  renWindow->InitializeFromCurrentContext(); //IF THIS COMMAND IS NOT CALLED, GODOT WIDGETS NEVER RENDERED
+
+
+  ren=vtkOpenGLRenderer::New();
+  ren->SetBackground(0.5,0.5,0.5);
+
+  renWindow->AddRenderer(ren);
+
+
+  // create an actor and give it cone geometry
+  vtkConeSource *cone = vtkConeSource::New();
+  cone->SetResolution(8);
+  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
+  coneMapper->SetInputConnection(cone->GetOutputPort());
+  vtkActor *coneActor = vtkActor::New();
+  coneActor->SetMapper(coneMapper);
+  coneActor->GetProperty()->SetColor(1.0, 0.0, 1.0);
+
+  vtkriw=vtkRenderWindowInteractor::New();
+  vtkriw->SetRenderWindow(renWindow);
+   vtkriw->Initialize();
+
+  // assign our actor to the renderer
+  ren->AddActor(coneActor);
+
+
+  vtkSmartPointer<vtkCallbackCommand> modifiedCallback =
+    vtkSmartPointer<vtkCallbackCommand>::New();
+  modifiedCallback->SetCallback (CameraModifiedCallback);
+
+
+  ////////////// CONTROL /////////////////
+  ren->GetActiveCamera()->AddObserver(vtkCommand::ModifiedEvent,modifiedCallback);
+//    vtkSmartPointer<vtkImageInteractionCallback1> callback =
+//    vtkSmartPointer<vtkImageInteractionCallback1>::New();
+
+//    vtkSmartPointer<vtkWindowsModInteractionCallback> callbackwinmod =
+//    vtkSmartPointer<vtkWindowsModInteractionCallback>::New();
+
+	//callback->SetRenderer(ren);
+    //callbackwinmod->SetRenderer(ren);
+
+	///////////////////////////////
+
+
+
+  //ren->Delete();
+  //renWindow->Delete();
+  renWindow->Render();
+  cone->Delete();
+  coneMapper->Delete();
+  coneActor->Delete();
 
 	print_line("Visual Server initiated");
 
@@ -1843,6 +1979,8 @@ void OS_Windows::process_events() {
 		TranslateMessage(&msg);
 		DispatchMessageW(&msg);
 		Main::iteration(); //ESTO ES MIO
+		//vtkriw->Render();
+        //renWindow->Render();
 
         secondsPassed = (clock() - startTime) / CLOCKS_PER_SEC;
         if(secondsPassed >= secondsToDelay)
@@ -1852,8 +1990,9 @@ void OS_Windows::process_events() {
             //theVTKApp->OnTimer();
             //im_vtk_window->draw();
             cout << "timeout"<<endl;
+
         }
-               //
+
 
 	}
 
@@ -2265,6 +2404,8 @@ String OS_Windows::get_joy_guid(int p_device) const {
 
 OS_Windows::OS_Windows(HINSTANCE _hInstance) {
 
+vtkriw=vtkRenderWindowInteractor::New();
+
 	key_event_pos=0;
 	force_quit=false;
 	alt_mem=false;
@@ -2296,6 +2437,7 @@ OS_Windows::~OS_Windows()
 #ifdef STDOUT_FILE
 	fclose(stdo);
 #endif
+vtkriw->Delete();
 }
 
 

@@ -117,12 +117,12 @@ myVTKApp * myVTKApp::New()
 }
 
 myVTKApp::myVTKApp()
-:vtkRenderWindowInteractor()
+//:vtkRenderWindowInteractor()
 {
 
 }
 myVTKApp::myVTKApp(HWND hwnd)
-:vtkRenderWindowInteractor()
+//:vtkRenderWindowInteractor()
 {
   // Similar to Examples/Tutorial/Step1/Cxx/Cone.cxx
   // We create the basic parts of a pipeline and connect them
@@ -134,8 +134,8 @@ myVTKApp::myVTKApp(HWND hwnd)
   this->renWin->SetParentId(hwnd);
 //  this->iren = vtkRenderWindowInteractor::New();
 //  this->iren->SetRenderWindow(this->renWin);
-    //this->SetRenderWindow(this->renWin);
-    vtkRenderWindowInteractor::SetRenderWindow(this->renWin);
+
+    //vtkRenderWindowInteractor::SetRenderWindow(this->renWin);
   this->cone = vtkConeSource::New();
   this->cone->SetHeight( 3.0 );
   this->cone->SetRadius( 1.0 );
@@ -149,29 +149,30 @@ myVTKApp::myVTKApp(HWND hwnd)
   this->renderer->SetBackground(0.2,0.4,0.3);
   this->renWin->SetSize(200,200);
 
+
   // Finally we start the interactor so that event will be handled
   //this->renWin->Render();
 }
 
-void myVTKApp::OnTimer(void)
-{
-    if (!Enabled)
-      return;
-    // this is all we need to do, InteractorStyle is stateful and will
-    // continue with whatever it's busy
-
-#if (VTK_MAJOR_VERSION >= 4)
-    // new style
-    this->InvokeEvent(vtkCommand::TimerEvent, NULL);
-#else
-    // old style
-    InteractorStyle->OnTimer();
-#endif
-//this->draw();
-
-this->Render();
-
-}
+//void myVTKApp::OnTimer(void)
+//{
+//    if (!Enabled)
+//      return;
+//    // this is all we need to do, InteractorStyle is stateful and will
+//    // continue with whatever it's busy
+//
+//#if (VTK_MAJOR_VERSION >= 4)
+//    // new style
+//    this->InvokeEvent(vtkCommand::TimerEvent, NULL);
+//#else
+//    // old style
+//    InteractorStyle->OnTimer();
+//#endif
+////this->draw();
+//
+//this->Render();
+//
+//}
 
 
 myVTKApp::~myVTKApp()

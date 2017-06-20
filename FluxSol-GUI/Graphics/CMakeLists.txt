@@ -21,7 +21,7 @@ ENDIF()
 INCLUDE(${VTK_USE_FILE})
 ENDIF()
 
-link_directories ("D:/Luciano/Libs/VTK-6.3.0-Install/lib")
+link_directories ("$ENV{VTK_DIR}/lib")
 
 #if (USE_PETSC)
 	find_package (PETSc REQUIRED HINTS "${MY_PETSC_DIR}/${MY_PETSC_ARCH}/conf")
@@ -61,7 +61,7 @@ link_directories ("D:/Luciano/Libs/VTK-6.3.0-Install/lib")
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
 
 set (NAME Graphics_)
-set (sources GraphicModel.cpp)
+set (sources GraphicModel.cpp SimpleView.cpp)
 add_library (${NAME} OBJECT ${sources})
 add_library (Graphics SHARED ${sources})
 

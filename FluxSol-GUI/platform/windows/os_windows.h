@@ -60,7 +60,6 @@
 #include <ctime>
 #include <cstdlib>
 
-
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
 */
@@ -110,7 +109,7 @@ class OS_Windows : public OS {
 	HINSTANCE	glhinstance;
 
 	//LUCIANO, just for test
-    myVTKApp *theVTKApp ;
+    //myVTKApp *theVTKApp ;
     HWND vtkwin;
 
     Control *controltest; //TEST TIMER

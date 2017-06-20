@@ -11,8 +11,8 @@
 
 LRESULT CALLBACK vtk_WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-class myVTKApp:
-    public vtkRenderWindowInteractor
+class myVTKApp
+//:    public vtkRenderWindowInteractor
 {
     protected:
               myVTKApp * New();
@@ -38,7 +38,7 @@ private:
 //   void UpdateSize(int x, int y);
 //   int CreateTimer(int timertype);
 //   int DestroyTimer();
-   void OnTimer(void);
+//   void OnTimer(void);
 //   void TerminateApp();
 };
 
