@@ -198,9 +198,14 @@ $<TARGET_OBJECTS:app_>
 
 #BESIDES MAIN AND CORE HAVE IT,
 #SERVER LIBRARY MUST BE LINKED ALSO IN ORDER TO LINK VISUAL SERVER GLES2
-
 target_link_libraries (${NAME} 
-driverstypes main core scene windows unix gl_context gles2 winmm opengl32
+main
+servers driverstypes core scene
+windows unix 
+gl_context gles2
+winmm 
+opengl32
+stdc++
 Graphics
 ${VTK_LIBRARIES}
 )

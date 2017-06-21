@@ -33,6 +33,7 @@
 #include "sort.h"
 #include "io/marshalls.h"
 // careful, these may run in different threads than the visual server
+//#include <gl\gl.h>
 
 BalloonAllocator<> *VisualServerRaster::OctreeAllocator::allocator=NULL;
 
@@ -7207,6 +7208,23 @@ void VisualServerRaster::draw() {
 	room_cull_enabled = GLOBAL_DEF("render/room_cull_enabled",true);
 	light_discard_enabled = GLOBAL_DEF("render/light_discard_enabled",true);
 	rasterizer->begin_frame();
+//	  glFlush();  // Render now
+//  glBegin(GL_TRIANGLES);
+//    glVertex3f(-1.5,-1.5,0.0);
+//    glVertex3f(1.5,0.0,0.0);
+//    glVertex3f(0.0,1.5,1.0);
+//  glEnd();
+//
+//  glEnable(GL_LIGHTING);
+//  glEnable(GL_LIGHT0);
+//  GLfloat lightpos[] = {-0.5f, 1.0f, 1.0f, 1.0f};
+//  glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+//  GLfloat diffuse[] = {0.0f, 0.8f, 0.8f, 1.0f};
+//  glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+//  GLfloat specular[] = {0.5f, 0.0f, 0.0f, 1.0f};
+//  glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+//  GLfloat ambient[] = {1.0f, 1.0f, 0.2f,  1.0f};
+//  glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 	_draw_viewports();
 	_draw_cursors_and_margins();
 	rasterizer->end_frame();

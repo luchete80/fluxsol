@@ -1166,7 +1166,7 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //                  godot_hinstance,
 //                  NULL);
 
-   ///// VTK STUFF //////
+//   ///// VTK STUFF //////
   ren=vtkOpenGLRenderer::New();
   vtkExternalOpenGLRenderWindow *renWindowext = vtkExternalOpenGLRenderWindow::New();
   //renWindow = vtkRenderWindow::New();
@@ -1179,77 +1179,77 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //  renWindow->InitializeFromCurrentContext(); //IF THIS COMMAND IS NOT CALLED, GODOT WIDGETS NEVER RENDERED
 //  renWindow->AddRenderer(ren);
 
-
-/////// NEW WAY
- //renWindowext->SetParentId(vtkwin);
-//  renWindowext->SetSize(400,400);
-  externalVTKWidget->SetRenderWindow(renWindowext);
-
-    vtkNew<vtkCallbackCommand> callback;
-    //callback->SetCallback(MakeCurrentCallback);
-    //renWindowext->InitializeFromCurrentContext();
-  ren = externalVTKWidget->AddRenderer(); //WHEN VTKRENDERWINDOW IS EXTERNAL
-//renWindowext->Delete();
-
-////////////////// QVTK WAY
+//
+///////// NEW WAY
+// //renWindowext->SetParentId(vtkwin);
+////  renWindowext->SetSize(400,400);
 //  externalVTKWidget->SetRenderWindow(renWindowext);
-////renWindowext->SetParentId(vtkwin);
-////    vtkNew<vtkCallbackCommand> callback;
+//
+//    vtkNew<vtkCallbackCommand> callback;
 //    //callback->SetCallback(MakeCurrentCallback);
 //    //renWindowext->InitializeFromCurrentContext();
-//    renWindowext->Render();	//If i want to obtain coordinates
-//    externalVTKWidget->GetRenderWindow()->AddRenderer(ren);
-//    renWindowext->AddRenderer(ren);
-//    //vtkriw= externalVTKWidget->GetInteractor();
-//renWindowext->Delete();
-////////////////////////////////
-//  vtkriw->SetRenderWindow(renWindow);
-//   vtkriw->Initialize();
-
-
-
- ren->SetBackground(0.5,0.5,0.5);
-  // create an actor and give it cone geometry
-  vtkConeSource *cone = vtkConeSource::New();
-  cone->SetResolution(8);
-  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
-  coneMapper->SetInputConnection(cone->GetOutputPort());
-  vtkActor *coneActor = vtkActor::New();
-  coneActor->SetMapper(coneMapper);
-  coneActor->GetProperty()->SetColor(1.0, 0.0, 1.0);
-
-  // assign our actor to the renderer
-  ren->AddActor(coneActor);
-
-    coneActor->RotateX(45.0);
-    coneActor->RotateY(45.0);
-    ren->ResetCamera();
-
-  vtkSmartPointer<vtkCallbackCommand> modifiedCallback =
-    vtkSmartPointer<vtkCallbackCommand>::New();
-  modifiedCallback->SetCallback (CameraModifiedCallback);
-
-
-  ////////////// CONTROL /////////////////
-  ren->GetActiveCamera()->AddObserver(vtkCommand::ModifiedEvent,modifiedCallback);
-//    vtkSmartPointer<vtkImageInteractionCallback1> callback =
-//    vtkSmartPointer<vtkImageInteractionCallback1>::New();
-
-//    vtkSmartPointer<vtkWindowsModInteractionCallback> callbackwinmod =
-//    vtkSmartPointer<vtkWindowsModInteractionCallback>::New();
-
-	//callback->SetRenderer(ren);
-    //callbackwinmod->SetRenderer(ren);
-
-	///////////////////////////////
-
-
-
-  //ren->Delete();
-  //renWindow->Delete();
-  cone->Delete();
-  coneMapper->Delete();
-  coneActor->Delete();
+//  ren = externalVTKWidget->AddRenderer(); //WHEN VTKRENDERWINDOW IS EXTERNAL
+////renWindowext->Delete();
+//
+//////////////////// QVTK WAY
+////  externalVTKWidget->SetRenderWindow(renWindowext);
+//////renWindowext->SetParentId(vtkwin);
+//////    vtkNew<vtkCallbackCommand> callback;
+////    //callback->SetCallback(MakeCurrentCallback);
+////    //renWindowext->InitializeFromCurrentContext();
+////    renWindowext->Render();	//If i want to obtain coordinates
+////    externalVTKWidget->GetRenderWindow()->AddRenderer(ren);
+////    renWindowext->AddRenderer(ren);
+////    //vtkriw= externalVTKWidget->GetInteractor();
+////renWindowext->Delete();
+//////////////////////////////////
+////  vtkriw->SetRenderWindow(renWindow);
+////   vtkriw->Initialize();
+//
+//
+//
+// ren->SetBackground(0.5,0.5,0.5);
+//  // create an actor and give it cone geometry
+//  vtkConeSource *cone = vtkConeSource::New();
+//  cone->SetResolution(8);
+//  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
+//  coneMapper->SetInputConnection(cone->GetOutputPort());
+//  vtkActor *coneActor = vtkActor::New();
+//  coneActor->SetMapper(coneMapper);
+//  coneActor->GetProperty()->SetColor(1.0, 0.0, 1.0);
+//
+//  // assign our actor to the renderer
+//  ren->AddActor(coneActor);
+//
+//    coneActor->RotateX(45.0);
+//    coneActor->RotateY(45.0);
+//    ren->ResetCamera();
+//
+//  vtkSmartPointer<vtkCallbackCommand> modifiedCallback =
+//    vtkSmartPointer<vtkCallbackCommand>::New();
+//  modifiedCallback->SetCallback (CameraModifiedCallback);
+//
+//
+//  ////////////// CONTROL /////////////////
+//  ren->GetActiveCamera()->AddObserver(vtkCommand::ModifiedEvent,modifiedCallback);
+////    vtkSmartPointer<vtkImageInteractionCallback1> callback =
+////    vtkSmartPointer<vtkImageInteractionCallback1>::New();
+//
+////    vtkSmartPointer<vtkWindowsModInteractionCallback> callbackwinmod =
+////    vtkSmartPointer<vtkWindowsModInteractionCallback>::New();
+//
+//	//callback->SetRenderer(ren);
+//    //callbackwinmod->SetRenderer(ren);
+//
+//	///////////////////////////////
+//
+//
+//
+//  //ren->Delete();
+//  //renWindow->Delete();
+//  cone->Delete();
+//  coneMapper->Delete();
+//  coneActor->Delete();
 
 	print_line("Visual Server initiated");
 
@@ -2021,13 +2021,13 @@ void OS_Windows::process_events() {
 
 		TranslateMessage(&msg);
 		DispatchMessageW(&msg);
-		//Main::iteration();
+		Main::iteration();
 
 		/// ALL THIS IS NEW
 		//vtkriw->Render();
 		//renWindow->Render();
         //renWindowext->Render();
-        externalVTKWidget->GetRenderWindow()->Render();
+        //externalVTKWidget->GetRenderWindow()->Render();
 //          glEnable(GL_DEPTH_TEST);
 //
 //  // Buffers being managed by external application i.e. GLUT in this case.
@@ -2377,25 +2377,25 @@ void OS_Windows::run() {
 		process_events(); // get rid of pending events
 //		if (Main::iteration()==true)
 //			break;
-glClearColor(1,0,0,1);
-            glClear(GL_COLOR_BUFFER_BIT);
-                glViewport(0, 0, 100, 100);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    //gluPerspective(60.0, (float)width/height, 0.001, 100.0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslatef(0.0f, 0.0f, -3.0f);
-    glBegin(GL_TRIANGLES);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glVertex2i(0,  1);
-    glColor3f(0.0f, 1.0f, 0.0f);
-    glVertex2i(-1, -1);
-    glColor3f(0.0f, 0.0f, 1.0f);
-    glVertex2i(1, -1);
-    glEnd();
-    glFlush();
-    SwapBuffers(hDC);
+//glClearColor(1,0,0,1);
+//            glClear(GL_COLOR_BUFFER_BIT);
+//                glViewport(0, 0, 100, 100);
+//    glMatrixMode(GL_PROJECTION);
+//    glLoadIdentity();
+//    //gluPerspective(60.0, (float)width/height, 0.001, 100.0);
+//    glMatrixMode(GL_MODELVIEW);
+//    glLoadIdentity();
+//    glTranslatef(0.0f, 0.0f, -3.0f);
+//    glBegin(GL_TRIANGLES);
+//    glColor3f(1.0f, 0.0f, 0.0f);
+//    glVertex2i(0,  1);
+//    glColor3f(0.0f, 1.0f, 0.0f);
+//    glVertex2i(-1, -1);
+//    glColor3f(0.0f, 0.0f, 1.0f);
+//    glVertex2i(1, -1);
+//    glEnd();
+//    glFlush();
+//    SwapBuffers(hDC);
 	}; //LUCIANO
 
 	//main_loop->finish(); //LUCIANO
@@ -2479,7 +2479,6 @@ String OS_Windows::get_joy_guid(int p_device) const {
 
 OS_Windows::OS_Windows(HINSTANCE _hInstance) {
 
-vtkriw=vtkRenderWindowInteractor::New();
 
 	key_event_pos=0;
 	force_quit=false;
@@ -2512,7 +2511,7 @@ OS_Windows::~OS_Windows()
 #ifdef STDOUT_FILE
 	fclose(stdo);
 #endif
-vtkriw->Delete();
+//vtkriw->Delete();
 }
 
 

@@ -109,7 +109,6 @@ class OS_Windows : public OS {
 	HINSTANCE	glhinstance;
 
 	//LUCIANO, just for test
-    //myVTKApp *theVTKApp ;
     HWND vtkwin;
 
     Control *controltest; //TEST TIMER
