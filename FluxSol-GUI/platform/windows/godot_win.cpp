@@ -185,8 +185,8 @@ int main(int _argc, char** _argv) {
 }
 
 HINSTANCE godot_hinstance = NULL;
-vtkRenderWindowInteractor *vtkriw=NULL;
-vtkRenderWindow *renWindow=NULL;
+//vtkRenderWindowInteractor *vtkriw=NULL;
+//vtkRenderWindow *renWindow=NULL;
 vtkOpenGLRenderer *ren=NULL;
 ExternalVTKWidget *externalVTKWidget=NULL;
 

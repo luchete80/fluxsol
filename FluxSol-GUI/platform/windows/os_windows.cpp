@@ -97,87 +97,87 @@ extern "C" {
 
 #include <vtkOpenGLRenderer.h>
 //#define STDOUT_FILE
-
-
-////////////////////// VTK STUFF
-
-
-///////////// IS THIS BELONGS TO OS_WinDOWS THE PROGRAM CRASHES
-///////////// WHEN RETURNING SINGLETON
-// Original was
-extern  vtkRenderWindowInteractor *vtkriw;
-extern vtkRenderWindow *renWindow;
-extern vtkOpenGLRenderer *ren;
-
-//extern vtkExternalOpenGLRenderWindow *renWindowext;
-extern ExternalVTKWidget *externalVTKWidget;
+//
+//
+//////////////////////// VTK STUFF
+//
+//
+/////////////// IS THIS BELONGS TO OS_WinDOWS THE PROGRAM CRASHES
+/////////////// WHEN RETURNING SINGLETON
+//// Original was
+////extern  vtkRenderWindowInteractor *vtkriw;
+////extern vtkRenderWindow *renWindow;
 //extern vtkOpenGLRenderer *ren;
-
-static void CameraModifiedCallback(vtkObject* caller,
-                                   long unsigned int vtkNotUsed(eventId),
-                                   void* vtkNotUsed(clientData),
-                                   void* vtkNotUsed(callData) )
-{
-//  std::cout << caller->GetClassName() << " modified" << std::endl;
-
-  vtkCamera* camera = static_cast<vtkCamera*>(caller);
-  // print the interesting stuff
-//  std::cout << "\tPosition: "
-//            << camera->GetPosition()[0] << ", "
-//            << camera->GetPosition()[1] << ", "
-//            << camera->GetPosition()[2] << std::endl;
-//  std::cout << "\tFocal point: "
-//            << camera->GetFocalPoint()[0] << ", "
-//            << camera->GetFocalPoint()[1] << ", "
-//            << camera->GetFocalPoint()[2] << std::endl;
-}
-
-
-void WindowModifiedCallback( vtkObject*
-                      caller, long unsigned int vtkNotUsed(eventId), void* vtkNotUsed(clientData), void* vtkNotUsed(callData))
-{
-  std::cout << "Window modified" << std::endl;
-  std::cout << caller->GetClassName() << std::endl;
-
-  vtkRenderWindow* window = static_cast<vtkRenderWindow*>(caller); //Observer is put in renderwindow
-
-
-  vtkSmartPointer<vtkOpenGLRenderer>  renderer =
-    vtkSmartPointer<vtkOpenGLRenderer>::New();
-
-  int* windowSize = window->GetSize();
-  std::cout << "Size: " << windowSize[0] << " " << windowSize[1] << std::endl;
-
-  //if(windowSize[0] > 400)
-    {
-    //window->SetSize(400, windowSize[1]);
-    //window->Render();
-    //window->Modified();
-    //window->Render();
-
-    }
-
-
-   double xpos,ypos;
 //
-//  //GetRenderWindow()->GetSize()
-////  cout << "xsize: "<<this->ui->qvtkWidget->GetRenderWindow()->GetSize()[0]<<endl;
-//  //cout << "ysize: "<<this->ui->qvtkWidget->GetRenderWindow()->GetSize()[1]<<endl;
+////extern vtkExternalOpenGLRenderWindow *renWindowext;
+//extern ExternalVTKWidget *externalVTKWidget;
+////extern vtkOpenGLRenderer *ren;
 //
-//    //double xsize=(double)(this->ui->qvtkWidget->GetRenderWindow()->GetSize()[0]);
-//    double xsize=windowSize[0];
-//    xpos=xsize*0.95;
-//  cout << "xsize" << xsize << "xpos" <<xpos<<endl;
-// textActor ->SetPosition ( xpos, 200);
+//static void CameraModifiedCallback(vtkObject* caller,
+//                                   long unsigned int vtkNotUsed(eventId),
+//                                   void* vtkNotUsed(clientData),
+//                                   void* vtkNotUsed(callData) )
+//{
+////  std::cout << caller->GetClassName() << " modified" << std::endl;
 //
-    //window->Modified();
-    //window->AddRenderer(renderer);
-    //renderer->AddActor(textActor);
+//  vtkCamera* camera = static_cast<vtkCamera*>(caller);
+//  // print the interesting stuff
+////  std::cout << "\tPosition: "
+////            << camera->GetPosition()[0] << ", "
+////            << camera->GetPosition()[1] << ", "
+////            << camera->GetPosition()[2] << std::endl;
+////  std::cout << "\tFocal point: "
+////            << camera->GetFocalPoint()[0] << ", "
+////            << camera->GetFocalPoint()[1] << ", "
+////            << camera->GetFocalPoint()[2] << std::endl;
+//}
 //
-    //window->Render();
-
-}
-/////////////////////////////////
+//
+//void WindowModifiedCallback( vtkObject*
+//                      caller, long unsigned int vtkNotUsed(eventId), void* vtkNotUsed(clientData), void* vtkNotUsed(callData))
+//{
+//  std::cout << "Window modified" << std::endl;
+//  std::cout << caller->GetClassName() << std::endl;
+//
+//  vtkRenderWindow* window = static_cast<vtkRenderWindow*>(caller); //Observer is put in renderwindow
+//
+//
+//  vtkSmartPointer<vtkOpenGLRenderer>  renderer =
+//    vtkSmartPointer<vtkOpenGLRenderer>::New();
+//
+//  int* windowSize = window->GetSize();
+//  std::cout << "Size: " << windowSize[0] << " " << windowSize[1] << std::endl;
+//
+//  //if(windowSize[0] > 400)
+//    {
+//    //window->SetSize(400, windowSize[1]);
+//    //window->Render();
+//    //window->Modified();
+//    //window->Render();
+//
+//    }
+//
+//
+//   double xpos,ypos;
+////
+////  //GetRenderWindow()->GetSize()
+//////  cout << "xsize: "<<this->ui->qvtkWidget->GetRenderWindow()->GetSize()[0]<<endl;
+////  //cout << "ysize: "<<this->ui->qvtkWidget->GetRenderWindow()->GetSize()[1]<<endl;
+////
+////    //double xsize=(double)(this->ui->qvtkWidget->GetRenderWindow()->GetSize()[0]);
+////    double xsize=windowSize[0];
+////    xpos=xsize*0.95;
+////  cout << "xsize" << xsize << "xpos" <<xpos<<endl;
+//// textActor ->SetPosition ( xpos, 200);
+////
+//    //window->Modified();
+//    //window->AddRenderer(renderer);
+//    //renderer->AddActor(textActor);
+////
+//    //window->Render();
+//
+//}
+///////////////////////////////////
 
 extern HINSTANCE godot_hinstance;
 
@@ -375,50 +375,37 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 
 		switch (uMsg)									// Check For Windows Messages
 	{
-//		case WM_ACTIVATE:							// Watch For Window Activate Message
-//		{
-//			minimized = HIWORD(wParam) != 0;
-//			if (!main_loop) {
-//				return 0;
-//			};
-//			if (LOWORD(wParam) == WA_ACTIVE || LOWORD(wParam) == WA_CLICKACTIVE) {
-//
-//				main_loop->notification(MainLoop::NOTIFICATION_WM_FOCUS_IN);
-//				alt_mem=false;
-//				control_mem=false;
-//				shift_mem=false;
-//				if (mouse_mode==MOUSE_MODE_CAPTURED) {
-//					RECT clipRect;
-//					GetClientRect(hWnd, &clipRect);
-//					ClientToScreen(hWnd, (POINT*) &clipRect.left);
-//					ClientToScreen(hWnd, (POINT*) &clipRect.right);
-//					ClipCursor(&clipRect);
-//					SetCapture(hWnd);
-//
-//				}
-//			} else {
-//				main_loop->notification(MainLoop::NOTIFICATION_WM_FOCUS_OUT);
-//				alt_mem=false;
-//
-//			};
-//
-//			return 0;								// Return To The Message Loop
-//		}break;
+		case WM_ACTIVATE:							// Watch For Window Activate Message
+		{
+			minimized = HIWORD(wParam) != 0;
+			if (!main_loop) {
+				return 0;
+			};
+			if (LOWORD(wParam) == WA_ACTIVE || LOWORD(wParam) == WA_CLICKACTIVE) {
+
+				main_loop->notification(MainLoop::NOTIFICATION_WM_FOCUS_IN);
+				alt_mem=false;
+				control_mem=false;
+				shift_mem=false;
+				if (mouse_mode==MOUSE_MODE_CAPTURED) {
+					RECT clipRect;
+					GetClientRect(hWnd, &clipRect);
+					ClientToScreen(hWnd, (POINT*) &clipRect.left);
+					ClientToScreen(hWnd, (POINT*) &clipRect.right);
+					ClipCursor(&clipRect);
+					SetCapture(hWnd);
+
+				}
+			} else {
+				main_loop->notification(MainLoop::NOTIFICATION_WM_FOCUS_OUT);
+				alt_mem=false;
+
+			};
+
+			return 0;								// Return To The Message Loop
+		}break;
 
 		case WM_PAINT:
-		        glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslatef(0.0f, 0.0f, -3.0f);
-    glBegin(GL_TRIANGLES);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glVertex2i(0,  1);
-    glColor3f(0.0f, 1.0f, 0.0f);
-    glVertex2i(-1, -1);
-    glColor3f(0.0f, 0.0f, 1.0f);
-    glVertex2i(1, -1);
-    glEnd();
-    glFlush();
-    SwapBuffers(hDC);
 			Main::force_redraw();
 			break;
 
@@ -1157,7 +1144,7 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //                      hWnd,(HMENU)2,
 //                      (HINSTANCE)vtkGetWindowLong(hWnd,vtkGWL_HINSTANCE),
 //                      NULL);
-        HINSTANCE hi;
+//        HINSTANCE hi;
 //     vtkwin = CreateWindow("button","Exit",
 //                  WS_CHILD | WS_VISIBLE | SS_CENTER,
 //                  100,100,400,400,
@@ -1167,11 +1154,11 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //                  NULL);
 
 //   ///// VTK STUFF //////
-  ren=vtkOpenGLRenderer::New();
-  vtkExternalOpenGLRenderWindow *renWindowext = vtkExternalOpenGLRenderWindow::New();
+//  ren=vtkOpenGLRenderer::New();
+//  vtkExternalOpenGLRenderWindow *renWindowext = vtkExternalOpenGLRenderWindow::New();
   //renWindow = vtkRenderWindow::New();
-  externalVTKWidget=ExternalVTKWidget::New();
-  vtkriw=vtkRenderWindowInteractor::New();
+//  externalVTKWidget=ExternalVTKWidget::New();
+  //vtkriw=vtkRenderWindowInteractor::New();
 
   /////// ORIRINAL WAY
 //  renWindow->SetParentId(vtkwin);
@@ -1181,7 +1168,7 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 
 //
 ///////// NEW WAY
-// //renWindowext->SetParentId(vtkwin);
+////renWindowext->SetParentId(vtkwin);
 ////  renWindowext->SetSize(400,400);
 //  externalVTKWidget->SetRenderWindow(renWindowext);
 //
@@ -1192,20 +1179,20 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 ////renWindowext->Delete();
 //
 //////////////////// QVTK WAY
-////  externalVTKWidget->SetRenderWindow(renWindowext);
-//////renWindowext->SetParentId(vtkwin);
-//////    vtkNew<vtkCallbackCommand> callback;
-////    //callback->SetCallback(MakeCurrentCallback);
-////    //renWindowext->InitializeFromCurrentContext();
-////    renWindowext->Render();	//If i want to obtain coordinates
-////    externalVTKWidget->GetRenderWindow()->AddRenderer(ren);
-////    renWindowext->AddRenderer(ren);
-////    //vtkriw= externalVTKWidget->GetInteractor();
-////renWindowext->Delete();
-//////////////////////////////////
-////  vtkriw->SetRenderWindow(renWindow);
-////   vtkriw->Initialize();
-//
+//  externalVTKWidget->SetRenderWindow(renWindowext);
+//renWindowext->SetParentId(vtkwin);
+////    vtkNew<vtkCallbackCommand> callback;
+//    //callback->SetCallback(MakeCurrentCallback);
+//    //renWindowext->InitializeFromCurrentContext();
+//    renWindowext->Render();	//If i want to obtain coordinates
+//    externalVTKWidget->GetRenderWindow()->AddRenderer(ren);
+//    renWindowext->AddRenderer(ren);
+//    //vtkriw= externalVTKWidget->GetInteractor();
+//renWindowext->Delete();
+//////////////////////////////
+//  vtkriw->SetRenderWindow(renWindow);
+//   vtkriw->Initialize();
+////
 //
 //
 // ren->SetBackground(0.5,0.5,0.5);
