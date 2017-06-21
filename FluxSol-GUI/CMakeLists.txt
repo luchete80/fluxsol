@@ -26,7 +26,6 @@ set (GODOTGUI_SRC_DIR "D:/Luciano/Libs/GodotGUI")
 set (GODOTGUI_BIN_DIR "$ENV{GODOTGUI_BIN_DIR}")
 set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
 
-link_directories ("D:/Luciano/Libs/VTK-6.3.0-Install/lib")
 link_directories ("${GODOTGUI_BIN_DIR}")
 
 

@@ -109,8 +109,8 @@ extern  vtkRenderWindowInteractor *vtkriw;
 extern vtkRenderWindow *renWindow;
 extern vtkOpenGLRenderer *ren;
 
-//extern vtkExternalOpenGLRenderWindow *renWindowext;
-extern ExternalVTKWidget *externalVTKWidget;
+//extern vtkExternalOpenGLRenderWindow *renWindow;
+//extern ExternalVTKWidget *externalVTKWidget=NULL;
 //extern vtkOpenGLRenderer *ren;
 
 static void CameraModifiedCallback(vtkObject* caller,
@@ -1158,57 +1158,33 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //                      (HINSTANCE)vtkGetWindowLong(hWnd,vtkGWL_HINSTANCE),
 //                      NULL);
         HINSTANCE hi;
-//     vtkwin = CreateWindow("button","Exit",
-//                  WS_CHILD | WS_VISIBLE | SS_CENTER,
-//                  100,100,400,400,
-//                  hWnd,(HMENU)2,
-//                  //(HINSTANCE)vtkGetWindowLong(hWnd,vtkGWL_HINSTANCE),
-//                  godot_hinstance,
-//                  NULL);
+     vtkwin = CreateWindow("button","Exit",
+                  WS_OVERLAPPEDWINDOW,//WS_CHILD | WS_VISIBLE | SS_CENTER,
+                  100,100,400,400,
+                  NULL,(HMENU)2,
+                  (HINSTANCE)vtkGetWindowLong(hWnd,vtkGWL_HINSTANCE),
+                  //godot_hinstance,
+                  NULL);
+   //theVTKApp = new myVTKApp(vtkwin);
 
-   ///// VTK STUFF //////
+
+  //renWindow = vtkExternalOpenGLRenderWindow::New();
+  renWindow = vtkRenderWindow::New();
+  //renWindow = vtkExternalOpenGLRenderWindow::New();
+  //externalVTKWidget->SetRenderWindow(renWindow.GetPointer());
+  //renWindow->SetParentId(hWnd);
+  renWindow->SetSize(600,600);
+
+
+  renWindow->InitializeFromCurrentContext(); //IF THIS COMMAND IS NOT CALLED, GODOT WIDGETS NEVER RENDERED
+
+
   ren=vtkOpenGLRenderer::New();
-  vtkExternalOpenGLRenderWindow *renWindowext = vtkExternalOpenGLRenderWindow::New();
-  //renWindow = vtkRenderWindow::New();
-  externalVTKWidget=ExternalVTKWidget::New();
-  vtkriw=vtkRenderWindowInteractor::New();
+  ren->SetBackground(0.5,0.5,0.5);
 
-  /////// ORIRINAL WAY
-//  renWindow->SetParentId(vtkwin);
-//  renWindow->SetSize(400,400);
-//  renWindow->InitializeFromCurrentContext(); //IF THIS COMMAND IS NOT CALLED, GODOT WIDGETS NEVER RENDERED
-//  renWindow->AddRenderer(ren);
+  renWindow->AddRenderer(ren);
 
 
-/////// NEW WAY
- //renWindowext->SetParentId(vtkwin);
-//  renWindowext->SetSize(400,400);
-  externalVTKWidget->SetRenderWindow(renWindowext);
-
-    vtkNew<vtkCallbackCommand> callback;
-    //callback->SetCallback(MakeCurrentCallback);
-    //renWindowext->InitializeFromCurrentContext();
-  ren = externalVTKWidget->AddRenderer(); //WHEN VTKRENDERWINDOW IS EXTERNAL
-//renWindowext->Delete();
-
-////////////////// QVTK WAY
-//  externalVTKWidget->SetRenderWindow(renWindowext);
-////renWindowext->SetParentId(vtkwin);
-////    vtkNew<vtkCallbackCommand> callback;
-//    //callback->SetCallback(MakeCurrentCallback);
-//    //renWindowext->InitializeFromCurrentContext();
-//    renWindowext->Render();	//If i want to obtain coordinates
-//    externalVTKWidget->GetRenderWindow()->AddRenderer(ren);
-//    renWindowext->AddRenderer(ren);
-//    //vtkriw= externalVTKWidget->GetInteractor();
-//renWindowext->Delete();
-////////////////////////////////
-//  vtkriw->SetRenderWindow(renWindow);
-//   vtkriw->Initialize();
-
-
-
- ren->SetBackground(0.5,0.5,0.5);
   // create an actor and give it cone geometry
   vtkConeSource *cone = vtkConeSource::New();
   cone->SetResolution(8);
@@ -1218,12 +1194,13 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
   coneActor->SetMapper(coneMapper);
   coneActor->GetProperty()->SetColor(1.0, 0.0, 1.0);
 
+  vtkriw=vtkRenderWindowInteractor::New();
+  vtkriw->SetRenderWindow(renWindow);
+   vtkriw->Initialize();
+
   // assign our actor to the renderer
   ren->AddActor(coneActor);
 
-    coneActor->RotateX(45.0);
-    coneActor->RotateY(45.0);
-    ren->ResetCamera();
 
   vtkSmartPointer<vtkCallbackCommand> modifiedCallback =
     vtkSmartPointer<vtkCallbackCommand>::New();
@@ -1247,6 +1224,7 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 
   //ren->Delete();
   //renWindow->Delete();
+  renWindow->Render();
   cone->Delete();
   coneMapper->Delete();
   coneActor->Delete();
@@ -2021,41 +1999,9 @@ void OS_Windows::process_events() {
 
 		TranslateMessage(&msg);
 		DispatchMessageW(&msg);
-		//Main::iteration();
-
-		/// ALL THIS IS NEW
-		//vtkriw->Render();
-		//renWindow->Render();
-        //renWindowext->Render();
-        externalVTKWidget->GetRenderWindow()->Render();
-//          glEnable(GL_DEPTH_TEST);
-//
-//  // Buffers being managed by external application i.e. GLUT in this case.
-//  glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
-//  glClearDepth(1.0f);
-//  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the color buffer
-//
-//  glFlush();  // Render now
-//  glBegin(GL_TRIANGLES);
-//    glVertex3f(-1.5,-1.5,0.0);
-//    glVertex3f(1.5,0.0,0.0);
-//    glVertex3f(0.0,1.5,1.0);
-//  glEnd();
-//
-//  glEnable(GL_LIGHTING);
-//  glEnable(GL_LIGHT0);
-//  GLfloat lightpos[] = {-0.5f, 1.0f, 1.0f, 1.0f};
-//  glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
-//  GLfloat diffuse[] = {0.0f, 0.8f, 0.8f, 1.0f};
-//  glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-//  GLfloat specular[] = {0.5f, 0.0f, 0.0f, 1.0f};
-//  glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-//  GLfloat ambient[] = {1.0f, 1.0f, 0.2f,  1.0f};
-//  glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-//
-//
-//        OS::get_singleton()->swap_buffers();
-//        ////////////
+		//Main::iteration(); //ESTO ES MIO
+		vtkriw->Render();
+        //renWindow->Render();
 
         secondsPassed = (clock() - startTime) / CLOCKS_PER_SEC;
         if(secondsPassed >= secondsToDelay)

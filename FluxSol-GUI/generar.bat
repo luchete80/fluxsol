@@ -1,5 +1,5 @@
 set FLUXSOL_DIR=D:/Luciano/Numerico/MecSol/FluxSol/Src
-set VTK_DIR=D:/Luciano/Libs/VTK-6.3.0-Install/
+set VTK_DIR=D:/Luciano/Libs/VTK-7.1.1-Install/
 
 set PATH=D:/Luciano/Programas/x86_64-5.3.0-posix-seh-rt_v4-rev0/mingw64/bin;D:/Luciano/Programas/CMake/bin;
 
