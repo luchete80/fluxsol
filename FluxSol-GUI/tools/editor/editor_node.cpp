@@ -1134,11 +1134,7 @@ void EditorNode::_dialog_action(String p_file) {
 
 			push_item(res.operator->() );
 		} break;
-		case FILE_NEW_INHERITED_SCENE: {
 
-
-			load_scene(p_file,false,true);
-		} break;
 		case FILE_OPEN_SCENE: {
 
 
@@ -1897,7 +1893,6 @@ void EditorNode::_menu_option_confirm(int p_option,bool p_confirmed) {
 
 
 		} break;
-		case FILE_NEW_INHERITED_SCENE:
 		case FILE_OPEN_SCENE: {
 
 
@@ -1969,6 +1964,19 @@ void EditorNode::_menu_option_confirm(int p_option,bool p_confirmed) {
 
 
 		} break;
+
+		case FILE_IMPORT_MESH: {
+        file->set_mode(EditorFileDialog::MODE_OPEN_FILE);
+			//not for now?
+			List<String> extensions;
+//			ResourceLoader::get_recognized_extensions_for_type("PackedScene",&extensions);
+//			file->clear_filters();
+//			for(int i=0;i<extensions.size();i++) {
+//
+//				file->add_filter("*."+extensions[i]+" ; "+extensions[i].to_upper());
+//			}
+
+		}
 		case SCENE_TAB_CLOSE: {
 			_remove_scene(tab_closing);
 			_update_scene_tabs();
@@ -5001,14 +5009,14 @@ EditorNode::EditorNode() {
 	file_menu->set_tooltip("Operations with scene files.");
 	p=file_menu->get_popup();
 	p->add_item("New Project",FILE_NEW_SCENE);
-	p->add_item("New Inherited Scene..",FILE_NEW_INHERITED_SCENE);
 	p->add_item("Open Project..",FILE_OPEN_SCENE,KEY_MASK_CMD+KEY_O);
 	p->add_separator();
-	p->add_item("Save Scene",FILE_SAVE_SCENE,KEY_MASK_CMD+KEY_S);
+	p->add_item("Save Project",FILE_SAVE_SCENE,KEY_MASK_CMD+KEY_S);
 	p->add_item("Save Scene As..",FILE_SAVE_AS_SCENE,KEY_MASK_SHIFT+KEY_MASK_CMD+KEY_S);
 	p->add_separator();
 	p->add_item("Close Scene",FILE_CLOSE,KEY_MASK_SHIFT+KEY_MASK_CTRL+KEY_W);
 	p->add_separator();
+	p->add_item("Import Mesh..",FILE_IMPORT_MESH,KEY_MASK_SHIFT+KEY_MASK_CMD+KEY_P);
 	p->add_item("Close Goto Prev. Scene",FILE_OPEN_PREV,KEY_MASK_SHIFT+KEY_MASK_CMD+KEY_P);
 	p->add_submenu_item("Open Recent","RecentScenes",FILE_OPEN_RECENT);
 	p->add_separator();
@@ -5139,24 +5147,6 @@ EditorNode::EditorNode() {
 	HBoxContainer *play_hb = memnew( HBoxContainer );
 	top_region->add_child(play_hb);
 
-	play_button = memnew( ToolButton );
-	play_hb->add_child(play_button);
-	play_button->set_toggle_mode(true);
-	play_button->set_icon(gui_base->get_icon("MainPlay","EditorIcons"));
-	play_button->set_focus_mode(Control::FOCUS_NONE);
-	play_button->connect("pressed", this,"_menu_option",make_binds(RUN_PLAY));
-	play_button->set_tooltip("Play the project (F5).");
-
-
-
-	/*pause_button = memnew( ToolButton );
-	//menu_panel->add_child(pause_button); - not needed for now?
-	pause_button->set_toggle_mode(true);
-	pause_button->set_icon(gui_base->get_icon("Pause","EditorIcons"));
-	pause_button->set_focus_mode(Control::FOCUS_NONE);
-	pause_button->connect("pressed", this,"_menu_option",make_binds(RUN_PAUSE));
-	pause_button->set_tooltip("Pause the scene (F7).");
-*/
 	stop_button = memnew( ToolButton );
 	play_hb->add_child(stop_button);
 	//stop_button->set_toggle_mode(true);
@@ -5173,25 +5163,6 @@ EditorNode::EditorNode() {
 	native_play_button->hide();
 	native_play_button->get_popup()->connect("item_pressed",this,"_run_in_device");
 	run_native->connect("native_run",this,"_menu_option",varray(RUN_PLAY_NATIVE));
-
-//	VSeparator *s1 = memnew( VSeparator );
-//	play_hb->add_child(s1);
-
-	play_scene_button = memnew( ToolButton );
-	play_hb->add_child(play_scene_button);
-	play_scene_button->set_toggle_mode(true);
-	play_scene_button->set_focus_mode(Control::FOCUS_NONE);
-	play_scene_button->set_icon(gui_base->get_icon("PlayScene","EditorIcons"));
-	play_scene_button->connect("pressed", this,"_menu_option",make_binds(RUN_PLAY_SCENE));
-	play_scene_button->set_tooltip("Play the edited scene (F6).");
-
-	play_custom_scene_button = memnew( ToolButton );
-	play_hb->add_child(play_custom_scene_button);
-	play_custom_scene_button->set_toggle_mode(true);
-	play_custom_scene_button->set_focus_mode(Control::FOCUS_NONE);
-	play_custom_scene_button->set_icon(gui_base->get_icon("PlayCustom","EditorIcons"));
-	play_custom_scene_button->connect("pressed", this,"_menu_option",make_binds(RUN_PLAY_CUSTOM_SCENE));
-	play_custom_scene_button->set_tooltip("Play custom scene ("+keycode_get_string(KEY_MASK_CMD|KEY_MASK_SHIFT|KEY_F5)+").");
 
 	debug_button = memnew( MenuButton );
 	debug_button->set_flat(true);
@@ -5212,25 +5183,6 @@ EditorNode::EditorNode() {
 	p->add_check_item("Visible Collision Shapes",RUN_DEBUG_COLLISONS);
 	p->add_check_item("Visible Navigation",RUN_DEBUG_NAVIGATION);
 	p->connect("item_pressed",this,"_menu_option");
-
-	/*
-	run_settings_button = memnew( ToolButton );
-	//menu_hb->add_child(run_settings_button);
-	//run_settings_button->set_toggle_mode(true);
-	run_settings_button->set_focus_mode(Control::FOCUS_NONE);
-	run_settings_button->set_icon(gui_base->get_icon("Run","EditorIcons"));
-	run_settings_button->connect("pressed", this,"_menu_option",make_binds(RUN_SCENE_SETTINGS));
-*/
-
-	/*
-	run_settings_button = memnew( ToolButton );
-	menu_panel->add_child(run_settings_button);
-	run_settings_button->set_pos(Point2(305,0));
-	run_settings_button->set_focus_mode(Control::FOCUS_NONE);
-	run_settings_button->set_icon(gui_base->get_icon("Run","EditorIcons"));
-	run_settings_button->connect("pressed", this,"_menu_option",make_binds(RUN_SETTINGS));
-*/
-
 
 	progress_hb = memnew( BackgroundProgress );
 	menu_hb->add_child(progress_hb);
@@ -5323,26 +5275,11 @@ EditorNode::EditorNode() {
 */
 
 
-
-	//editor_hsplit = memnew( HSplitContainer );
-	//main_split->add_child(editor_hsplit);
-	//editor_hsplit->set_v_size_flags(Control::SIZE_EXPAND_FILL);
-
-	//editor_vsplit = memnew( VSplitContainer );
-	//editor_hsplit->add_child(editor_vsplit);
-
-	//top_pallete = memnew( TabContainer );
 	scene_tree_dock = memnew( SceneTreeDock(this,scene_root,editor_selection,editor_data) );
 	scene_tree_dock->set_name("Scene");
 	//top_pallete->add_child(scene_tree_dock);
 	dock_slot[DOCK_SLOT_LEFT_UR]->add_child(scene_tree_dock);
-#if 0
-	resources_dock = memnew( ResourcesDock(this) );
-	resources_dock->set_name("Resources");
-	//top_pallete->add_child(resources_dock);
-	dock_slot[DOCK_SLOT_RIGHT_BL]->add_child(resources_dock);
-	//top_pallete->set_v_size_flags(Control::SIZE_EXPAND_FILL);
-#endif
+
 	dock_slot[DOCK_SLOT_RIGHT_BL]->hide();
 	/*Control *editor_spacer = memnew( Control );
 	editor_spacer->set_custom_minimum_size(Size2(260,200));
@@ -5463,17 +5400,6 @@ EditorNode::EditorNode() {
 	search_bar->add_child(clear_button);
 	clear_button->connect("pressed",this,"_clear_search_box");
 
-//	property_editor = memnew( PropertyEditor );
-//	property_editor->set_autoclear(true);
-//	property_editor->set_show_categories(true);
-//	property_editor->set_v_size_flags(Control::SIZE_EXPAND_FILL);
-//	property_editor->set_use_doc_hints(true);
-//
-//	property_editor->hide_top_label();
-//	property_editor->register_text_enter(search_box);
-//
-//	prop_editor_base->add_child( property_editor );
-//	property_editor->set_undo_redo(&editor_data.get_undo_redo());
 
 
 	scenes_dock = memnew( ScenesDock(this) );
@@ -5525,51 +5451,6 @@ EditorNode::EditorNode() {
 	center_split->connect("resized",this,"_vp_resized");
 
 
-	/*PanelContainer *bottom_pc = memnew( PanelContainer );
-	srt->add_child(bottom_pc);
-	bottom_hb = memnew( HBoxContainer );
-	bottom_pc->add_child(bottom_hb);*/
-
-
-//	center_vb->add_child( log->get_button() );
-//	log->get_button()->set_h_size_flags(Control::SIZE_EXPAND_FILL);
-
-
-	//progress_hb->set_h_size_flags(Control::SIZE_EXPAND_FILL);
-
-
-
-	/*
-	animation_menu = memnew( ToolButton );
-	animation_menu->set_pos(Point2(500,0));
-	animation_menu->set_size(Size2(20,20));
-	animation_menu->set_toggle_mode(true);
-	animation_menu->set_focus_mode(Control::FOCUS_NONE);
-	menu_panel->add_child(animation_menu);
-	animation_menu->set_icon(gui_base->get_icon("Animation","EditorIcons"));
-	animation_menu->connect("pressed",this,"_animation_visibility_toggle");;
-*/
-
-
-
-
-
-
-
-	//call_dialog = memnew( CallDialog );
-	//call_dialog->hide();
-	//gui_base->add_child( call_dialog );
-
-
-
-
-	orphan_resources = memnew( OrphanResourcesDialog );
-	gui_base->add_child(orphan_resources);
-
-
-
-
-
 	confirmation = memnew( ConfirmationDialog  );
 	gui_base->add_child(confirmation);
 	confirmation->connect("confirmed", this,"_menu_confirm_current");
@@ -5577,31 +5458,6 @@ EditorNode::EditorNode() {
 	accept = memnew( AcceptDialog  );
 	gui_base->add_child(accept);
 	accept->connect("confirmed", this,"_menu_confirm_current");
-
-
-
-
-
-//	optimized_save = memnew( OptimizedSaveDialog(&editor_data) );
-	//gui_base->add_child(optimized_save);
-	//optimized_save->connect("confirmed",this,"_save_optimized");
-
-	/// ALL THIS 4 lines are commented by luciano
-//	project_export = memnew( ProjectExport(&editor_data) );
-//	gui_base->add_child(project_export);
-//
-//	project_export_settings = memnew( ProjectExportDialog(this) );
-//	gui_base->add_child(project_export_settings);
-
-	//optimized_presets = memnew( OptimizedPresetsDialog(&editor_data) );
-	//gui_base->add_child(optimized_presets);
-	//optimized_presets->connect("confirmed",this,"_presets_optimized");
-
-
-
-	//import_subscene = memnew( EditorSubScene );
-	//gui_base->add_child(import_subscene);
-
 
 
 	dependency_error = memnew( DependencyErrorDialog );
@@ -5743,80 +5599,16 @@ EditorNode::EditorNode() {
 	editor_import_export->add_import_plugin( Ref<EditorTextureImportPlugin>( memnew(EditorTextureImportPlugin(this,EditorTextureImportPlugin::MODE_ATLAS) )));
 	editor_import_export->add_import_plugin( Ref<EditorTextureImportPlugin>( memnew(EditorTextureImportPlugin(this,EditorTextureImportPlugin::MODE_LARGE) )));
 	editor_import_export->add_import_plugin( Ref<EditorTextureImportPlugin>( memnew(EditorTextureImportPlugin(this,EditorTextureImportPlugin::MODE_TEXTURE_3D) )));
-	//Ref<EditorSceneImportPlugin> _scene_import =  memnew(EditorSceneImportPlugin(this) );
-	//Ref<EditorSceneImporterCollada> _collada_import = memnew( EditorSceneImporterCollada);
-	//_scene_import->add_importer(_collada_import);
-//	Ref<EditorSceneImporterFBXConv> _fbxconv_import = memnew( EditorSceneImporterFBXConv);
-//	_scene_import->add_importer(_fbxconv_import);
-	//editor_import_export->add_import_plugin( _scene_import);
-	// TODO: This plugin has no code, it should be either implemented or dropped (GH-3667)
-	// editor_import_export->add_import_plugin( Ref<EditorSceneAnimationImportPlugin>( memnew(EditorSceneAnimationImportPlugin(this))));
-	editor_import_export->add_import_plugin( Ref<EditorMeshImportPlugin>( memnew(EditorMeshImportPlugin(this))));
-	//LUCIANO: in io import plugin
-	//editor_import_export->add_import_plugin( Ref<EditorFontImportPlugin>( memnew(EditorFontImportPlugin(this))));
-	//editor_import_export->add_import_plugin( Ref<EditorSampleImportPlugin>( memnew(EditorSampleImportPlugin(this))));
-	//editor_import_export->add_import_plugin( Ref<EditorTranslationImportPlugin>( memnew(EditorTranslationImportPlugin(this))));
 
-	//editor_import_export->add_export_plugin( Ref<EditorTextureExportPlugin>( memnew(EditorTextureExportPlugin)));
-	//editor_import_export->add_export_plugin( Ref<EditorSampleExportPlugin>( memnew(EditorSampleExportPlugin)));
-	//editor_import_export->add_export_plugin( Ref<EditorSceneExportPlugin>( memnew(EditorSceneExportPlugin)));
+	//editor_import_export->add_import_plugin( Ref<EditorMeshImportPlugin>( memnew(EditorMeshImportPlugin(this))));
 
-
-	//add_editor_plugin( memnew( AnimationPlayerEditorPlugin(this) ) );
 	add_editor_plugin( memnew( CanvasItemEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( SpatialEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( ScriptEditorPlugin(this) ) );
-
-	//more visually meaningful to have this later
-	//raise_bottom_panel_item(AnimationPlayerEditor::singleton);
-
-	//add_editor_plugin( memnew( ShaderGraphEditorPlugin(this,true) ) );
-	//add_editor_plugin( memnew( ShaderGraphEditorPlugin(this,false) ) );
-	//add_editor_plugin( memnew( ShaderEditorPlugin(this,true) ) );
-	//add_editor_plugin( memnew( ShaderEditorPlugin(this,false) ) );
-	//add_editor_plugin( memnew( CameraEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( SampleEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( SampleLibraryEditorPlugin(this) ) );
 	add_editor_plugin( memnew( ThemeEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( MultiMeshEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( MeshInstanceEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( AnimationTreeEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( SamplePlayerEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( MeshLibraryEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( StreamEditorPlugin(this) ) );
 	add_editor_plugin( memnew( StyleBoxEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( ParticlesEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( ResourcePreloaderEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( ItemListEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( RichTextEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( CollisionPolygonEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( CollisionPolygon2DEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( TileSetEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( TileMapEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( SpriteFramesEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( SpriteRegionEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( Particles2DEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( Path2DEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( PathEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( BakedLightEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( Polygon2DEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( LightOccluder2DEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( NavigationPolygonEditorPlugin(this) ) );
-	//add_editor_plugin( memnew( ColorRampEditorPlugin(this,true) ) );
-	//add_editor_plugin( memnew( ColorRampEditorPlugin(this,false) ) );
-	//add_editor_plugin( memnew( CollisionShape2DEditorPlugin(this) ) );
+
 
 	for(int i=0;i<EditorPlugins::get_plugin_count();i++)
 		add_editor_plugin( EditorPlugins::create(i,this) );
-
-
-	//resource_preview->add_preview_generator( Ref<EditorTexturePreviewPlugin>( memnew(EditorTexturePreviewPlugin )));
-	//resource_preview->add_preview_generator( Ref<EditorPackedScenePreviewPlugin>( memnew(EditorPackedScenePreviewPlugin )));
-	//resource_preview->add_preview_generator( Ref<EditorMaterialPreviewPlugin>( memnew(EditorMaterialPreviewPlugin )));
-	//resource_preview->add_preview_generator( Ref<EditorScriptPreviewPlugin>( memnew(EditorScriptPreviewPlugin )));
-	//resource_preview->add_preview_generator( Ref<EditorSamplePreviewPlugin>( memnew(EditorSamplePreviewPlugin )));
-	//resource_preview->add_preview_generator( Ref<EditorMeshPreviewPlugin>( memnew(EditorMeshPreviewPlugin )));
-	//resource_preview->add_preview_generator( Ref<EditorBitmapPreviewPlugin>( memnew(EditorBitmapPreviewPlugin )));
 
 	circle_step_msec=OS::get_singleton()->get_ticks_msec();
 	circle_step_frame=OS::get_singleton()->get_frames_drawn();
@@ -5831,10 +5623,6 @@ EditorNode::EditorNode() {
 //	_edit_current(); //LUCIANO
 	current=NULL;
 
-	//LUCIANO
-//	PhysicsServer::get_singleton()->set_active(false); // no physics by default if editor
-//	Physics2DServer::get_singleton()->set_active(false); // no physics by default if editor
-//	ScriptServer::set_scripting_enabled(false); // no scripting by default if editor
 
 	Globals::get_singleton()->set("debug/indicators_enabled",true);
 	Globals::get_singleton()->set("render/room_cull_enabled",false);

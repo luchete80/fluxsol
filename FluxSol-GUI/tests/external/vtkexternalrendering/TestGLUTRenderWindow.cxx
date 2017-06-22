@@ -45,7 +45,9 @@
 #include <vtkLight.h>
 #include <vtkNew.h>
 #include <vtkPolyDataMapper.h>
-#include <vtkTesting.h>
+
+#include <vtkRenderWindowInteractor.h>
+//#include <vtkTesting.h>
 
 namespace {
 
@@ -57,8 +59,10 @@ char** ArgV;
 static bool tested = false;
 static int retVal = 0;
 static int windowId = -1;
-static int windowH = 301;
-static int windowW = 300;
+static int windowH = 500;
+static int windowW = 500;
+
+vtkRenderWindowInteractor *riw=vtkRenderWindowInteractor::New();
 
 static void MakeCurrentCallback(vtkObject* vtkNotUsed(caller),
                                 long unsigned int vtkNotUsed(eventId),
@@ -78,11 +82,13 @@ void display()
   if (!initialized)
   {
     vtkNew<vtkExternalOpenGLRenderWindow> renWin;
+	renWin->SetSize(300,300); //LUCIANO
+	renWin->SetParentId(windowId); //LUCIANO
     externalVTKWidget->SetRenderWindow(renWin.GetPointer());
     vtkNew<vtkCallbackCommand> callback;
     callback->SetCallback(MakeCurrentCallback);
-    renWin->AddObserver(vtkCommand::WindowMakeCurrentEvent,
-                        callback.GetPointer());
+    //renWin->AddObserver(vtkCommand::WindowMakeCurrentEvent,
+                        //callback.GetPointer());
     vtkNew<vtkPolyDataMapper> mapper;
     vtkNew<vtkActor> actor;
     actor->SetMapper(mapper.GetPointer());
@@ -95,6 +101,9 @@ void display()
     ren->ResetCamera();
 
     initialized = true;
+
+	//LUCIANO
+	//riw=externalVTKWidget->GetInteractor();
   }
 
   // Enable depth testing. Demonstrates OpenGL context being managed by external
@@ -131,22 +140,22 @@ void display()
 void test()
 {
   bool interactiveMode = false;
-  vtkTesting* t = vtkTesting::New();
+  //vtkTesting* t = vtkTesting::New();
   for(int cc = 1; cc < NumArgs; cc++)
   {
-    t->AddArgument(ArgV[cc]);
+    //t->AddArgument(ArgV[cc]);
     if (strcmp(ArgV[cc], "-I") == 0)
     {
       interactiveMode = true;
     }
   }
-  t->SetRenderWindow(externalVTKWidget->GetRenderWindow());
+  //t->SetRenderWindow(externalVTKWidget->GetRenderWindow());
   if (!tested)
   {
-    retVal = t->RegressionTest(0);
+   // retVal = t->RegressionTest(0);
     tested = true;
   }
-  t->Delete();
+  //t->Delete();
   if (!interactiveMode)
   {
     // Exit out of the infinitely running loop
@@ -168,7 +177,7 @@ void onexit(void)
 } // end anon namespace
 
 /* Main function: GLUT runs as a console application starting at main()  */
-int TestGLUTRenderWindow(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
   NumArgs = argc;
   ArgV = argv;
@@ -178,7 +187,7 @@ int TestGLUTRenderWindow(int argc, char* argv[])
   glutInitWindowPosition(101, 201); // Position the window's initial top-left corner
   windowId = glutCreateWindow("VTK External Window Test"); // Create a window with the given title
   glutDisplayFunc(display); // Register display callback handler for window re-paint
-  glutIdleFunc(test); // Register test callback handler for vtkTesting
+  //glutIdleFunc(test); // Register test callback handler for vtkTesting
   glutReshapeFunc(handleResize); // Register resize callback handler for window resize
   atexit(onexit);  // Register callback to uninitialize on exit
   glewInit();

@@ -32,6 +32,10 @@
 #include "default_mouse_cursor.xpm"
 #include "sort.h"
 #include "io/marshalls.h"
+
+#include "Graphics/vtkRendering.h"
+vtkOpenGLRenderer *ren=NULL;
+vtkRenderWindowInteractor *vtkriw=NULL;
 // careful, these may run in different threads than the visual server
 //#include <gl\gl.h>
 
@@ -7225,6 +7229,7 @@ void VisualServerRaster::draw() {
 //  glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
 //  GLfloat ambient[] = {1.0f, 1.0f, 0.2f,  1.0f};
 //  glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+vtkriw->Render();
 	_draw_viewports();
 	_draw_cursors_and_margins();
 	rasterizer->end_frame();

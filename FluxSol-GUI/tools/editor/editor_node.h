@@ -107,13 +107,13 @@ class EditorNode : public Node {
 
 	enum MenuOptions {
 		FILE_NEW_SCENE,
-		FILE_NEW_INHERITED_SCENE,
 		FILE_OPEN_SCENE,
 		FILE_SAVE_SCENE,
 		FILE_SAVE_AS_SCENE,
 		FILE_SAVE_BEFORE_RUN,
 		FILE_SAVE_AND_RUN,
 		FILE_IMPORT_SUBSCENE,
+		FILE_IMPORT_MESH,
 		FILE_EXPORT_PROJECT,
 		FILE_EXPORT_MESH_LIBRARY,
 		FILE_EXPORT_TILESET,
@@ -400,13 +400,13 @@ class EditorNode : public Node {
 	String external_file;
 	List<String> previous_scenes;
 	bool opening_prev;
-	
+
 	void _dialog_action(String p_file);
 
 
 	void _edit_current();
 	void _dialog_display_file_error(String p_file,Error p_error);
-	
+
 	int current_option;
 	//void _animation_visibility_toggle();
 	void _resource_created();
@@ -421,7 +421,7 @@ class EditorNode : public Node {
 	void _select_history(int p_idx);
 	void _prepare_history();
 
-	
+
 	void _fs_changed();
 	void _sources_changed(bool p_exist);
 	void _imported(Node *p_node);
@@ -676,7 +676,7 @@ public:
 	void raise_bottom_panel_item(Control *p_item);
 	void hide_bottom_panel();
 
-	EditorNode();	
+	EditorNode();
 	~EditorNode();
 	void get_singleton(const char* arg1, bool arg2);
 

@@ -174,7 +174,7 @@ target_link_libraries (main editor servers driverstypes)
 
 target_link_libraries (gl_context core opengl32)
 target_link_libraries (png zlib core)
-target_link_libraries (gles2 core gl_context opengl32 png)
+target_link_libraries (gles2 core gl_context opengl32 png ${VTK_LIBRARIES})
 
 ###############################################
 ###############################################

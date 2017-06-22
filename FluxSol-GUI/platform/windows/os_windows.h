@@ -54,8 +54,6 @@
 #include <fcntl.h>
 #include <stdio.h>
 
-#include "gvtk/vtkFrame.h" //LUCIANO, THIS MUST BE CHANGED TO VIEWPORT AND PUT IN EDITOR
-#include "vtkApp.h" //Just for testing
 #include <iostream>
 #include <ctime>
 #include <cstdlib>

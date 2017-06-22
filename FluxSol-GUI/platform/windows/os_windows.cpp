@@ -57,19 +57,9 @@
 #include "shlobj.h"
 #include <regstr.h>
 #include <process.h>
-#include <vtkProperty.h>
-#include <vtkCallbackCommand.h>
+//
 
-// VTK includes
-#include <ExternalVTKWidget.h>
-#include <vtkActor.h>
-#include <vtkCallbackCommand.h>
-#include <vtkCamera.h>
-#include <vtkCubeSource.h>
-#include <vtkExternalOpenGLRenderWindow.h>
-#include <vtkLight.h>
-#include <vtkNew.h>
-#include <vtkPolyDataMapper.h>
+#include "Graphics/vtkRendering.h"
 
 
 #include <direct.h>	//LUCIANO _wchdir EN MINGW
@@ -95,89 +85,6 @@ extern "C" {
 #define WM_MOUSEHWHEEL 0x020e
 #endif
 
-#include <vtkOpenGLRenderer.h>
-//#define STDOUT_FILE
-//
-//
-//////////////////////// VTK STUFF
-//
-//
-/////////////// IS THIS BELONGS TO OS_WinDOWS THE PROGRAM CRASHES
-/////////////// WHEN RETURNING SINGLETON
-//// Original was
-////extern  vtkRenderWindowInteractor *vtkriw;
-////extern vtkRenderWindow *renWindow;
-//extern vtkOpenGLRenderer *ren;
-//
-////extern vtkExternalOpenGLRenderWindow *renWindowext;
-//extern ExternalVTKWidget *externalVTKWidget;
-////extern vtkOpenGLRenderer *ren;
-//
-//static void CameraModifiedCallback(vtkObject* caller,
-//                                   long unsigned int vtkNotUsed(eventId),
-//                                   void* vtkNotUsed(clientData),
-//                                   void* vtkNotUsed(callData) )
-//{
-////  std::cout << caller->GetClassName() << " modified" << std::endl;
-//
-//  vtkCamera* camera = static_cast<vtkCamera*>(caller);
-//  // print the interesting stuff
-////  std::cout << "\tPosition: "
-////            << camera->GetPosition()[0] << ", "
-////            << camera->GetPosition()[1] << ", "
-////            << camera->GetPosition()[2] << std::endl;
-////  std::cout << "\tFocal point: "
-////            << camera->GetFocalPoint()[0] << ", "
-////            << camera->GetFocalPoint()[1] << ", "
-////            << camera->GetFocalPoint()[2] << std::endl;
-//}
-//
-//
-//void WindowModifiedCallback( vtkObject*
-//                      caller, long unsigned int vtkNotUsed(eventId), void* vtkNotUsed(clientData), void* vtkNotUsed(callData))
-//{
-//  std::cout << "Window modified" << std::endl;
-//  std::cout << caller->GetClassName() << std::endl;
-//
-//  vtkRenderWindow* window = static_cast<vtkRenderWindow*>(caller); //Observer is put in renderwindow
-//
-//
-//  vtkSmartPointer<vtkOpenGLRenderer>  renderer =
-//    vtkSmartPointer<vtkOpenGLRenderer>::New();
-//
-//  int* windowSize = window->GetSize();
-//  std::cout << "Size: " << windowSize[0] << " " << windowSize[1] << std::endl;
-//
-//  //if(windowSize[0] > 400)
-//    {
-//    //window->SetSize(400, windowSize[1]);
-//    //window->Render();
-//    //window->Modified();
-//    //window->Render();
-//
-//    }
-//
-//
-//   double xpos,ypos;
-////
-////  //GetRenderWindow()->GetSize()
-//////  cout << "xsize: "<<this->ui->qvtkWidget->GetRenderWindow()->GetSize()[0]<<endl;
-////  //cout << "ysize: "<<this->ui->qvtkWidget->GetRenderWindow()->GetSize()[1]<<endl;
-////
-////    //double xsize=(double)(this->ui->qvtkWidget->GetRenderWindow()->GetSize()[0]);
-////    double xsize=windowSize[0];
-////    xpos=xsize*0.95;
-////  cout << "xsize" << xsize << "xpos" <<xpos<<endl;
-//// textActor ->SetPosition ( xpos, 200);
-////
-//    //window->Modified();
-//    //window->AddRenderer(renderer);
-//    //renderer->AddActor(textActor);
-////
-//    //window->Render();
-//
-//}
-///////////////////////////////////
 
 extern HINSTANCE godot_hinstance;
 
@@ -440,11 +347,11 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 //				input->set_mouse_in_window(false);
 //
 //		} break;
-//		case WM_MOUSEMOVE: {
-//
-//			if (outside) {
+		case WM_MOUSEMOVE: {
+
+			if (outside) {
 //				//mouse enter
-//
+
 //				if (main_loop && mouse_mode!=MOUSE_MODE_CAPTURED)
 //					main_loop->notification(MainLoop::NOTIFICATION_WM_MOUSE_ENTER);
 //				if (input)
@@ -462,8 +369,8 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 //				tme.hwndTrack=hWnd;
 //				tme.dwHoverTime=HOVER_DEFAULT;
 //				TrackMouseEvent(&tme);
-//
-//			}
+
+			} //If outside
 //
 //            //LUCIANO: ESTO YA ESTABA COMENTADO
 //			/*
@@ -533,187 +440,187 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 //			old_y=mm.y;
 //			if (main_loop)
 //				input->parse_input_event(event);
-//
-//
-//
-//		} break;
-		case WM_LBUTTONDOWN:
-		case WM_LBUTTONUP:
-		case WM_MBUTTONDOWN:
-		case WM_MBUTTONUP:
-		case WM_RBUTTONDOWN:
-		case WM_RBUTTONUP:
-		case WM_MOUSEWHEEL:
-		case WM_MOUSEHWHEEL:
-		case WM_LBUTTONDBLCLK:
-		case WM_RBUTTONDBLCLK:
-		/*case WM_XBUTTONDOWN:
-		case WM_XBUTTONUP: */{
-
-			/*
-			LPARAM extra = GetMessageExtraInfo();
-			if (IsPenEvent(extra)) {
-
-				int idx = extra & 0x7f;
-				_touch_event(idx, uMsg, wParam, lParam);
-				if (idx != 0) {
-					return 0;
-				};
-				// fallthrough for mouse event
-			};
-			*/
-
-			InputEvent event;
-			event.type=InputEvent::MOUSE_BUTTON;
-			event.ID=++last_id;
-			InputEventMouseButton &mb=event.mouse_button;
-
-			switch (uMsg) {
-				case WM_LBUTTONDOWN: {
-					mb.pressed=true;
-					mb.button_index=1;
-				} break;
-				case WM_LBUTTONUP: {
-					mb.pressed=false;
-					mb.button_index=1;
-				} break;
-				case WM_MBUTTONDOWN: {
-					mb.pressed=true;
-					mb.button_index=3;
-
-				} break;
-				case WM_MBUTTONUP: {
-					mb.pressed=false;
-					mb.button_index=3;
-				} break;
-				case WM_RBUTTONDOWN: {
-					mb.pressed=true;
-					mb.button_index=2;
-				} break;
-				case WM_RBUTTONUP: {
-					mb.pressed=false;
-					mb.button_index=2;
-				} break;
-				case WM_LBUTTONDBLCLK: {
-
-					mb.pressed=true;
-					mb.button_index=1;
-					mb.doubleclick = true;
-				} break;
-				case WM_RBUTTONDBLCLK: {
-
-					mb.pressed=true;
-					mb.button_index=2;
-					mb.doubleclick = true;
-				} break;
-				case WM_MOUSEWHEEL: {
-
-					mb.pressed=true;
-					int motion = (short)HIWORD(wParam);
-					if (!motion)
-						return 0;
-
-
-					if (motion>0)
-						mb.button_index= BUTTON_WHEEL_UP;
-					else
-						mb.button_index= BUTTON_WHEEL_DOWN;
-
-
-				} break;
-				case WM_MOUSEHWHEEL: {
-
-					mb.pressed = true;
-					int motion = (short)HIWORD(wParam);
-					if (!motion)
-						return 0;
-
-					if (motion<0)
-						mb.button_index = BUTTON_WHEEL_LEFT;
-					else
-						mb.button_index = BUTTON_WHEEL_RIGHT;
-				} break;
-					/*
-				case WM_XBUTTONDOWN: {
-					mb.pressed=true;
-					mb.button_index=(HIWORD(wParam)==XBUTTON1)?6:7;
-				} break;
-				case WM_XBUTTONUP:
-					mb.pressed=true;
-					mb.button_index=(HIWORD(wParam)==XBUTTON1)?6:7;
-				} break;*/
-				default: { return 0; }
-			}
-
-
-			mb.mod.control=(wParam&MK_CONTROL)!=0;
-			mb.mod.shift=(wParam&MK_SHIFT)!=0;
-			mb.mod.alt=alt_mem;
-			//mb.mod.alt=(wParam&MK_MENU)!=0;
-			mb.button_mask|=(wParam&MK_LBUTTON)?(1<<0):0;
-			mb.button_mask|=(wParam&MK_RBUTTON)?(1<<1):0;
-			mb.button_mask|=(wParam&MK_MBUTTON)?(1<<2):0;
-
-			last_button_state=mb.button_mask;
-			/*
-			mb.button_mask|=(wParam&MK_XBUTTON1)?(1<<5):0;
-			mb.button_mask|=(wParam&MK_XBUTTON2)?(1<<6):0;*/
-			mb.x=GET_X_LPARAM(lParam);
-			mb.y=GET_Y_LPARAM(lParam);
-
-			if (mouse_mode==MOUSE_MODE_CAPTURED) {
-
-				mb.x=old_x;
-				mb.y=old_y;
-			}
-
-			mb.global_x=mb.x;
-			mb.global_y=mb.y;
-
-
-			if (uMsg != WM_MOUSEWHEEL) {
-				if (mb.pressed) {
-
-					if (++pressrc>0)
-						SetCapture(hWnd);
-				} else {
-
-
-					if (--pressrc<=0) {
-						ReleaseCapture();
-						pressrc=0;
-					}
-
-				}
-			} else if (mouse_mode!=MOUSE_MODE_CAPTURED) {
-				// for reasons unknown to mankind, wheel comes in screen cordinates
-				RECT rect;
-				GetWindowRect(hWnd,&rect);
-				mb.x-=rect.left;
-				mb.y-=rect.top;
-
-			}
-
-			if (main_loop) {
-				input->parse_input_event(event);
-				if (mb.pressed && mb.button_index>3) {
-					//send release for mouse wheel
-					mb.pressed=false;
-					event.ID=++last_id;
-					input->parse_input_event(event);
-
-				}
-			}
 
 
 
 		} break;
-
-//		case WM_SIZE: {
-//			video_mode.width=LOWORD(lParam);
-//			video_mode.height=HIWORD(lParam);
-//			//return 0;								// Jump Back
+//		case WM_LBUTTONDOWN:
+//		case WM_LBUTTONUP:
+//		case WM_MBUTTONDOWN:
+//		case WM_MBUTTONUP:
+//		case WM_RBUTTONDOWN:
+//		case WM_RBUTTONUP:
+//		case WM_MOUSEWHEEL:
+//		case WM_MOUSEHWHEEL:
+//		case WM_LBUTTONDBLCLK:
+//		case WM_RBUTTONDBLCLK:
+//		/*case WM_XBUTTONDOWN:
+//		case WM_XBUTTONUP: */{
+//
+//			/*
+//			LPARAM extra = GetMessageExtraInfo();
+//			if (IsPenEvent(extra)) {
+//
+//				int idx = extra & 0x7f;
+//				_touch_event(idx, uMsg, wParam, lParam);
+//				if (idx != 0) {
+//					return 0;
+//				};
+//				// fallthrough for mouse event
+//			};
+//			*/
+//
+//			InputEvent event;
+//			event.type=InputEvent::MOUSE_BUTTON;
+//			event.ID=++last_id;
+//			InputEventMouseButton &mb=event.mouse_button;
+//
+//			switch (uMsg) {
+//				case WM_LBUTTONDOWN: {
+//					mb.pressed=true;
+//					mb.button_index=1;
+//				} break;
+//				case WM_LBUTTONUP: {
+//					mb.pressed=false;
+//					mb.button_index=1;
+//				} break;
+//				case WM_MBUTTONDOWN: {
+//					mb.pressed=true;
+//					mb.button_index=3;
+//
+//				} break;
+//				case WM_MBUTTONUP: {
+//					mb.pressed=false;
+//					mb.button_index=3;
+//				} break;
+//				case WM_RBUTTONDOWN: {
+//					mb.pressed=true;
+//					mb.button_index=2;
+//				} break;
+//				case WM_RBUTTONUP: {
+//					mb.pressed=false;
+//					mb.button_index=2;
+//				} break;
+//				case WM_LBUTTONDBLCLK: {
+//
+//					mb.pressed=true;
+//					mb.button_index=1;
+//					mb.doubleclick = true;
+//				} break;
+//				case WM_RBUTTONDBLCLK: {
+//
+//					mb.pressed=true;
+//					mb.button_index=2;
+//					mb.doubleclick = true;
+//				} break;
+//				case WM_MOUSEWHEEL: {
+//
+//					mb.pressed=true;
+//					int motion = (short)HIWORD(wParam);
+//					if (!motion)
+//						return 0;
+//
+//
+//					if (motion>0)
+//						mb.button_index= BUTTON_WHEEL_UP;
+//					else
+//						mb.button_index= BUTTON_WHEEL_DOWN;
+//
+//
+//				} break;
+//				case WM_MOUSEHWHEEL: {
+//
+//					mb.pressed = true;
+//					int motion = (short)HIWORD(wParam);
+//					if (!motion)
+//						return 0;
+//
+//					if (motion<0)
+//						mb.button_index = BUTTON_WHEEL_LEFT;
+//					else
+//						mb.button_index = BUTTON_WHEEL_RIGHT;
+//				} break;
+//					/*
+//				case WM_XBUTTONDOWN: {
+//					mb.pressed=true;
+//					mb.button_index=(HIWORD(wParam)==XBUTTON1)?6:7;
+//				} break;
+//				case WM_XBUTTONUP:
+//					mb.pressed=true;
+//					mb.button_index=(HIWORD(wParam)==XBUTTON1)?6:7;
+//				} break;*/
+//				default: { return 0; }
+//			}
+//
+//
+//			mb.mod.control=(wParam&MK_CONTROL)!=0;
+//			mb.mod.shift=(wParam&MK_SHIFT)!=0;
+//			mb.mod.alt=alt_mem;
+//			//mb.mod.alt=(wParam&MK_MENU)!=0;
+//			mb.button_mask|=(wParam&MK_LBUTTON)?(1<<0):0;
+//			mb.button_mask|=(wParam&MK_RBUTTON)?(1<<1):0;
+//			mb.button_mask|=(wParam&MK_MBUTTON)?(1<<2):0;
+//
+//			last_button_state=mb.button_mask;
+//			/*
+//			mb.button_mask|=(wParam&MK_XBUTTON1)?(1<<5):0;
+//			mb.button_mask|=(wParam&MK_XBUTTON2)?(1<<6):0;*/
+//			mb.x=GET_X_LPARAM(lParam);
+//			mb.y=GET_Y_LPARAM(lParam);
+//
+//			if (mouse_mode==MOUSE_MODE_CAPTURED) {
+//
+//				mb.x=old_x;
+//				mb.y=old_y;
+//			}
+//
+//			mb.global_x=mb.x;
+//			mb.global_y=mb.y;
+//
+//
+//			if (uMsg != WM_MOUSEWHEEL) {
+//				if (mb.pressed) {
+//
+//					if (++pressrc>0)
+//						SetCapture(hWnd);
+//				} else {
+//
+//
+//					if (--pressrc<=0) {
+//						ReleaseCapture();
+//						pressrc=0;
+//					}
+//
+//				}
+//			} else if (mouse_mode!=MOUSE_MODE_CAPTURED) {
+//				// for reasons unknown to mankind, wheel comes in screen cordinates
+//				RECT rect;
+//				GetWindowRect(hWnd,&rect);
+//				mb.x-=rect.left;
+//				mb.y-=rect.top;
+//
+//			}
+//
+//			if (main_loop) {
+//				input->parse_input_event(event);
+//				if (mb.pressed && mb.button_index>3) {
+//					//send release for mouse wheel
+//					mb.pressed=false;
+//					event.ID=++last_id;
+//					input->parse_input_event(event);
+//
+//				}
+//			}
+//
+//
+//
 //		} break;
+
+		case WM_SIZE: {
+			video_mode.width=LOWORD(lParam);
+			video_mode.height=HIWORD(lParam);
+			//return 0;								// Jump Back
+		} break;
 //		case WM_SYSKEYDOWN:
 //		case WM_SYSKEYUP:
 //		case WM_KEYUP:
@@ -1145,26 +1052,27 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //                      (HINSTANCE)vtkGetWindowLong(hWnd,vtkGWL_HINSTANCE),
 //                      NULL);
 //        HINSTANCE hi;
-//     vtkwin = CreateWindow("button","Exit",
-//                  WS_CHILD | WS_VISIBLE | SS_CENTER,
-//                  100,100,400,400,
-//                  hWnd,(HMENU)2,
-//                  //(HINSTANCE)vtkGetWindowLong(hWnd,vtkGWL_HINSTANCE),
-//                  godot_hinstance,
-//                  NULL);
+     vtkwin = CreateWindow("button",NULL,
+                  WS_CHILD | WS_VISIBLE | SS_CENTER,
+                  100,100,400,400,
+                  hWnd,NULL,
+                  //(HINSTANCE)vtkGetWindowLong(hWnd,vtkGWL_HINSTANCE),
+                  godot_hinstance,
+                  NULL);
 
-//   ///// VTK STUFF //////
-//  ren=vtkOpenGLRenderer::New();
-//  vtkExternalOpenGLRenderWindow *renWindowext = vtkExternalOpenGLRenderWindow::New();
-  //renWindow = vtkRenderWindow::New();
-//  externalVTKWidget=ExternalVTKWidget::New();
-  //vtkriw=vtkRenderWindowInteractor::New();
+   ///// VTK STUFF //////
+  ren=vtkOpenGLRenderer::New();
+  vtkExternalOpenGLRenderWindow *renWindowext = vtkExternalOpenGLRenderWindow::New();
+  renWindow = vtkRenderWindow::New();
+  externalVTKWidget=ExternalVTKWidget::New();
+  vtkriw=vtkRenderWindowInteractor::New();
 
   /////// ORIRINAL WAY
-//  renWindow->SetParentId(vtkwin);
-//  renWindow->SetSize(400,400);
-//  renWindow->InitializeFromCurrentContext(); //IF THIS COMMAND IS NOT CALLED, GODOT WIDGETS NEVER RENDERED
-//  renWindow->AddRenderer(ren);
+  //renWindow->SetParentId(vtkwin);
+  renWindow->SetSize(400,400);
+  renWindow->InitializeFromCurrentContext(); //IF THIS COMMAND IS NOT CALLED, GODOT WIDGETS NEVER RENDERED
+  renWindow->AddRenderer(ren);
+  renWindow->Render();
 
 //
 ///////// NEW WAY
@@ -1189,29 +1097,29 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //    renWindowext->AddRenderer(ren);
 //    //vtkriw= externalVTKWidget->GetInteractor();
 //renWindowext->Delete();
-//////////////////////////////
-//  vtkriw->SetRenderWindow(renWindow);
-//   vtkriw->Initialize();
+////////////////////////////
+  vtkriw->SetRenderWindow(renWindow);
+   vtkriw->Initialize();
 ////
 //
-//
-// ren->SetBackground(0.5,0.5,0.5);
-//  // create an actor and give it cone geometry
-//  vtkConeSource *cone = vtkConeSource::New();
-//  cone->SetResolution(8);
-//  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
-//  coneMapper->SetInputConnection(cone->GetOutputPort());
-//  vtkActor *coneActor = vtkActor::New();
-//  coneActor->SetMapper(coneMapper);
-//  coneActor->GetProperty()->SetColor(1.0, 0.0, 1.0);
-//
-//  // assign our actor to the renderer
-//  ren->AddActor(coneActor);
-//
-//    coneActor->RotateX(45.0);
-//    coneActor->RotateY(45.0);
-//    ren->ResetCamera();
-//
+
+ ren->SetBackground(0.5,0.5,0.5);
+  // create an actor and give it cone geometry
+  vtkConeSource *cone = vtkConeSource::New();
+  cone->SetResolution(8);
+  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
+  coneMapper->SetInputConnection(cone->GetOutputPort());
+  vtkActor *coneActor = vtkActor::New();
+  coneActor->SetMapper(coneMapper);
+  coneActor->GetProperty()->SetColor(1.0, 0.0, 1.0);
+
+  // assign our actor to the renderer
+  ren->AddActor(coneActor);
+
+    coneActor->RotateX(45.0);
+    coneActor->RotateY(45.0);
+    //ren->ResetCamera();
+
 //  vtkSmartPointer<vtkCallbackCommand> modifiedCallback =
 //    vtkSmartPointer<vtkCallbackCommand>::New();
 //  modifiedCallback->SetCallback (CameraModifiedCallback);
@@ -2008,11 +1916,11 @@ void OS_Windows::process_events() {
 
 		TranslateMessage(&msg);
 		DispatchMessageW(&msg);
-		Main::iteration();
-
+		Main::iteration(); //ESTO ES MIO
+//		if (Main::iteration()==true)
+//			break;
 		/// ALL THIS IS NEW
 		//vtkriw->Render();
-		//renWindow->Render();
         //renWindowext->Render();
         //externalVTKWidget->GetRenderWindow()->Render();
 //          glEnable(GL_DEPTH_TEST);
