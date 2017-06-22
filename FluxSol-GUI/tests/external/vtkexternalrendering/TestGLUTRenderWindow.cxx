@@ -85,8 +85,8 @@ void display()
 	renWin->SetSize(300,300); //LUCIANO
 //	renWin->SetParentId(windowId); //LUCIANO
     externalVTKWidget->SetRenderWindow(renWin.GetPointer());
-    vtkNew<vtkCallbackCommand> callback;
-    callback->SetCallback(MakeCurrentCallback);
+    //vtkNew<vtkCallbackCommand> callback;
+    //callback->SetCallback(MakeCurrentCallback);
     //renWin->AddObserver(vtkCommand::WindowMakeCurrentEvent,
                         //callback.GetPointer());
     vtkNew<vtkPolyDataMapper> mapper;
@@ -165,8 +165,8 @@ void test()
 
 void handleResize(int w, int h)
 {
-  externalVTKWidget->GetRenderWindow()->SetSize(w, h);
-  glutPostRedisplay();
+  //externalVTKWidget->GetRenderWindow()->SetSize(w, h);
+  //glutPostRedisplay();
 }
 
 void onexit(void)

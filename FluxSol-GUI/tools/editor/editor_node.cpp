@@ -4710,10 +4710,6 @@ EditorNode::EditorNode() {
 
 	GLOBAL_DEF("editor/main_run_args","$exec -path $path -scene $scene $main_scene");
 
-//	ObjectTypeDB::set_type_enabled("CollisionShape",true);
-//	ObjectTypeDB::set_type_enabled("CollisionShape2D",true);
-//	ObjectTypeDB::set_type_enabled("CollisionPolygon2D",true);
-	//ObjectTypeDB::set_type_enabled("BodyVolumeConvexPolygon",true);
 
 	gui_base = memnew( Panel );
 	add_child(gui_base);
@@ -4724,11 +4720,11 @@ EditorNode::EditorNode() {
 	gui_base->set_theme( theme );
 
 	//LUCIANO TOMODIFY
-	//editor_register_icons(theme);
-	//editor_register_fonts(theme);
+	editor_register_icons(theme);
+	editor_register_fonts(theme);
 
-	//theme->set_icon("folder","EditorFileDialog",Theme::get_default()->get_icon("folder","EditorFileDialog"));
-	//theme->set_color("files_disabled","EditorFileDialog",Color(0,0,0,0.7));
+	theme->set_icon("folder","EditorFileDialog",Theme::get_default()->get_icon("folder","EditorFileDialog"));
+	theme->set_color("files_disabled","EditorFileDialog",Color(0,0,0,0.7));
 
 	String global_font = EditorSettings::get_singleton()->get("global/font");
 	if (global_font!="") {
@@ -4762,23 +4758,6 @@ EditorNode::EditorNode() {
 	gui_base->add_child(main_vbox);
 	main_vbox->set_area_as_parent_rect(8);
 
-#if 0
-	PanelContainer *top_dark_panel = memnew( PanelContainer );
-	Ref<StyleBoxTexture> top_dark_sb;
-	top_dark_sb.instance();;
-	top_dark_sb->set_texture(theme->get_icon("PanelTop","EditorIcons"));
-	for(int i=0;i<4;i++) {
-		top_dark_sb->set_margin_size(Margin(i),3);
-		top_dark_sb->set_default_margin(Margin(i),0);
-	}
-	top_dark_sb->set_expand_margin_size(MARGIN_LEFT,20);
-	top_dark_sb->set_expand_margin_size(MARGIN_RIGHT,20);
-
-	top_dark_panel->add_style_override("panel",top_dark_sb);
-	VBoxContainer *top_dark_vb = memnew( VBoxContainer );
-	main_vbox->add_child(top_dark_panel);
-	top_dark_panel->add_child(top_dark_vb);
-#endif
 
 
 
@@ -5069,34 +5048,6 @@ EditorNode::EditorNode() {
 	editor_region->add_child(main_editor_button_vb);
 	menu_hb->add_child(editor_region);
 
-	//menu_hb->add_spacer();
-#if 0
-	node_menu = memnew( MenuButton );
-	node_menu->set_text("Node");
-	node_menu->set_pos( Point2( 50,0) );;
-	menu_panel->add_child( node_menu );
-
-	p=node_menu->get_popup();
-	p->add_item("Create",NODE_CREATE);
-	p->add_item("Instance",NODE_INSTANCE);
-	p->add_separator();
-	p->add_item("Reparent",NODE_REPARENT);
-	p->add_item("Move Up",NODE_MOVE_UP);
-	p->add_item("Move Down",NODE_MOVE_DOWN);
-	p->add_separator();
-	p->add_item("Duplicate",NODE_DUPLICATE);
-	p->add_separator();
-	p->add_item("Remove (Branch)",NODE_REMOVE_BRANCH);
-	p->add_item("Remove (Element)",NODE_REMOVE_ELEMENT);
-	p->add_separator();
-	p->add_item("Edit Subscriptions..",NODE_CONNECTIONS);
-	p->add_item("Edit Groups..",NODE_GROUPS);
-
-	resource_menu = memnew( MenuButton );
-	resource_menu->set_text("Resource");
-	resource_menu->set_pos( Point2( 90,0) );
-	menu_panel->add_child( resource_menu );
-#endif
 
 	import_menu = memnew( MenuButton );
 	import_menu->set_tooltip("Import assets to the project.");
@@ -5126,11 +5077,6 @@ EditorNode::EditorNode() {
 	left_menu_hb->add_child(export_button);
 
 	menu_hb->add_spacer();
-
-	//Separator *s1 = memnew( VSeparator );
-	//menu_panel->add_child(s1);
-	//s1->set_pos(Point2(210,4));
-	//s1->set_size(Point2(10,15));
 
 
 	CenterContainer *play_cc = memnew( CenterContainer );
@@ -5724,7 +5670,7 @@ EditorNode::EditorNode() {
 
 	editor_data.add_edited_scene(-1);
 	editor_data.set_edited_scene(0);
-	_update_scene_tabs();
+	//_update_scene_tabs();
 
 	_load_docks();
 

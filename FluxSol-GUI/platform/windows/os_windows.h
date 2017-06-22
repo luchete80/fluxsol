@@ -103,16 +103,7 @@ class OS_Windows : public OS {
 	HDC		hDC;	// Private GDI Device Context
 	HINSTANCE	hInstance;		// Holds The Instance Of The Application
 	HWND hWnd;
-	HWND glwin;
-	HINSTANCE	glhinstance;
 
-	//LUCIANO, just for test
-    HWND vtkwin;
-
-    Control *controltest; //TEST TIMER
-    Timer *timer_controltest;
-
-    //END LUCIANO
 
 	HCURSOR hCursor;
 
@@ -121,19 +112,12 @@ class OS_Windows : public OS {
 
 	MainLoop *main_loop;
 
-	//MyFrame * gvtk_viewport;
-
 	WNDPROC user_proc;
 
 	// LUCIANO, temporal timer
     clock_t startTime;; //Start timer
     double secondsPassed;
     double secondsToDelay ;
-
-	//AudioServerSW *audio_server;
-	//SampleManagerMallocSW *sample_manager;
-	//SpatialSoundServerSW *spatial_sound_server;
-	//SpatialSound2DServerSW *spatial_sound_2d_server;
 
 	MouseMode mouse_mode;
 	bool alt_mem;
@@ -149,9 +133,6 @@ class OS_Windows : public OS {
 	InputDefault *input;
 	joystick_windows *joystick;
 
-#ifdef RTAUDIO_ENABLED
-	AudioDriverRtAudio driver_rtaudio;
-#endif
 
 	void _drag_event(int p_x, int p_y, int idx);
 	void _touch_event(bool p_pressed, int p_x, int p_y, int idx);

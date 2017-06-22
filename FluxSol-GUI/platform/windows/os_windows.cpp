@@ -59,7 +59,7 @@
 #include <process.h>
 //
 
-#include "Graphics/vtkRendering.h"
+//#include "Graphics/vtkRendering.h"
 
 
 #include <direct.h>	//LUCIANO _wchdir EN MINGW
@@ -1052,40 +1052,41 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //                      (HINSTANCE)vtkGetWindowLong(hWnd,vtkGWL_HINSTANCE),
 //                      NULL);
 //        HINSTANCE hi;
-     vtkwin = CreateWindow("button",NULL,
-                  WS_CHILD | WS_VISIBLE | SS_CENTER,
-                  100,100,400,400,
-                  hWnd,NULL,
-                  //(HINSTANCE)vtkGetWindowLong(hWnd,vtkGWL_HINSTANCE),
-                  godot_hinstance,
-                  NULL);
+//     vtkwin = CreateWindow("button",NULL,
+//                  WS_CHILD | WS_VISIBLE | SS_CENTER,
+//                  100,100,400,400,
+//                  hWnd,NULL,
+//                  //(HINSTANCE)vtkGetWindowLong(hWnd,vtkGWL_HINSTANCE),
+//                  godot_hinstance,
+//                  NULL);
 
    ///// VTK STUFF //////
-  ren=vtkOpenGLRenderer::New();
-  vtkExternalOpenGLRenderWindow *renWindowext = vtkExternalOpenGLRenderWindow::New();
-  renWindow = vtkRenderWindow::New();
-  externalVTKWidget=ExternalVTKWidget::New();
-  vtkriw=vtkRenderWindowInteractor::New();
-
-  /////// ORIRINAL WAY
-  //renWindow->SetParentId(vtkwin);
-  renWindow->SetSize(400,400);
-  renWindow->InitializeFromCurrentContext(); //IF THIS COMMAND IS NOT CALLED, GODOT WIDGETS NEVER RENDERED
-  renWindow->AddRenderer(ren);
-  renWindow->Render();
+//  ren=vtkOpenGLRenderer::New();
+//  vtkExternalOpenGLRenderWindow *renWindowext = vtkExternalOpenGLRenderWindow::New();
+//  renWindow = vtkRenderWindow::New();
+//  externalVTKWidget=ExternalVTKWidget::New();
+//  //vtkriw=vtkRenderWindowInteractor::New();
+//
+//  ///// ORIRINAL WAY
+//  renWindow->SetParentId(hWnd);
+//  renWindow->SetSize(400,400);
+//  renWindow->InitializeFromCurrentContext(); //IF THIS COMMAND IS NOT CALLED, GODOT WIDGETS NEVER RENDERED
+//  renWindow->AddRenderer(ren);
+//  renWindow->Render();
 
 //
 ///////// NEW WAY
-////renWindowext->SetParentId(vtkwin);
-////  renWindowext->SetSize(400,400);
+//renWindowext->SetParentId(vtkwin);
+//  renWindowext->SetSize(400,400);
 //  externalVTKWidget->SetRenderWindow(renWindowext);
 //
-//    vtkNew<vtkCallbackCommand> callback;
+//   // vtkNew<vtkCallbackCommand> callback;
 //    //callback->SetCallback(MakeCurrentCallback);
 //    //renWindowext->InitializeFromCurrentContext();
 //  ren = externalVTKWidget->AddRenderer(); //WHEN VTKRENDERWINDOW IS EXTERNAL
-////renWindowext->Delete();
-//
+//  externalVTKWidget->GetRenderWindow()->Render();
+//renWindowext->Delete();
+
 //////////////////// QVTK WAY
 //  externalVTKWidget->SetRenderWindow(renWindowext);
 //renWindowext->SetParentId(vtkwin);
@@ -1098,26 +1099,26 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //    //vtkriw= externalVTKWidget->GetInteractor();
 //renWindowext->Delete();
 ////////////////////////////
-  vtkriw->SetRenderWindow(renWindow);
-   vtkriw->Initialize();
-////
+//  vtkriw->SetRenderWindow(renWindow);
+//   vtkriw->Initialize();
+//
 //
 
- ren->SetBackground(0.5,0.5,0.5);
-  // create an actor and give it cone geometry
-  vtkConeSource *cone = vtkConeSource::New();
-  cone->SetResolution(8);
-  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
-  coneMapper->SetInputConnection(cone->GetOutputPort());
-  vtkActor *coneActor = vtkActor::New();
-  coneActor->SetMapper(coneMapper);
-  coneActor->GetProperty()->SetColor(1.0, 0.0, 1.0);
-
-  // assign our actor to the renderer
-  ren->AddActor(coneActor);
-
-    coneActor->RotateX(45.0);
-    coneActor->RotateY(45.0);
+// ren->SetBackground(0.5,0.5,0.5);
+//  // create an actor and give it cone geometry
+//  vtkConeSource *cone = vtkConeSource::New();
+//  cone->SetResolution(8);
+//  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
+//  coneMapper->SetInputConnection(cone->GetOutputPort());
+//  vtkActor *coneActor = vtkActor::New();
+//  coneActor->SetMapper(coneMapper);
+//  coneActor->GetProperty()->SetColor(1.0, 0.0, 1.0);
+//
+//  // assign our actor to the renderer
+//  ren->AddActor(coneActor);
+//
+//    coneActor->RotateX(45.0);
+//    coneActor->RotateY(45.0);
     //ren->ResetCamera();
 
 //  vtkSmartPointer<vtkCallbackCommand> modifiedCallback =
@@ -1959,7 +1960,7 @@ void OS_Windows::process_events() {
             //theVTKApp->Render();
             //theVTKApp->OnTimer();
             //im_vtk_window->draw();
-            cout << "timeout"<<endl;
+            //cout << "timeout"<<endl;
 
         }
 
@@ -2256,8 +2257,8 @@ void OS_Windows::swap_buffers() {
 
 void OS_Windows::run() {
     //print_line("Os Run"); //LUCIANO
-//	if (!main_loop)
-//		return;
+	if (!main_loop)
+		return;
 
 	main_loop->init(); //LUCIANO
 
