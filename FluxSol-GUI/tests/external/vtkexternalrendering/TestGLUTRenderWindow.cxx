@@ -59,8 +59,8 @@ char** ArgV;
 static bool tested = false;
 static int retVal = 0;
 static int windowId = -1;
-static int windowH = 500;
-static int windowW = 500;
+static int windowH = 100;
+static int windowW = 100;
 
 vtkRenderWindowInteractor *riw=vtkRenderWindowInteractor::New();
 
@@ -83,7 +83,7 @@ void display()
   {
     vtkNew<vtkExternalOpenGLRenderWindow> renWin;
 	renWin->SetSize(300,300); //LUCIANO
-	renWin->SetParentId(windowId); //LUCIANO
+//	renWin->SetParentId(windowId); //LUCIANO
     externalVTKWidget->SetRenderWindow(renWin.GetPointer());
     vtkNew<vtkCallbackCommand> callback;
     callback->SetCallback(MakeCurrentCallback);
