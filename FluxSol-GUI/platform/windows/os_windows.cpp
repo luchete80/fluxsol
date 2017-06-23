@@ -59,7 +59,7 @@
 #include <process.h>
 //
 
-//#include "Graphics/vtkRendering.h"
+#include "Graphics/vtkRendering.h"
 
 
 #include <direct.h>	//LUCIANO _wchdir EN MINGW
@@ -1060,12 +1060,12 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //                  godot_hinstance,
 //                  NULL);
 
-   ///// VTK STUFF //////
-//  ren=vtkOpenGLRenderer::New();
-//  vtkExternalOpenGLRenderWindow *renWindowext = vtkExternalOpenGLRenderWindow::New();
-//  renWindow = vtkRenderWindow::New();
-//  externalVTKWidget=ExternalVTKWidget::New();
-  //vtkriw=vtkRenderWindowInteractor::New();
+   /// VTK STUFF //////
+  ren=vtkOpenGLRenderer::New();
+  vtkExternalOpenGLRenderWindow *renWindowext = vtkExternalOpenGLRenderWindow::New();
+  renWindow = vtkRenderWindow::New();
+  externalVTKWidget=ExternalVTKWidget::New();
+  vtkriw=vtkRenderWindowInteractor::New();
 //
 //  ///// ORIRINAL WAY
 //  renWindow->SetParentId(hWnd);
@@ -1075,16 +1075,16 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //  renWindow->Render();
 
 //
-///////// NEW WAY
+/////// NEW WAY
 //renWindowext->SetParentId(vtkwin);
-//  renWindowext->SetSize(400,400);
-//  externalVTKWidget->SetRenderWindow(renWindowext);
+  renWindowext->SetSize(400,400);
+  externalVTKWidget->SetRenderWindow(renWindowext);
 //
 //   // vtkNew<vtkCallbackCommand> callback;
 //    //callback->SetCallback(MakeCurrentCallback);
 //    //renWindowext->InitializeFromCurrentContext();
-//  ren = externalVTKWidget->AddRenderer(); //WHEN VTKRENDERWINDOW IS EXTERNAL
-//  externalVTKWidget->GetRenderWindow()->Render();
+  ren = externalVTKWidget->AddRenderer(); //WHEN VTKRENDERWINDOW IS EXTERNAL
+  externalVTKWidget->GetRenderWindow()->Render();
 //renWindowext->Delete();
 
 //////////////////// QVTK WAY
@@ -1104,27 +1104,28 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //
 //
 
-// ren->SetBackground(0.5,0.5,0.5);
-//  // create an actor and give it cone geometry
-//  vtkConeSource *cone = vtkConeSource::New();
-//  cone->SetResolution(8);
-//  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
-//  coneMapper->SetInputConnection(cone->GetOutputPort());
-//  vtkActor *coneActor = vtkActor::New();
-//  coneActor->SetMapper(coneMapper);
-//  coneActor->GetProperty()->SetColor(1.0, 0.0, 1.0);
-//
-//  // assign our actor to the renderer
-//  ren->AddActor(coneActor);
-//
-//    coneActor->RotateX(45.0);
-//    coneActor->RotateY(45.0);
-    //ren->ResetCamera();
+ ren->SetBackground(0.5,0.5,0.5);
+  // create an actor and give it cone geometry
+  vtkConeSource *cone = vtkConeSource::New();
+  cone->SetResolution(8);
+  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
+  coneMapper->SetInputConnection(cone->GetOutputPort());
+  vtkActor *coneActor = vtkActor::New();
+  coneActor->SetMapper(coneMapper);
+  coneActor->GetProperty()->SetColor(1.0, 0.0, 1.0);
+  coneActor->GetProperty()->SetInterpolationToFlat();
 
+  // assign our actor to the renderer
+  ren->AddActor(coneActor);
+
+    coneActor->RotateX(45.0);
+    coneActor->RotateY(45.0);
+    ren->ResetCamera();
+//
 //  vtkSmartPointer<vtkCallbackCommand> modifiedCallback =
 //    vtkSmartPointer<vtkCallbackCommand>::New();
 //  modifiedCallback->SetCallback (CameraModifiedCallback);
-//
+
 //
 //  ////////////// CONTROL /////////////////
 //  ren->GetActiveCamera()->AddObserver(vtkCommand::ModifiedEvent,modifiedCallback);
@@ -1917,40 +1918,52 @@ void OS_Windows::process_events() {
 
 		TranslateMessage(&msg);
 		DispatchMessageW(&msg);
-		Main::iteration(); //ESTO ES MIO
+//		Main::iteration(); //ESTO ES MIO
 //		if (Main::iteration()==true)
 //			break;
 		/// ALL THIS IS NEW
-		//vtkriw->Render();
-        //renWindowext->Render();
-        //externalVTKWidget->GetRenderWindow()->Render();
-//          glEnable(GL_DEPTH_TEST);
-//
-//  // Buffers being managed by external application i.e. GLUT in this case.
-//  glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
-//  glClearDepth(1.0f);
-//  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the color buffer
-//
-//  glFlush();  // Render now
-//  glBegin(GL_TRIANGLES);
-//    glVertex3f(-1.5,-1.5,0.0);
-//    glVertex3f(1.5,0.0,0.0);
-//    glVertex3f(0.0,1.5,1.0);
-//  glEnd();
-//
-//  glEnable(GL_LIGHTING);
-//  glEnable(GL_LIGHT0);
-//  GLfloat lightpos[] = {-0.5f, 1.0f, 1.0f, 1.0f};
-//  glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
-//  GLfloat diffuse[] = {0.0f, 0.8f, 0.8f, 1.0f};
-//  glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-//  GLfloat specular[] = {0.5f, 0.0f, 0.0f, 1.0f};
-//  glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-//  GLfloat ambient[] = {1.0f, 1.0f, 0.2f,  1.0f};
-//  glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-//
-//
-//        OS::get_singleton()->swap_buffers();
+
+   glClearColor(1.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
+//   glClearDepth(100.0f);
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the color buffer
+          //glEnable(GL_DEPTH_TEST);
+
+
+             //glFlush();  // Render now
+   glBegin(GL_TRIANGLES);
+     glVertex3f(-0.5,-0.5,0.0);
+     glVertex3f(1.5,0.0,0.0);
+     glVertex3f(0.0,1.5,1.0);
+   glEnd();
+    //
+    //  // Buffers being managed by external application i.e. GLUT in this case.
+    //  glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
+    //  glClearDepth(1.0f);
+    //  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the color buffer
+    //
+    //  glFlush();  // Render now
+    //  glBegin(GL_TRIANGLES);
+    //    glVertex3f(-1.5,-1.5,0.0);
+    //    glVertex3f(1.5,0.0,0.0);
+    //    glVertex3f(0.0,1.5,1.0);
+    //  glEnd();
+    //
+    //  glEnable(GL_LIGHTING);
+    //  glEnable(GL_LIGHT0);
+    //  GLfloat lightpos[] = {-0.5f, 1.0f, 1.0f, 1.0f};
+    //  glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+    //  GLfloat diffuse[] = {0.0f, 0.8f, 0.8f, 1.0f};
+    //  glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+    //  GLfloat specular[] = {0.5f, 0.0f, 0.0f, 1.0f};
+    //  glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+    //  GLfloat ambient[] = {1.0f, 1.0f, 0.2f,  1.0f};
+    //  glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+    //
+    //
+    externalVTKWidget->GetRenderWindow()->Render();
+
+    OS::get_singleton()->swap_buffers();
+    glFlush();
 //        ////////////
 
         secondsPassed = (clock() - startTime) / CLOCKS_PER_SEC;

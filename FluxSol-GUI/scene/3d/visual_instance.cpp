@@ -29,10 +29,10 @@
 #include "visual_instance.h"
 
 #include "servers/visual_server.h"
-#include "room_instance.h"
+//#include "room_instance.h"
 #include "scene/scene_string_names.h"
-#include "baked_light_instance.h"
-#include "skeleton.h"
+//#include "baked_light_instance.h"
+//#include "skeleton.h"
 
 AABB VisualInstance::get_transformed_aabb() const {
 
@@ -49,29 +49,29 @@ void VisualInstance::_notification(int p_what) {
 
 			// CHECK ROOM
 			Spatial * parent = get_parent_spatial();
-			Room *room=NULL;
-			bool is_geom = cast_to<GeometryInstance>();
+			// Room *room=NULL;
+			// bool is_geom = cast_to<GeometryInstance>();
 
-			while(parent) {
+			// while(parent) {
 
-				room = parent->cast_to<Room>();
-				if (room)
-					break;
+				// room = parent->cast_to<Room>();
+				// if (room)
+					// break;
 
-				if (is_geom && parent->cast_to<BakedLightSampler>()) {
-					VS::get_singleton()->instance_geometry_set_baked_light_sampler(get_instance(),parent->cast_to<BakedLightSampler>()->get_instance());
-					break;
-				}
+				// // if (is_geom && parent->cast_to<BakedLightSampler>()) {
+					// // VS::get_singleton()->instance_geometry_set_baked_light_sampler(get_instance(),parent->cast_to<BakedLightSampler>()->get_instance());
+					// // break;
+				// }
 
-				parent=parent->get_parent_spatial();
-			}
+				//parent=parent->get_parent_spatial();
+			//}
 
 
 
-			if (room) {
+			// if (room) {
 
-				VisualServer::get_singleton()->instance_set_room(instance,room->get_instance());
-			}
+				// VisualServer::get_singleton()->instance_set_room(instance,room->get_instance());
+			// }
 			// CHECK SKELETON => moving skeleton attaching logic to MeshInstance
 			/*
 			Skeleton *skeleton=get_parent()?get_parent()->cast_to<Skeleton>():NULL;
@@ -79,7 +79,7 @@ void VisualInstance::_notification(int p_what) {
 				VisualServer::get_singleton()->instance_attach_skeleton( instance, skeleton->get_skeleton() );
 			*/
 
-			VisualServer::get_singleton()->instance_set_scenario( instance, get_world()->get_scenario() );
+			//VisualServer::get_singleton()->instance_set_scenario( instance, get_world()->get_scenario() );
 
 		} break;
 		case NOTIFICATION_TRANSFORM_CHANGED: {
@@ -92,7 +92,7 @@ void VisualInstance::_notification(int p_what) {
 			VisualServer::get_singleton()->instance_set_scenario( instance, RID() );
 			VisualServer::get_singleton()->instance_set_room(instance,RID());
 			VisualServer::get_singleton()->instance_attach_skeleton( instance, RID() );
-			VS::get_singleton()->instance_geometry_set_baked_light_sampler(instance, RID() );
+			//VS::get_singleton()->instance_geometry_set_baked_light_sampler(instance, RID() );
 
 
 		} break;
@@ -157,16 +157,16 @@ VisualInstance::~VisualInstance() {
 
 
 
-void GeometryInstance::set_material_override(const Ref<Material>& p_material) {
+// void GeometryInstance::set_material_override(const Ref<Material>& p_material) {
 
-	material_override=p_material;
-	VS::get_singleton()->instance_geometry_set_material_override(get_instance(),p_material.is_valid() ? p_material->get_rid() : RID());
-}
+	// material_override=p_material;
+	// VS::get_singleton()->instance_geometry_set_material_override(get_instance(),p_material.is_valid() ? p_material->get_rid() : RID());
+// }
 
-Ref<Material> GeometryInstance::get_material_override() const{
+// Ref<Material> GeometryInstance::get_material_override() const{
 
-	return material_override;
-}
+	// return material_override;
+// }
 
 
 
@@ -200,7 +200,7 @@ void GeometryInstance::_notification(int p_what) {
 
 		if (flags[FLAG_USE_BAKED_LIGHT]) {
 
-			_find_baked_light();
+			//_find_baked_light();
 		}
 
 		_update_visibility();
@@ -210,7 +210,7 @@ void GeometryInstance::_notification(int p_what) {
 		if (flags[FLAG_USE_BAKED_LIGHT]) {
 
 			if (baked_light_instance) {
-				baked_light_instance->disconnect(SceneStringNames::get_singleton()->baked_light_changed,this,SceneStringNames::get_singleton()->_baked_light_changed);
+//				baked_light_instance->disconnect(SceneStringNames::get_singleton()->baked_light_changed,this,SceneStringNames::get_singleton()->_baked_light_changed);
 				baked_light_instance=NULL;
 			}
 			_baked_light_changed();
@@ -227,32 +227,32 @@ void GeometryInstance::_notification(int p_what) {
 
 void GeometryInstance::_baked_light_changed() {
 
-	if (!baked_light_instance)
-		VS::get_singleton()->instance_geometry_set_baked_light(get_instance(),RID());
-	else
-		VS::get_singleton()->instance_geometry_set_baked_light(get_instance(),baked_light_instance->get_baked_light_instance());
+	// if (!baked_light_instance)
+		// VS::get_singleton()->instance_geometry_set_baked_light(get_instance(),RID());
+	// else
+		// VS::get_singleton()->instance_geometry_set_baked_light(get_instance(),baked_light_instance->get_baked_light_instance());
 
 }
 
 void GeometryInstance::_find_baked_light() {
 
-	Node *n=get_parent();
-	while(n) {
+	// Node *n=get_parent();
+	// while(n) {
 
-		BakedLightInstance *bl=n->cast_to<BakedLightInstance>();
-		if (bl) {
+		// BakedLightInstance *bl=n->cast_to<BakedLightInstance>();
+		// if (bl) {
 
-			baked_light_instance=bl;
-			baked_light_instance->connect(SceneStringNames::get_singleton()->baked_light_changed,this,SceneStringNames::get_singleton()->_baked_light_changed);
-			_baked_light_changed();
+			// baked_light_instance=bl;
+			// baked_light_instance->connect(SceneStringNames::get_singleton()->baked_light_changed,this,SceneStringNames::get_singleton()->_baked_light_changed);
+			// _baked_light_changed();
 
-			return;
-		}
+			// return;
+		// }
 
-		n=n->get_parent();
-	}
+		// n=n->get_parent();
+	// }
 
-	_baked_light_changed();
+	// _baked_light_changed();
 }
 
 void GeometryInstance::_update_visibility() {
@@ -279,10 +279,10 @@ void GeometryInstance::set_flag(Flags p_flag,bool p_value) {
 
 		if (is_inside_world()) {
 			if (!p_value) {
-				if (baked_light_instance) {
-					baked_light_instance->disconnect(SceneStringNames::get_singleton()->baked_light_changed,this,SceneStringNames::get_singleton()->_baked_light_changed);
-					baked_light_instance=NULL;
-				}
+				// if (baked_light_instance) {
+					// baked_light_instance->disconnect(SceneStringNames::get_singleton()->baked_light_changed,this,SceneStringNames::get_singleton()->_baked_light_changed);
+					// baked_light_instance=NULL;
+				// }
 				_baked_light_changed();
 			} else {
 				_find_baked_light();
@@ -324,8 +324,8 @@ float GeometryInstance::get_extra_cull_margin() const{
 
 void GeometryInstance::_bind_methods() {
 
-	ObjectTypeDB::bind_method(_MD("set_material_override","material"), &GeometryInstance::set_material_override);
-	ObjectTypeDB::bind_method(_MD("get_material_override"), &GeometryInstance::get_material_override);
+	// ObjectTypeDB::bind_method(_MD("set_material_override","material"), &GeometryInstance::set_material_override);
+	// ObjectTypeDB::bind_method(_MD("get_material_override"), &GeometryInstance::get_material_override);
 
 	ObjectTypeDB::bind_method(_MD("set_flag","flag","value"), &GeometryInstance::set_flag);
 	ObjectTypeDB::bind_method(_MD("get_flag","flag"), &GeometryInstance::get_flag);
@@ -342,7 +342,7 @@ void GeometryInstance::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("set_extra_cull_margin","margin"), &GeometryInstance::set_extra_cull_margin);
 	ObjectTypeDB::bind_method(_MD("get_extra_cull_margin"), &GeometryInstance::get_extra_cull_margin);
 
-	ObjectTypeDB::bind_method(_MD("_baked_light_changed"), &GeometryInstance::_baked_light_changed);
+	//ObjectTypeDB::bind_method(_MD("_baked_light_changed"), &GeometryInstance::_baked_light_changed);
 
 	ADD_PROPERTYI( PropertyInfo( Variant::BOOL, "geometry/visible"), _SCS("set_flag"), _SCS("get_flag"),FLAG_VISIBLE);
 	ADD_PROPERTY( PropertyInfo( Variant::OBJECT, "geometry/material_override",PROPERTY_HINT_RESOURCE_TYPE,"Material"), _SCS("set_material_override"), _SCS("get_material_override"));
@@ -355,8 +355,8 @@ void GeometryInstance::_bind_methods() {
 	ADD_PROPERTYI( PropertyInfo( Variant::BOOL, "geometry/billboard_y"), _SCS("set_flag"), _SCS("get_flag"),FLAG_BILLBOARD_FIX_Y);
 	ADD_PROPERTYI( PropertyInfo( Variant::BOOL, "geometry/depth_scale"), _SCS("set_flag"), _SCS("get_flag"),FLAG_DEPH_SCALE);
 	ADD_PROPERTYI( PropertyInfo( Variant::BOOL, "geometry/visible_in_all_rooms"), _SCS("set_flag"), _SCS("get_flag"),FLAG_VISIBLE_IN_ALL_ROOMS);
-	ADD_PROPERTYI( PropertyInfo( Variant::BOOL, "geometry/use_baked_light"), _SCS("set_flag"), _SCS("get_flag"),FLAG_USE_BAKED_LIGHT);
-	ADD_PROPERTY( PropertyInfo( Variant::INT, "geometry/baked_light_tex_id"), _SCS("set_baked_light_texture_id"), _SCS("get_baked_light_texture_id"));
+	// ADD_PROPERTYI( PropertyInfo( Variant::BOOL, "geometry/use_baked_light"), _SCS("set_flag"), _SCS("get_flag"),FLAG_USE_BAKED_LIGHT);
+	// ADD_PROPERTY( PropertyInfo( Variant::INT, "geometry/baked_light_tex_id"), _SCS("set_baked_light_texture_id"), _SCS("get_baked_light_texture_id"));
 
 //	ADD_SIGNAL( MethodInfo("visibility_changed"));
 

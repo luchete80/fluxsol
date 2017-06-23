@@ -32,7 +32,7 @@
 #include "scene/3d/spatial.h"
 #include "face3.h"
 #include "rid.h"
-#include "scene/resources/material.h"
+//#include "scene/resources/material.h"
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
 */
@@ -102,7 +102,7 @@ public:
 private:
 
 	bool flags[FLAG_MAX];
-	Ref<Material> material_override;
+	//Ref<Material> material_override;
 	float draw_begin;
 	float draw_end;
 	void _find_baked_light();
@@ -127,8 +127,8 @@ public:
 	void set_draw_range_end(float p_dist);
 	float get_draw_range_end() const;
 
-	void set_material_override(const Ref<Material>& p_material);
-	Ref<Material> get_material_override() const;
+	// void set_material_override(const Ref<Material>& p_material);
+	// Ref<Material> get_material_override() const;
 
 	void set_baked_light_texture_id(int p_id);
 	int get_baked_light_texture_id() const;

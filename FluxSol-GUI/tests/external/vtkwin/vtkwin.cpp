@@ -29,6 +29,8 @@
 #include <vtkExternalOpenGLRenderWindow.h>
 #include <ExternalVTKWidget.h>
 
+#include <vtkTransform.h>
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 
@@ -49,8 +51,8 @@ WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return 0;
 
     case WM_SIZE:
-	glViewport(0, 0, LOWORD(lParam), HIWORD(lParam));
-	PostMessage(hWnd, WM_PAINT, 0, 0);
+	//glViewport(0, 0, LOWORD(lParam), HIWORD(lParam));
+	//PostMessage(hWnd, WM_PAINT, 0, 0);
 	return 0;
 
     case WM_CHAR:
@@ -120,8 +122,8 @@ CreateOpenGLWindow(char* title, int x, int y, int width, int height,
     pfd.nSize        = sizeof(pfd);
     pfd.nVersion     = 1;
     pfd.dwFlags      = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | flags;
-    pfd.iPixelType   = type;
-    pfd.cColorBits   = 32;
+    pfd.iPixelType   = PFD_TYPE_RGBA;
+    pfd.cColorBits   = 24;
 
     pf = ChoosePixelFormat(hDC, &pfd);
     if (pf == 0) {
@@ -190,28 +192,43 @@ HGLRC hRC;				/* opengl context */
     wglMakeCurrent(hDC, hRC);
 
     ShowWindow(hwnd, nCmdShow);
-	
+
+      // HWND vtkwin = CreateWindow("button",NULL,
+                 // WS_CHILD | WS_VISIBLE | SS_CENTER,
+                 // 100,100,400,400,
+                 // hwnd,NULL,
+                 // //(HINSTANCE)vtkGetWindowLong(hWnd,vtkGWL_HINSTANCE),
+                 // (HINSTANCE)vtkGetWindowLong(hwnd,vtkGWL_HINSTANCE),
+                 // NULL);
+				 
 	  //LUCIANO
 	  //AFTER CREATE CONTEXT!
   myVTKApp *theVTKApp=new myVTKApp(hwnd);
+  
+
+  
+  
+  //main loop
 
     while(GetMessage(&msg, hwnd, 0, 0)) {
 
 	
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
 	
-	glEnable(GL_DEPTH_TEST);
+	// glEnable(GL_DEPTH_TEST);
 
   // // // Buffers being managed by external application i.e. GLUT in this case.
-   glClearColor(1.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
-   glClearDepth(1.0f);
+   glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
+   glClearDepth(100.0f);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the color buffer
 
-  //glFlush();  // Render now
-  glBegin(GL_TRIANGLES);
-    glVertex3f(-0.5,-0.5,0.0);
-    glVertex3f(1.5,0.0,0.0);
-    glVertex3f(0.0,1.5,1.0);
-  glEnd();
+  // //glFlush();  // Render now
+  // glBegin(GL_TRIANGLES);
+    // glVertex3f(-0.5,-0.5,0.0);
+    // glVertex3f(1.5,0.0,0.0);
+    // glVertex3f(0.0,1.5,1.0);
+  // glEnd();
   
 	theVTKApp->Draw();
 	
@@ -248,7 +265,9 @@ myVTKApp::myVTKApp(HWND hwnd)
   
 	
   renderer = vtkRenderer::New(); 
-  this->renWin=vtkExternalOpenGLRenderWindow::New();
+  this->renWin=vtkExternalOpenGLRenderWindow::New(); //NEW
+  renWin->SetSize(100,100);
+  //this->renWin=vtkRenderWindow::New(); //OLD
   externalVTKWidget=ExternalVTKWidget::New();
   
   //New One
@@ -258,30 +277,50 @@ myVTKApp::myVTKApp(HWND hwnd)
   //OLD ONE
   //this->renWin = vtkRenderWindow::New();
   // this->renWin->AddRenderer(this->renderer);
-  //renWin->InitializeFromCurrentContext();
+  // renWin->InitializeFromCurrentContext();
 
   // setup the parent window
   //renWin->SetParentId(hwnd);
   this->iren = vtkRenderWindowInteractor::New();
   this->iren->SetRenderWindow(renWin);
+  //this->iren->Initialize();
 
   this->cone = vtkConeSource::New();
   this->cone->SetHeight( 3.0 );
   this->cone->SetRadius( 1.0 );
-  this->cone->SetResolution( 10 );
+  this->cone->SetResolution( 8 );
+  
+  renWin->SetOffScreenRendering(1);
+  
+   vtkSmartPointer<vtkTransform> transform = 
+    vtkSmartPointer<vtkTransform>::New();
+  transform->PostMultiply(); //this is the key line
+  transform->RotateZ(90.0);
+  transform->RotateX(45.0);
+  transform->Translate(0,1.0,0.0);
+  transform->Scale(0.1,0.1,0.1);
+  
+  
+  
 
   this->coneMapper = vtkPolyDataMapper::New();
   this->coneMapper->SetInputConnection(this->cone->GetOutputPort());
   this->coneActor = vtkActor::New();
   this->coneActor->SetMapper(this->coneMapper);
-  this->coneActor->GetProperty()->SetColor(1.0, 0.0, 1.0);
+  this->coneActor->GetProperty()->SetColor(0.0, 1.0, 1.0);
+  
+   this->coneActor->SetUserTransform(transform);
+   
+   coneActor->GetProperty()->BackfaceCullingOn();
+   coneActor->GetProperty()->LightingOff();
+   coneActor->GetProperty()->ShadingOn();
+   coneActor->GetProperty()->SetInterpolationToFlat();
 
   this->renderer->AddActor(this->coneActor);
   this->renderer->SetBackground(0.9,0.9,0.3);
-  renWin->SetSize(300,300);
 
   // Finally we start the interactor so that event will be handled
-  renWin->Render();
+  //renWin->Render();
 }
 
 myVTKApp::~myVTKApp()

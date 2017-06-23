@@ -36,6 +36,7 @@
 #include "Graphics/vtkRendering.h"
 vtkOpenGLRenderer *ren=NULL;
 vtkRenderWindowInteractor *vtkriw=NULL;
+ExternalVTKWidget *externalVTKWidget=NULL;
 
 BalloonAllocator<> *VisualServerRaster::OctreeAllocator::allocator=NULL;
 
@@ -7232,7 +7233,7 @@ void VisualServerRaster::draw() {
 	_draw_cursors_and_margins();
 //	vtkriw->Render();
 //	ren->Render();
-//	externalVTKWidget->GetRenderWindow()->Render();
+	externalVTKWidget->GetRenderWindow()->Render();
 	rasterizer->end_frame();
 	draw_extra_frame=rasterizer->needs_to_draw_next_frame();
 }

@@ -86,6 +86,7 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/drivers/unix")
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/scene")
 add_subdirectory("${PROJECT_SOURCE_DIR}/scene/2d")
+add_subdirectory("${PROJECT_SOURCE_DIR}/scene/3d")
 add_subdirectory("${PROJECT_SOURCE_DIR}/scene/gui")
 add_subdirectory("${PROJECT_SOURCE_DIR}/scene/io")
 add_subdirectory("${PROJECT_SOURCE_DIR}/scene/main")
@@ -113,7 +114,8 @@ $<TARGET_OBJECTS:coreos_>
 
 add_library(scene SHARED $<TARGET_OBJECTS:scene_> 
                          $<TARGET_OBJECTS:scene2d_>
-						  $<TARGET_OBJECTS:sceneio_>
+
+						 $<TARGET_OBJECTS:sceneio_>
 						  $<TARGET_OBJECTS:scenemain_>
 						  $<TARGET_OBJECTS:sceneresources_>
 						 $<TARGET_OBJECTS:sceneresources_>

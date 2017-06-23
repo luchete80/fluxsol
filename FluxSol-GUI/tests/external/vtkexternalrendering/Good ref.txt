@@ -1,0 +1,215 @@
+http://vtk.1045678.n5.nabble.com/Using-ExternalVTKWidget-with-an-external-OpenGL-context-OpenSG-td5735517.html
+
+Dear All,
+I am trying to draw some VTK stuff inside a pre-existing OpenGL context; this context has been created with a library called OpenSG (not to be confused with OpenSceneGraph).
+
+After some trial-and-error development, I managed to adapt a OpenSG example and integrate some VTK rendering. In the initialization phase I:
+- create an OpenSG GLUT window and put a torus inside the OpenSG scene,
+- create a VTK ExternalVTKWidget and related window/renderer, and put a cube inside the VTK scene.
+In the GLUT main loop, I:
+- activate the OpenSG window,
+- draw the OpenSG torus,
+- setup some GL stuff for camera and lights (why?!?),
+- draw the VTK cube,
+- swap buffers and deactivate the OpenSG window.
+
+Now, my questions are essentially two:
+1) Why do I need to write the OpenGL/glu code for the camera and the lights? It seems to me that OpenSG correctly calls the OpenGL state machine and sets up the camera and lights, but, when it comes to VTK, the internal camera and lights settings are not used (for example, if I set the camera near and far plane in the vtkRenderer it is ignored, to get everything work I have to call the gluPerspective() on each frame). The same for the Modelview tranform.
+2) When I quit the application, a VTK window opens and prompts me for some OpenGL errors: "
+Generic Warning: In ..\..\..\VTK-6.3.0\Rendering\OpenGL\vtkOpenGLDisplayListPainter.cxx, line 52
+failed after ReleaseAllLists 16 OpenGL errors detected
+  0 : (1282) Invalid operation
+  1 : (1282) Invalid operation
+  2 : (1282) Invalid operation
+  3 : (1282) Invalid operation
+  4 : (1282) Invalid operation
+  5 : (1282) Invalid operation
+  6 : (1282) Invalid operation
+  7 : (1282) Invalid operation
+  8 : (1282) Invalid operation
+  9 : (1282) Invalid operation
+  10 : (1282) Invalid operation
+  11 : (1282) Invalid operation
+  12 : (1282) Invalid operation
+  13 : (1282) Invalid operation
+  14 : (1282) Invalid operation
+  15 : (1282) Invalid operation
+", can someone tell me why?
+
+Currently , I am developing with Visual Studio 2010.
+Any suggestion or hint will be highly appreciated!
+Kind Regards,
+Christian
+
+PS: below you can find the complete example:
+
+#include <vtkAutoInit.h>
+VTK_MODULE_INIT(vtkRenderingOpenGL);
+VTK_MODULE_INIT(vtkRenderingContextOpenGL);
+VTK_MODULE_INIT(vtkRenderingFreeType);
+VTK_MODULE_INIT(vtkInteractionStyle);
+
+// OSG Includes
+#include <OSGGLUT.h>
+#include <OSGConfig.h>
+#include <OSGSimpleGeometry.h>
+#include <OSGGLUTWindow.h>
+#include <OSGSimpleSceneManager.h>
+#include <OSGPerspectiveCamera.h>
+
+// VTK includes
+#include <ExternalVTKWidget.h>
+#include <vtkActor.h>
+#include <vtkCallbackCommand.h>
+#include <vtkCamera.h>
+#include <vtkCubeSource.h>
+#include <vtkExternalOpenGLRenderWindow.h>
+#include <vtkNew.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkProperty.h>
+
+// defines
+#define FOV 75.f
+#define NEAR_PLANE 0.01f
+#define FAR_PLANE 100.0f
+
+// variables
+vtkNew<ExternalVTKWidget> externalVTKWidget;
+vtkNew<vtkActor> actor;
+int width = 100, height = 100;
+OSG::SimpleSceneManagerRefPtr mgr;
+OSG::GLUTWindowRefPtr gwin;
+
+using namespace OSG;
+
+// redraw the window
+void display(void)
+{
+	// activate OSG window
+	gwin->activate();
+	gwin->frameInit();
+
+	// draw OSG stuff
+	mgr->update();
+	gwin->renderAllViewports(mgr->getRenderAction());
+
+	// setup gl stuff for camera and lights (why?!?)
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective (FOV, (float)width/(float)height, NEAR_PLANE, FAR_PLANE);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+
+	// draw VTK stuff
+	actor->RotateX(1.0f);
+	actor->RotateY(1.0f);
+	externalVTKWidget->GetRenderWindow()->Render();
+
+	// swap buffers and deactivate OSG window
+	gwin->swap();
+	gwin->frameExit();
+	gwin->deactivate();
+}
+
+// react to size changes
+void reshape(int w, int h)
+{
+	width = w;
+	height = h;
+	mgr->resize(w, h);
+	glutPostRedisplay();
+}
+
+// react to mouse button presses
+void mouse(int button, int state, int x, int y)
+{
+	if (state)
+		mgr->mouseButtonRelease(button, x, y);
+	else
+		mgr->mouseButtonPress(button, x, y);
+	glutPostRedisplay();
+}
+
+// react to mouse motions with pressed buttons
+void motion(int x, int y)
+{
+	mgr->mouseMove(x, y);
+	glutPostRedisplay();
+}
+
+// react to keys
+void keyboard(unsigned char k, int x, int y)
+{
+	switch(k)
+	{
+	case 27:
+		{
+			mgr = NULL;
+			gwin = NULL;
+			OSG::osgExit();
+			exit(0);
+		}
+		break;
+	}
+}
+
+
+int main(int argc, char **argv)
+{
+	// init and setup GLUT
+	glewInit();
+	OSG::osgInit(argc,argv);
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
+	int winid = glutCreateWindow("OpenSG");
+	glutReshapeFunc(reshape);
+	glutDisplayFunc(display);
+	glutIdleFunc(display);
+	glutMouseFunc(mouse);
+	glutMotionFunc(motion);
+	glutKeyboardFunc(keyboard);
+
+	{
+		// Connection between GLUT and OpenSG
+		gwin = OSG::GLUTWindow::create();
+		gwin->setGlutId(winid);
+		gwin->setSize(100, 100);
+		gwin->init();
+
+		// create the scene
+		OSG::NodeRefPtr scene = OSG::makeTorus(.1f, 0.6f, 16, 16);
+		OSG::commitChanges();
+		mgr = OSG::SimpleSceneManager::create();
+		mgr->setWindow(gwin );
+		mgr->setRoot  (scene);
+		mgr->showAll();
+
+		// set the camera parameters
+		CameraRecPtr cam = mgr->getCamera();
+		PerspectiveCamera *pPerspCam = OSG::dynamic_pointer_cast<PerspectiveCamera>(cam);
+		pPerspCam->setFov(FOV);
+		pPerspCam->setNear(NEAR_PLANE);
+		pPerspCam->setFar(FAR_PLANE);
+		pPerspCam->setAspect(1.f);
+	}
+
+	{
+		// create the VTK scene
+		vtkNew<vtkCubeSource> cs;
+		vtkNew<vtkPolyDataMapper> mapper;
+		mapper->SetInputConnection(cs->GetOutputPort());
+
+		actor->SetMapper(mapper.GetPointer());
+		actor->GetProperty()->SetColor(1,1,0.2);
+		actor->GetProperty()->SetOpacity(0.5);
+
+		// create the VTK external renderer
+		vtkNew<vtkExternalOpenGLRenderWindow> renWin;
+		externalVTKWidget->SetRenderWindow(renWin.GetPointer());
+		vtkRenderer* ren = externalVTKWidget->AddRenderer();
+		ren->AddActor(actor.GetPointer());
+	}
+
+	glutMainLoop();
+	return 0;
+}

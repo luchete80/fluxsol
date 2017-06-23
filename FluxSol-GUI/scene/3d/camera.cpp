@@ -29,7 +29,6 @@
 #include "camera.h"
 
 #include "camera_matrix.h"
-#include "scene/resources/material.h"
 #include "scene/resources/surface_tool.h"
 
 
@@ -347,16 +346,16 @@ RES Camera::_get_gizmo_geometry() const {
 
 	Ref<SurfaceTool> surface_tool( memnew( SurfaceTool ));
 
-	Ref<FixedMaterial> mat( memnew( FixedMaterial ));
+	//Ref<FixedMaterial> mat( memnew( FixedMaterial ));
 
-	mat->set_parameter( FixedMaterial::PARAM_DIFFUSE,Color(1.0,0.5,1.0,0.5) );
-	mat->set_line_width(4);
-	mat->set_flag(Material::FLAG_DOUBLE_SIDED,true);
-	mat->set_flag(Material::FLAG_UNSHADED,true);
+		// mat->set_parameter( FixedMaterial::PARAM_DIFFUSE,Color(1.0,0.5,1.0,0.5) );
+		// mat->set_line_width(4);
+		// mat->set_flag(Material::FLAG_DOUBLE_SIDED,true);
+		// mat->set_flag(Material::FLAG_UNSHADED,true);
 	//mat->set_hint(Material::HINT_NO_DEPTH_DRAW,true);
 
 	surface_tool->begin(Mesh::PRIMITIVE_LINES);
-	surface_tool->set_material(mat);
+	//surface_tool->set_material(mat);
 
 	switch(mode) {
 
