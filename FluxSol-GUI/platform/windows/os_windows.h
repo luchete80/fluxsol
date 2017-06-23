@@ -107,6 +107,10 @@ class OS_Windows : public OS {
 
 	HCURSOR hCursor;
 
+    HWND vtkwin;
+    Control *controltest;
+    Timer *timer_controltest;
+
 	Size2 window_rect;
 	VideoMode video_mode;
 

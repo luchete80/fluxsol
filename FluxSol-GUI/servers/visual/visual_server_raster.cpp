@@ -33,11 +33,9 @@
 #include "sort.h"
 #include "io/marshalls.h"
 
-//#include "Graphics/vtkRendering.h"
-//vtkOpenGLRenderer *ren=NULL;
-//vtkRenderWindowInteractor *vtkriw=NULL;
-// careful, these may run in different threads than the visual server
-//#include <gl\gl.h>
+#include "Graphics/vtkRendering.h"
+vtkOpenGLRenderer *ren=NULL;
+vtkRenderWindowInteractor *vtkriw=NULL;
 
 BalloonAllocator<> *VisualServerRaster::OctreeAllocator::allocator=NULL;
 

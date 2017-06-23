@@ -4720,11 +4720,11 @@ EditorNode::EditorNode() {
 	gui_base->set_theme( theme );
 
 	//LUCIANO TOMODIFY
-	editor_register_icons(theme);
-	editor_register_fonts(theme);
+	//editor_register_icons(theme);
+	//editor_register_fonts(theme);
 
-	theme->set_icon("folder","EditorFileDialog",Theme::get_default()->get_icon("folder","EditorFileDialog"));
-	theme->set_color("files_disabled","EditorFileDialog",Color(0,0,0,0.7));
+	//theme->set_icon("folder","EditorFileDialog",Theme::get_default()->get_icon("folder","EditorFileDialog"));
+	//theme->set_color("files_disabled","EditorFileDialog",Color(0,0,0,0.7));
 
 	String global_font = EditorSettings::get_singleton()->get("global/font");
 	if (global_font!="") {
@@ -4757,9 +4757,6 @@ EditorNode::EditorNode() {
 	main_vbox = memnew( VBoxContainer );
 	gui_base->add_child(main_vbox);
 	main_vbox->set_area_as_parent_rect(8);
-
-
-
 
 	menu_hb = memnew( HBoxContainer );
 	main_vbox->add_child(menu_hb);
@@ -4906,10 +4903,6 @@ EditorNode::EditorNode() {
 	srt->add_constant_override("separation",0);
 
 
-/*	main_editor_tabs  = memnew( Tabs );
-	main_editor_tabs->connect("tab_changed",this,"_editor_select");
-	main_editor_tabs->set_tab_close_display_policy(Tabs::SHOW_NEVER);
-*/
 	scene_tabs=memnew( Tabs );
 	scene_tabs->add_tab("unsaved");
 	scene_tabs->set_tab_align(Tabs::ALIGN_CENTER);
@@ -5093,14 +5086,6 @@ EditorNode::EditorNode() {
 	HBoxContainer *play_hb = memnew( HBoxContainer );
 	top_region->add_child(play_hb);
 
-	stop_button = memnew( ToolButton );
-	play_hb->add_child(stop_button);
-	//stop_button->set_toggle_mode(true);
-	stop_button->set_focus_mode(Control::FOCUS_NONE);
-	stop_button->set_icon(gui_base->get_icon("MainStop","EditorIcons"));
-	stop_button->connect("pressed", this,"_menu_option",make_binds(RUN_STOP));
-	stop_button->set_tooltip("Stop the scene (F8).");
-
 	run_native = memnew( EditorRunNative);
 	play_hb->add_child(run_native);
 	native_play_button = memnew( MenuButton );
@@ -5139,21 +5124,6 @@ EditorNode::EditorNode() {
 		menu_hb->add_child(sp);
 	}
 
-
-	PanelContainer *vu_cont = memnew( PanelContainer );
-	vu_cont->add_style_override("panel",gui_base->get_stylebox("hover","Button"));
-	menu_hb->add_child(vu_cont);
-
-	audio_vu = memnew( TextureProgress );
-	CenterContainer *vu_cc = memnew( CenterContainer );
-	vu_cc->add_child(audio_vu);
-	vu_cont->add_child(vu_cc);
-	audio_vu->set_under_texture(gui_base->get_icon("VuEmpty","EditorIcons"));
-	audio_vu->set_progress_texture(gui_base->get_icon("VuFull","EditorIcons"));
-	audio_vu->set_max(24);
-	audio_vu->set_min(-80);
-	audio_vu->set_step(0.01);
-	audio_vu->set_val(0);
 
 	{
 		Control *sp = memnew( Control );
@@ -5670,7 +5640,7 @@ EditorNode::EditorNode() {
 
 	editor_data.add_edited_scene(-1);
 	editor_data.set_edited_scene(0);
-	//_update_scene_tabs();
+	_update_scene_tabs();
 
 	_load_docks();
 

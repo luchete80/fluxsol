@@ -82,6 +82,8 @@ void display()
   if (!initialized)
   {
     vtkNew<vtkExternalOpenGLRenderWindow> renWin;
+	renWin->SetSize(300,300); //LUCIANO
+//	renWin->SetParentId(windowId); //LUCIANO
     externalVTKWidget->SetRenderWindow(renWin.GetPointer());
     //vtkNew<vtkCallbackCommand> callback;
     //callback->SetCallback(MakeCurrentCallback);

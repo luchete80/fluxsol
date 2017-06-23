@@ -1065,7 +1065,7 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //  vtkExternalOpenGLRenderWindow *renWindowext = vtkExternalOpenGLRenderWindow::New();
 //  renWindow = vtkRenderWindow::New();
 //  externalVTKWidget=ExternalVTKWidget::New();
-//  //vtkriw=vtkRenderWindowInteractor::New();
+  //vtkriw=vtkRenderWindowInteractor::New();
 //
 //  ///// ORIRINAL WAY
 //  renWindow->SetParentId(hWnd);
