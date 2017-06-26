@@ -59,7 +59,7 @@
 #include <process.h>
 //
 
-#include "Graphics/vtkRendering.h"
+//#include "Graphics/vtkRendering.h"
 
 
 #include <direct.h>	//LUCIANO _wchdir EN MINGW
@@ -444,177 +444,177 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 
 
 		} break;
-//		case WM_LBUTTONDOWN:
-//		case WM_LBUTTONUP:
-//		case WM_MBUTTONDOWN:
-//		case WM_MBUTTONUP:
-//		case WM_RBUTTONDOWN:
-//		case WM_RBUTTONUP:
-//		case WM_MOUSEWHEEL:
-//		case WM_MOUSEHWHEEL:
-//		case WM_LBUTTONDBLCLK:
-//		case WM_RBUTTONDBLCLK:
-//		/*case WM_XBUTTONDOWN:
-//		case WM_XBUTTONUP: */{
-//
-//			/*
-//			LPARAM extra = GetMessageExtraInfo();
-//			if (IsPenEvent(extra)) {
-//
-//				int idx = extra & 0x7f;
-//				_touch_event(idx, uMsg, wParam, lParam);
-//				if (idx != 0) {
-//					return 0;
-//				};
-//				// fallthrough for mouse event
-//			};
-//			*/
-//
-//			InputEvent event;
-//			event.type=InputEvent::MOUSE_BUTTON;
-//			event.ID=++last_id;
-//			InputEventMouseButton &mb=event.mouse_button;
-//
-//			switch (uMsg) {
-//				case WM_LBUTTONDOWN: {
-//					mb.pressed=true;
-//					mb.button_index=1;
-//				} break;
-//				case WM_LBUTTONUP: {
-//					mb.pressed=false;
-//					mb.button_index=1;
-//				} break;
-//				case WM_MBUTTONDOWN: {
-//					mb.pressed=true;
-//					mb.button_index=3;
-//
-//				} break;
-//				case WM_MBUTTONUP: {
-//					mb.pressed=false;
-//					mb.button_index=3;
-//				} break;
-//				case WM_RBUTTONDOWN: {
-//					mb.pressed=true;
-//					mb.button_index=2;
-//				} break;
-//				case WM_RBUTTONUP: {
-//					mb.pressed=false;
-//					mb.button_index=2;
-//				} break;
-//				case WM_LBUTTONDBLCLK: {
-//
-//					mb.pressed=true;
-//					mb.button_index=1;
-//					mb.doubleclick = true;
-//				} break;
-//				case WM_RBUTTONDBLCLK: {
-//
-//					mb.pressed=true;
-//					mb.button_index=2;
-//					mb.doubleclick = true;
-//				} break;
-//				case WM_MOUSEWHEEL: {
-//
-//					mb.pressed=true;
-//					int motion = (short)HIWORD(wParam);
-//					if (!motion)
-//						return 0;
-//
-//
-//					if (motion>0)
-//						mb.button_index= BUTTON_WHEEL_UP;
-//					else
-//						mb.button_index= BUTTON_WHEEL_DOWN;
-//
-//
-//				} break;
-//				case WM_MOUSEHWHEEL: {
-//
-//					mb.pressed = true;
-//					int motion = (short)HIWORD(wParam);
-//					if (!motion)
-//						return 0;
-//
-//					if (motion<0)
-//						mb.button_index = BUTTON_WHEEL_LEFT;
-//					else
-//						mb.button_index = BUTTON_WHEEL_RIGHT;
-//				} break;
-//					/*
-//				case WM_XBUTTONDOWN: {
-//					mb.pressed=true;
-//					mb.button_index=(HIWORD(wParam)==XBUTTON1)?6:7;
-//				} break;
-//				case WM_XBUTTONUP:
-//					mb.pressed=true;
-//					mb.button_index=(HIWORD(wParam)==XBUTTON1)?6:7;
-//				} break;*/
-//				default: { return 0; }
-//			}
-//
-//
-//			mb.mod.control=(wParam&MK_CONTROL)!=0;
-//			mb.mod.shift=(wParam&MK_SHIFT)!=0;
-//			mb.mod.alt=alt_mem;
-//			//mb.mod.alt=(wParam&MK_MENU)!=0;
-//			mb.button_mask|=(wParam&MK_LBUTTON)?(1<<0):0;
-//			mb.button_mask|=(wParam&MK_RBUTTON)?(1<<1):0;
-//			mb.button_mask|=(wParam&MK_MBUTTON)?(1<<2):0;
-//
-//			last_button_state=mb.button_mask;
-//			/*
-//			mb.button_mask|=(wParam&MK_XBUTTON1)?(1<<5):0;
-//			mb.button_mask|=(wParam&MK_XBUTTON2)?(1<<6):0;*/
-//			mb.x=GET_X_LPARAM(lParam);
-//			mb.y=GET_Y_LPARAM(lParam);
-//
-//			if (mouse_mode==MOUSE_MODE_CAPTURED) {
-//
-//				mb.x=old_x;
-//				mb.y=old_y;
-//			}
-//
-//			mb.global_x=mb.x;
-//			mb.global_y=mb.y;
-//
-//
-//			if (uMsg != WM_MOUSEWHEEL) {
-//				if (mb.pressed) {
-//
-//					if (++pressrc>0)
-//						SetCapture(hWnd);
-//				} else {
-//
-//
-//					if (--pressrc<=0) {
-//						ReleaseCapture();
-//						pressrc=0;
-//					}
-//
-//				}
-//			} else if (mouse_mode!=MOUSE_MODE_CAPTURED) {
-//				// for reasons unknown to mankind, wheel comes in screen cordinates
-//				RECT rect;
-//				GetWindowRect(hWnd,&rect);
-//				mb.x-=rect.left;
-//				mb.y-=rect.top;
-//
-//			}
-//
-//			if (main_loop) {
-//				input->parse_input_event(event);
-//				if (mb.pressed && mb.button_index>3) {
-//					//send release for mouse wheel
-//					mb.pressed=false;
-//					event.ID=++last_id;
-//					input->parse_input_event(event);
-//
-//				}
-//			}
-//
-//
-//
-//		} break;
+		case WM_LBUTTONDOWN:
+		case WM_LBUTTONUP:
+		case WM_MBUTTONDOWN:
+		case WM_MBUTTONUP:
+		case WM_RBUTTONDOWN:
+		case WM_RBUTTONUP:
+		case WM_MOUSEWHEEL:
+		case WM_MOUSEHWHEEL:
+		case WM_LBUTTONDBLCLK:
+		case WM_RBUTTONDBLCLK:
+		/*case WM_XBUTTONDOWN:
+		case WM_XBUTTONUP: */{
+
+			/*
+			LPARAM extra = GetMessageExtraInfo();
+			if (IsPenEvent(extra)) {
+
+				int idx = extra & 0x7f;
+				_touch_event(idx, uMsg, wParam, lParam);
+				if (idx != 0) {
+					return 0;
+				};
+				// fallthrough for mouse event
+			};
+			*/
+
+			InputEvent event;
+			event.type=InputEvent::MOUSE_BUTTON;
+			event.ID=++last_id;
+			InputEventMouseButton &mb=event.mouse_button;
+
+			switch (uMsg) {
+				case WM_LBUTTONDOWN: {
+					mb.pressed=true;
+					mb.button_index=1;
+				} break;
+				case WM_LBUTTONUP: {
+					mb.pressed=false;
+					mb.button_index=1;
+				} break;
+				case WM_MBUTTONDOWN: {
+					mb.pressed=true;
+					mb.button_index=3;
+
+				} break;
+				case WM_MBUTTONUP: {
+					mb.pressed=false;
+					mb.button_index=3;
+				} break;
+				case WM_RBUTTONDOWN: {
+					mb.pressed=true;
+					mb.button_index=2;
+				} break;
+				case WM_RBUTTONUP: {
+					mb.pressed=false;
+					mb.button_index=2;
+				} break;
+				case WM_LBUTTONDBLCLK: {
+
+					mb.pressed=true;
+					mb.button_index=1;
+					mb.doubleclick = true;
+				} break;
+				case WM_RBUTTONDBLCLK: {
+
+					mb.pressed=true;
+					mb.button_index=2;
+					mb.doubleclick = true;
+				} break;
+				case WM_MOUSEWHEEL: {
+
+					mb.pressed=true;
+					int motion = (short)HIWORD(wParam);
+					if (!motion)
+						return 0;
+
+
+					if (motion>0)
+						mb.button_index= BUTTON_WHEEL_UP;
+					else
+						mb.button_index= BUTTON_WHEEL_DOWN;
+
+
+				} break;
+				case WM_MOUSEHWHEEL: {
+
+					mb.pressed = true;
+					int motion = (short)HIWORD(wParam);
+					if (!motion)
+						return 0;
+
+					if (motion<0)
+						mb.button_index = BUTTON_WHEEL_LEFT;
+					else
+						mb.button_index = BUTTON_WHEEL_RIGHT;
+				} break;
+					/*
+				case WM_XBUTTONDOWN: {
+					mb.pressed=true;
+					mb.button_index=(HIWORD(wParam)==XBUTTON1)?6:7;
+				} break;
+				case WM_XBUTTONUP:
+					mb.pressed=true;
+					mb.button_index=(HIWORD(wParam)==XBUTTON1)?6:7;
+				} break;*/
+				default: { return 0; }
+			}
+
+
+			mb.mod.control=(wParam&MK_CONTROL)!=0;
+			mb.mod.shift=(wParam&MK_SHIFT)!=0;
+			mb.mod.alt=alt_mem;
+			//mb.mod.alt=(wParam&MK_MENU)!=0;
+			mb.button_mask|=(wParam&MK_LBUTTON)?(1<<0):0;
+			mb.button_mask|=(wParam&MK_RBUTTON)?(1<<1):0;
+			mb.button_mask|=(wParam&MK_MBUTTON)?(1<<2):0;
+
+			last_button_state=mb.button_mask;
+			/*
+			mb.button_mask|=(wParam&MK_XBUTTON1)?(1<<5):0;
+			mb.button_mask|=(wParam&MK_XBUTTON2)?(1<<6):0;*/
+			mb.x=GET_X_LPARAM(lParam);
+			mb.y=GET_Y_LPARAM(lParam);
+
+			if (mouse_mode==MOUSE_MODE_CAPTURED) {
+
+				mb.x=old_x;
+				mb.y=old_y;
+			}
+
+			mb.global_x=mb.x;
+			mb.global_y=mb.y;
+
+
+			if (uMsg != WM_MOUSEWHEEL) {
+				if (mb.pressed) {
+
+					if (++pressrc>0)
+						SetCapture(hWnd);
+				} else {
+
+
+					if (--pressrc<=0) {
+						ReleaseCapture();
+						pressrc=0;
+					}
+
+				}
+			} else if (mouse_mode!=MOUSE_MODE_CAPTURED) {
+				// for reasons unknown to mankind, wheel comes in screen cordinates
+				RECT rect;
+				GetWindowRect(hWnd,&rect);
+				mb.x-=rect.left;
+				mb.y-=rect.top;
+
+			}
+
+			if (main_loop) {
+				input->parse_input_event(event);
+				if (mb.pressed && mb.button_index>3) {
+					//send release for mouse wheel
+					mb.pressed=false;
+					event.ID=++last_id;
+					input->parse_input_event(event);
+
+				}
+			}
+
+
+
+		} break;
 
 		case WM_SIZE: {
 			video_mode.width=LOWORD(lParam);
@@ -1059,13 +1059,12 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //                  //(HINSTANCE)vtkGetWindowLong(hWnd,vtkGWL_HINSTANCE),
 //                  godot_hinstance,
 //                  NULL);
-
-   /// VTK STUFF //////
-  ren=vtkOpenGLRenderer::New();
-  vtkExternalOpenGLRenderWindow *renWindowext = vtkExternalOpenGLRenderWindow::New();
-  renWindow = vtkRenderWindow::New();
-  externalVTKWidget=ExternalVTKWidget::New();
-  vtkriw=vtkRenderWindowInteractor::New();
+//
+//   /// VTK STUFF //////
+//  ren=vtkOpenGLRenderer::New();
+//  vtkExternalOpenGLRenderWindow *renWindowext = vtkExternalOpenGLRenderWindow::New();
+//  renWindow = vtkRenderWindow::New();
+//  externalVTKWidget=ExternalVTKWidget::New();
 //
 //  ///// ORIRINAL WAY
 //  renWindow->SetParentId(hWnd);
@@ -1073,54 +1072,59 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 //  renWindow->InitializeFromCurrentContext(); //IF THIS COMMAND IS NOT CALLED, GODOT WIDGETS NEVER RENDERED
 //  renWindow->AddRenderer(ren);
 //  renWindow->Render();
-
 //
-/////// NEW WAY
-//renWindowext->SetParentId(vtkwin);
-  renWindowext->SetSize(400,400);
-  externalVTKWidget->SetRenderWindow(renWindowext);
-//
-//   // vtkNew<vtkCallbackCommand> callback;
-//    //callback->SetCallback(MakeCurrentCallback);
-//    //renWindowext->InitializeFromCurrentContext();
-  ren = externalVTKWidget->AddRenderer(); //WHEN VTKRENDERWINDOW IS EXTERNAL
-  externalVTKWidget->GetRenderWindow()->Render();
-//renWindowext->Delete();
-
-//////////////////// QVTK WAY
+////
+///////// NEW WAY
+////renWindowext->SetParentId(vtkwin);
+//  renWindowext->SetSize(200,200);
 //  externalVTKWidget->SetRenderWindow(renWindowext);
-//renWindowext->SetParentId(vtkwin);
-////    vtkNew<vtkCallbackCommand> callback;
-//    //callback->SetCallback(MakeCurrentCallback);
-//    //renWindowext->InitializeFromCurrentContext();
-//    renWindowext->Render();	//If i want to obtain coordinates
-//    externalVTKWidget->GetRenderWindow()->AddRenderer(ren);
-//    renWindowext->AddRenderer(ren);
-//    //vtkriw= externalVTKWidget->GetInteractor();
-//renWindowext->Delete();
-////////////////////////////
-//  vtkriw->SetRenderWindow(renWindow);
-//   vtkriw->Initialize();
+//
+////
+////   // vtkNew<vtkCallbackCommand> callback;
+////    //callback->SetCallback(MakeCurrentCallback);
+////    //renWindowext->InitializeFromCurrentContext();
+//  ren = externalVTKWidget->AddRenderer(); //WHEN VTKRENDERWINDOW IS EXTERNAL
+//  externalVTKWidget->GetRenderWindow()->Render();
+//
+// ren->SetBackground(0.5,0.5,0.5);
+//  // create an actor and give it cone geometry
+//  vtkConeSource *cone = vtkConeSource::New();
+//  cone->SetResolution(8);
+//  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
+//  coneMapper->SetInputConnection(cone->GetOutputPort());
+//  vtkActor *coneActor = vtkActor::New();
+//  coneActor->SetMapper(coneMapper);
+//  coneActor->GetProperty()->SetColor(1.0, 0.0, 1.0);
+//  coneActor->GetProperty()->SetInterpolationToFlat();
+//
+//  // assign our actor to the renderer
+//  ren->AddActor(coneActor);
+//
+//    coneActor->RotateX(45.0);
+//    coneActor->RotateY(45.0);
+//    ren->ResetCamera();
 //
 //
+//  double lightPosition[3] = {0, 0, 1};
+//
+//  // Create a light
+//  double lightFocalPoint[3] = {0,0,0};
+//
+//  vtkSmartPointer<vtkLight> light = vtkSmartPointer<vtkLight>::New();
+//  light->SetLightTypeToSceneLight();
+//  light->SetPosition(lightPosition[0], lightPosition[1], lightPosition[2]);
+//  light->SetPositional(true); // required for vtkLightActor below
+//  light->SetConeAngle(10);
+//  light->SetFocalPoint(lightFocalPoint[0], lightFocalPoint[1], lightFocalPoint[2]);
+//  light->SetDiffuseColor(1,0,0);
+//  light->SetAmbientColor(0,1,0);
+//  light->SetSpecularColor(0,0,1);
+//   //vtkLightCollection* originalLights = renderer->GetLights();
+//  //PRINT_LINE("Originally there are " << originalLights->GetNumberOfItems() << " lights." << std::endl;
+//  vtkSmartPointer<vtkLightActor> lightActor = vtkSmartPointer<vtkLightActor>::New();
+//  lightActor->SetLight(light);
+//  ren->AddViewProp(lightActor);
 
- ren->SetBackground(0.5,0.5,0.5);
-  // create an actor and give it cone geometry
-  vtkConeSource *cone = vtkConeSource::New();
-  cone->SetResolution(8);
-  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
-  coneMapper->SetInputConnection(cone->GetOutputPort());
-  vtkActor *coneActor = vtkActor::New();
-  coneActor->SetMapper(coneMapper);
-  coneActor->GetProperty()->SetColor(1.0, 0.0, 1.0);
-  coneActor->GetProperty()->SetInterpolationToFlat();
-
-  // assign our actor to the renderer
-  ren->AddActor(coneActor);
-
-    coneActor->RotateX(45.0);
-    coneActor->RotateY(45.0);
-    ren->ResetCamera();
 //
 //  vtkSmartPointer<vtkCallbackCommand> modifiedCallback =
 //    vtkSmartPointer<vtkCallbackCommand>::New();
@@ -1919,51 +1923,25 @@ void OS_Windows::process_events() {
 		TranslateMessage(&msg);
 		DispatchMessageW(&msg);
 //		Main::iteration(); //ESTO ES MIO
-//		if (Main::iteration()==true)
-//			break;
+		if (Main::iteration()==true)
+			break;
 		/// ALL THIS IS NEW
-
-   glClearColor(1.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
+//
+//   glClearColor(1.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
 //   glClearDepth(100.0f);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the color buffer
-          //glEnable(GL_DEPTH_TEST);
-
-
-             //glFlush();  // Render now
-   glBegin(GL_TRIANGLES);
-     glVertex3f(-0.5,-0.5,0.0);
-     glVertex3f(1.5,0.0,0.0);
-     glVertex3f(0.0,1.5,1.0);
-   glEnd();
-    //
-    //  // Buffers being managed by external application i.e. GLUT in this case.
-    //  glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
-    //  glClearDepth(1.0f);
-    //  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the color buffer
-    //
-    //  glFlush();  // Render now
-    //  glBegin(GL_TRIANGLES);
-    //    glVertex3f(-1.5,-1.5,0.0);
-    //    glVertex3f(1.5,0.0,0.0);
-    //    glVertex3f(0.0,1.5,1.0);
-    //  glEnd();
-    //
-    //  glEnable(GL_LIGHTING);
-    //  glEnable(GL_LIGHT0);
-    //  GLfloat lightpos[] = {-0.5f, 1.0f, 1.0f, 1.0f};
-    //  glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
-    //  GLfloat diffuse[] = {0.0f, 0.8f, 0.8f, 1.0f};
-    //  glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-    //  GLfloat specular[] = {0.5f, 0.0f, 0.0f, 1.0f};
-    //  glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-    //  GLfloat ambient[] = {1.0f, 1.0f, 0.2f,  1.0f};
-    //  glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-    //
-    //
-    externalVTKWidget->GetRenderWindow()->Render();
-
-    OS::get_singleton()->swap_buffers();
-    glFlush();
+//   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the color buffer
+//          //glEnable(GL_DEPTH_TEST);
+//
+//
+//             //glFlush();  // Render now
+//   glBegin(GL_TRIANGLES);
+//     glVertex3f(-0.5,-0.5,1.0);
+//     glVertex3f(1.5,0.0,1.0);
+//     glVertex3f(0.0,1.5,1.0);
+//   glEnd();
+//
+//    externalVTKWidget->GetRenderWindow()->Render();
+//    OS::get_singleton()->swap_buffers();
 //        ////////////
 
         secondsPassed = (clock() - startTime) / CLOCKS_PER_SEC;

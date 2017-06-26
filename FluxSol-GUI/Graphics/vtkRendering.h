@@ -19,12 +19,14 @@
 #include <vtkOpenGLRenderer.h>
 #include <vtkConeSource.h>
 #include <vtkRenderWindowInteractor.h>
+#include <vtkLight.h>
+#include <vtkLightActor.h>
 
 
 ///////////// IS THIS BELONGS TO OS_WinDOWS THE PROGRAM CRASHES
 ///////////// WHEN RETURNING SINGLETON
 // Original was
-extern  vtkRenderWindowInteractor *vtkriw;
+//extern  vtkRenderWindowInteractor *vtkriw;
 extern vtkRenderWindow *renWindow;
 extern vtkOpenGLRenderer *ren;
 

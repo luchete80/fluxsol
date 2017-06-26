@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Visualization Toolkit
-  Module:    vtkExternalOpenGLRenderWindow.cxx
+  Module:    myvtkExternalOpenGLRenderWindow.cxx
 
   Copyright (c) Ken Martin, Will Schroeder, Bill Lorensen
   All rights reserved.
@@ -17,26 +17,26 @@
   #include "vtk_glew.h"
 #endif
 
-#include "vtkExternalOpenGLRenderWindow.h"
+#include "myvtkExternalOpenGLRenderWindow.h"
 #include "vtkObjectFactory.h"
 #include "vtkRendererCollection.h"
 #include "vtkRenderer.h"
 
-vtkStandardNewMacro(vtkExternalOpenGLRenderWindow);
+vtkStandardNewMacro(myvtkExternalOpenGLRenderWindow);
 
 //----------------------------------------------------------------------------
-vtkExternalOpenGLRenderWindow::vtkExternalOpenGLRenderWindow()
+myvtkExternalOpenGLRenderWindow::myvtkExternalOpenGLRenderWindow()
 {
   this->AutomaticWindowPositionAndResize = 1;
 }
 
 //----------------------------------------------------------------------------
-vtkExternalOpenGLRenderWindow::~vtkExternalOpenGLRenderWindow()
+myvtkExternalOpenGLRenderWindow::~myvtkExternalOpenGLRenderWindow()
 {
 }
 
 //----------------------------------------------------------------------------
-void vtkExternalOpenGLRenderWindow::Start(void)
+void myvtkExternalOpenGLRenderWindow::Start(void)
 {
   // Make sure all important OpenGL options are set for VTK
   this->OpenGLInit();
@@ -74,7 +74,7 @@ void vtkExternalOpenGLRenderWindow::Start(void)
 }
 
 //----------------------------------------------------------------------------
-void vtkExternalOpenGLRenderWindow::Render()
+void myvtkExternalOpenGLRenderWindow::Render()
 {
 #ifdef VTK_OPENGL2
   // Query current GL state and store them
@@ -90,13 +90,13 @@ void vtkExternalOpenGLRenderWindow::Render()
 }
 
 //----------------------------------------------------------------------------
-bool vtkExternalOpenGLRenderWindow::IsCurrent(void)
+bool myvtkExternalOpenGLRenderWindow::IsCurrent(void)
 {
   return true;
 }
 
 //----------------------------------------------------------------------------
-void vtkExternalOpenGLRenderWindow::PrintSelf(ostream& os, vtkIndent indent)
+void myvtkExternalOpenGLRenderWindow::PrintSelf(ostream& os, vtkIndent indent)
 {
   this->Superclass::PrintSelf(os, indent);
 }

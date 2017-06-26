@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Visualization Toolkit
-  Module:    vtkExternalOpenGLRenderWindow.h
+  Module:    myvtkExternalOpenGLRenderWindow.h
 
   Copyright (c) Ken Martin, Will Schroeder, Bill Lorensen
   All rights reserved.
@@ -13,11 +13,11 @@
 
 =========================================================================*/
 /**
- * @class   vtkExternalOpenGLRenderWindow
+ * @class   myvtkExternalOpenGLRenderWindow
  * @brief   OpenGL render window that allows using
  * an external window to render vtk objects
  *
- * vtkExternalOpenGLRenderWindow is a concrete implementation of the abstract
+ * myvtkExternalOpenGLRenderWindow is a concrete implementation of the abstract
  * class vtkRenderWindow. vtkExternalOpenGLRenderer interfaces to the OpenGL
  * graphics library.
  *
@@ -38,18 +38,20 @@
  * \sa vtkGenericOpenGLRenderWindow
 */
 
-#ifndef vtkExternalOpenGLRenderWindow_h
-#define vtkExternalOpenGLRenderWindow_h
+#ifndef myvtkExternalOpenGLRenderWindow_h
+#define myvtkExternalOpenGLRenderWindow_h
 
 #include "vtkRenderingExternalModule.h" // For export macro
 #include "vtkGenericOpenGLRenderWindow.h"
 
-class VTKRENDERINGEXTERNAL_EXPORT vtkExternalOpenGLRenderWindow :
+#include <GL/gl.h>
+
+class VTKRENDERINGEXTERNAL_EXPORT myvtkExternalOpenGLRenderWindow :
   public vtkGenericOpenGLRenderWindow
 {
 public:
-  static vtkExternalOpenGLRenderWindow *New();
-  vtkTypeMacro(vtkExternalOpenGLRenderWindow, vtkGenericOpenGLRenderWindow);
+  static myvtkExternalOpenGLRenderWindow *New();
+  vtkTypeMacro(myvtkExternalOpenGLRenderWindow, vtkGenericOpenGLRenderWindow);
   void PrintSelf(ostream &os, vtkIndent indent);
 
   /**
@@ -72,7 +74,7 @@ public:
   //@{
   /**
    * Turn on/off a flag which enables/disables automatic positioning and
-   * resizing of the render window. By default, vtkExternalOpenGLRenderWindow
+   * resizing of the render window. By default, myvtkExternalOpenGLRenderWindow
    * queries the viewport position and size (glViewport) from the OpenGL state
    * and uses it to resize itself. However, in special circumstances this
    * feature is undesirable. One such circumstance may be to avoid performance
@@ -87,13 +89,13 @@ public:
   //@}
 
 protected:
-  vtkExternalOpenGLRenderWindow();
-  ~vtkExternalOpenGLRenderWindow();
+  myvtkExternalOpenGLRenderWindow();
+  ~myvtkExternalOpenGLRenderWindow();
 
   int AutomaticWindowPositionAndResize;
 
 private:
-  vtkExternalOpenGLRenderWindow(const vtkExternalOpenGLRenderWindow&) VTK_DELETE_FUNCTION;
-  void operator=(const vtkExternalOpenGLRenderWindow&) VTK_DELETE_FUNCTION;
+  myvtkExternalOpenGLRenderWindow(const myvtkExternalOpenGLRenderWindow&) VTK_DELETE_FUNCTION;
+  void operator=(const myvtkExternalOpenGLRenderWindow&) VTK_DELETE_FUNCTION;
 };
-#endif //vtkExternalOpenGLRenderWindow_h
+#endif //myvtkExternalOpenGLRenderWindow_h

@@ -36,6 +36,7 @@
 #include "scene/gui/label.h"
 #include "scene/main/timer.h"
 #include "scene/scene_string_names.h"
+#include "scene/3d/camera.h"
 
 #include "globals.h"
 
@@ -2205,6 +2206,23 @@ Viewport::Viewport() {
 
 
 }
+
+void Viewport::_camera_make_next_current(Camera* p_exclude) {
+
+	for(Set<Camera*>::Element *E=cameras.front();E;E=E->next()) {
+
+		if (p_exclude==E->get())
+			continue;
+		if (!E->get()->is_inside_tree())
+			continue;
+		if (camera!=NULL)
+			return;
+
+		E->get()->make_current();
+
+	}
+}
+
 
 
 Viewport::~Viewport() {

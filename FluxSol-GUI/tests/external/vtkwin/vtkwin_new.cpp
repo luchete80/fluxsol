@@ -214,8 +214,8 @@ HGLRC hRC;				/* opengl context */
     while(GetMessage(&msg, hwnd, 0, 0)) {
 
 	
-	//glEnable(GL_LIGHTING);
-	//glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
 	
 	glEnable(GL_DEPTH_TEST);
 

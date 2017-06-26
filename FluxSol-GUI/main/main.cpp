@@ -1384,9 +1384,26 @@ bool Main::iteration() {
 
 	int iters = 0;
 
+		while(time_accum>frame_slice) { //LUCIANO
+
+		uint64_t fixed_begin = OS::get_singleton()->get_ticks_usec();
+		if (OS::get_singleton()->get_main_loop()->iteration( frame_slice*time_scale )) {
+			exit=true;
+			break;
+		}
+
+		message_queue->flush();
+
+		time_accum-=frame_slice;
+		message_queue->flush();
+
+		fixed_process_max=MAX(OS::get_singleton()->get_ticks_usec()-fixed_begin,fixed_process_max);
+		iters++;
+	}
+
 	uint64_t idle_begin = OS::get_singleton()->get_ticks_usec();
 //
-    //OS::get_singleton()->get_main_loop()->idle( step*time_scale ); //CRASHING
+//    OS::get_singleton()->get_main_loop()->idle( step*time_scale ); //CRASHING
 	message_queue->flush();
 
 	VisualServer::get_singleton()->sync(); //sync if still drawing from previous frames.

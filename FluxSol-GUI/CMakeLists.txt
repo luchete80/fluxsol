@@ -114,7 +114,7 @@ $<TARGET_OBJECTS:coreos_>
 
 add_library(scene SHARED $<TARGET_OBJECTS:scene_> 
                          $<TARGET_OBJECTS:scene2d_>
-
+						 $<TARGET_OBJECTS:scene3d_>
 						 $<TARGET_OBJECTS:sceneio_>
 						  $<TARGET_OBJECTS:scenemain_>
 						  $<TARGET_OBJECTS:sceneresources_>

@@ -35,8 +35,7 @@
 #include <GL/glu.h>
 
 #include <vtkNew.h>
-#include <vtkLight.h>
-#include <vtkLightActor.h>
+
 
 
 LONG WINAPI
@@ -158,8 +157,8 @@ public:
   
   void Draw();
 private:
-  //vtkRenderWindow *renWin; //OLD
-  vtkExternalOpenGLRenderWindow *renWin; //NEW
+  vtkRenderWindow *renWin; //OLD
+  //vtkExternalOpenGLRenderWindow *renWin; //NEW
   ExternalVTKWidget *externalVTKWidget;
   
   vtkRenderer *renderer;
@@ -214,10 +213,10 @@ HGLRC hRC;				/* opengl context */
     while(GetMessage(&msg, hwnd, 0, 0)) {
 
 	
-	//glEnable(GL_LIGHTING);
-	//glEnable(GL_LIGHT0);
+	// glEnable(GL_LIGHTING);
+	// glEnable(GL_LIGHT0);
 	
-	glEnable(GL_DEPTH_TEST);
+	// glEnable(GL_DEPTH_TEST);
 
   // // // Buffers being managed by external application i.e. GLUT in this case.
    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
@@ -253,9 +252,9 @@ HGLRC hRC;				/* opengl context */
 //LUCIANO
 void myVTKApp::Draw()
 {
-	//this->iren->Render();
+	this->iren->Render();
 	//this->renWin->Render();
-	externalVTKWidget->GetRenderWindow()->Render();
+	//externalVTKWidget->GetRenderWindow()->Render();
 }
 
 myVTKApp::myVTKApp(HWND hwnd)
@@ -265,19 +264,19 @@ myVTKApp::myVTKApp(HWND hwnd)
   
 	
   renderer = vtkRenderer::New(); 
-  this->renWin=vtkExternalOpenGLRenderWindow::New(); //NEW
+  //this->renWin=vtkExternalOpenGLRenderWindow::New(); //NEW
   
   //this->renWin=vtkRenderWindow::New(); //OLD
   externalVTKWidget=ExternalVTKWidget::New();
   
   //New One
-  this->renderer=this->externalVTKWidget->AddRenderer();
-  this->externalVTKWidget->SetRenderWindow(this->renWin);
+  // this->renderer=this->externalVTKWidget->AddRenderer();
+  // this->externalVTKWidget->SetRenderWindow(this->renWin);
   
   ////OLD ONE
-  // this->renWin = vtkRenderWindow::New();
-  // this->renWin->AddRenderer(this->renderer);
-  // renWin->InitializeFromCurrentContext();
+  this->renWin = vtkRenderWindow::New();
+  this->renWin->AddRenderer(this->renderer);
+  renWin->InitializeFromCurrentContext();
 
   renWin->SetSize(200,200);
   // setup the parent window
@@ -291,7 +290,7 @@ myVTKApp::myVTKApp(HWND hwnd)
   this->cone->SetRadius( 1.0 );
   this->cone->SetResolution( 8 );
   
-  renWin->SetOffScreenRendering(1);
+  //renWin->SetOffScreenRendering(1);
   
    vtkSmartPointer<vtkTransform> transform = 
     vtkSmartPointer<vtkTransform>::New();
@@ -316,27 +315,6 @@ myVTKApp::myVTKApp(HWND hwnd)
    coneActor->GetProperty()->LightingOn();
    coneActor->GetProperty()->ShadingOn();
    coneActor->GetProperty()->SetInterpolationToFlat();
-   
-   
-     double lightPosition[3] = {0, 0, 1};
-  // Create a light
-  double lightFocalPoint[3] = {0,0,0};
-  
-  vtkSmartPointer<vtkLight> light = vtkSmartPointer<vtkLight>::New();
-  light->SetLightTypeToSceneLight();
-  light->SetPosition(lightPosition[0], lightPosition[1], lightPosition[2]);
-  light->SetPositional(true); // required for vtkLightActor below
-  light->SetConeAngle(10);
-  light->SetFocalPoint(lightFocalPoint[0], lightFocalPoint[1], lightFocalPoint[2]);
-  light->SetDiffuseColor(1,0,0);
-  light->SetAmbientColor(0,1,0);
-  light->SetSpecularColor(0,0,1);
-   //vtkLightCollection* originalLights = renderer->GetLights();
-  //PRINT_LINE("Originally there are " << originalLights->GetNumberOfItems() << " lights." << std::endl;
-  vtkSmartPointer<vtkLightActor> lightActor = vtkSmartPointer<vtkLightActor>::New();
-  lightActor->SetLight(light);
-  renderer->AddViewProp(lightActor);
-  
 
   this->renderer->AddActor(this->coneActor);
   this->renderer->SetBackground(0.9,0.9,0.3);

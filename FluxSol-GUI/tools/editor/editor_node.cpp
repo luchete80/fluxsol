@@ -1969,12 +1969,12 @@ void EditorNode::_menu_option_confirm(int p_option,bool p_confirmed) {
         file->set_mode(EditorFileDialog::MODE_OPEN_FILE);
 			//not for now?
 			List<String> extensions;
-//			ResourceLoader::get_recognized_extensions_for_type("PackedScene",&extensions);
-//			file->clear_filters();
-//			for(int i=0;i<extensions.size();i++) {
-//
-//				file->add_filter("*."+extensions[i]+" ; "+extensions[i].to_upper());
-//			}
+			ResourceLoader::get_recognized_extensions_for_type("PackedScene",&extensions);
+			file->clear_filters();
+			for(int i=0;i<extensions.size();i++) {
+
+				file->add_filter("*."+extensions[i]+" ; "+extensions[i].to_upper());
+			}
 
 		}
 		case SCENE_TAB_CLOSE: {
@@ -4720,8 +4720,8 @@ EditorNode::EditorNode() {
 	gui_base->set_theme( theme );
 
 	//LUCIANO TOMODIFY
-	//editor_register_icons(theme);
-	//editor_register_fonts(theme);
+	editor_register_icons(theme);
+	editor_register_fonts(theme);
 
 	//theme->set_icon("folder","EditorFileDialog",Theme::get_default()->get_icon("folder","EditorFileDialog"));
 	//theme->set_color("files_disabled","EditorFileDialog",Color(0,0,0,0.7));

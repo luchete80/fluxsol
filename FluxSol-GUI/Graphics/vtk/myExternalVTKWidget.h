@@ -20,8 +20,8 @@
 #ifndef __ExternalVTKWidget_h
 #define __ExternalVTKWidget_h
 
-#include "vtkExternalOpenGLRenderer.h"
-#include "vtkExternalOpenGLRenderWindow.h"
+#include "myvtkExternalOpenGLRenderer.h"
+#include "myvtkExternalOpenGLRenderWindow.h"
 #include "vtkObject.h"
 #include "vtkRenderingExternalModule.h" // For export macro
 
@@ -35,10 +35,10 @@ public:
 
   // Set/Get an external render window for the ExternalVTKWidget.
   // Since this is a special environment, the methods are limited to use
-  // vtkExternalOpenGLRenderWindow only.
-  // \sa vtkExternalOpenGLRenderWindow
-  vtkExternalOpenGLRenderWindow* GetRenderWindow(void);
-  void SetRenderWindow(vtkExternalOpenGLRenderWindow* renWin);
+  // myvtkExternalOpenGLRenderWindow only.
+  // \sa myvtkExternalOpenGLRenderWindow
+  myvtkExternalOpenGLRenderWindow* GetRenderWindow(void);
+  void SetRenderWindow(myvtkExternalOpenGLRenderWindow* renWin);
 
   // Creates a new renderer and adds it to the render window.
   // Returns a handle to the created renderer.
@@ -51,7 +51,7 @@ protected:
   ExternalVTKWidget();
   ~ExternalVTKWidget();
 
-  vtkExternalOpenGLRenderWindow* RenderWindow;
+  myvtkExternalOpenGLRenderWindow* RenderWindow;
 
 private:
   ExternalVTKWidget(const ExternalVTKWidget&) VTK_DELETE_FUNCTION;
