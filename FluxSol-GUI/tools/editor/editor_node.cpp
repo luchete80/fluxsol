@@ -1875,21 +1875,12 @@ void EditorNode::_menu_option_confirm(int p_option,bool p_confirmed) {
 	switch( p_option ) {
 		case FILE_NEW_SCENE: {
 
-			/*
-			if (!p_confirmed) {
-				confirmation->get_ok()->set_text("Yes");
-				//confirmation->get_cancel()->show();
-				confirmation->set_text("Start a New Scene? (Current will be lost)");
-				confirmation->popup_centered_minsize();
-				break;
-			}*/
-
-
-			int idx = editor_data.add_edited_scene(-1);
-			_scene_tab_changed(idx);
-			editor_data.clear_editor_states();
-
-			//_cleanup_scene();
+		//LUCIANO
+//			int idx = editor_data.add_edited_scene(-1);
+//			_scene_tab_changed(idx);
+//			editor_data.clear_editor_states();
+//
+//			//_cleanup_scene();
 
 
 		} break;
@@ -1899,13 +1890,13 @@ void EditorNode::_menu_option_confirm(int p_option,bool p_confirmed) {
 			//print_tree();
 			file->set_mode(EditorFileDialog::MODE_OPEN_FILE);
 			//not for now?
-			List<String> extensions;
-			ResourceLoader::get_recognized_extensions_for_type("PackedScene",&extensions);
-			file->clear_filters();
-			for(int i=0;i<extensions.size();i++) {
-
-				file->add_filter("*."+extensions[i]+" ; "+extensions[i].to_upper());
-			}
+//			List<String> extensions;
+//			ResourceLoader::get_recognized_extensions_for_type("PackedScene",&extensions);
+//			file->clear_filters();
+//			for(int i=0;i<extensions.size();i++) {
+//
+//				file->add_filter("*."+extensions[i]+" ; "+extensions[i].to_upper());
+//			}
 
 
 			//file->set_current_path(current_path);
@@ -1968,13 +1959,13 @@ void EditorNode::_menu_option_confirm(int p_option,bool p_confirmed) {
 		case FILE_IMPORT_MESH: {
         file->set_mode(EditorFileDialog::MODE_OPEN_FILE);
 			//not for now?
-			List<String> extensions;
-			ResourceLoader::get_recognized_extensions_for_type("PackedScene",&extensions);
-			file->clear_filters();
-			for(int i=0;i<extensions.size();i++) {
-
-				file->add_filter("*."+extensions[i]+" ; "+extensions[i].to_upper());
-			}
+//			List<String> extensions;
+//			ResourceLoader::get_recognized_extensions_for_type("PackedScene",&extensions);
+//			file->clear_filters();
+//			for(int i=0;i<extensions.size();i++) {
+//
+//				file->add_filter("*."+extensions[i]+" ; "+extensions[i].to_upper());
+//			}
 
 		}
 		case SCENE_TAB_CLOSE: {
@@ -5554,25 +5545,6 @@ EditorNode::EditorNode() {
 	set_process(true);
 	OS::get_singleton()->set_low_processor_usage_mode(true);
 
-
-	if (0) { //not sure if i want this to happen after all
-
-		//store project name in ssettings
-		String project_name;
-		//figure it out from path
-		project_name=Globals::get_singleton()->get_resource_path().replace("\\","/");
-		print_line("path: "+project_name);
-		if (project_name.length() && project_name[project_name.length()-1]=='/')
-			project_name=project_name.substr(0,project_name.length()-1);
-
-		project_name=project_name.replace("/","::");
-
-		if (project_name!="") {
-			EditorSettings::get_singleton()->set("projects/"+project_name,Globals::get_singleton()->get_resource_path());
-			EditorSettings::get_singleton()->raise_order("projects/"+project_name);
-			EditorSettings::get_singleton()->save();
-		}
-	}
 
 
 	//edited_scene=NULL;
