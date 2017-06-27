@@ -149,41 +149,6 @@ bool EditorFileSystemDirectory::is_missing_sources(int p_idx) const {
 	return false;
 }
 
-bool EditorFileSystemDirectory::have_sources_changed(int p_idx) const {
-
-	ERR_FAIL_INDEX_V(p_idx,files.size(),false);
-	return files[p_idx]->meta.sources_changed;
-
-}
-
-int EditorFileSystemDirectory::get_source_count(int p_idx) const {
-
-	ERR_FAIL_INDEX_V(p_idx,files.size(),0);
-	if (!files[p_idx]->meta.enabled)
-		return 0;
-
-}
-String EditorFileSystemDirectory::get_source_file(int p_idx,int p_source) const {
-
-	ERR_FAIL_INDEX_V(p_idx,files.size(),String());
-	ERR_FAIL_INDEX_V(p_source,files[p_idx]->meta.sources.size(),String());
-	if (!files[p_idx]->meta.enabled)
-		return String();
-
-	return files[p_idx]->meta.sources[p_source].path;
-
-}
-bool EditorFileSystemDirectory::is_source_file_missing(int p_idx,int p_source) const {
-
-	ERR_FAIL_INDEX_V(p_idx,files.size(),false);
-	ERR_FAIL_INDEX_V(p_source,files[p_idx]->meta.sources.size(),false);
-	if (!files[p_idx]->meta.enabled)
-		return false;
-
-	return files[p_idx]->meta.sources[p_source].missing;
-}
-
-
 StringName EditorFileSystemDirectory::get_file_type(int p_idx) const {
 
 	ERR_FAIL_INDEX_V(p_idx,files.size(),"");
@@ -245,11 +210,8 @@ EditorFileSystemDirectory::ImportMeta EditorFileSystem::_get_meta(const String& 
 	EditorFileSystemDirectory::ImportMeta m;
 	if (imd.is_null()) {
 		m.enabled=false;
-		m.sources_changed=false;
 	} else {
 		m.enabled=true;
-		m.sources_changed=false;
-
 		for(int i=0;i<imd->get_source_count();i++) {
 			EditorFileSystemDirectory::ImportMeta::Source s;
 			s.path=imd->get_source_path(i);
@@ -621,33 +583,42 @@ void EditorFileSystem::_scan_new_dir(EditorFileSystemDirectory *p_dir,DirAccess 
 	int total = dirs.size()+files.size();
 	int idx=0;
 
+
 	for (List<String>::Element *E=dirs.front();E;E=E->next(),idx++) {
 
 		if (da->change_dir(E->get())==OK) {
 
-			EditorFileSystemDirectory *efd = memnew( EditorFileSystemDirectory );
+			String d = da->get_current_dir();
 
-			efd->parent=p_dir;
-			efd->name=E->get();
-
-			_scan_new_dir(efd,da,p_progress.get_sub(idx,total));
-
-			int idx=0;
-			for(int i=0;i<p_dir->subdirs.size();i++) {
-
-				if (efd->name<p_dir->subdirs[i]->name)
-					break;
-				idx++;
-			}
-			if (idx==p_dir->subdirs.size()) {
-				p_dir->subdirs.push_back(efd);
+			if (d==cd || !d.begins_with(cd)) {
+				da->change_dir(cd); //avoid recursion
 			} else {
-				p_dir->subdirs.insert(idx,efd);
-			}
 
-			da->change_dir("..");
+
+				EditorFileSystemDirectory *efd = memnew( EditorFileSystemDirectory );
+
+				efd->parent=p_dir;
+				efd->name=E->get();
+
+				_scan_new_dir(efd,da,p_progress.get_sub(idx,total));
+
+				int idx=0;
+				for(int i=0;i<p_dir->subdirs.size();i++) {
+
+					if (efd->name<p_dir->subdirs[i]->name)
+						break;
+					idx++;
+				}
+				if (idx==p_dir->subdirs.size()) {
+					p_dir->subdirs.push_back(efd);
+				} else {
+					p_dir->subdirs.insert(idx,efd);
+				}
+
+				da->change_dir("..");
+			}
 		} else {
-			ERR_PRINTS(TTR("Cannot go into subdir:")+" "+E->get());
+			ERR_PRINTS("Can't go into subdir: "+E->get());
 		}
 
 		p_progress.update(idx,total);
@@ -687,13 +658,7 @@ void EditorFileSystem::_scan_new_dir(EditorFileSystemDirectory *p_dir,DirAccess 
 				ia.dir=p_dir;
 				ia.file=E->get();
 				scan_actions.push_back(ia);
-				fi->meta.sources_changed=true;
-			} else {
-				fi->meta.sources_changed=false;
 			}
-
-		} else {
-			fi->meta.sources_changed=true;
 		}
 
 		p_dir->files.push_back(fi);
@@ -808,9 +773,6 @@ void EditorFileSystem::_scan_fs_changes(EditorFileSystemDirectory *p_dir,const S
 						ia.dir=p_dir;
 						ia.file=f;
 						scan_actions.push_back(ia);
-						fi->meta.sources_changed=true;
-					} else {
-						fi->meta.sources_changed=false;
 					}
 
 				} else {
@@ -821,11 +783,9 @@ void EditorFileSystem::_scan_fs_changes(EditorFileSystemDirectory *p_dir,const S
 			}
 
 		}
+
 		da->list_dir_end();
 		memdelete(da);
-
-
-
 
 	}
 
@@ -847,9 +807,6 @@ void EditorFileSystem::_scan_fs_changes(EditorFileSystemDirectory *p_dir,const S
 			ia.dir=p_dir;
 			ia.file=p_dir->files[i]->file;
 			scan_actions.push_back(ia);
-			p_dir->files[i]->meta.sources_changed=true;
-		} else {
-			p_dir->files[i]->meta.sources_changed=false;
 		}
 	}
 
@@ -873,7 +830,7 @@ void EditorFileSystem::_thread_func_sources(void *_userdata) {
 
 	EditorFileSystem *efs = (EditorFileSystem*)_userdata;
 	if (efs->filesystem) {
-		EditorProgressBG pr("sources",TTR("ScanSources"),1000);
+		EditorProgressBG pr("sources","ScanSources",1000);
 		ScanProgress sp;
 		sp.progress=&pr;
 		sp.hi=1;
@@ -901,7 +858,7 @@ void EditorFileSystem::scan_sources() {
 
 	if (!use_threads) {
 		if (filesystem) {
-			EditorProgressBG pr("sources",TTR("ScanSources"),1000);
+			EditorProgressBG pr("sources","ScanSources",1000);
 			ScanProgress sp;
 			sp.progress=&pr;
 			sp.hi=1;
@@ -950,7 +907,7 @@ void EditorFileSystem::_notification(int p_what) {
 				Thread::wait_to_finish(thread);
 				memdelete(thread);
 				thread=NULL;
-				WARN_PRINTS("Scan thread aborted...");
+				WARN_PRINT("Scan thread aborted...");
 				set_process(false);
 
 			}
@@ -1161,25 +1118,6 @@ String EditorFileSystem::get_file_type(const String& p_file) const {
 
     return fs->files[cpos]->type;
 
-}
-
-EditorFileSystemDirectory* EditorFileSystem::find_file(const String& p_file,int* r_index) const {
-
-	if (!filesystem || scanning)
-	    return NULL;
-
-	EditorFileSystemDirectory *fs=NULL;
-	int cpos=-1;
-	if (!_find_file(p_file,&fs,cpos)) {
-
-	    return NULL;
-	}
-
-
-	if (r_index)
-		*r_index=cpos;
-
-	return fs;
 }
 
 

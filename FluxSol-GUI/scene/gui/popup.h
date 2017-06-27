@@ -29,7 +29,7 @@
 #ifndef POPUP_H
 #define POPUP_H
 
-#include "./scene/gui/control.h"
+#include "scene/gui/control.h"
 
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
@@ -65,7 +65,6 @@ public:
 	void set_as_minsize();
 	virtual void popup();
 
-	virtual String get_configuration_warning() const;
 
 	Popup();
 	~Popup();

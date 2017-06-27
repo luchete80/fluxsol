@@ -286,7 +286,11 @@ void Node::move_child(Node *p_child,int p_pos) {
 	ERR_FAIL_INDEX( p_pos, data.children.size()+1 );
 	ERR_EXPLAIN("child is not a child of this node.");
 	ERR_FAIL_COND(p_child->data.parent!=this);
-	ERR_FAIL_COND(data.blocked>0);
+	if (data.blocked>0) {
+		ERR_EXPLAIN("Parent node is busy setting up children, move_child() failed. Consider using call_deferred(\"move_child\") instead (or \"popup\" if this is from a popup).");
+		ERR_FAIL_COND(data.blocked>0);
+	}
+
 
 	data.children.remove( p_child->data.pos );
 	data.children.insert( p_pos, p_child );
@@ -739,6 +743,12 @@ void Node::add_child(Node *p_child, bool p_legible_unique_name) {
 	}
 	ERR_EXPLAIN("Can't add child, already has a parent");
 	ERR_FAIL_COND( p_child->data.parent );
+
+	if (data.blocked>0) {
+		ERR_EXPLAIN("Parent node is busy setting up children, add_node() failed. Consider using call_deferred(\"add_child\",child) instead.");
+		ERR_FAIL_COND(data.blocked>0);
+	}
+
 	ERR_EXPLAIN("Can't add child while a notification is happening");
 	ERR_FAIL_COND( data.blocked > 0 );
 
@@ -747,16 +757,6 @@ void Node::add_child(Node *p_child, bool p_legible_unique_name) {
 
 	_add_child_nocheck(p_child,p_child->data.name);
 
-}
-
-void Node::add_child_below_node(Node *p_node, Node *p_child, bool p_legible_unique_name) {
-	add_child(p_child, p_legible_unique_name);
-
-	if (is_a_parent_of(p_node)) {
-		move_child(p_child, p_node->get_position_in_parent() + 1);
-	} else {
-		WARN_PRINTS("Cannot move under node " + p_node->get_name() + " as " + p_child->get_name() + " does not share a parent")
-	}
 }
 
 
@@ -800,7 +800,10 @@ void Node::_propagate_validate_owner() {
 void Node::remove_child(Node *p_child) {
 
 	ERR_FAIL_NULL(p_child);
-	ERR_FAIL_COND( data.blocked > 0 );
+	if (data.blocked>0) {
+		ERR_EXPLAIN("Parent node is busy setting up children, remove_node() failed. Consider using call_deferred(\"remove_child\",child) instead.");
+		ERR_FAIL_COND(data.blocked>0);
+	}
 
 	int idx=-1;
 	for (int i=0;i<data.children.size();i++) {
@@ -1485,7 +1488,7 @@ int Node::get_position_in_parent() const {
 
 
 
-Node *Node::duplicate(bool p_use_instancing) const {
+Node *Node::_duplicate(bool p_use_instancing) const {
 
 
 	Node *node=NULL;
@@ -1503,8 +1506,7 @@ Node *Node::duplicate(bool p_use_instancing) const {
 
 		Ref<PackedScene> res = ResourceLoader::load(get_filename());
 		ERR_FAIL_COND_V(res.is_null(),NULL);
-// LUCIANO
-//		node=res->instance();
+		node=res->instance();
 		ERR_FAIL_COND_V(!node,NULL);
 
 		instanced=true;
@@ -1565,7 +1567,19 @@ Node *Node::duplicate(bool p_use_instancing) const {
 		node->add_child(dup);
 	}
 
+
 	return node;
+}
+
+Node *Node::duplicate(bool p_use_instancing) const {
+
+	Node* dupe = _duplicate(p_use_instancing);
+
+	if (dupe) {
+		_duplicate_signals(this,dupe);
+	}
+
+	return dupe;
 }
 
 
@@ -1580,8 +1594,7 @@ void Node::_duplicate_and_reown(Node* p_new_parent, const Map<Node*,Node*>& p_re
 
 		Ref<PackedScene> res = ResourceLoader::load(get_filename());
 		ERR_FAIL_COND(res.is_null());
-		//LUCIANO
-//		node=res->instance();
+		node=res->instance();
 		ERR_FAIL_COND(!node);
 	} else {
 
@@ -1638,11 +1651,12 @@ void Node::_duplicate_and_reown(Node* p_new_parent, const Map<Node*,Node*>& p_re
 
 void Node::_duplicate_signals(const Node* p_original,Node* p_copy) const {
 
-	if (this!=p_original && get_owner()!=p_original)
+	if (this!=p_original && (get_owner()!=p_original && get_owner()!=p_original->get_owner()))
 		return;
 
 	List<Connection> conns;
 	get_all_signal_connections(&conns);
+
 
 	for (List<Connection>::Element *E=conns.front();E;E=E->next()) {
 
@@ -1652,14 +1666,17 @@ void Node::_duplicate_signals(const Node* p_original,Node* p_copy) const {
 			Node *copy = p_copy->get_node(p);
 
 			Node *target = E->get().target->cast_to<Node>();
-			if (!target)
+			if (!target) {
 				continue;
+			}
 			NodePath ptarget = p_original->get_path_to(target);
 			Node *copytarget = p_copy->get_node(ptarget);
+
 
 			if (copy && copytarget) {
 				copy->connect(E->get().signal,copytarget,E->get().method,E->get().binds,CONNECT_PERSIST);
 			}
+
 		}
 	}
 
@@ -1977,7 +1994,7 @@ Array Node::_get_children() const {
 	return arr;
 }
 
-//#ifdef TOOLS_ENABLED
+#ifdef TOOLS_ENABLED
 void Node::set_import_path(const NodePath& p_import_path) {
 
 
@@ -1989,7 +2006,7 @@ NodePath Node::get_import_path() const {
 	return data.import_path;
 }
 
-//#endif
+#endif
 
 static void _add_nodes_to_options(const Node *p_base,const Node *p_node,List<String>*r_options) {
 
@@ -2022,26 +2039,7 @@ void Node::clear_internal_tree_resource_paths() {
 
 }
 
-String Node::get_configuration_warning() const {
-
-	return String();
-}
-
-void Node::update_configuration_warning() {
-
-//#ifdef TOOLS_ENABLED
-	if (!is_inside_tree())
-		return;
-	if (get_tree()->get_edited_scene_root() && (get_tree()->get_edited_scene_root()==this || get_tree()->get_edited_scene_root()->is_a_parent_of(this))) {
-		get_tree()->emit_signal(SceneStringNames::get_singleton()->node_configuration_warning_changed,this);
-	}
-//#endif
-
-}
-
 void Node::_bind_methods() {
-
-	ObjectTypeDB::bind_method(_MD("_add_child_below_node","node:Node","child_node:Node","legible_unique_name"),&Node::add_child_below_node,DEFVAL(false));
 
 	ObjectTypeDB::bind_method(_MD("set_name","name"),&Node::set_name);
 	ObjectTypeDB::bind_method(_MD("get_name"),&Node::get_name);
@@ -2107,16 +2105,12 @@ void Node::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("get_viewport"),&Node::get_viewport);
 
 	ObjectTypeDB::bind_method(_MD("queue_free"),&Node::queue_delete);
-
-
-
-
-//#ifdef TOOLS_ENABLED
+#ifdef TOOLS_ENABLED
 	ObjectTypeDB::bind_method(_MD("_set_import_path","import_path"),&Node::set_import_path);
 	ObjectTypeDB::bind_method(_MD("_get_import_path"),&Node::get_import_path);
 	ADD_PROPERTYNZ( PropertyInfo(Variant::NODE_PATH,"_import_path",PROPERTY_HINT_NONE,"",PROPERTY_USAGE_NOEDITOR),_SCS("_set_import_path"),_SCS("_get_import_path"));
 
-//#endif
+#endif
 
 	BIND_CONSTANT( NOTIFICATION_ENTER_TREE );
 	BIND_CONSTANT( NOTIFICATION_EXIT_TREE );
@@ -2130,8 +2124,6 @@ void Node::_bind_methods() {
 	BIND_CONSTANT( NOTIFICATION_PAUSED );
 	BIND_CONSTANT( NOTIFICATION_UNPAUSED );
 	BIND_CONSTANT( NOTIFICATION_INSTANCED );
-	BIND_CONSTANT( NOTIFICATION_DRAG_BEGIN );
-	BIND_CONSTANT( NOTIFICATION_DRAG_END );
 
 
 

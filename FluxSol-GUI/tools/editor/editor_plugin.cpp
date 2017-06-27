@@ -28,6 +28,7 @@
 /*************************************************************************/
 #include "editor_plugin.h"
 #include "plugins/canvas_item_editor_plugin.h"
+//#include "plugins/spatial_editor_plugin.h"
 
 void EditorPlugin::add_custom_type(const String& p_type, const String& p_base,const Ref<Script>& p_script, const Ref<Texture>& p_icon) {
 
@@ -50,35 +51,35 @@ void EditorPlugin::add_custom_control(CustomControlContainer p_location,Control 
 			EditorNode::get_menu_hb()->add_child(p_control);
 		} break;
 		case CONTAINER_SPATIAL_EDITOR_MENU: {
-
+			//LUCIANO, TODO: REMOVE
 			//SpatialEditor::get_singleton()->add_control_to_menu_panel(p_control);
 
 		} break;
 		case CONTAINER_SPATIAL_EDITOR_SIDE: {
-
-			//SpatialEditor::get_singleton()->get_palette_split()->add_child(p_control);
-			//SpatialEditor::get_singleton()->get_palette_split()->move_child(p_control,0);
+		//LUCIANO, TODO: REMOVE
+			// SpatialEditor::get_singleton()->get_palette_split()->add_child(p_control);
+			// SpatialEditor::get_singleton()->get_palette_split()->move_child(p_control,0);
 
 		} break;
 		case CONTAINER_SPATIAL_EDITOR_BOTTOM: {
-
+//LUCIANO, TODO: REMOVE
 			//SpatialEditor::get_singleton()->get_shader_split()->add_child(p_control);
 
 		} break;
 		case CONTAINER_CANVAS_EDITOR_MENU: {
 
-			//CanvasItemEditor::get_singleton()->add_control_to_menu_panel(p_control);
+			CanvasItemEditor::get_singleton()->add_control_to_menu_panel(p_control);
 
 		} break;
 		case CONTAINER_CANVAS_EDITOR_SIDE: {
 
-			//CanvasItemEditor::get_singleton()->get_palette_split()->add_child(p_control);
-			//CanvasItemEditor::get_singleton()->get_palette_split()->move_child(p_control,0);
+			CanvasItemEditor::get_singleton()->get_palette_split()->add_child(p_control);
+			CanvasItemEditor::get_singleton()->get_palette_split()->move_child(p_control,0);
 
 		} break;
 		case CONTAINER_CANVAS_EDITOR_BOTTOM: {
 
-			//CanvasItemEditor::get_singleton()->get_bottom_split()->add_child(p_control);
+			CanvasItemEditor::get_singleton()->get_bottom_split()->add_child(p_control);
 
 		} break;
 

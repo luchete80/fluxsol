@@ -1956,18 +1956,18 @@ void EditorNode::_menu_option_confirm(int p_option,bool p_confirmed) {
 
 		} break;
 
-		case FILE_IMPORT_MESH: {
-        file->set_mode(EditorFileDialog::MODE_OPEN_FILE);
-			//not for now?
-//			List<String> extensions;
-//			ResourceLoader::get_recognized_extensions_for_type("PackedScene",&extensions);
-//			file->clear_filters();
-//			for(int i=0;i<extensions.size();i++) {
-//
-//				file->add_filter("*."+extensions[i]+" ; "+extensions[i].to_upper());
-//			}
+		// case FILE_IMPORT_MESH: {
+        // file->set_mode(EditorFileDialog::MODE_OPEN_FILE);
+			// //not for now?
+// //			List<String> extensions;
+// //			ResourceLoader::get_recognized_extensions_for_type("PackedScene",&extensions);
+// //			file->clear_filters();
+// //			for(int i=0;i<extensions.size();i++) {
+// //
+// //				file->add_filter("*."+extensions[i]+" ; "+extensions[i].to_upper());
+// //			}
 
-		}
+		// } break;
 		case SCENE_TAB_CLOSE: {
 			_remove_scene(tab_closing);
 			_update_scene_tabs();
@@ -4979,7 +4979,7 @@ EditorNode::EditorNode() {
 	p->add_separator();
 	p->add_item("Close Scene",FILE_CLOSE,KEY_MASK_SHIFT+KEY_MASK_CTRL+KEY_W);
 	p->add_separator();
-	p->add_item("Import Mesh..",FILE_IMPORT_MESH,KEY_MASK_SHIFT+KEY_MASK_CMD+KEY_P);
+	//p->add_item("Import Mesh..",FILE_IMPORT_MESH,KEY_MASK_SHIFT+KEY_MASK_CMD+KEY_P);
 	p->add_item("Close Goto Prev. Scene",FILE_OPEN_PREV,KEY_MASK_SHIFT+KEY_MASK_CMD+KEY_P);
 	p->add_submenu_item("Open Recent","RecentScenes",FILE_OPEN_RECENT);
 	p->add_separator();

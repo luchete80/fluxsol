@@ -12,24 +12,24 @@
 #include "register_driver_types.h"
 
 #include "png/image_loader_png.h"
-#include "webp/image_loader_webp.h"
+//#include "webp/image_loader_webp.h"
 #include "png/resource_saver_png.h"
 #include "jpegd/image_loader_jpegd.h"
-#include "dds/texture_loader_dds.h"
-#include "pvr/texture_loader_pvr.h"
-#include "etc1/image_etc.h"
+//#include "dds/texture_loader_dds.h"
+//#include "pvr/texture_loader_pvr.h"
+//#include "etc1/image_etc.h"
 //#include "chibi/event_stream_chibi.h"
-#include "pnm/bitmap_loader_pnm.h"
+//#include "pnm/bitmap_loader_pnm.h"
 
 #define PNG_ENABLED //LUCIANO
 #define TOOLS_ENABLED //LUCIANO
 
 #ifdef TOOLS_ENABLED
-#include "squish/image_compress_squish.h"
+//#include "squish/image_compress_squish.h"
 #endif
 
 #ifdef TOOLS_ENABLED
-#include "convex_decomp/b2d_decompose.h"
+//#include "convex_decomp/b2d_decompose.h"
 #endif
 
 #ifdef TOOLS_ENABLED

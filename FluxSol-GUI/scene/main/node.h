@@ -84,9 +84,9 @@ private:
 		StringName name;
 		SceneTree *tree;
 		bool inside_tree;
-//#ifdef TOOLS_ENABLED
+#ifdef TOOLS_ENABLED
 		NodePath import_path; //path used when imported, used by scene editors to keep tracking
-//#endif
+#endif
 
 		Viewport *viewport;
 
@@ -136,6 +136,8 @@ private:
 
 	void _duplicate_signals(const Node* p_original,Node* p_copy) const;
 	void _duplicate_and_reown(Node* p_new_parent, const Map<Node*,Node*>& p_reown_map) const;
+	Node *_duplicate(bool p_use_instancing) const;
+
 	Array _get_children() const;
 	Array _get_groups() const;
 
@@ -180,8 +182,6 @@ public:
 		NOTIFICATION_PARENTED=18,
 		NOTIFICATION_UNPARENTED=19,
 		NOTIFICATION_INSTANCED=20,
-		NOTIFICATION_DRAG_BEGIN=21,
-		NOTIFICATION_DRAG_END=22,
 	};
 
 	/* NODE/TREE */
@@ -190,7 +190,6 @@ public:
 	void set_name(const String& p_name);
 
 	void add_child(Node *p_child,bool p_legible_unique_name=false);
-	void add_child_below_node(Node *p_node, Node *p_child, bool p_legible_unique_name=false);
 	void remove_child(Node *p_child);
 
 	int get_child_count() const;
@@ -306,20 +305,16 @@ public:
 
 	void force_parent_owned() { data.parent_owned=true; } //hack to avoid duplicate nodes
 
-//#ifdef TOOLS_ENABLED
+#ifdef TOOLS_ENABLED
 	void set_import_path(const NodePath& p_import_path); //path used when imported, used by scene editors to keep tracking
 	NodePath get_import_path() const;
-//#endif
+#endif
 
 	void get_argument_options(const StringName& p_function,int p_idx,List<String>*r_options) const;
 
 	void clear_internal_tree_resource_paths();
 
 	_FORCE_INLINE_ Viewport *get_viewport() const { return data.viewport; }
-
-	virtual String get_configuration_warning() const;
-
-	void update_configuration_warning();
 
 	/* CANVAS */
 

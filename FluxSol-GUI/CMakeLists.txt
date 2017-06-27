@@ -22,33 +22,9 @@ ENDIF()
 
 
 #DIRECTORIES
-set (GODOTGUI_SRC_DIR "D:/Luciano/Libs/GodotGUI")
-set (GODOTGUI_BIN_DIR "$ENV{GODOTGUI_BIN_DIR}")
 set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
 
 link_directories ("${GODOTGUI_BIN_DIR}")
-
-
-#GODOTGUI
-include_directories("${GODOTGUI_SRC_DIR}")
-include_directories("${GODOTGUI_SRC_DIR}/core")
-include_directories("${GODOTGUI_SRC_DIR}/core/math")
-include_directories("${GODOTGUI_SRC_DIR}/core/io")
-include_directories("${GODOTGUI_SRC_DIR}/core/os")
-include_directories("${GODOTGUI_SRC_DIR}/drivers")
-include_directories("${GODOTGUI_SRC_DIR}/drivers/freetype")
-include_directories("${GODOTGUI_SRC_DIR}/drivers/freetype/freetype/include")
-include_directories("${GODOTGUI_SRC_DIR}/drivers/png")
-include_directories("${GODOTGUI_SRC_DIR}/drivers/windows")
-include_directories("${GODOTGUI_SRC_DIR}/tools/editor")
-include_directories("${GODOTGUI_SRC_DIR}/tools/editor/plugins")
-include_directories("${GODOTGUI_SRC_DIR}/tools/editor/io_plugins")
-include_directories("${GODOTGUI_SRC_DIR}/scene/2d")
-include_directories("${GODOTGUI_SRC_DIR}/scene/gui")
-include_directories("${GODOTGUI_SRC_DIR}/platform/windows")
-include_directories("${GODOTGUI_SRC_DIR}/servers")
-include_directories("${GODOTGUI_SRC_DIR}/servers/physics_2d")
-include_directories("${GODOTGUI_SRC_DIR}/servers/visual")
 
 
 #FLUXSOL
@@ -63,6 +39,7 @@ include_directories("${PROJECT_SOURCE_DIR}/drivers/freetype")
 include_directories("${PROJECT_SOURCE_DIR}/drivers/freetype/freetype/include")
 include_directories("${PROJECT_SOURCE_DIR}/drivers/png")
 include_directories("${PROJECT_SOURCE_DIR}/drivers/windows")
+include_directories("${PROJECT_SOURCE_DIR}/scene/2d")
 include_directories("${PROJECT_SOURCE_DIR}/scene/gui")
 include_directories("${PROJECT_SOURCE_DIR}/main")
 include_directories("${PROJECT_SOURCE_DIR}/platform/windows")

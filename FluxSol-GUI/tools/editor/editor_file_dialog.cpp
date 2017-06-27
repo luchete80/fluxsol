@@ -7,7 +7,7 @@
 #include "editor_settings.h"
 #include "scene/gui/margin_container.h"
 #include "os/file_access.h"
-#include "editor_scale.h"
+
 EditorFileDialog::GetIconFunc EditorFileDialog::get_icon_func=NULL;
 EditorFileDialog::GetIconFunc EditorFileDialog::get_large_icon_func=NULL;
 
@@ -273,11 +273,13 @@ void EditorFileDialog::_action_pressed() {
 
 	String f=dir_access->get_current_dir().plus_file(file->get_text());
 
-	if ((mode==MODE_OPEN_ANY || mode==MODE_OPEN_FILE) && dir_access->file_exists(f)) {
+	if (mode==MODE_OPEN_FILE && dir_access->file_exists(f)) {
 		_save_to_recent();
 		emit_signal("file_selected",f);
 		hide();
-	}else if (mode==MODE_OPEN_ANY || mode==MODE_OPEN_DIR) {
+	}
+
+	if (mode==MODE_OPEN_DIR) {
 
 
 		String path=dir_access->get_current_dir();
@@ -347,13 +349,13 @@ void EditorFileDialog::_action_pressed() {
 
 		if (!valid) {
 
-			exterr->popup_centered_minsize(Size2(250,80)*EDSCALE);
+			exterr->popup_centered_minsize(Size2(250,80));
 			return;
 
 		}
 
 		if (dir_access->file_exists(f)) {
-			confirm_save->set_text(TTR("File Exists, Overwrite?"));
+			confirm_save->set_text("File Exists, Overwrite?");
 			confirm_save->popup_centered(Size2(200,80));
 		} else {
 
@@ -411,7 +413,7 @@ void EditorFileDialog::_item_dc_selected(int p_item) {
 
 		//print_line("change dir: "+String(d["name"]));
 		dir_access->change_dir(d["name"]);
-		if (mode==MODE_OPEN_FILE || mode==MODE_OPEN_FILES || mode==MODE_OPEN_DIR || MODE_OPEN_ANY)
+		if (mode==MODE_OPEN_FILE || mode==MODE_OPEN_FILES || mode==MODE_OPEN_DIR)
 			file->set_text("");
 		call_deferred("_update_file_list");
 		call_deferred("_update_dir");
@@ -431,7 +433,6 @@ void EditorFileDialog::update_file_list() {
 
 
 	int thumbnail_size = EditorSettings::get_singleton()->get("file_dialog/thumbnail_size");
-	thumbnail_size*=EDSCALE;
 	Ref<Texture> folder_thumbnail;
 	Ref<Texture> file_thumbnail;
 
@@ -506,6 +507,11 @@ void EditorFileDialog::update_file_list() {
 			else if (item!=".." || !skip_pp)
 				dirs.push_back(item);
 		}
+	}
+
+	if (dirs.find("..")==NULL) {
+		//may happen if lacking permissions
+		dirs.push_back("..");
 	}
 
 	dirs.sort_custom<NoCaseComparator>();
@@ -678,7 +684,7 @@ void EditorFileDialog::update_filters() {
 		if (max_filters<filters.size())
 			all_filters+=", ...";
 
-		filter->add_item(TTR("All Recognized")+" ( "+all_filters+" )");
+		filter->add_item("All Recognized ( "+all_filters+" )");
 	}
 	for(int i=0;i<filters.size();i++) {
 
@@ -690,7 +696,7 @@ void EditorFileDialog::update_filters() {
 			filter->add_item("( "+flt+" )");
 	}
 
-	filter->add_item(TTR("All Files (*)"));
+	filter->add_item("All Files (*)");
 
 }
 
@@ -768,11 +774,10 @@ void EditorFileDialog::set_mode(Mode p_mode) {
 	mode=p_mode;
 	switch(mode) {
 
-		case MODE_OPEN_FILE: get_ok()->set_text(TTR("Open")); set_title("Open a File"); makedir->hide(); break;
-		case MODE_OPEN_FILES: get_ok()->set_text(TTR("Open")); set_title("Open File(s)"); makedir->hide(); break;
-		case MODE_OPEN_DIR: get_ok()->set_text(TTR("Open")); set_title("Open a Directory"); makedir->show(); break;
-		case MODE_OPEN_ANY: get_ok()->set_text(TTR("Open")); set_title("Open a File or Directory"); makedir->show(); break;
-		case MODE_SAVE_FILE: get_ok()->set_text(TTR("Save")); set_title("Save a File"); makedir->show(); break;
+		case MODE_OPEN_FILE: get_ok()->set_text("Open"); set_title("Open a File"); makedir->hide(); break;
+		case MODE_OPEN_FILES: get_ok()->set_text("Open"); set_title("Open File(s)"); makedir->hide(); break;
+		case MODE_SAVE_FILE: get_ok()->set_text("Save"); set_title("Save a File"); makedir->show(); break;
+		case MODE_OPEN_DIR: get_ok()->set_text("Open"); set_title("Open a Directory"); makedir->show(); break;
 	}
 
 	if (mode==MODE_OPEN_FILES) {
@@ -841,7 +846,7 @@ void EditorFileDialog::_make_dir_confirm() {
 		_push_history();
 
 	} else {
-		mkdirerr->popup_centered_minsize(Size2(250,50)*EDSCALE);
+		mkdirerr->popup_centered_minsize(Size2(250,50));
 	}
 	makedirname->set_text(""); // reset label
 }
@@ -849,7 +854,7 @@ void EditorFileDialog::_make_dir_confirm() {
 
 void EditorFileDialog::_make_dir() {
 
-	makedialog->popup_centered_minsize(Size2(250,80)*EDSCALE);
+	makedialog->popup_centered_minsize(Size2(250,80));
 	makedirname->grab_focus();
 
 }
@@ -1149,7 +1154,6 @@ void EditorFileDialog::_bind_methods() {
 	BIND_CONSTANT( MODE_OPEN_FILE );
 	BIND_CONSTANT( MODE_OPEN_FILES );
 	BIND_CONSTANT( MODE_OPEN_DIR );
-	BIND_CONSTANT( MODE_OPEN_ANY );
 	BIND_CONSTANT( MODE_SAVE_FILE );
 
 	BIND_CONSTANT( ACCESS_RESOURCES );
@@ -1213,7 +1217,7 @@ EditorFileDialog::EditorFileDialog() {
 	set_child_rect(vbc);
 
 	mode=MODE_SAVE_FILE;
-	set_title(TTR("Save a File"));
+	set_title("Save a File");
 
 	HBoxContainer *pathhb = memnew( HBoxContainer );
 
@@ -1259,13 +1263,13 @@ EditorFileDialog::EditorFileDialog() {
 	drives->connect("item_selected",this,"_select_drive");
 
 	makedir = memnew( Button );
-	makedir->set_text(TTR("Create Folder"));
+	makedir->set_text("Create Folder");
 	makedir->connect("pressed",this,"_make_dir");
 	pathhb->add_child(makedir);
 
 	list_hb = memnew( HBoxContainer );
 
-	vbc->add_margin_child(TTR("Path:"),pathhb);
+	vbc->add_margin_child("Path:",pathhb);
 	vbc->add_child(list_hb);
 	list_hb->set_v_size_flags(SIZE_EXPAND_FILL);
 
@@ -1273,7 +1277,7 @@ EditorFileDialog::EditorFileDialog() {
 	list_hb->add_child(fav_vb);
 	HBoxContainer *fav_hb = memnew( HBoxContainer );
 	fav_vb->add_child(fav_hb);
-	fav_hb->add_child(memnew(Label(TTR("Favorites:"))));
+	fav_hb->add_child(memnew(Label("Favorites:")));
 	fav_hb->add_spacer();
 	fav_up = memnew( ToolButton );
 	fav_hb->add_child(fav_up);
@@ -1293,7 +1297,7 @@ EditorFileDialog::EditorFileDialog() {
 	favorites->connect("item_selected",this,"_favorite_selected");
 
 	recent = memnew( ItemList );
-	fav_vb->add_margin_child(TTR("Recent:"),recent,true);
+	fav_vb->add_margin_child("Recent:",recent,true);
 	recent->connect("item_selected",this,"_recent_selected");
 
 	VBoxContainer *item_vb = memnew( VBoxContainer );
@@ -1302,7 +1306,7 @@ EditorFileDialog::EditorFileDialog() {
 
 	item_list = memnew( ItemList );
 	item_list->set_v_size_flags(SIZE_EXPAND_FILL);
-	item_vb->add_margin_child(TTR("Directories & Files:"),item_list,true);
+	item_vb->add_margin_child("Directories & Files:",item_list,true);
 
 	HBoxContainer* filter_hb = memnew( HBoxContainer );
 	item_vb->add_child(filter_hb);
@@ -1314,7 +1318,7 @@ EditorFileDialog::EditorFileDialog() {
 	preview_vb = memnew( VBoxContainer );
 	filter_hb->add_child(preview_vb);
 	CenterContainer *prev_cc = memnew( CenterContainer );
-	preview_vb->add_margin_child(TTR("Preview:"),prev_cc);
+	preview_vb->add_margin_child("Preview:",prev_cc);
 	preview = memnew( TextureFrame );
 	prev_cc->add_child(preview);
 	preview_vb->hide();
@@ -1322,12 +1326,12 @@ EditorFileDialog::EditorFileDialog() {
 
 	file = memnew(LineEdit);
 	//add_child(file);
-	filter_vb->add_margin_child(TTR("File:"),file);
+	filter_vb->add_margin_child("File:",file);
 
 
 	filter = memnew( OptionButton );
 	//add_child(filter);
-	filter_vb->add_margin_child(TTR("Filter:"),filter);
+	filter_vb->add_margin_child("Filter:",filter);
 	filter->set_clip_text(true);//too many extensions overflow it
 
 	dir_access = DirAccess::create(DirAccess::ACCESS_RESOURCES);
@@ -1352,21 +1356,21 @@ EditorFileDialog::EditorFileDialog() {
 	confirm_save->connect("confirmed", this,"_save_confirm_pressed");
 
 	makedialog = memnew( ConfirmationDialog );
-	makedialog->set_title(TTR("Create Folder"));
+	makedialog->set_title("Create Folder");
 	VBoxContainer *makevb= memnew( VBoxContainer );
 	makedialog->add_child(makevb);
 	makedialog->set_child_rect(makevb);
 	makedirname = memnew( LineEdit );
-	makevb->add_margin_child(TTR("Name:"),makedirname);
+	makevb->add_margin_child("Name:",makedirname);
 	add_child(makedialog);
 	makedialog->register_text_enter(makedirname);
 	makedialog->connect("confirmed",this,"_make_dir_confirm");
 	mkdirerr = memnew( AcceptDialog );
-	mkdirerr->set_text(TTR("Could not create folder."));
+	mkdirerr->set_text("Could not create folder.");
 	add_child(mkdirerr);
 
 	exterr = memnew( AcceptDialog );
-	exterr->set_text(TTR("Must use a valid extension."));
+	exterr->set_text("Must use a valid extension.");
 	add_child(exterr);
 
 
