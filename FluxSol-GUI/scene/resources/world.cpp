@@ -147,12 +147,12 @@ struct SpatialIndexer {
 	void _update(uint64_t p_frame) {
 
 //LUCIANO, CRASH
-		if (p_frame==last_frame)
-			return;
-		last_frame=p_frame;
-
-		if (!changed)
-			return;
+//		if (p_frame==last_frame)
+//			return;
+//		last_frame=p_frame;
+//
+//		if (!changed)
+//			return;
 
 
 

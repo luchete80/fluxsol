@@ -1956,18 +1956,25 @@ void EditorNode::_menu_option_confirm(int p_option,bool p_confirmed) {
 
 		} break;
 
-		// case FILE_IMPORT_MESH: {
-        // file->set_mode(EditorFileDialog::MODE_OPEN_FILE);
-			// //not for now?
-// //			List<String> extensions;
-// //			ResourceLoader::get_recognized_extensions_for_type("PackedScene",&extensions);
-// //			file->clear_filters();
-// //			for(int i=0;i<extensions.size();i++) {
-// //
-// //				file->add_filter("*."+extensions[i]+" ; "+extensions[i].to_upper());
-// //			}
+		case FILE_IMPORT_MESH: {
+        file->set_mode(EditorFileDialog::MODE_OPEN_FILE);
+			//not for now?
+			List<String> extensions;
+			ResourceLoader::get_recognized_extensions_for_type("PackedScene",&extensions);
+			file->clear_filters();
+			for(int i=0;i<extensions.size();i++) {
 
-		// } break;
+				file->add_filter("*."+extensions[i]+" ; "+extensions[i].to_upper());
+			}
+
+			Node *scene = editor_data.get_edited_scene_root();
+			if (scene) {
+				file->set_current_path(scene->get_filename());
+			};
+			file->set_title(p_option==FILE_OPEN_SCENE?"Open Scene":"Open Base Scene");
+			file->popup_centered_ratio();
+
+		} break;
 		case SCENE_TAB_CLOSE: {
 			_remove_scene(tab_closing);
 			_update_scene_tabs();
@@ -4979,7 +4986,7 @@ EditorNode::EditorNode() {
 	p->add_separator();
 	p->add_item("Close Scene",FILE_CLOSE,KEY_MASK_SHIFT+KEY_MASK_CTRL+KEY_W);
 	p->add_separator();
-	//p->add_item("Import Mesh..",FILE_IMPORT_MESH,KEY_MASK_SHIFT+KEY_MASK_CMD+KEY_P);
+	p->add_item("Import Mesh..",FILE_IMPORT_MESH,KEY_MASK_SHIFT+KEY_MASK_CMD+KEY_P);
 	p->add_item("Close Goto Prev. Scene",FILE_OPEN_PREV,KEY_MASK_SHIFT+KEY_MASK_CMD+KEY_P);
 	p->add_submenu_item("Open Recent","RecentScenes",FILE_OPEN_RECENT);
 	p->add_separator();
@@ -5373,11 +5380,11 @@ EditorNode::EditorNode() {
 	dependency_fixer = memnew( DependencyEditor );
 	gui_base->add_child( dependency_fixer );
 
-//	settings_config_dialog = memnew( EditorSettingsDialog );
-//	gui_base->add_child(settings_config_dialog);
+	settings_config_dialog = memnew( EditorSettingsDialog );
+	gui_base->add_child(settings_config_dialog);
 
-//	project_settings = memnew( ProjectSettings(&editor_data) );
-//	gui_base->add_child(project_settings);
+	//project_settings = memnew( ProjectSettings(&editor_data) );
+	//gui_base->add_child(project_settings);
 
 	import_confirmation = memnew( ConfirmationDialog );
 	import_confirmation->get_ok()->set_text("Re-Import");
@@ -5507,7 +5514,7 @@ EditorNode::EditorNode() {
 	editor_import_export->add_import_plugin( Ref<EditorTextureImportPlugin>( memnew(EditorTextureImportPlugin(this,EditorTextureImportPlugin::MODE_LARGE) )));
 	editor_import_export->add_import_plugin( Ref<EditorTextureImportPlugin>( memnew(EditorTextureImportPlugin(this,EditorTextureImportPlugin::MODE_TEXTURE_3D) )));
 
-	//editor_import_export->add_import_plugin( Ref<EditorMeshImportPlugin>( memnew(EditorMeshImportPlugin(this))));
+	editor_import_export->add_import_plugin( Ref<EditorMeshImportPlugin>( memnew(EditorMeshImportPlugin(this))));
 
 	add_editor_plugin( memnew( CanvasItemEditorPlugin(this) ) );
 	add_editor_plugin( memnew( ThemeEditorPlugin(this) ) );

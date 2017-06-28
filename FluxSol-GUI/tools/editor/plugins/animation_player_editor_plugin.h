@@ -31,7 +31,7 @@
 
 #include "tools/editor/editor_plugin.h"
 #include "tools/editor/editor_node.h"
-#include "scene/animation/animation_player.h"
+//#include "scene/animation/animation_player.h"
 #include "scene/gui/dialogs.h"
 #include "scene/gui/texture_button.h"
 #include "scene/gui/slider.h"
