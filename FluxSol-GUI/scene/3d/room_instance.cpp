@@ -56,17 +56,17 @@ void Room::_notification(int p_what) {
 			}
 
 
-			if (sound_enabled)
-				SpatialSoundServer::get_singleton()->room_set_space(sound_room,get_world()->get_sound_space());
+//			if (sound_enabled)
+//				SpatialSoundServer::get_singleton()->room_set_space(sound_room,get_world()->get_sound_space());
 
 		} break;
 		case NOTIFICATION_TRANSFORM_CHANGED: {
-			SpatialSoundServer::get_singleton()->room_set_transform(sound_room,get_global_transform());
+//			SpatialSoundServer::get_singleton()->room_set_transform(sound_room,get_global_transform());
 		} break;
 		case NOTIFICATION_EXIT_WORLD: {
 
-			if (sound_enabled)
-				SpatialSoundServer::get_singleton()->room_set_space(sound_room,RID());
+//			if (sound_enabled)
+//				SpatialSoundServer::get_singleton()->room_set_space(sound_room,RID());
 
 
 		 } break;
@@ -154,8 +154,8 @@ void Room::set_room( const Ref<RoomBounds>& p_room ) {
 	propagate_notification(NOTIFICATION_AREA_CHANGED);
 	update_gizmo();
 
-	if (room.is_valid())
-		SpatialSoundServer::get_singleton()->room_set_bounds(sound_room,room->get_bounds());
+//	if (room.is_valid())
+//		SpatialSoundServer::get_singleton()->room_set_bounds(sound_room,room->get_bounds());
 
 
 }
@@ -239,10 +239,10 @@ void Room::set_simulate_acoustics(bool p_enable) {
 	if (!is_inside_world())
 		return; //nothing to do
 
-	if (sound_enabled)
-		SpatialSoundServer::get_singleton()->room_set_space(sound_room,get_world()->get_sound_space());
-	else
-		SpatialSoundServer::get_singleton()->room_set_space(sound_room,RID());
+//	if (sound_enabled)
+//		SpatialSoundServer::get_singleton()->room_set_space(sound_room,get_world()->get_sound_space());
+//	else
+//		SpatialSoundServer::get_singleton()->room_set_space(sound_room,RID());
 
 
 }
@@ -285,7 +285,7 @@ void Room::_bind_methods() {
 Room::Room() {
 
 	sound_enabled=false;
-	sound_room=SpatialSoundServer::get_singleton()->room_create();
+//	sound_room=SpatialSoundServer::get_singleton()->room_create();
 
 	level=0;
 
@@ -294,6 +294,6 @@ Room::Room() {
 
 Room::~Room() {
 
-	SpatialSoundServer::get_singleton()->free(sound_room);
+//	SpatialSoundServer::get_singleton()->free(sound_room);
 }
 

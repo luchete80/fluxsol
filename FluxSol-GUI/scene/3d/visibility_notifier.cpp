@@ -29,8 +29,8 @@
 #include "visibility_notifier.h"
 
 #include "scene/scene_string_names.h"
-#include "scene/3d/physics_body.h"
-#include "scene/animation/animation_player.h"
+//#include "scene/3d/physics_body.h"
+//#include "scene/animation/animation_player.h"
 #include "scene/scene_string_names.h"
 
 void VisibilityNotifier::_enter_camera(Camera* p_camera) {
@@ -164,21 +164,21 @@ void VisibilityEnabler::_find_nodes(Node* p_node) {
 
 	if (enabler[ENABLER_FREEZE_BODIES]) {
 
-		RigidBody *rb = p_node->cast_to<RigidBody>();
-		if (rb && ((rb->get_mode()==RigidBody::MODE_CHARACTER || (rb->get_mode()==RigidBody::MODE_RIGID && !rb->is_able_to_sleep())))) {
-
-
-			add=true;
-			meta=rb->get_mode();
-		}
+//		RigidBody *rb = p_node->cast_to<RigidBody>();
+//		if (rb && ((rb->get_mode()==RigidBody::MODE_CHARACTER || (rb->get_mode()==RigidBody::MODE_RIGID && !rb->is_able_to_sleep())))) {
+//
+//
+//			add=true;
+//			meta=rb->get_mode();
+//		}
 	}
 
 	if (enabler[ENABLER_PAUSE_ANIMATIONS]) {
 
-		AnimationPlayer *ap = p_node->cast_to<AnimationPlayer>();
-		if (ap) {
-			add=true;
-		}
+//		AnimationPlayer *ap = p_node->cast_to<AnimationPlayer>();
+//		if (ap) {
+//			add=true;
+//		}
 	}
 
 	if (add) {
@@ -241,27 +241,27 @@ void VisibilityEnabler::_change_node_state(Node* p_node,bool p_enabled) {
 	ERR_FAIL_COND(!nodes.has(p_node));
 
 	{
-		RigidBody *rb = p_node->cast_to<RigidBody>();
-		if (rb) {
-
-			if (p_enabled) {
-				RigidBody::Mode mode = RigidBody::Mode(nodes[p_node].operator int());
-				//rb->set_mode(mode);
-				rb->set_sleeping(false);
-			} else {
-				//rb->set_mode(RigidBody::MODE_STATIC);
-				rb->set_sleeping(true);
-			}
-		}
+//		RigidBody *rb = p_node->cast_to<RigidBody>();
+//		if (rb) {
+//
+//			if (p_enabled) {
+//				RigidBody::Mode mode = RigidBody::Mode(nodes[p_node].operator int());
+//				//rb->set_mode(mode);
+//				rb->set_sleeping(false);
+//			} else {
+//				//rb->set_mode(RigidBody::MODE_STATIC);
+//				rb->set_sleeping(true);
+//			}
+//		}
 	}
 
 	{
-		AnimationPlayer *ap=p_node->cast_to<AnimationPlayer>();
-
-		if (ap) {
-
-			ap->set_active(p_enabled);
-		}
+//		AnimationPlayer *ap=p_node->cast_to<AnimationPlayer>();
+//
+//		if (ap) {
+//
+//			ap->set_active(p_enabled);
+//		}
 	}
 
 }

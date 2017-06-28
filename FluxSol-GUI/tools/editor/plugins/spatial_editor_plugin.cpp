@@ -37,9 +37,9 @@
 #include "tools/editor/editor_node.h"
 #include "tools/editor/editor_settings.h"
 #include "scene/resources/surface_tool.h"
-#include "tools/editor/spatial_editor_gizmos.h"
+//#include "tools/editor/spatial_editor_gizmos.h" //LUCIANO: TODO, add this file
 #include "globals.h"
-#include "tools/editor/plugins/animation_player_editor_plugin.h"
+//#include "tools/editor/plugins/animation_player_editor_plugin.h"
 //#include "tools/editor/animation_editor.h"
 
 #define DISTANCE_DEFAULT 4
@@ -1748,10 +1748,10 @@ void SpatialEditorViewport::_sinput(const InputEvent &p_event) {
 					if (!get_selected_count() || _edit.mode!=TRANSFORM_NONE)
 						break;
 
-					if (!AnimationPlayerEditor::singleton->get_key_editor()->has_keying()) {
-						set_message("Keying is disabled (no key inserted).");
-						break;
-					}
+//					if (!AnimationPlayerEditor::singleton->get_key_editor()->has_keying()) {
+//						set_message("Keying is disabled (no key inserted).");
+//						break;
+//					}
 
 					List<Node*> &selection = editor_selection->get_selected_node_list();
 
@@ -3648,7 +3648,7 @@ void SpatialEditor::_notification(int p_what) {
 
 	if (p_what==NOTIFICATION_ENTER_TREE) {
 
-		gizmos = memnew( SpatialEditorGizmos );
+//		gizmos = memnew( SpatialEditorGizmos ); //LUCIANO TODO: To Modify
 		_init_indicators();
 		_update_default_light_angle();
 	}
@@ -3656,7 +3656,7 @@ void SpatialEditor::_notification(int p_what) {
 	if (p_what==NOTIFICATION_EXIT_TREE) {
 
 		_finish_indicators();
-		memdelete( gizmos );
+//		memdelete( gizmos ); //LUCIANO: TODO Modify
 
 	}
 }
@@ -3691,31 +3691,31 @@ void SpatialEditor::_request_gizmo(Object* p_obj) {
 	if (!sp)
 		return;
 	if (editor->get_edited_scene() && (sp==editor->get_edited_scene() || sp->get_owner()==editor->get_edited_scene())) {
-
-		Ref<SpatialEditorGizmo> seg = gizmos->get_gizmo(sp);
-
-		if (seg.is_valid()) {
-			sp->set_gizmo(seg);
-		}
-
-		for (List<EditorPlugin*>::Element *E=gizmo_plugins.front();E;E=E->next()) {
-
-			if (E->get()->create_spatial_gizmo(sp)) {
-
-				seg = sp->get_gizmo();
-				if (sp==selected && seg.is_valid()) {
-
-					seg->set_selected(true);
-					selected->update_gizmo();
-				}
-				return;
-			}
-		}
-
-		if (seg.is_valid() && sp==selected) {
-			seg->set_selected(true);
-			selected->update_gizmo();
-		}
+// LUCIANO, TO MODIFY
+//		Ref<SpatialEditorGizmo> seg = gizmos->get_gizmo(sp);
+//
+//		if (seg.is_valid()) {
+//			sp->set_gizmo(seg);
+//		}
+//
+//		for (List<EditorPlugin*>::Element *E=gizmo_plugins.front();E;E=E->next()) {
+//
+//			if (E->get()->create_spatial_gizmo(sp)) {
+//
+//				seg = sp->get_gizmo();
+//				if (sp==selected && seg.is_valid()) {
+//
+//					seg->set_selected(true);
+//					selected->update_gizmo();
+//				}
+//				return;
+//			}
+//		}
+//
+//		if (seg.is_valid() && sp==selected) {
+//			seg->set_selected(true);
+//			selected->update_gizmo();
+//		}
 
 	}
 

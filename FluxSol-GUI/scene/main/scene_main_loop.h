@@ -306,6 +306,10 @@ public:
 
 	int get_collision_debug_contact_count() { return collision_debug_contacts; }
 
+    //Added by luciano
+    //Ref<Material> get_debug_navigation_material();
+	//Ref<Material> get_debug_navigation_disabled_material();
+
 	int64_t get_frame() const;
 
 	int get_node_count() const;

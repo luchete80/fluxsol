@@ -799,48 +799,48 @@ Error Main::setup2() {
 	path_remap->load_remaps();
 
 	if (show_logo) { //boot logo!
-//		String boot_logo_path=GLOBAL_DEF("application/boot_splash",String());
-//		bool boot_logo_scale=GLOBAL_DEF("application/boot_splash_fullsize",true);
-//		Globals::get_singleton()->set_custom_property_info("application/boot_splash",PropertyInfo(Variant::STRING,"application/boot_splash",PROPERTY_HINT_FILE,"*.png"));
-//
-//		Image boot_logo;
-//
-//		boot_logo_path = boot_logo_path.strip_edges();
-//
-//		if (boot_logo_path!=String() /*&& FileAccess::exists(boot_logo_path)*/) {
-//			print_line("Boot splash path: "+boot_logo_path);
-//			Error err = boot_logo.load(boot_logo_path);
-//		}
-//
-//		if (!boot_logo.empty()) {
-//			OS::get_singleton()->_msec_splash=OS::get_singleton()->get_ticks_msec();
-//			Color clear = GLOBAL_DEF("render/default_clear_color",Color(0.3,0.3,0.3));
-//			VisualServer::get_singleton()->set_default_clear_color(clear);
-//			Color boot_bg = GLOBAL_DEF("application/boot_bg_color", clear);
-//			VisualServer::get_singleton()->set_boot_image(boot_logo, boot_bg,boot_logo_scale);
-//#ifndef TOOLS_ENABLED
-//			//no tools, so free the boot logo (no longer needed)
-//		//	Globals::get_singleton()->set("application/boot_logo",Image());
-//#endif
-//
-//		} else {
-//#ifndef NO_DEFAULT_BOOT_LOGO
-//
-//			MAIN_PRINT("Main: Create bootsplash");
-//			Image splash(boot_splash_png);
-//
-//			MAIN_PRINT("Main: ClearColor");
-//			VisualServer::get_singleton()->set_default_clear_color(boot_splash_bg_color);
-//			MAIN_PRINT("Main: Image");
-//			VisualServer::get_singleton()->set_boot_image(splash, boot_splash_bg_color,false);
-//#endif
-//			MAIN_PRINT("Main: DCC");
-//			VisualServer::get_singleton()->set_default_clear_color(GLOBAL_DEF("render/default_clear_color",Color(0.3,0.3,0.3)));
-//			MAIN_PRINT("Main: END");
-//		}
-//
-//		Image icon(app_icon_png);
-//		OS::get_singleton()->set_icon(icon);
+		String boot_logo_path=GLOBAL_DEF("application/boot_splash",String());
+		bool boot_logo_scale=GLOBAL_DEF("application/boot_splash_fullsize",true);
+		Globals::get_singleton()->set_custom_property_info("application/boot_splash",PropertyInfo(Variant::STRING,"application/boot_splash",PROPERTY_HINT_FILE,"*.png"));
+
+		Image boot_logo;
+
+		boot_logo_path = boot_logo_path.strip_edges();
+
+		if (boot_logo_path!=String() /*&& FileAccess::exists(boot_logo_path)*/) {
+			print_line("Boot splash path: "+boot_logo_path);
+			Error err = boot_logo.load(boot_logo_path);
+		}
+
+		if (!boot_logo.empty()) {
+			OS::get_singleton()->_msec_splash=OS::get_singleton()->get_ticks_msec();
+			Color clear = GLOBAL_DEF("render/default_clear_color",Color(0.3,0.3,0.3));
+			VisualServer::get_singleton()->set_default_clear_color(clear);
+			Color boot_bg = GLOBAL_DEF("application/boot_bg_color", clear);
+			VisualServer::get_singleton()->set_boot_image(boot_logo, boot_bg,boot_logo_scale);
+#ifndef TOOLS_ENABLED
+			//no tools, so free the boot logo (no longer needed)
+		//	Globals::get_singleton()->set("application/boot_logo",Image());
+#endif
+
+		} else {
+#ifndef NO_DEFAULT_BOOT_LOGO
+
+			MAIN_PRINT("Main: Create bootsplash");
+			Image splash(boot_splash_png);
+
+			MAIN_PRINT("Main: ClearColor");
+			VisualServer::get_singleton()->set_default_clear_color(boot_splash_bg_color);
+			MAIN_PRINT("Main: Image");
+			VisualServer::get_singleton()->set_boot_image(splash, boot_splash_bg_color,false);
+#endif
+			MAIN_PRINT("Main: DCC");
+			VisualServer::get_singleton()->set_default_clear_color(GLOBAL_DEF("render/default_clear_color",Color(0.3,0.3,0.3)));
+			MAIN_PRINT("Main: END");
+		}
+
+		Image icon(app_icon_png);
+		OS::get_singleton()->set_icon(icon);
 	}
 	GLOBAL_DEF("application/icon",String());
 	Globals::get_singleton()->set_custom_property_info("application/icon",PropertyInfo(Variant::STRING,"application/icon",PROPERTY_HINT_FILE,"*.png,*.webp"));

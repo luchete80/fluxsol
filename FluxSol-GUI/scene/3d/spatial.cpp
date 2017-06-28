@@ -27,7 +27,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 #include "spatial.h"
- 
+
 #include "scene/main/viewport.h"
 #include "message_queue.h"
 #include "scene/scene_string_names.h"
@@ -99,14 +99,14 @@ void Spatial::_propagate_transform_changed(Spatial *p_origin) {
 //		return; //already dirty
 
 	data.children_lock++;
-		
+
 	for (List<Spatial*>::Element *E=data.children.front();E;E=E->next()) {
-	
+
 		if (E->get()->data.toplevel_active)
 			continue; //don't propagate to a toplevel
 		E->get()->_propagate_transform_changed(p_origin);
 	}
-	
+
 
 	if (!data.ignore_notification && !xform_change.in_list()) {
 
@@ -176,7 +176,7 @@ void Spatial::_notification(int p_what) {
 				Variant::CallError err;
 				get_script_instance()->call_multilevel(SceneStringNames::get_singleton()->_enter_world,NULL,0);
 			}
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 			if (get_tree()->is_editor_hint()) {
 
 //				get_scene()->call_group(SceneMainLoop::GROUP_CALL_REALTIME,SceneStringNames::get_singleton()->_spatial_editor_group,SceneStringNames::get_singleton()->_request_gizmo,this);
@@ -187,16 +187,16 @@ void Spatial::_notification(int p_what) {
 						data.gizmo->create();
 				}
 			}
-#endif
+//#endif
 
 		} break;
 		case NOTIFICATION_EXIT_WORLD: {
 
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 			if (data.gizmo.is_valid()) {
 				data.gizmo->free();
 			}
-#endif
+//#endif
 
 			if (get_script_instance()) {
 
@@ -211,14 +211,14 @@ void Spatial::_notification(int p_what) {
 
 
 		case NOTIFICATION_TRANSFORM_CHANGED: {
-		
-#ifdef TOOLS_ENABLED
+
+//#ifdef TOOLS_ENABLED
 			if (data.gizmo.is_valid()) {
 				data.gizmo->transform();
 			}
-#endif
+//#endif
 		} break;
-	
+
 		default: {}
 	}
 }
@@ -257,7 +257,7 @@ Transform Spatial::get_transform() const {
 
 		_update_local_transform();
 	}
-	
+
 	return data.local_transform;
 }
 Transform Spatial::get_global_transform() const {
@@ -272,16 +272,16 @@ Transform Spatial::get_global_transform() const {
 		}
 
 		if (data.parent && !data.toplevel_active) {
-		
+
 			data.global_transform=data.parent->get_global_transform() * data.local_transform;
 		} else {
-		
+
 			data.global_transform=data.local_transform;
 		}
-		
+
 		data.dirty&=~DIRTY_GLOBAL;
 	}
-	
+
 	return data.global_transform;
 }
 #if 0
@@ -290,7 +290,7 @@ void Spatial::add_child_notify(Node *p_child) {
 	Spatial *s=p_child->cast_to<Spatial>();
 	if (!s)
 		return;
-		
+
 	ERR_FAIL_COND(data.children_lock>0);
 
 	s->data.dirty=DIRTY_GLOBAL; // don't allow global transform to be valid
@@ -305,12 +305,12 @@ void Spatial::remove_child_notify(Node *p_child) {
 	Spatial *s=p_child->cast_to<Spatial>();
 	if (!s)
 		return;
-	
+
 	ERR_FAIL_COND(data.children_lock>0);
-	
+
 	if (s->data.C)
 		data.children.erase(s->data.C);
-	s->data.parent=NULL;		
+	s->data.parent=NULL;
 	s->data.C=NULL;
 */
 }
@@ -405,7 +405,7 @@ Vector3 Spatial::get_scale() const{
 
 void Spatial::update_gizmo() {
 
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 	if (!is_inside_world())
 		return;
 	if (!data.gizmo.is_valid())
@@ -414,12 +414,12 @@ void Spatial::update_gizmo() {
 		return;
 	data.gizmo_dirty=true;
 	MessageQueue::get_singleton()->push_call(this,"_update_gizmo");
-#endif
+//#endif
 }
 
 void Spatial::set_gizmo(const Ref<SpatialGizmo>& p_gizmo) {
 
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 
 	if (data.gizmo_disabled)
 		return;
@@ -433,21 +433,21 @@ void Spatial::set_gizmo(const Ref<SpatialGizmo>& p_gizmo) {
 		data.gizmo->transform();
 	}
 
-#endif
+//#endif
 }
 
 Ref<SpatialGizmo> Spatial::get_gizmo() const {
 
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 
 	return data.gizmo;
-#else
+//#else
 
-	return Ref<SpatialGizmo>();
-#endif
+//	return Ref<SpatialGizmo>();
+//#endif
 }
 
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 
 void Spatial::_update_gizmo() {
 
@@ -468,7 +468,7 @@ void Spatial::set_disable_gizmo(bool p_enabled) {
 		data.gizmo=Ref<SpatialGizmo>();
 }
 
-#endif
+//#endif
 
 void Spatial::set_as_toplevel(bool p_enabled) {
 
@@ -512,7 +512,7 @@ Ref<World> Spatial::get_world() const {
 
 }
 
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 void Spatial::set_import_transform(const Transform& p_transform) {
 	data.import_transform=p_transform;
 }
@@ -521,7 +521,7 @@ Transform Spatial::get_import_transform() const {
 
 	return data.import_transform;
 }
-#endif
+//#endif
 
 
 void Spatial::_propagate_visibility_changed() {
@@ -529,10 +529,10 @@ void Spatial::_propagate_visibility_changed() {
 	notification(NOTIFICATION_VISIBILITY_CHANGED);
 	emit_signal(SceneStringNames::get_singleton()->visibility_changed);
 	_change_notify("visibility/visible");
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 	if (data.gizmo.is_valid())
 		_update_gizmo();
-#endif
+//#endif
 
 	for (List<Spatial*>::Element*E=data.children.front();E;E=E->next()) {
 
@@ -595,11 +595,11 @@ bool Spatial::is_hidden() const{
 }
 
 void Spatial::set_hidden(bool p_hidden) {
-	
+
 	if (data.visible != p_hidden) {
 		return;
 	}
-	
+
 	_set_visible_(!p_hidden);
 }
 
@@ -736,12 +736,12 @@ void Spatial::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("_get_rotation_deg"), &Spatial::_get_rotation_deg);
 	ObjectTypeDB::bind_method(_MD("get_world:World"), &Spatial::get_world);
 
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 	ObjectTypeDB::bind_method(_MD("_update_gizmo"), &Spatial::_update_gizmo);
 	ObjectTypeDB::bind_method(_MD("_set_import_transform"), &Spatial::set_import_transform);
 	ObjectTypeDB::bind_method(_MD("_get_import_transform"), &Spatial::get_import_transform);
 	ADD_PROPERTY( PropertyInfo(Variant::TRANSFORM,"_import_transform",PROPERTY_HINT_NONE,"",PROPERTY_USAGE_NOEDITOR),_SCS("_set_import_transform"),_SCS("_get_import_transform"));
-#endif
+//#endif
 
 	ObjectTypeDB::bind_method(_MD("update_gizmo"), &Spatial::update_gizmo);
 	ObjectTypeDB::bind_method(_MD("set_gizmo","gizmo:SpatialGizmo"), &Spatial::set_gizmo);
@@ -813,10 +813,10 @@ Spatial::Spatial() : xform_change(this)
 	data.viewport=NULL;
 	data.inside_world=false;
 	data.visible=true;
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 	data.gizmo_disabled=false;
 	data.gizmo_dirty=false;
-#endif
+//#endif
 	data.notify_local_transform=false;
 	data.parent=NULL;
 	data.C=NULL;

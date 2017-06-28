@@ -225,13 +225,13 @@ void NavigationMeshInstance::set_enabled(bool p_enabled) {
 		}
 
 	}
-
+// LUCIANO TODO: Change this to allow material
 	if (debug_view) {
 		MeshInstance *dm=debug_view->cast_to<MeshInstance>();
 		if (is_enabled()) {
-			dm->set_material_override( get_tree()->get_debug_navigation_material() );
+//			dm->set_material_override( get_tree()->get_debug_navigation_material() );
 		} else {
-			dm->set_material_override( get_tree()->get_debug_navigation_disabled_material() );
+//			dm->set_material_override( get_tree()->get_debug_navigation_disabled_material() );
 		}
 
 	}
@@ -272,13 +272,13 @@ void NavigationMeshInstance::_notification(int p_what) {
 			}
 
 			if (navmesh.is_valid() && get_tree()->is_debugging_navigation_hint()) {
-
+//LUCIANO: TODO: CHANGE MATERIAL
 				MeshInstance *dm = memnew( MeshInstance );
 				dm->set_mesh( navmesh->get_debug_mesh() );
 				if (is_enabled()) {
-					dm->set_material_override( get_tree()->get_debug_navigation_material() );
+//					dm->set_material_override( get_tree()->get_debug_navigation_material() );
 				} else {
-					dm->set_material_override( get_tree()->get_debug_navigation_disabled_material() );
+//					dm->set_material_override( get_tree()->get_debug_navigation_disabled_material() );
 				}
 				add_child(dm);
 				debug_view=dm;

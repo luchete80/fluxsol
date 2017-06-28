@@ -1,7 +1,0 @@
-vtkGtkRenderWindowInteractor - Merging gtk and vtk
-
-This is a implementation of the vtkRenderWindowInteractor() class for 
-Gtk. It has been tested on both Linux and Windows.
-
-
-

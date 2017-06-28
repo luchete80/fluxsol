@@ -57,7 +57,7 @@ class Spatial : public Node {
 
 	OBJ_TYPE( Spatial, Node );
 	OBJ_CATEGORY("3D");
-	
+
 	enum TransformDirty {
 		DIRTY_NONE=0,
 		DIRTY_VECTORS=1,
@@ -68,7 +68,7 @@ class Spatial : public Node {
 	mutable SelfList<Node> xform_change;
 
 	struct Data {
-	
+
 
 
 		mutable Transform global_transform;
@@ -84,29 +84,29 @@ class Spatial : public Node {
 		bool toplevel_active;
 		bool toplevel;
 		bool inside_world;
-	
+
 		int children_lock;
 		Spatial *parent;
 		List<Spatial*> children;
 		List<Spatial*>::Element *C;
-		
+
 		bool ignore_notification;
 		bool notify_local_transform;
 
 		bool visible;
 
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 		Ref<SpatialGizmo> gizmo;
 		bool gizmo_disabled;
 		bool gizmo_dirty;
 		Transform import_transform;
-#endif
+//#endif
 
 	} data;
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 
 	void _update_gizmo();
-#endif
+//#endif
 	void _notify_dirty();
 	void _propagate_transform_changed(Spatial *p_origin);
 
@@ -130,7 +130,7 @@ protected:
 public:
 
 	enum {
-	
+
 		NOTIFICATION_TRANSFORM_CHANGED=SceneTree::NOTIFICATION_TRANSFORM_CHANGED,
 		NOTIFICATION_ENTER_WORLD=41,
 		NOTIFICATION_EXIT_WORLD=42,
@@ -153,7 +153,7 @@ public:
 
 	void set_transform(const Transform& p_transform);
 	void set_global_transform(const Transform& p_transform);
-	
+
 	Transform get_transform() const;
 	Transform get_global_transform() const;
 
@@ -193,12 +193,12 @@ public:
 	bool is_hidden() const;
 	void set_hidden(bool p_hidden);
 
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 	void set_import_transform(const Transform& p_transform)	;
 	Transform get_import_transform() const;
-#endif
+//#endif
 
-	Spatial();	
+	Spatial();
 	~Spatial();
 
 };

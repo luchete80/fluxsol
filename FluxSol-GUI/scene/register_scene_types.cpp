@@ -163,11 +163,11 @@ void register_scene_types() {
 	ObjectTypeDB::register_type<Node>();
 	ObjectTypeDB::register_virtual_type<InstancePlaceholder>();
 
-//	ObjectTypeDB::register_type<Viewport>();
-//	ObjectTypeDB::register_virtual_type<RenderTargetTexture>();
+	ObjectTypeDB::register_type<Viewport>();
+	ObjectTypeDB::register_virtual_type<RenderTargetTexture>();
 //	ObjectTypeDB::register_type<HTTPRequest>();
-//	ObjectTypeDB::register_type<Timer>();
-//	ObjectTypeDB::register_type<CanvasLayer>();
+	ObjectTypeDB::register_type<Timer>();
+	ObjectTypeDB::register_type<CanvasLayer>();
 //	ObjectTypeDB::register_type<CanvasModulate>();
 //	ObjectTypeDB::register_type<ResourcePreloader>();
 //
