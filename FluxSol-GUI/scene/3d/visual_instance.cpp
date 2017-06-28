@@ -29,7 +29,7 @@
 #include "visual_instance.h"
 
 #include "servers/visual_server.h"
-//#include "room_instance.h"
+#include "room_instance.h"
 #include "scene/scene_string_names.h"
 //#include "baked_light_instance.h"
 //#include "skeleton.h"

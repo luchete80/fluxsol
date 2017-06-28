@@ -381,8 +381,8 @@ Ref<Mesh> SurfaceTool::commit(const Ref<Mesh>& p_existing) {
 	}
 
 	mesh->add_surface(primitive,a);
-	// if (material.is_valid())
-		// mesh->surface_set_material(surface,material);
+	if (material.is_valid())
+		mesh->surface_set_material(surface,material);
 
 	return mesh;
 }
@@ -567,7 +567,7 @@ void SurfaceTool::create_from(const Ref<Mesh>& p_existing, int p_surface) {
 	clear();
 	primitive=p_existing->surface_get_primitive_type(p_surface);
 	_create_list(p_existing,p_surface,&vertex_array,&index_array,format);
-	//material=p_existing->surface_get_material(p_surface);
+	material=p_existing->surface_get_material(p_surface);
 
 }
 
@@ -796,10 +796,10 @@ void SurfaceTool::generate_normals() {
 
 }
 
-// void SurfaceTool::set_material(const Ref<Material>& p_material) {
+void SurfaceTool::set_material(const Ref<Material>& p_material) {
 
-	// material=p_material;
-// }
+	material=p_material;
+}
 
 void SurfaceTool::clear() {
 
@@ -826,7 +826,7 @@ void SurfaceTool::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("add_bones","bones"),&SurfaceTool::add_bones);
 	ObjectTypeDB::bind_method(_MD("add_weights","weights"),&SurfaceTool::add_weights);
 	ObjectTypeDB::bind_method(_MD("add_smooth_group","smooth"),&SurfaceTool::add_smooth_group);
-	//ObjectTypeDB::bind_method(_MD("set_material","material:Material"),&SurfaceTool::set_material);
+	ObjectTypeDB::bind_method(_MD("set_material","material:Material"),&SurfaceTool::set_material);
 	ObjectTypeDB::bind_method(_MD("index"),&SurfaceTool::index);
 	ObjectTypeDB::bind_method(_MD("deindex"),&SurfaceTool::deindex);
 	///ObjectTypeDB::bind_method(_MD("generate_flat_normals"),&SurfaceTool::generate_flat_normals);

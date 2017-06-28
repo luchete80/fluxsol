@@ -65,7 +65,7 @@ private:
 	bool first;
 	Mesh::PrimitiveType primitive;
 	int format;
-	//Ref<Material> material;
+	Ref<Material> material;
 	//arrays
 	List< Vertex > vertex_array;
 	List< int > index_array;
@@ -117,7 +117,7 @@ public:
 
 	void add_to_format(int p_flags) { format|=p_flags; }
 
-	//void set_material(const Ref<Material>& p_material);
+	void set_material(const Ref<Material>& p_material);
 
 	void clear();
 

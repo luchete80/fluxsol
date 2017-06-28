@@ -30,7 +30,7 @@
 #define MESH_H
 
 #include "servers/visual_server.h"
-//#include "scene/resources/material.h"
+#include "scene/resources/material.h"
 //#include "scene/resources/shape.h"
 #include "resource.h"
 #include "triangle_mesh.h"

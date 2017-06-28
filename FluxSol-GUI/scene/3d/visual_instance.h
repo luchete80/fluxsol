@@ -32,7 +32,7 @@
 #include "scene/3d/spatial.h"
 #include "face3.h"
 #include "rid.h"
-//#include "scene/resources/material.h"
+#include "scene/resources/material.h"
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
 */

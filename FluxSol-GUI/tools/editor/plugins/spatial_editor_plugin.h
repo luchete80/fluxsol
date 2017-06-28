@@ -35,6 +35,7 @@
 #include "scene/3d/immediate_geometry.h"
 #include "scene/3d/light.h"
 #include "scene/gui/panel_container.h"
+#include "scene/resources/material.h" //LUCIANO
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
 */
