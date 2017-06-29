@@ -1,10 +1,10 @@
 #ifndef GRAPH_EDIT_H
 #define GRAPH_EDIT_H
 
-#include "./scene/gui/graph_node.h"
-#include "./scene/gui/scroll_bar.h"
-#include "./scene/gui/slider.h"
-#include "./scene/gui/tool_button.h"
+#include "scene/gui/graph_node.h"
+#include "scene/gui/scroll_bar.h"
+#include "scene/gui/slider.h"
+#include "scene/gui/tool_button.h"
 #include "texture_frame.h"
 
 class GraphEdit;
@@ -118,7 +118,7 @@ public:
 
 	void set_right_disconnects(bool p_enable);
 	bool is_right_disconnects_enabled() const;
-
+	
 	Vector2 get_scroll_ofs() const;
 
 

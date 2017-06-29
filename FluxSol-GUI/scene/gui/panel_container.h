@@ -29,7 +29,7 @@
 #ifndef PANEL_CONTAINER_H
 #define PANEL_CONTAINER_H
 
-#include "./scene/gui/container.h"
+#include "scene/gui/container.h"
 
 class PanelContainer : public Container {
 

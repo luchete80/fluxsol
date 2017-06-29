@@ -1146,8 +1146,7 @@ int Tree::draw_item(const Point2i& p_pos,const Point2& p_draw_ofs, const Size2& 
 
 						Ref<Texture> updown = cache.updown;
 
-						//String valtext = String::num( p_item->cells[i].val, Math::decimals( p_item->cells[i].step ) );
-						String valtext = rtos( p_item->cells[i].val );
+						String valtext = String::num( p_item->cells[i].val, Math::decimals( p_item->cells[i].step ) );
 						font->draw( ci, text_pos, valtext, col, item_rect.size.x-updown->get_width());
 
 						if (!p_item->cells[i].editable)
@@ -1282,8 +1281,6 @@ void Tree::select_single_item(TreeItem *p_selected,TreeItem *p_current,int p_col
 		switched=true;
 	}
 
-	bool emitted_row=false;
-
 	for (int i=0;i<columns.size();i++) {
 
 		TreeItem::Cell &c=p_current->cells[i];
@@ -1302,10 +1299,7 @@ void Tree::select_single_item(TreeItem *p_selected,TreeItem *p_current,int p_col
 					selected_item=p_selected;
 					selected_col=0;
 					selected_item=p_selected;
-					if (!emitted_row) {
-						emit_signal("item_selected");
-						emitted_row=true;
-					}
+					emit_signal("item_selected");
 					//if (p_col==i)
 					//	p_current->selected_signal.call(p_col);
 				}
@@ -2170,7 +2164,7 @@ void Tree::_input_event(InputEvent p_event) {
 					float diff_y = -b.relative_y;
 					diff_y=Math::pow(ABS(diff_y),1.8)*SGN(diff_y);
 					diff_y*=0.1;
-					range_drag_base=CLAMP(range_drag_base + c.step * diff_y, c.min, c.max);
+					range_drag_base=CLAMP(range_drag_base + c.step * diff_y, c.min, c.max);					
 					popup_edited_item->set_range(popup_edited_item_col,range_drag_base);
 					item_edited(popup_edited_item_col,popup_edited_item);
 
@@ -2749,15 +2743,6 @@ void Tree::clear() {
 		ERR_FAIL_COND(blocked>0);
 	}
 
-	if (pressing_for_editor) {
-		if (range_drag_enabled) {
-			range_drag_enabled = false;
-			Input::get_singleton()->set_mouse_mode(Input::MOUSE_MODE_VISIBLE);
-			warp_mouse(range_drag_capture_pos);
-		}
-		pressing_for_editor = false;
-	}
-
 	if (root) {
 		memdelete( root );
 		root = NULL;
@@ -2767,6 +2752,7 @@ void Tree::clear() {
 	edited_item=NULL;
 	popup_edited_item=NULL;
 	selected_item=NULL;
+	pressing_for_editor=false;
 
 	update();
 };
@@ -3238,7 +3224,7 @@ void Tree::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("_scroll_moved"),&Tree::_scroll_moved);
 
 	ObjectTypeDB::bind_method(_MD("clear"),&Tree::clear);
-	ObjectTypeDB::bind_method(_MD("create_item:TreeItem","parent:TreeItem"),&Tree::_create_item,DEFVAL(Variant()));
+	ObjectTypeDB::bind_method(_MD("create_item:TreeItem","parent:TreeItem"),&Tree::_create_item,DEFVAL((Object*)NULL));
 
 	ObjectTypeDB::bind_method(_MD("get_root:TreeItem"),&Tree::get_root);
 	ObjectTypeDB::bind_method(_MD("set_column_min_width","column","min_width"),&Tree::set_column_min_width);

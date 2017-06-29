@@ -29,14 +29,12 @@
 #ifndef LINE_EDIT_H
 #define LINE_EDIT_H
 
-#include "./scene/gui/control.h"
-#include "./scene/gui/popup_menu.h"
-
+#include "scene/gui/control.h"
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
 */
 class LineEdit : public Control {
-
+	
 	OBJ_TYPE( LineEdit, Control );
 
 public:
@@ -47,37 +45,23 @@ public:
 		ALIGN_RIGHT,
 		ALIGN_FILL
 	};
-
-	enum MenuItems {
-		MENU_CUT,
-		MENU_COPY,
-		MENU_PASTE,
-		MENU_CLEAR,
-		MENU_SELECT_ALL,
-		MENU_UNDO,
-		MENU_MAX
-
-	};
-
 private:
 	Align align;
 
 	bool editable;
 	bool pass;
-
+	
 	String undo_text;
 	String text;
-
-	PopupMenu *menu;
-
+	
 	int cursor_pos;
 	int window_pos;
 	int max_length; // 0 for no maximum
 
 	int cached_width;
-
+	
 	struct Selection {
-
+		
 		int begin;
 		int end;
 		int cursor_start;
@@ -87,41 +71,41 @@ private:
 		bool doubleclick;
 		bool drag_attempt;
 	} selection;
-
+	
 	void shift_selection_check_pre(bool);
 	void shift_selection_check_post(bool);
-
+	
 	void selection_clear();
 	void selection_fill_at_cursor();
 	void selection_delete();
 	void set_window_pos(int p_pos);
-
+	
 	void set_cursor_at_pixel_pos(int p_x);
-
+	
 	void clear_internal();
 	void changed_internal();
-
-
+	
+	void copy_text();
+	void cut_text();
+	void paste_text();
+			
 
 	void _input_event(InputEvent p_event);
 	void _notification(int p_what);
-
-
-protected:
-	static void _bind_methods();
+	
+protected:	
+	static void _bind_methods();	
 public:
 	void set_align(Align p_align);
 	Align get_align() const;
-
+		
 	virtual Variant get_drag_data(const Point2& p_point);
 	virtual bool can_drop_data(const Point2& p_point,const Variant& p_data) const;
 	virtual void drop_data(const Point2& p_point,const Variant& p_data);
 
-	void menu_option(int p_option);
-	PopupMenu *get_menu() const;
-
+	
 	void select_all();
-
+	
 	void delete_char();
 	void set_text(String p_text);
 	String get_text() const;
@@ -131,15 +115,11 @@ public:
 	int get_max_length() const;
 	void append_at_cursor(String p_text);
 	void clear();
-
-	void copy_text();
-	void cut_text();
-	void paste_text();
-	void undo();
-
+	
+	
 	void set_editable(bool p_editable);
 	bool is_editable() const;
-
+	
 	void set_secret(bool p_secret);
 	bool is_secret() const;
 
@@ -147,10 +127,10 @@ public:
 
 	virtual Size2 get_minimum_size() const;
 
-	virtual bool is_text_field() const;
+    virtual bool is_text_field() const;
 	LineEdit();
 	~LineEdit();
-
+	
 };
 
 

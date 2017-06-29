@@ -45,7 +45,8 @@ class SceneTree;
 class PackedScene;
 class Node;
 class Viewport;
-
+class Material;
+class Mesh;
 
 class SceneTree : public MainLoop {
 
@@ -75,7 +76,7 @@ private:
 	struct Group {
 
 		Vector<Node*> nodes;
-		uint64_t last_tree_version;
+		uint64_t last_tree_version;		
 		Group() { last_tree_version=0; };
 	};
 
@@ -145,7 +146,10 @@ private:
 	Color debug_collision_contact_color;
 	Color debug_navigation_color;
 	Color debug_navigation_disabled_color;
-
+	Ref<Mesh> debug_contact_mesh;
+	Ref<Material> navigation_material;
+	Ref<Material> navigation_disabled_material;
+	Ref<Material> collision_material;
 	int collision_debug_contacts;
 
 	void _change_scene(Node* p_to);
@@ -302,13 +306,12 @@ public:
 	Color get_debug_navigation_disabled_color() const;
 
 
-
+	Ref<Material> get_debug_navigation_material();
+	Ref<Material> get_debug_navigation_disabled_material();
+	Ref<Material> get_debug_collision_material();
+	Ref<Mesh> get_debug_contact_mesh();
 
 	int get_collision_debug_contact_count() { return collision_debug_contacts; }
-
-    //Added by luciano
-    //Ref<Material> get_debug_navigation_material();
-	//Ref<Material> get_debug_navigation_disabled_material();
 
 	int64_t get_frame() const;
 
@@ -341,7 +344,6 @@ public:
 
 	static SceneTree* get_singleton() { return singleton; }
 
-	void drop_files(const Vector<String>& p_files,int p_from_screen=0);
 
 	SceneTree();
 	~SceneTree();

@@ -1,10 +1,10 @@
 #ifndef SCENE_GUI_COLOR_RAMP_EDIT_H_
 #define SCENE_GUI_COLOR_RAMP_EDIT_H_
 
-#include "./scene/gui/popup.h"
-#include "./scene/gui/color_picker.h"
-#include "./scene/resources/color_ramp.h"
-#include "./scene/resources/default_theme/theme_data.h"
+#include "scene/gui/popup.h"
+#include "scene/gui/color_picker.h"
+#include "scene/resources/color_ramp.h"
+#include "scene/resources/default_theme/theme_data.h"
 
 #define POINT_WIDTH 8
 

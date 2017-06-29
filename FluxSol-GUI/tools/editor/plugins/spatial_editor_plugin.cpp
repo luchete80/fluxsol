@@ -4092,13 +4092,13 @@ SpatialEditor::SpatialEditor(EditorNode *p_editor) {
 
 
     //Luciano, problem with Color Picker
-	//settings_ambient_color = memnew( ColorPickerButton );
-	//settings_vbc->add_margin_child("Ambient Light Color:",settings_ambient_color);
-	//settings_ambient_color->connect("color_changed",this,"_update_ambient_light_color");
+	settings_ambient_color = memnew( ColorPickerButton );
+	settings_vbc->add_margin_child("Ambient Light Color:",settings_ambient_color);
+	settings_ambient_color->connect("color_changed",this,"_update_ambient_light_color");
 
 	viewport_environment->set_enable_fx(Environment::FX_AMBIENT_LIGHT,true);
 	viewport_environment->fx_set_param(Environment::FX_PARAM_AMBIENT_LIGHT_COLOR,Color(0.15,0.15,0.15));
-	//settings_ambient_color->set_color(Color(0.15,0.15,0.15));
+	settings_ambient_color->set_color(Color(0.15,0.15,0.15));
 
 
 	settings_fov = memnew( SpinBox );

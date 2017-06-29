@@ -29,7 +29,7 @@
 #ifndef TOOL_BUTTON_H
 #define TOOL_BUTTON_H
 
-#include "./scene/gui/button.h"
+#include "scene/gui/button.h"
 
 class ToolButton : public Button {
 	OBJ_TYPE(ToolButton,Button);

@@ -29,7 +29,7 @@
 #ifndef TABS_H
 #define TABS_H
 
-#include "./scene/gui/control.h"
+#include "scene/gui/control.h"
 
 class Tabs : public Control {
 

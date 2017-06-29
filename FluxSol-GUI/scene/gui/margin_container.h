@@ -29,7 +29,7 @@
 #ifndef MARGIN_CONTAINER_H
 #define MARGIN_CONTAINER_H
 
-#include "./scene/gui/container.h"
+#include "scene/gui/container.h"
 
 class MarginContainer : public Container {
 	OBJ_TYPE(MarginContainer,Container);

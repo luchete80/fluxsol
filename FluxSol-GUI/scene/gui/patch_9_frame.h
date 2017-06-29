@@ -1,7 +1,7 @@
 #ifndef PATCH_9_FRAME_H
 #define PATCH_9_FRAME_H
 
-#include "./scene/gui/control.h"
+#include "scene/gui/control.h"
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
 */

@@ -1,7 +1,7 @@
 #include "graph_edit.h"
 #include "os/input.h"
 #include "os/keyboard.h"
-#include "./scene/gui/box_container.h"
+#include "scene/gui/box_container.h"
 
 
 #define ZOOM_SCALE 1.2
@@ -617,7 +617,7 @@ void GraphEdit::_input_event(const InputEvent& p_ev) {
 
 		if (b.button_index==BUTTON_LEFT && b.pressed) {
 
-			GraphNode *gn = NULL;
+			GraphNode *gn;
 			for(int i=get_child_count()-1;i>=0;i--) {
 
 				gn=get_child(i)->cast_to<GraphNode>();

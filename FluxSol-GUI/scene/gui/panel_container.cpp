@@ -31,12 +31,7 @@
 
 Size2 PanelContainer::get_minimum_size() const {
 
-	Ref<StyleBox> style;
-
-	if (has_stylebox("panel"))
-		style=get_stylebox("panel");
-	else
-		style=get_stylebox("panel","PanelContainer");
+	Ref<StyleBox> style=get_stylebox("panel");
 
 
 	Size2 ms;

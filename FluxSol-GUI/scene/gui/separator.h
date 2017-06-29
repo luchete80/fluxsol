@@ -33,7 +33,7 @@
 	@author Juan Linietsky <reduzio@gmail.com>
 */
 
-#include "./scene/gui/control.h"
+#include "scene/gui/control.h"
 class Separator : public Control {
 
 	OBJ_TYPE( Separator, Control );

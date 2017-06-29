@@ -29,7 +29,7 @@
 #ifndef BUTTON_ARRAY_H
 #define BUTTON_ARRAY_H
 
-#include "./scene/gui/control.h"
+#include "scene/gui/control.h"
 
 class ButtonArray : public Control {
 
@@ -69,7 +69,7 @@ protected:
 
 	void _notification(int p_what);
 	static void _bind_methods();
-
+	
 public:
 
 	void _input_event(const InputEvent& p_event);

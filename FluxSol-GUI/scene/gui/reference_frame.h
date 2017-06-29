@@ -29,7 +29,7 @@
 #ifndef REFERENCE_FRAME_H
 #define REFERENCE_FRAME_H
 
-#include "./scene/gui/control.h"
+#include "scene/gui/control.h"
 
 class ReferenceFrame : public Control {
 

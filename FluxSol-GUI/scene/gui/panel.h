@@ -29,18 +29,18 @@
 #ifndef PANEL_H
 #define PANEL_H
 
-#include "./scene/gui/control.h"
+#include "scene/gui/control.h"
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
 */
 class Panel : public Control{
-
+	
 	OBJ_TYPE(Panel,Control);
 protected:
 
 	void _notification(int p_what);
 public:
-	Panel();
+	Panel();	
 	~Panel();
 
 };

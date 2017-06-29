@@ -29,7 +29,7 @@
 #ifndef GRID_CONTAINER_H
 #define GRID_CONTAINER_H
 
-#include "./scene/gui/container.h"
+#include "scene/gui/container.h"
 
 class GridContainer : public Container {
 

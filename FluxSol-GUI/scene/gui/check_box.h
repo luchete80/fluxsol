@@ -30,7 +30,7 @@
 #define CHECK_BOX_H
 
 
-#include "./scene/gui/button.h"
+#include "scene/gui/button.h"
 /**
 @author Mariano Suligoy <marianognu.esyrpg@gmail.com>
 */

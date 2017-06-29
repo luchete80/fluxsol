@@ -30,7 +30,7 @@
 #define RICH_TEXT_LABEL_H
 
 
-#include "./scene/gui/scroll_bar.h"
+#include "scene/gui/scroll_bar.h"
 
 class RichTextLabel : public Control {
 

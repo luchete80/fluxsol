@@ -29,7 +29,7 @@
 #ifndef LABEL_H
 #define LABEL_H
 
-#include "./scene/gui/control.h"
+#include "scene/gui/control.h"
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
 */

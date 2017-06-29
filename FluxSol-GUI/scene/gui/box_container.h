@@ -29,7 +29,7 @@
 #ifndef BOX_CONTAINER_H
 #define BOX_CONTAINER_H
 
-#include "./scene/gui/container.h"
+#include "scene/gui/container.h"
 
 class BoxContainer : public Container {
 

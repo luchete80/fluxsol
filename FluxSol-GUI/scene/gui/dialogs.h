@@ -29,11 +29,11 @@
 #ifndef DIALOGS_H
 #define DIALOGS_H
 
-#include "./scene/gui/label.h"
-#include "./scene/gui/button.h"
-#include "./scene/gui/texture_button.h"
-#include "./scene/gui/panel.h"
-#include "./scene/gui/popup.h"
+#include "scene/gui/label.h"
+#include "scene/gui/button.h"
+#include "scene/gui/texture_button.h"
+#include "scene/gui/panel.h"
+#include "scene/gui/popup.h"
 #include "box_container.h"
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
@@ -64,8 +64,6 @@ public:
 	void set_title(const String& p_title);
 	String get_title() const;
 
-	Size2 get_minimum_size() const;
-
 	WindowDialog();
 	~WindowDialog();
 
@@ -91,7 +89,6 @@ class AcceptDialog : public WindowDialog {
 
 	OBJ_TYPE(AcceptDialog,WindowDialog);
 
-	Control *child;
 	HBoxContainer *hbc;
 	Label *label;
 	Button *ok;
@@ -103,12 +100,10 @@ class AcceptDialog : public WindowDialog {
 	void _ok_pressed();
 	void _close_pressed();
 	void _builtin_text_entered(const String& p_text);
-	void _update_child_rect();
 
 	static bool swap_ok_cancel;
 
 
-	virtual void remove_child_notify(Node *p_child);
 
 
 protected:
@@ -120,8 +115,6 @@ protected:
 	virtual void cancel_pressed() {}
 	virtual void custom_action(const String&) {}
 public:
-
-	Size2 get_minimum_size() const;
 
 	Label *get_label() { return label; }
 	static void set_swap_ok_cancel(bool p_swap);
@@ -149,7 +142,7 @@ public:
 
 
 class ConfirmationDialog : public AcceptDialog {
-
+	
 	OBJ_TYPE(ConfirmationDialog,AcceptDialog);
 	Button *cancel;
 protected:

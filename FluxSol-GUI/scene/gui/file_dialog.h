@@ -29,21 +29,21 @@
 #ifndef FILE_DIALOG_H
 #define FILE_DIALOG_H
 
-#include "./scene/gui/dialogs.h"
-#include "./scene/gui/tree.h"
-#include "./scene/gui/line_edit.h"
-#include "./scene/gui/option_button.h"
-#include "./scene/gui/dialogs.h"
-#include "./scene/gui/tool_button.h"
+#include "scene/gui/dialogs.h"
+#include "scene/gui/tree.h"
+#include "scene/gui/line_edit.h"
+#include "scene/gui/option_button.h"
+#include "scene/gui/dialogs.h"
+#include "scene/gui/tool_button.h"
 #include "os/dir_access.h"
 #include "box_container.h"
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
 */
 class FileDialog : public ConfirmationDialog {
-
+	
 	OBJ_TYPE( FileDialog, ConfirmationDialog );
-
+	
 public:
 
 	enum Access {
@@ -57,8 +57,7 @@ public:
 		MODE_OPEN_FILE,
 		MODE_OPEN_FILES,
 		MODE_OPEN_DIR,
-		MODE_OPEN_ANY,
-		MODE_SAVE_FILE
+		MODE_SAVE_FILE,
 	};
 
 	typedef Ref<Texture> (*GetIconFunc)(const String&);
@@ -90,7 +89,7 @@ private:
 	ConfirmationDialog *confirm_save;
 
 	ToolButton *refresh;
-
+	
 	Vector<String> filters;
 
 
@@ -98,13 +97,13 @@ private:
 	bool show_hidden_files;
 
 	bool invalidated;
-
+	
 	void update_dir();
 	void update_file_list();
 	void update_filters();
-
+	
 	void _tree_selected();
-
+	
 	void _select_drive(int p_idx);
 	void _tree_dc_selected();
 	void _dir_entered(String p_dir);
@@ -123,18 +122,18 @@ private:
 	virtual void _post_popup();
 
 protected:
-
+	
 	void _notification(int p_what);
 	static void _bind_methods();
 	//bind helpers
 public:
-
+	
 	void clear_filters();
 	void add_filter(const String& p_filter);
 
 	void set_enable_multiple_selection(bool p_enable);
 	Vector<String> get_selected_files() const;
-
+	
 	String get_current_dir() const;
 	String get_current_file() const;
 	String get_current_path() const;
@@ -157,8 +156,8 @@ public:
 	static void set_default_show_hidden_files(bool p_show);
 
 	void invalidate();
-
-	FileDialog();
+	
+	FileDialog();	
 	~FileDialog();
 
 };

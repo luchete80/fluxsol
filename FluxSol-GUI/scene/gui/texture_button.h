@@ -29,8 +29,8 @@
 #ifndef TEXTURE_BUTTON_H
 #define TEXTURE_BUTTON_H
 
-#include "./scene/gui/base_button.h"
-#include "./scene/resources/bit_mask.h"
+#include "scene/gui/base_button.h"
+#include "scene/resources/bit_mask.h"
 class TextureButton : public BaseButton {
 
 	OBJ_TYPE( TextureButton, BaseButton );

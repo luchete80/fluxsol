@@ -27,7 +27,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 #include "container.h"
-#include "./scene/scene_string_names.h"
+#include "scene/scene_string_names.h"
 #include "message_queue.h"
 
 

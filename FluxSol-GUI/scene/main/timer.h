@@ -38,8 +38,6 @@ class Timer : public Node {
 	float wait_time;
 	bool one_shot;
 	bool autostart;
-	bool processing;
-	bool active;
 
 	double time_left;
 protected:
@@ -64,8 +62,6 @@ public:
 
 	void start();
 	void stop();
-	void set_active(bool p_active);
-	bool is_active() const;
 
 	float get_time_left() const;
 

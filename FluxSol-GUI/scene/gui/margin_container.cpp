@@ -31,10 +31,7 @@
 
 Size2 MarginContainer::get_minimum_size() const {
 
-	int margin_left = get_constant("margin_left");
-	int margin_top = get_constant("margin_top");
-	int margin_right = get_constant("margin_right");
-	int margin_bottom = get_constant("margin_bottom");
+	int margin = get_constant("margin");
 
 	Size2 max;
 
@@ -55,10 +52,9 @@ Size2 MarginContainer::get_minimum_size() const {
 			max.height = s.height;
 	}
 
-	max.width += (margin_left + margin_right);
-	max.height += (margin_top + margin_bottom);
-
+	max.width += margin;
 	return max;
+
 
 }
 
@@ -66,10 +62,7 @@ void MarginContainer::_notification(int p_what) {
 
 	if (p_what==NOTIFICATION_SORT_CHILDREN) {
 
-		int margin_left = get_constant("margin_left");
-		int margin_top = get_constant("margin_top");
-		int margin_right = get_constant("margin_right");
-		int margin_bottom = get_constant("margin_bottom");
+		int margin = get_constant("margin");
 
 		Size2 s = get_size();
 
@@ -80,10 +73,13 @@ void MarginContainer::_notification(int p_what) {
 				continue;
 			if (c->is_set_as_toplevel())
 				continue;
+			int w;
+			if (c->get_h_size_flags() & Control::SIZE_EXPAND)
+				w=s.width-margin;
+			else
+				w=c->get_combined_minimum_size().width;
 
-			int w=s.width-margin_left-margin_right;
-			int h=s.height-margin_top-margin_bottom;
-			fit_child_in_rect(c,Rect2(margin_left,margin_top,w,h));
+			fit_child_in_rect(c,Rect2(margin,0,s.width-margin,s.height));
 		}
 
 	}

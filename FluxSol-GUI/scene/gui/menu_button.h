@@ -29,30 +29,30 @@
 #ifndef MENU_BUTTON_H
 #define MENU_BUTTON_H
 
-#include "./scene/gui/popup_menu.h"
-#include "./scene/gui/button.h"
+#include "scene/gui/popup_menu.h"
+#include "scene/gui/button.h"
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
 */
 class MenuButton : public Button {
-
+	
 	OBJ_TYPE( MenuButton, Button );
 
 	bool clicked;
 	PopupMenu *popup;
-	virtual void pressed();
+	virtual void pressed();	
 
 	void _unhandled_key_input(InputEvent p_event);
 	Array _get_items() const;
 	void _set_items(const Array& p_items);
 
 	void _input_event(InputEvent p_event);
-protected:
+protected:	
+	
 
-
-	static void _bind_methods();
+	static void _bind_methods();		
 public:
-
+	
 	PopupMenu *get_popup();
 	MenuButton();
 	~MenuButton();

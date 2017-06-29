@@ -27,7 +27,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 #include "rich_text_label.h"
-#include "./scene/scene_string_names.h"
+#include "scene/scene_string_names.h"
 #include "os/keyboard.h"
 #include "os/os.h"
 RichTextLabel::Item *RichTextLabel::_get_next_item(Item* p_item,bool p_free) {
@@ -237,7 +237,7 @@ if (m_height > line_height) {\
 				if (font.is_null())
 					font=p_base_font;
 
-				const CharType *c = text->text.c_str();
+				const CharType *c = text->text.c_str();				
 				const CharType *cf=c;
 				int fh=font->get_height();
 				int ascent = font->get_ascent();
@@ -297,7 +297,7 @@ if (m_height > line_height) {\
 							fw+=cw;
 						}
 
-						end++;
+						end++;						
 					}
 
 					ENSURE_WIDTH(w);
@@ -2058,7 +2058,7 @@ RichTextLabel::RichTextLabel() {
 	scroll_active=true;
 	scroll_w=0;
 
-	vscroll = memnew( VScrollBar );
+	vscroll = memnew( VScrollBar );	
 	add_child(vscroll);
 	vscroll->set_drag_slave(String(".."));
 	vscroll->set_step(1);

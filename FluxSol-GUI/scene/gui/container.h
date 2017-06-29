@@ -29,7 +29,7 @@
 #ifndef CONTAINER_H
 #define CONTAINER_H
 
-#include "./scene/gui/control.h"
+#include "scene/gui/control.h"
 
 class Container : public Control {
 

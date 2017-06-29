@@ -30,8 +30,8 @@
 #define TAB_CONTAINER_H
 
 
-#include "./scene/gui/control.h"
-#include "./scene/gui/popup.h"
+#include "scene/gui/control.h"
+#include "scene/gui/popup.h"
 class TabContainer : public Control {
 
 	OBJ_TYPE( TabContainer, Control );

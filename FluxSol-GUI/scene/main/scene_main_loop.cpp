@@ -35,13 +35,15 @@
 #include "globals.h"
 #include <stdio.h>
 #include "os/keyboard.h"
-
 //#include "servers/spatial_sound_2d_server.h"
-
+//#include "servers/physics_2d_server.h"
+//#include "servers/physics_server.h"
 #include "scene/scene_string_names.h"
 #include "io/resource_loader.h"
 #include "viewport.h"
 #include "scene/resources/packed_scene.h"
+#include "scene/resources/material.h"
+#include "scene/resources/mesh.h"
 
 void SceneTree::tree_changed() {
 
@@ -209,7 +211,7 @@ void SceneTree::call_group(uint32_t p_call_flags,const StringName& p_group,const
 				else
 					nodes[i]->call(p_function,VARIANT_ARG_PASS);
 			} else
-				MessageQueue::get_singleton()->push_call(nodes[i],p_function,VARIANT_ARG_PASS);
+				MessageQueue::get_singleton()->push_call(nodes[i],p_function,VARIANT_ARG_PASS);			
 		}
 
 	}
@@ -431,7 +433,7 @@ void SceneTree::input_event( const InputEvent& p_event ) {
 		ScriptDebugger::get_singleton()->request_quit();
 	}
 
-	_flush_ugc();
+	_flush_ugc();	
 	root_lock--;
 	MessageQueue::get_singleton()->flush(); //small little hack
 
@@ -495,7 +497,10 @@ bool SceneTree::iteration(float p_time) {
 	_notify_group_pause("fixed_process",Node::NOTIFICATION_FIXED_PROCESS);
 	_flush_ugc();
 	_flush_transform_notifications();
-	//LUCIANO
+	call_group(GROUP_CALL_REALTIME,"_viewports","update_worlds");
+	root_lock--;
+
+	_flush_delete_queue();
 
 	return _quit;
 }
@@ -689,6 +694,112 @@ Color SceneTree::get_debug_navigation_disabled_color() const {
 	return debug_navigation_disabled_color;
 }
 
+Ref<Material> SceneTree::get_debug_navigation_material() {
+
+	if (navigation_material.is_valid())
+		return navigation_material;
+
+	Ref<FixedMaterial> line_material = Ref<FixedMaterial>( memnew( FixedMaterial ));
+	line_material->set_flag(Material::FLAG_UNSHADED, true);
+	line_material->set_line_width(3.0);
+	line_material->set_fixed_flag(FixedMaterial::FLAG_USE_ALPHA, true);
+	line_material->set_fixed_flag(FixedMaterial::FLAG_USE_COLOR_ARRAY, true);
+	line_material->set_parameter(FixedMaterial::PARAM_DIFFUSE,get_debug_navigation_color());
+
+	navigation_material=line_material;
+
+	return navigation_material;
+
+}
+
+Ref<Material> SceneTree::get_debug_navigation_disabled_material(){
+
+	if (navigation_disabled_material.is_valid())
+		return navigation_disabled_material;
+
+	Ref<FixedMaterial> line_material = Ref<FixedMaterial>( memnew( FixedMaterial ));
+	line_material->set_flag(Material::FLAG_UNSHADED, true);
+	line_material->set_line_width(3.0);
+	line_material->set_fixed_flag(FixedMaterial::FLAG_USE_ALPHA, true);
+	line_material->set_fixed_flag(FixedMaterial::FLAG_USE_COLOR_ARRAY, true);
+	line_material->set_parameter(FixedMaterial::PARAM_DIFFUSE,get_debug_navigation_disabled_color());
+
+	navigation_disabled_material=line_material;
+
+	return navigation_disabled_material;
+
+}
+Ref<Material> SceneTree::get_debug_collision_material() {
+
+	if (collision_material.is_valid())
+		return collision_material;
+
+
+	Ref<FixedMaterial> line_material = Ref<FixedMaterial>( memnew( FixedMaterial ));
+	line_material->set_flag(Material::FLAG_UNSHADED, true);
+	line_material->set_line_width(3.0);
+	line_material->set_fixed_flag(FixedMaterial::FLAG_USE_ALPHA, true);
+	line_material->set_fixed_flag(FixedMaterial::FLAG_USE_COLOR_ARRAY, true);
+	line_material->set_parameter(FixedMaterial::PARAM_DIFFUSE,get_debug_collisions_color());
+
+	collision_material=line_material;
+
+	return collision_material;
+}
+
+Ref<Mesh> SceneTree::get_debug_contact_mesh() {
+
+	if (debug_contact_mesh.is_valid())
+		return debug_contact_mesh;
+
+	debug_contact_mesh = Ref<Mesh>( memnew( Mesh ) );
+
+	Ref<FixedMaterial> mat = memnew( FixedMaterial );
+	mat->set_flag(Material::FLAG_UNSHADED,true);
+	mat->set_flag(Material::FLAG_DOUBLE_SIDED,true);
+	mat->set_fixed_flag(FixedMaterial::FLAG_USE_ALPHA,true);
+	mat->set_parameter(FixedMaterial::PARAM_DIFFUSE,get_debug_collision_contact_color());
+
+	Vector3 diamond[6]={
+		Vector3(-1, 0, 0),
+		Vector3( 1, 0, 0),
+		Vector3( 0, -1, 0),
+		Vector3( 0, 1, 0),
+		Vector3( 0, 0, -1),
+		Vector3( 0, 0, 1)
+	};
+
+	int diamond_faces[8*3]={
+		0,2,4,
+		0,3,4,
+		1,2,4,
+		1,3,4,
+		0,2,5,
+		0,3,5,
+		1,2,5,
+		1,3,5,
+	};
+
+	DVector<int> indices;
+	for(int i=0;i<8*3;i++)
+		indices.push_back(diamond_faces[i]);
+
+	DVector<Vector3> vertices;
+	for(int i=0;i<6;i++)
+		vertices.push_back(diamond[i]*0.1);
+
+	Array arr;
+	arr.resize(Mesh::ARRAY_MAX);
+	arr[Mesh::ARRAY_VERTEX]=vertices;
+	arr[Mesh::ARRAY_INDEX]=indices;
+
+
+	debug_contact_mesh->add_surface(Mesh::PRIMITIVE_TRIANGLES,arr);
+	debug_contact_mesh->surface_set_material(0,mat);
+
+	return debug_contact_mesh;
+
+}
 
 
 
@@ -697,7 +808,8 @@ void SceneTree::set_pause(bool p_enabled) {
 	if (p_enabled==pause)
 		return;
 	pause=p_enabled;
-
+	// PhysicsServer::get_singleton()->set_active(!p_enabled);
+	// Physics2DServer::get_singleton()->set_active(!p_enabled);
 	if (get_root())
 		get_root()->propagate_notification(p_enabled ? Node::NOTIFICATION_PAUSED : Node::NOTIFICATION_UNPAUSED);
 }
@@ -890,7 +1002,6 @@ static void _fill_array(Node *p_node, Array& array, int p_level) {
 	array.push_back(p_level);
 	array.push_back(p_node->get_name());
 	array.push_back(p_node->get_type());
-	array.push_back(p_node->get_instance_ID());
 	for(int i=0;i<p_node->get_child_count();i++) {
 
 		_fill_array(p_node->get_child(i),array,p_level+1);
@@ -1481,14 +1592,6 @@ void SceneTree::_live_edit_reparent_node_func(const NodePath& p_at,const NodePat
 
 
 #endif
-
-
-void SceneTree::drop_files(const Vector<String>& p_files,int p_from_screen) {
-
-	emit_signal("files_dropped",p_files,p_from_screen);
-	MainLoop::drop_files(p_files,p_from_screen);
-}
-
 void SceneTree::_bind_methods() {
 
 
@@ -1557,12 +1660,9 @@ void SceneTree::_bind_methods() {
 	ADD_SIGNAL( MethodInfo("tree_changed") );
 	ADD_SIGNAL( MethodInfo("node_removed",PropertyInfo( Variant::OBJECT, "node") ) );
 	ADD_SIGNAL( MethodInfo("screen_resized") );
-	ADD_SIGNAL( MethodInfo("node_configuration_warning_changed",PropertyInfo( Variant::OBJECT, "node")) );
 
 	ADD_SIGNAL( MethodInfo("idle_frame"));
 	ADD_SIGNAL( MethodInfo("fixed_frame"));
-
-	ADD_SIGNAL( MethodInfo("files_dropped",PropertyInfo(Variant::STRING_ARRAY,"files"),PropertyInfo(Variant::INT,"screen")) );
 
 	BIND_CONSTANT( GROUP_CALL_DEFAULT );
 	BIND_CONSTANT( GROUP_CALL_REVERSE );
@@ -1629,7 +1729,7 @@ SceneTree::SceneTree() {
 		ScriptDebugger::get_singleton()->set_request_scene_tree_message_func(_debugger_request_tree,this);
 	}
 
-	root->set_physics_object_picking(GLOBAL_DEF("physics/enable_object_picking",true));
+//	root->set_physics_object_picking(GLOBAL_DEF("physics/enable_object_picking",true));
 
 //#ifdef TOOLS_ENABLED
 	edited_scene_root=NULL;

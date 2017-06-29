@@ -1,7 +1,7 @@
 #ifndef GRAPH_NODE_H
 #define GRAPH_NODE_H
 
-#include "./scene/gui/container.h"
+#include "scene/gui/container.h"
 
 class GraphNode : public Container {
 

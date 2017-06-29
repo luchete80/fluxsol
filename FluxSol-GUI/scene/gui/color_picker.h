@@ -29,17 +29,17 @@
 #ifndef COLOR_PICKER_H
 #define COLOR_PICKER_H
 
-#include "./scene/gui/slider.h"
-#include "./scene/gui/line_edit.h"
-#include "./scene/gui/spin_box.h"
-#include "./scene/gui/label.h"
-#include "./scene/gui/button.h"
-#include "./scene/gui/popup.h"
-#include "./scene/gui/box_container.h"
-#include "./scene/gui/texture_frame.h"
-#include "./scene/gui/tool_button.h"
-#include "./scene/gui/check_button.h"
-
+#include "scene/gui/slider.h"
+#include "scene/gui/line_edit.h"
+#include "scene/gui/spin_box.h"
+#include "scene/gui/label.h"
+#include "scene/gui/button.h"
+#include "scene/gui/popup.h"
+#include "scene/gui/box_container.h"
+#include "scene/gui/texture_frame.h"
+#include "scene/gui/tool_button.h"
+#include "scene/gui/check_button.h"
+#include "scene/resources/material.h"
 
 class ColorPicker : public BoxContainer {
 

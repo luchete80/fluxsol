@@ -29,7 +29,7 @@
 #ifndef TEXTURE_PROGRESS_H
 #define TEXTURE_PROGRESS_H
 
-#include "./scene/gui/range.h"
+#include "scene/gui/range.h"
 
 class TextureProgress : public Range {
 

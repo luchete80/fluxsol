@@ -29,7 +29,7 @@
 #ifndef PROGRESS_BAR_H
 #define PROGRESS_BAR_H
 
-#include "./scene/gui/range.h"
+#include "scene/gui/range.h"
 
 class ProgressBar : public Range {
 

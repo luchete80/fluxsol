@@ -30,7 +30,7 @@
 #define CENTER_CONTAINER_H
 
 
-#include "./scene/gui/container.h"
+#include "scene/gui/container.h"
 
 class CenterContainer : public Container {
 
