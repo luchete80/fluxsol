@@ -62,6 +62,7 @@
 #include "plugins/camera_editor_plugin.h"
 #include "plugins/style_box_editor_plugin.h"
 #include "plugins/resource_preloader_editor_plugin.h"
+#include "plugins/spatial_editor_plugin.h"
 #include "plugins/theme_editor_plugin.h"
 
 #include "main/input_default.h"
@@ -5514,9 +5515,10 @@ EditorNode::EditorNode() {
 	editor_import_export->add_import_plugin( Ref<EditorTextureImportPlugin>( memnew(EditorTextureImportPlugin(this,EditorTextureImportPlugin::MODE_LARGE) )));
 	editor_import_export->add_import_plugin( Ref<EditorTextureImportPlugin>( memnew(EditorTextureImportPlugin(this,EditorTextureImportPlugin::MODE_TEXTURE_3D) )));
 
-	editor_import_export->add_import_plugin( Ref<EditorMeshImportPlugin>( memnew(EditorMeshImportPlugin(this))));
+//	editor_import_export->add_import_plugin( Ref<EditorMeshImportPlugin>( memnew(EditorMeshImportPlugin(this))));
 
 	add_editor_plugin( memnew( CanvasItemEditorPlugin(this) ) );
+	add_editor_plugin( memnew( SpatialEditorPlugin(this) ) );
 	add_editor_plugin( memnew( ThemeEditorPlugin(this) ) );
 	add_editor_plugin( memnew( StyleBoxEditorPlugin(this) ) );
 

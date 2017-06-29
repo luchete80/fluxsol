@@ -2257,35 +2257,14 @@ void OS_Windows::run() {
 
 	int frames=0;
 	uint64_t frame=0;
-    //Main::iteration(); //THIS CRASHES
-    //gvtk_viewport=new MyFrame(hWnd);
+
 	while (!force_quit) { //LUCIANO
 
 		process_events(); // get rid of pending events
-//		if (Main::iteration()==true)
-//			break;
-//glClearColor(1,0,0,1);
-//            glClear(GL_COLOR_BUFFER_BIT);
-//                glViewport(0, 0, 100, 100);
-//    glMatrixMode(GL_PROJECTION);
-//    glLoadIdentity();
-//    //gluPerspective(60.0, (float)width/height, 0.001, 100.0);
-//    glMatrixMode(GL_MODELVIEW);
-//    glLoadIdentity();
-//    glTranslatef(0.0f, 0.0f, -3.0f);
-//    glBegin(GL_TRIANGLES);
-//    glColor3f(1.0f, 0.0f, 0.0f);
-//    glVertex2i(0,  1);
-//    glColor3f(0.0f, 1.0f, 0.0f);
-//    glVertex2i(-1, -1);
-//    glColor3f(0.0f, 0.0f, 1.0f);
-//    glVertex2i(1, -1);
-//    glEnd();
-//    glFlush();
-//    SwapBuffers(hDC);
+
 	}; //LUCIANO
 
-	//main_loop->finish(); //LUCIANO
+	main_loop->finish(); //LUCIANO
 
 }
 

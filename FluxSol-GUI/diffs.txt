@@ -1,0 +1,5 @@
+diff -bur /d/Luciano/Programas-Src/godot-src-2.0-branch/tools/editor/editor_node.cpp /d/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-GUI/tools/editor/editor_node.cpp > /d/Luciano/editor.txt
+
+diff -bur /d/Luciano/Programas-Src/godot-src-2.0-branch/tools/main/ /d/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-GUI/tools/main >  /d/Luciano/editor.txt
+
+diff -bur /d/Luciano/Programas-Src/godot-src-2.0-branch/scene/ /d/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-GUI/scene >  /d/Luciano/scene.txt
