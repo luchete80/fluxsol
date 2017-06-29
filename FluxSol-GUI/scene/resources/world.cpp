@@ -306,12 +306,12 @@ World::World() {
 ////	sound_space = SpatialSoundServer::get_singleton()->space_create();
 //
 //	PhysicsServer::get_singleton()->space_set_active(space,true);
-//
-//#ifdef _3D_DISABLED
-//	indexer = NULL;
-//#else
-//	indexer =  memnew( SpatialIndexer );
-//#endif
+
+#ifdef _3D_DISABLED
+	indexer = NULL;
+#else
+	indexer =  memnew( SpatialIndexer );
+#endif
 }
 
 World::~World() {
