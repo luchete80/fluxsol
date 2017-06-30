@@ -5,3 +5,5 @@ diff -bur /d/Luciano/Programas-Src/godot-src-2.0-branch/tools/main/ /d/Luciano/N
 diff -bur /d/Luciano/Programas-Src/godot-src-2.0-stable/scene/ /d/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-GUI/scene >  /d/Luciano/scene.txt
 
 diff -bur /d/Luciano/Programas-Src/godot-src-2.0-stable/servers/ /d/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-GUI/servers >  /d/Luciano/servers.txt
+
+diff -bur /d/Luciano/Programas-Src/godot-src-2.0-stable/drivers/gles2 /d/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-GUI/drivers/gles2 >  /d/Luciano/gles2.txt

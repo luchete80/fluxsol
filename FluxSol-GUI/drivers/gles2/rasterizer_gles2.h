@@ -29,12 +29,11 @@
 #ifndef RASTERIZER_GLES2_H
 #define RASTERIZER_GLES2_H
 
-#define GLES2_ENABLED
-
 #include "servers/visual/rasterizer.h"
 
 #define MAX_POLYGON_VERTICES 4096 //used for WebGL canvas_draw_polygon call.
-
+#define GLES2_ENABLED
+#define GLEW_ENABLED
 
 #ifdef GLES2_ENABLED
 
@@ -60,7 +59,7 @@
 #include "drivers/gles2/shaders/blur.glsl.h"
 #include "drivers/gles2/shaders/copy.glsl.h"
 #include "drivers/gles2/shader_compiler_gles2.h"
-
+//#include "servers/visual/particle_system_sw.h"
 
 /**
         @author Juan Linietsky <reduzio@gmail.com>
@@ -110,8 +109,6 @@ class RasterizerGLES2 : public Rasterizer {
 
 	bool use_half_float;
 	bool low_memory_2d;
-
-	bool shrink_textures_x2;
 
 	Vector<float> skel_default;
 
@@ -259,7 +256,7 @@ class RasterizerGLES2 : public Rasterizer {
 
 			bool inuse;
 			bool istexture;
-			Variant value;
+			Variant value;			
 			int index;
 		};
 
@@ -525,7 +522,12 @@ class RasterizerGLES2 : public Rasterizer {
 
 	struct Particles : public Geometry {
 
+		//ParticleSystemSW data; // software particle system
 
+		Particles() {
+			type=GEOMETRY_PARTICLES;
+
+		}
 	};
 
 	mutable RID_Owner<Particles> particles_owner;
@@ -534,14 +536,14 @@ class RasterizerGLES2 : public Rasterizer {
 
 		RID particles;
 
-
+		//ParticleSystemProcessSW particles_process;
 		Transform transform;
 
 		ParticlesInstance() {  }
 	};
 
 	mutable RID_Owner<ParticlesInstance> particles_instance_owner;
-
+	//ParticleSystemDrawInfoSW particle_draw_info;
 
 	struct Skeleton {
 
@@ -829,9 +831,7 @@ class RasterizerGLES2 : public Rasterizer {
 
 	bool fragment_lighting;
 	RID shadow_material;
-	RID shadow_material_double_sided;
 	Material *shadow_mat_ptr;
-	Material *shadow_mat_double_sided_ptr;
 
 	int max_texture_units;
 	GLuint base_framebuffer;
@@ -1068,7 +1068,7 @@ class RasterizerGLES2 : public Rasterizer {
 
 	Plane camera_plane;
 
-	void _add_geometry( const Geometry* p_geometry, const InstanceData *p_instance, const Geometry *p_geometry_cmp, const GeometryOwner *p_owner,int p_material=-1);
+	void _add_geometry( const Geometry* p_geometry, const InstanceData *p_instance, const Geometry *p_geometry_cmp, const GeometryOwner *p_owner);
 	void _render_list_forward(RenderList *p_render_list,const Transform& p_view_transform,const Transform& p_view_transform_inverse, const CameraMatrix& p_projection,bool p_reverse_cull=false,bool p_fragment_light=false,bool p_alpha_pass=false);
 
 	//void _setup_light(LightInstance* p_instance, int p_idx);
@@ -1336,8 +1336,6 @@ public:
 	virtual String texture_get_path(RID p_texture) const;
 	virtual void texture_debug_usage(List<VS::TextureInfo> *r_info);
 
-	virtual void texture_set_shrink_all_x2_on_set_data(bool p_enable);
-
 	GLuint _texture_get_name(RID p_tex);
 
 	/* SHADER API */
@@ -1451,6 +1449,65 @@ public:
 	virtual void immediate_set_material(RID p_immediate,RID p_material);
 	virtual RID immediate_get_material(RID p_immediate) const;
 
+	// /* PARTICLES API */
+
+	// virtual RID particles_create();
+
+	// virtual void particles_set_amount(RID p_particles, int p_amount);
+	// virtual int particles_get_amount(RID p_particles) const;
+
+	// virtual void particles_set_emitting(RID p_particles, bool p_emitting);
+	// virtual bool particles_is_emitting(RID p_particles) const;
+
+	// virtual void particles_set_visibility_aabb(RID p_particles, const AABB& p_visibility);
+	// virtual AABB particles_get_visibility_aabb(RID p_particles) const;
+
+	// virtual void particles_set_emission_half_extents(RID p_particles, const Vector3& p_half_extents);
+	// virtual Vector3 particles_get_emission_half_extents(RID p_particles) const;
+
+	// virtual void particles_set_emission_base_velocity(RID p_particles, const Vector3& p_base_velocity);
+	// virtual Vector3 particles_get_emission_base_velocity(RID p_particles) const;
+
+	// virtual void particles_set_emission_points(RID p_particles, const DVector<Vector3>& p_points);
+	// virtual DVector<Vector3> particles_get_emission_points(RID p_particles) const;
+
+	// virtual void particles_set_gravity_normal(RID p_particles, const Vector3& p_normal);
+	// virtual Vector3 particles_get_gravity_normal(RID p_particles) const;
+
+	// virtual void particles_set_variable(RID p_particles, VS::ParticleVariable p_variable,float p_value);
+	// virtual float particles_get_variable(RID p_particles, VS::ParticleVariable p_variable) const;
+
+	// virtual void particles_set_randomness(RID p_particles, VS::ParticleVariable p_variable,float p_randomness);
+	// virtual float particles_get_randomness(RID p_particles, VS::ParticleVariable p_variable) const;
+
+	// virtual void particles_set_color_phase_pos(RID p_particles, int p_phase, float p_pos);
+	// virtual float particles_get_color_phase_pos(RID p_particles, int p_phase) const;
+
+	// virtual void particles_set_color_phases(RID p_particles, int p_phases);
+	// virtual int particles_get_color_phases(RID p_particles) const;
+
+	// virtual void particles_set_color_phase_color(RID p_particles, int p_phase, const Color& p_color);
+	// virtual Color particles_get_color_phase_color(RID p_particles, int p_phase) const;
+
+	// virtual void particles_set_attractors(RID p_particles, int p_attractors);
+	// virtual int particles_get_attractors(RID p_particles) const;
+
+	// virtual void particles_set_attractor_pos(RID p_particles, int p_attractor, const Vector3& p_pos);
+	// virtual Vector3 particles_get_attractor_pos(RID p_particles,int p_attractor) const;
+
+	// virtual void particles_set_attractor_strength(RID p_particles, int p_attractor, float p_force);
+	// virtual float particles_get_attractor_strength(RID p_particles,int p_attractor) const;
+
+	// virtual void particles_set_material(RID p_particles, RID p_material,bool p_owned=false);
+	// virtual RID particles_get_material(RID p_particles) const;
+
+	// virtual AABB particles_get_aabb(RID p_particles) const;
+
+	// virtual void particles_set_height_from_velocity(RID p_particles, bool p_enable);
+	// virtual bool particles_has_height_from_velocity(RID p_particles) const;
+
+	// virtual void particles_set_use_local_coordinates(RID p_particles, bool p_enable);
+	// virtual bool particles_is_using_local_coordinates(RID p_particles) const;
 
 	/* SKELETON API */
 
@@ -1649,7 +1706,7 @@ public:
 	void reload_vram();
 
 	virtual bool has_feature(VS::Features p_feature) const;
-
+	
 	virtual void restore_framebuffer();
 
 	static RasterizerGLES2* get_singleton();

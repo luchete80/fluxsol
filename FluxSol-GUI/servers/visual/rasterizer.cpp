@@ -406,31 +406,31 @@ void Rasterizer::fixed_material_set_parameter(RID p_material, VS::FixedMaterialP
 }
 Variant Rasterizer::fixed_material_get_parameter(RID p_material,VS::FixedMaterialParam p_parameter) const{
 
-	// const Map<RID,FixedMaterial*>::Element *E = fixed_materials.find(p_material);
-	// ERR_FAIL_COND_V(!E,Variant());
-	// const FixedMaterial &fm=*E->get();
-	// ERR_FAIL_INDEX_V(p_parameter,VS::FIXED_MATERIAL_PARAM_MAX,Variant());
-	// return fm.param[p_parameter];
+	const Map<RID,FixedMaterial*>::Element *E = fixed_materials.find(p_material);
+	ERR_FAIL_COND_V(!E,Variant());
+	const FixedMaterial &fm=*E->get();
+	ERR_FAIL_INDEX_V(p_parameter,VS::FIXED_MATERIAL_PARAM_MAX,Variant());
+	return fm.param[p_parameter];
 }
 
 void Rasterizer::fixed_material_set_texture(RID p_material,VS::FixedMaterialParam p_parameter, RID p_texture){
 
-	// Map<RID,FixedMaterial*>::Element *E = fixed_materials.find(p_material);
-	// if (!E) {
+	Map<RID,FixedMaterial*>::Element *E = fixed_materials.find(p_material);
+	if (!E) {
 
-		// print_line("Not found: "+itos(p_material.get_id()));
-	// }
-	// ERR_FAIL_COND(!E);
-	// FixedMaterial &fm=*E->get();
+		print_line("Not found: "+itos(p_material.get_id()));
+	}
+	ERR_FAIL_COND(!E);
+	FixedMaterial &fm=*E->get();
 
 
-	// ERR_FAIL_INDEX(p_parameter,VS::FIXED_MATERIAL_PARAM_MAX);
-	// RID material=E->key();
-	// fm.texture[p_parameter]=p_texture;
-	// VS::get_singleton()->material_set_param(material,_fixed_material_tex_names[p_parameter],p_texture);
+	ERR_FAIL_INDEX(p_parameter,VS::FIXED_MATERIAL_PARAM_MAX);
+	RID material=E->key();
+	fm.texture[p_parameter]=p_texture;
+	VS::get_singleton()->material_set_param(material,_fixed_material_tex_names[p_parameter],p_texture);
 
-	// if (!fm.dirty_list.in_list())
-		// fixed_material_dirty_list.add( &fm.dirty_list );
+	if (!fm.dirty_list.in_list())
+		fixed_material_dirty_list.add( &fm.dirty_list );
 
 
 
@@ -438,12 +438,12 @@ void Rasterizer::fixed_material_set_texture(RID p_material,VS::FixedMaterialPara
 }
 RID Rasterizer::fixed_material_get_texture(RID p_material,VS::FixedMaterialParam p_parameter) const{
 
-	// const Map<RID,FixedMaterial*>::Element *E = fixed_materials.find(p_material);
-	// ERR_FAIL_COND_V(!E,RID());
-	// const FixedMaterial &fm=*E->get();
-	// ERR_FAIL_INDEX_V(p_parameter,VS::FIXED_MATERIAL_PARAM_MAX,RID());
+	const Map<RID,FixedMaterial*>::Element *E = fixed_materials.find(p_material);
+	ERR_FAIL_COND_V(!E,RID());
+	const FixedMaterial &fm=*E->get();
+	ERR_FAIL_INDEX_V(p_parameter,VS::FIXED_MATERIAL_PARAM_MAX,RID());
 
-	// return fm.texture[p_parameter];
+	return fm.texture[p_parameter];
 }
 
 

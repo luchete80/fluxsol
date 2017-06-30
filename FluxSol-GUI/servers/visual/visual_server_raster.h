@@ -811,8 +811,6 @@ public:
 	
 	/* PARTICLES API */
 
-
-	
 	/* Light API */
 	
 	virtual RID light_create(LightType p_type);

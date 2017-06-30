@@ -338,9 +338,6 @@ public:
 	virtual void immediate_set_material(RID p_immediate,RID p_material)=0;
 	virtual RID immediate_get_material(RID p_immediate) const=0;
 
-	
-	/* PARTICLES API */
-
 
 	/* SKELETON API */
 	
