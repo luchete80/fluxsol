@@ -5191,7 +5191,7 @@ EditorNode::EditorNode() {
 
 
 	scene_tree_dock = memnew( SceneTreeDock(this,scene_root,editor_selection,editor_data) );
-	scene_tree_dock->set_name("Scene");
+	scene_tree_dock->set_name("Model");
 	//top_pallete->add_child(scene_tree_dock);
 	dock_slot[DOCK_SLOT_LEFT_UR]->add_child(scene_tree_dock);
 

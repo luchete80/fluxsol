@@ -1,12 +1,11 @@
 /*************************************************************************/
-/*  test_cube.cpp                                                        */
+/*  test_cube.h                                                          */
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
 /*                    http://www.godotengine.org                         */
 /*************************************************************************/
-/* Copyright (c) 2007-2017 Juan Linietsky, Ariel Manzur.                 */
-/* Copyright (c) 2014-2017 Godot Engine contributors (cf. AUTHORS.md)    */
+/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -27,22 +26,32 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
-#include "test_cube.h"
-#include "servers/visual_server.h"
+#ifndef TEST_CUBE_H
+#define TEST_CUBE_H
 
-Rect3 TestCube::get_aabb() const {
 
-	return Rect3(Vector3(-1, -1, -1), Vector3(2, 2, 2));
-}
-PoolVector<Face3> TestCube::get_faces(uint32_t p_usage_flags) const {
+#include "scene/3d/visual_instance.h"
+#include "rid.h"
 
-	return PoolVector<Face3>();
-}
 
-TestCube::TestCube() {
+/**
+	@author Juan Linietsky <reduzio@gmail.com>
+*/
+class TestCube : public GeometryInstance {
 
-	set_base(VisualServer::get_singleton()->get_test_cube());
-}
+	OBJ_TYPE( TestCube, GeometryInstance );
 
-TestCube::~TestCube() {
-}
+	RID instance;
+	
+
+public:
+
+	virtual AABB get_aabb() const;
+	virtual DVector<Face3> get_faces(uint32_t p_usage_flags) const;
+
+	TestCube();	
+	~TestCube();
+
+};
+
+#endif

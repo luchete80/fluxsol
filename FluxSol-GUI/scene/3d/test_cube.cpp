@@ -1,12 +1,11 @@
 /*************************************************************************/
-/*  test_cube.h                                                          */
+/*  test_cube.cpp                                                        */
 /*************************************************************************/
 /*                       This file is part of:                           */
 /*                           GODOT ENGINE                                */
 /*                    http://www.godotengine.org                         */
 /*************************************************************************/
-/* Copyright (c) 2007-2017 Juan Linietsky, Ariel Manzur.                 */
-/* Copyright (c) 2014-2017 Godot Engine contributors (cf. AUTHORS.md)    */
+/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -27,27 +26,28 @@
 /* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE     */
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
-#ifndef TEST_CUBE_H
-#define TEST_CUBE_H
+#include "test_cube.h"
+#include "servers/visual_server.h"
 
-#include "rid.h"
-#include "scene/3d/visual_instance.h"
 
-/**
-	@author Juan Linietsky <reduzio@gmail.com>
-*/
-class TestCube : public GeometryInstance {
 
-	GDCLASS(TestCube, GeometryInstance);
+AABB TestCube::get_aabb() const {
 
-	RID instance;
+	return AABB( Vector3(-1,-1,-1), Vector3(2, 2, 2 ) );
+}
+DVector<Face3> TestCube::get_faces(uint32_t p_usage_flags) const {
 
-public:
-	virtual Rect3 get_aabb() const;
-	virtual PoolVector<Face3> get_faces(uint32_t p_usage_flags) const;
+	return DVector<Face3>();
+}
 
-	TestCube();
-	~TestCube();
-};
 
-#endif
+TestCube::TestCube() {
+
+	set_base(VisualServer::get_singleton()->get_test_cube());
+}
+
+
+TestCube::~TestCube() {
+}
+
+
