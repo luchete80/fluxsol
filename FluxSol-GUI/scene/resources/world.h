@@ -5,7 +5,7 @@
 /*                           GODOT ENGINE                                */
 /*                    http://www.godotengine.org                         */
 /*************************************************************************/
-/* Copyright (c) 2007-2015 Juan Linietsky, Ariel Manzur.                 */
+/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -30,7 +30,9 @@
 #define WORLD_H
 
 #include "resource.h"
+//#include "servers/physics_server.h"
 #include "servers/visual_server.h"
+//#include "servers/spatial_sound_server.h"
 #include "scene/resources/environment.h"
 
 class SpatialIndexer;
@@ -73,6 +75,7 @@ public:
 	void set_environment(const Ref<Environment>& p_environment);
 	Ref<Environment> get_environment() const;
 
+	//PhysicsDirectSpaceState *get_direct_space_state();
 
 	World();
 	~World();

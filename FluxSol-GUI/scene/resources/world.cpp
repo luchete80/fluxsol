@@ -5,7 +5,7 @@
 /*                           GODOT ENGINE                                */
 /*                    http://www.godotengine.org                         */
 /*************************************************************************/
-/* Copyright (c) 2007-2015 Juan Linietsky, Ariel Manzur.                 */
+/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -27,6 +27,9 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 #include "world.h"
+#include "scene/3d/camera.h"
+#include "scene/3d/visibility_notifier.h"
+#include "scene/3d/spatial_indexer.h"
 #include "scene/scene_string_names.h"
 #include "octree.h"
 #include "camera_matrix.h"
@@ -103,7 +106,7 @@ struct SpatialIndexer {
 
 		while(!removed.empty()) {
 
-
+			p_notifier->_exit_camera(removed.front()->get());
 			removed.pop_front();
 		}
 
@@ -136,7 +139,7 @@ struct SpatialIndexer {
 		}
 
 		while(!removed.empty()) {
-
+			removed.front()->get()->_exit_camera(p_camera);
 			removed.pop_front();
 		}
 
@@ -146,13 +149,12 @@ struct SpatialIndexer {
 
 	void _update(uint64_t p_frame) {
 
-//LUCIANO, CRASH
-//		if (p_frame==last_frame)
-//			return;
-//		last_frame=p_frame;
-//
-//		if (!changed)
-//			return;
+		if (p_frame==last_frame)
+			return;
+		last_frame=p_frame;
+
+		if (!changed)
+			return;
 
 
 
@@ -162,13 +164,31 @@ struct SpatialIndexer {
 
 			Camera *c=E->key();
 
+			Vector<Plane> planes = c->get_frustum();
 
+			int culled = octree.cull_convex(planes,cull.ptr(),cull.size());
 
 
 			VisibilityNotifier**ptr=cull.ptr();
 
 			List<VisibilityNotifier*> added;
 			List<VisibilityNotifier*> removed;
+
+			for(int i=0;i<culled;i++) {
+
+				//notifiers in frustum
+
+				Map<VisibilityNotifier*,uint64_t>::Element *H=E->get().notifiers.find(ptr[i]);
+				if (!H) {
+
+					E->get().notifiers.insert(ptr[i],pass);
+					added.push_back(ptr[i]);
+				} else {
+					H->get()=pass;
+				}
+
+
+			}
 
 			for (Map<VisibilityNotifier*,uint64_t>::Element *F=E->get().notifiers.front();F;F=F->next()) {
 
@@ -177,13 +197,13 @@ struct SpatialIndexer {
 			}
 
 			while(!added.empty()) {
-
+				added.front()->get()->_enter_camera(E->key());
 				added.pop_front();
 			}
 
 			while(!removed.empty()) {
 				E->get().notifiers.erase(removed.front()->get());
-
+				removed.front()->get()->_exit_camera(E->key());
 				removed.pop_front();
 			}
 		}
@@ -287,6 +307,11 @@ Ref<Environment> World::get_environment() const {
 }
 
 
+// PhysicsDirectSpaceState *World::get_direct_space_state() {
+
+	// return PhysicsServer::get_singleton()->space_get_direct_state(space);
+// }
+
 void World::_bind_methods() {
 
 	ObjectTypeDB::bind_method(_MD("get_space"),&World::get_space);
@@ -294,6 +319,7 @@ void World::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("get_sound_space"),&World::get_sound_space);
 	ObjectTypeDB::bind_method(_MD("set_environment","env:Environment"),&World::set_environment);
 	ObjectTypeDB::bind_method(_MD("get_environment:Environment"),&World::get_environment);
+	//ObjectTypeDB::bind_method(_MD("get_direct_space_state:PhysicsDirectSpaceState"),&World::get_direct_space_state);
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT,"environment",PROPERTY_HINT_RESOURCE_TYPE,"Environment"),_SCS("set_environment"),_SCS("get_environment"));
 
 }
@@ -301,11 +327,11 @@ void World::_bind_methods() {
 
 World::World() {
 
-//	space = PhysicsServer::get_singleton()->space_create();
-//	scenario = VisualServer::get_singleton()->scenario_create();
-////	sound_space = SpatialSoundServer::get_singleton()->space_create();
-//
-//	PhysicsServer::get_singleton()->space_set_active(space,true);
+	//space = PhysicsServer::get_singleton()->space_create();
+	scenario = VisualServer::get_singleton()->scenario_create();
+	//sound_space = SpatialSoundServer::get_singleton()->space_create();
+
+	//PhysicsServer::get_singleton()->space_set_active(space,true);
 
 #ifdef _3D_DISABLED
 	indexer = NULL;
@@ -316,7 +342,9 @@ World::World() {
 
 World::~World() {
 
+	//PhysicsServer::get_singleton()->free(space);
 	VisualServer::get_singleton()->free(scenario);
+	//SpatialSoundServer::get_singleton()->free(sound_space);
 
 #ifndef _3D_DISABLED
 	memdelete( indexer );
