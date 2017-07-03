@@ -31,7 +31,7 @@
 
 #include "resource.h"
 #include "mesh.h"
-#include "shape.h"
+//#include "shape.h"
 #include "map.h"
 
 class MeshLibrary : public Resource {
@@ -43,8 +43,8 @@ class MeshLibrary : public Resource {
 
 		String name;
 		Ref<Mesh> mesh;
-		Ref<Shape> shape;
-		Ref<Texture> preview;
+//		Ref<Shape> shape;
+//		Ref<Texture> preview;
 	};
 
 	Map<int,Item> item_map;
@@ -56,18 +56,18 @@ protected:
 	void _get_property_list( List<PropertyInfo> *p_list) const;
 
 	static void _bind_methods();
-public:		
+public:
 
 
 	void create_item(int p_item);
 	void set_item_name(int p_item,const String& p_name);
 	void set_item_mesh(int p_item,const Ref<Mesh>& p_mesh);
-	void set_item_shape(int p_item,const Ref<Shape>& p_shape);
-	void set_item_preview(int p_item,const Ref<Texture>& p_preview);
+//	void set_item_shape(int p_item,const Ref<Shape>& p_shape);
+//	void set_item_preview(int p_item,const Ref<Texture>& p_preview);
 	String get_item_name(int p_item) const;
 	Ref<Mesh> get_item_mesh(int p_item) const;
-	Ref<Shape> get_item_shape(int p_item) const;
-	Ref<Texture> get_item_preview(int p_item) const;
+//	Ref<Shape> get_item_shape(int p_item) const;
+//	Ref<Texture> get_item_preview(int p_item) const;
 
 	void remove_item(int p_item);
 	bool has_item(int p_item) const;

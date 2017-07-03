@@ -385,9 +385,9 @@ friend void postinitialize_handler(Object*);
 	bool _predelete();
 	void _postinitialize();
 	bool _can_translate;
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 	bool _edited;
-#endif
+//#endif
 	ScriptInstance *script_instance;
 	RefPtr script;
 	Dictionary metadata;
@@ -468,11 +468,11 @@ public: //should be protected, but bug in clang++
 
 public:
 
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 	_FORCE_INLINE_ void _change_notify(const char *p_property="") { _edited=true; for(Set<Object*>::Element *E=change_receptors.front();E;E=E->next()) ((Object*)(E->get()))->_changed_callback(this,p_property); }
-#else
-	_FORCE_INLINE_ void _change_notify(const char *p_what="") {  }
-#endif
+//#else
+//	_FORCE_INLINE_ void _change_notify(const char *p_what="") {  }
+//#endif
 	static void* get_type_ptr_static() {
 		static int ptr;
 		return &ptr;
@@ -582,10 +582,10 @@ public:
 	Variant get_meta(const String& p_name) const;
 	void get_meta_list(List<String> *p_list) const;
 
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 	void set_edited(bool p_edited);
 	bool is_edited() const;
-#endif
+//#endif
 
 	void set_script_instance(ScriptInstance *p_instance);
 	_FORCE_INLINE_ ScriptInstance* get_script_instance() const { return script_instance; }

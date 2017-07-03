@@ -87,7 +87,7 @@ public:
 
 
 class Resource : public Reference {
-	
+
 	OBJ_TYPE( Resource, Reference );
 	OBJ_CATEGORY("Resources");
 	RES_BASE_EXTENSION("res");
@@ -95,21 +95,21 @@ class Resource : public Reference {
 	Set<ObjectID> owners;
 
 friend class ResBase;
-friend class ResourceCache;	
-	
+friend class ResourceCache;
+
 	String name;
 	String path_cache;
 	int subindex;
 
 	virtual bool _use_builtin_script() const { return true; }
 
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 	Ref<ResourceImportMetadata> import_metadata;
 	uint64_t last_modified_time;
-#endif
+//#endif
 
 protected:
-	
+
 	void emit_changed();
 
 	void notify_change_to_owners();
@@ -120,7 +120,7 @@ protected:
 	void _set_path(const String& p_path);
 	void _take_over_path(const String& p_path);
 public:
-	
+
 	virtual bool can_reload_from_file();
 	virtual void reload_from_file();
 
@@ -142,16 +142,16 @@ public:
 	Ref<ResourceImportMetadata> get_import_metadata() const;
 
 
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 
 	virtual void set_last_modified_time(uint64_t p_time) { last_modified_time=p_time; }
 	uint64_t get_last_modified_time() const { return last_modified_time; }
 
-#endif
+//#endif
 
 	virtual RID get_rid() const; // some resources may offer conversion to RID
 
-	Resource();	
+	Resource();
 	~Resource();
 
 };
@@ -160,11 +160,11 @@ public:
 typedef Ref<Resource> RES;
 
 class ResourceCache {
-friend class Resource;	
-	static HashMap<String,Resource*> resources;	
+friend class Resource;
+	static HashMap<String,Resource*> resources;
 friend void unregister_core_types();
 	static void clear();
-public:	
+public:
 
 	static void reload_externals();
 	static bool has(const String& p_path);

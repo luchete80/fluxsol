@@ -40,7 +40,7 @@
 #include "io/resource_saver.h"
 #include "io/md5.h"
 #include "io_plugins/editor_texture_import_plugin.h"
-//#include "tools/editor/plugins/script_editor_plugin.h"
+#include "tools/editor/plugins/script_editor_plugin.h"
 #include "io/zip_io.h"
 
 
@@ -1039,22 +1039,22 @@ void EditorExportPlatform::gen_export_flags(Vector<String> &r_flags, int p_flags
 		r_flags.push_back(host+":"+String::num(GLOBAL_DEF("debug/debug_port", 6007)));
 
 		List<String> breakpoints;
-		// ScriptEditor::get_singleton()->get_breakpoints(&breakpoints);
+		//ScriptEditor::get_singleton()->get_breakpoints(&breakpoints); //LUCIANO
 
 
-		// if (breakpoints.size()) {
+		if (breakpoints.size()) {
 
-			// r_flags.push_back("-bp");
-			// String bpoints;
-			// for(const List<String>::Element *E=breakpoints.front();E;E=E->next()) {
+			r_flags.push_back("-bp");
+			String bpoints;
+			for(const List<String>::Element *E=breakpoints.front();E;E=E->next()) {
 
-				// bpoints+=E->get().replace(" ","%20");
-				// if (E->next())
-					// bpoints+=",";
-			// }
+				bpoints+=E->get().replace(" ","%20");
+				if (E->next())
+					bpoints+=",";
+			}
 
-			// r_flags.push_back(bpoints);
-		// }
+			r_flags.push_back(bpoints);
+		}
 
 	}
 

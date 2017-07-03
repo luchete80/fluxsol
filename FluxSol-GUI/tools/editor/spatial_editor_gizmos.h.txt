@@ -34,20 +34,20 @@
 #include "scene/3d/light.h"
 #include "scene/3d/camera.h"
 #include "scene/3d/position_3d.h"
-//#include "scene/3d/spatial_sample_player.h"
-//#include "scene/3d/spatial_stream_player.h"
-//#include "scene/3d/test_cube.h"
+#include "scene/3d/spatial_sample_player.h"
+#include "scene/3d/spatial_stream_player.h"
+#include "scene/3d/test_cube.h"
 #include "scene/3d/mesh_instance.h"
-//#include "scene/3d/body_shape.h"
+#include "scene/3d/body_shape.h"
 #include "scene/3d/room_instance.h"
 #include "scene/3d/visibility_notifier.h"
 #include "scene/3d/portal.h"
-//#include "scene/3d/ray_cast.h"
+#include "scene/3d/ray_cast.h"
 #include "scene/3d/navigation_mesh.h"
 
-//#include "scene/3d/vehicle_body.h"
-//#include "scene/3d/collision_polygon.h"
-//#include "scene/3d/physics_joint.h"
+#include "scene/3d/vehicle_body.h"
+#include "scene/3d/collision_polygon.h"
+#include "scene/3d/physics_joint.h"
 
 
 class Camera;
@@ -191,7 +191,7 @@ class SkeletonSpatialGizmo  : public SpatialGizmoTool {
 
 	OBJ_TYPE(SkeletonSpatialGizmo,SpatialGizmoTool);
 
-//	Skeleton* skel;
+	Skeleton* skel;
 
 public:
 
@@ -207,7 +207,7 @@ class SpatialPlayerSpatialGizmo  : public SpatialGizmoTool {
 
 	OBJ_TYPE(SpatialPlayerSpatialGizmo,SpatialGizmoTool);
 
-//	SpatialPlayer* splayer;
+	SpatialPlayer* splayer;
 
 public:
 

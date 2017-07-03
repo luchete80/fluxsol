@@ -835,9 +835,7 @@ ProjectManager::ProjectManager() {
 
 	Ref<Theme> theme = Ref<Theme>( memnew( Theme ) );
 	set_theme(theme);
-	
-	//TOMODIFY
-	//editor_register_icons(theme);
+	editor_register_icons(theme);
 
 	String global_font = EditorSettings::get_singleton()->get("global/font");
 	if (global_font!="") {

@@ -239,13 +239,13 @@ void UndoRedo::_process_operation_list(List<Operation>::Element *E) {
 
 			case Operation::TYPE_METHOD: {
 
-				obj->call(op.name,VARIANT_ARGS_FROM_ARRAY(op.args));				
-#ifdef TOOLS_ENABLED
+				obj->call(op.name,VARIANT_ARGS_FROM_ARRAY(op.args));
+//#ifdef TOOLS_ENABLED
 				Resource* res = obj->cast_to<Resource>();
 				if (res)
 					res->set_edited(true);
 
-#endif
+//#endif
 
 				if (method_callback) {
 					method_callback(method_callbck_ud,obj,op.name,VARIANT_ARGS_FROM_ARRAY(op.args));
@@ -254,11 +254,11 @@ void UndoRedo::_process_operation_list(List<Operation>::Element *E) {
 			case Operation::TYPE_PROPERTY: {
 
 				obj->set(op.name,op.args[0]);
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 				Resource* res = obj->cast_to<Resource>();
 				if (res)
 					res->set_edited(true);
-#endif
+//#endif
 				if (property_callback) {
 					property_callback(prop_callback_ud,obj,op.name,op.args[0]);
 				}
@@ -450,10 +450,10 @@ void UndoRedo::_bind_methods() {
 
 	ObjectTypeDB::bind_method(_MD("create_action","name","mergeable"),&UndoRedo::create_action, DEFVAL(false) );
 	ObjectTypeDB::bind_method(_MD("commit_action"),&UndoRedo::commit_action);
-	
+
 	//ObjectTypeDB::bind_method(_MD("add_do_method","p_object", "p_method", "VARIANT_ARG_LIST"),&UndoRedo::add_do_method);
 	//ObjectTypeDB::bind_method(_MD("add_undo_method","p_object", "p_method", "VARIANT_ARG_LIST"),&UndoRedo::add_undo_method);
-	
+
 	{
 		MethodInfo mi;
 		mi.name="add_do_method";

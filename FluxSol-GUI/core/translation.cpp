@@ -647,7 +647,7 @@ void TranslationServer::setup() {
 	else
 		set_locale( OS::get_singleton()->get_locale() );
 	fallback = GLOBAL_DEF("locale/fallback","en");
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 
 	{
 		String options="";
@@ -660,7 +660,7 @@ void TranslationServer::setup() {
 		}
 		Globals::get_singleton()->set_custom_property_info("locale/fallback",PropertyInfo(Variant::STRING,"locale/fallback",PROPERTY_HINT_ENUM,options));
 	}
-#endif
+//#endif
 	//load translations
 
 }

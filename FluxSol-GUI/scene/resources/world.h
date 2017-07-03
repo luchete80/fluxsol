@@ -30,9 +30,9 @@
 #define WORLD_H
 
 #include "resource.h"
-#include "servers/physics_server.h"
+//#include "servers/physics_server.h"
 #include "servers/visual_server.h"
-#include "servers/spatial_sound_server.h"
+//#include "servers/spatial_sound_server.h"
 #include "scene/resources/environment.h"
 
 class SpatialIndexer;
@@ -75,7 +75,7 @@ public:
 	void set_environment(const Ref<Environment>& p_environment);
 	Ref<Environment> get_environment() const;
 
-	PhysicsDirectSpaceState *get_direct_space_state();
+	//PhysicsDirectSpaceState *get_direct_space_state();
 
 	World();
 	~World();

@@ -41,7 +41,7 @@
 #include "editor_node.h"
 #include "multi_node_edit.h"
 #include "array_property_edit.h"
-//#include "editor_help.h"
+#include "editor_help.h"
 #include "scene/resources/packed_scene.h"
 
 
@@ -2501,12 +2501,12 @@ void PropertyEditor::update_tree() {
 				if (!class_descr_cache.has(type)) {
 
 					String descr;
-					//DocData *dd=EditorHelp::get_doc_data();
-					//Map<String,DocData::ClassDoc>::Element *E=dd->class_list.find(type);
-					// if (E) {
-						// descr=E->get().brief_description;
-					// }
-					// class_descr_cache[type]=descr.world_wrap(80);
+					DocData *dd=EditorHelp::get_doc_data();
+					Map<String,DocData::ClassDoc>::Element *E=dd->class_list.find(type);
+					if (E) {
+						descr=E->get().brief_description;
+					}
+					class_descr_cache[type]=descr.world_wrap(80);
 
 				}
 
@@ -2594,15 +2594,15 @@ void PropertyEditor::update_tree() {
 				}
 				if (!found) {
 
-					// DocData *dd=EditorHelp::get_doc_data();
-					// Map<String,DocData::ClassDoc>::Element *E=dd->class_list.find(type);
-					// if (E) {
-						// for(int i=0;i<E->get().methods.size();i++) {
-							// if (E->get().methods[i].name==setter.operator String()) {
-								// descr=E->get().methods[i].description.strip_edges().world_wrap(80);
-							// }
-						// }
-					// }
+					DocData *dd=EditorHelp::get_doc_data();
+					Map<String,DocData::ClassDoc>::Element *E=dd->class_list.find(type);
+					if (E) {
+						for(int i=0;i<E->get().methods.size();i++) {
+							if (E->get().methods[i].name==setter.operator String()) {
+								descr=E->get().methods[i].description.strip_edges().world_wrap(80);
+							}
+						}
+					}
 
 					descr_cache[type][setter]=descr;
 				}

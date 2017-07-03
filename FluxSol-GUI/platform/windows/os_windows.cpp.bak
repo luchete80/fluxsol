@@ -59,6 +59,18 @@
 #include <process.h>
 //
 
+//#include "Graphics/vtkRendering.h"
+
+
+#include <direct.h>	//LUCIANO _wchdir EN MINGW
+
+#if (_MSC_VER >= 1700)
+#define HIDPI_SUPPORT
+#endif
+
+#ifdef HIDPI_SUPPORT
+#include <ShellScalingAPI.h>
+#endif
 static const WORD MAX_CONSOLE_LINES = 1500;
 
 extern "C" {

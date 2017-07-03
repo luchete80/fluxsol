@@ -463,7 +463,7 @@ void EditorFileSystem::scan() {
 		filesystem=new_filesystem;
 		new_filesystem=NULL;
 		_update_scan_actions();
-		scanning=false;
+		scanning=false;		
 		emit_signal("filesystem_changed");
 		emit_signal("sources_changed",sources_changed.size()>0);
 
@@ -583,40 +583,31 @@ void EditorFileSystem::_scan_new_dir(EditorFileSystemDirectory *p_dir,DirAccess 
 	int total = dirs.size()+files.size();
 	int idx=0;
 
-
 	for (List<String>::Element *E=dirs.front();E;E=E->next(),idx++) {
 
 		if (da->change_dir(E->get())==OK) {
 
-			String d = da->get_current_dir();
+			EditorFileSystemDirectory *efd = memnew( EditorFileSystemDirectory );
 
-			if (d==cd || !d.begins_with(cd)) {
-				da->change_dir(cd); //avoid recursion
-			} else {
+			efd->parent=p_dir;
+			efd->name=E->get();
 
+			_scan_new_dir(efd,da,p_progress.get_sub(idx,total));
 
-				EditorFileSystemDirectory *efd = memnew( EditorFileSystemDirectory );
+			int idx=0;
+			for(int i=0;i<p_dir->subdirs.size();i++) {
 
-				efd->parent=p_dir;
-				efd->name=E->get();
-
-				_scan_new_dir(efd,da,p_progress.get_sub(idx,total));
-
-				int idx=0;
-				for(int i=0;i<p_dir->subdirs.size();i++) {
-
-					if (efd->name<p_dir->subdirs[i]->name)
-						break;
-					idx++;
-				}
-				if (idx==p_dir->subdirs.size()) {
-					p_dir->subdirs.push_back(efd);
-				} else {
-					p_dir->subdirs.insert(idx,efd);
-				}
-
-				da->change_dir("..");
+				if (efd->name<p_dir->subdirs[i]->name)
+					break;
+				idx++;
 			}
+			if (idx==p_dir->subdirs.size()) {
+				p_dir->subdirs.push_back(efd);
+			} else {
+				p_dir->subdirs.insert(idx,efd);
+			}
+
+			da->change_dir("..");
 		} else {
 			ERR_PRINTS("Can't go into subdir: "+E->get());
 		}
@@ -783,9 +774,11 @@ void EditorFileSystem::_scan_fs_changes(EditorFileSystemDirectory *p_dir,const S
 			}
 
 		}
-
 		da->list_dir_end();
 		memdelete(da);
+
+
+
 
 	}
 

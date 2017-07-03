@@ -27,8 +27,8 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 #include "mesh.h"
-#include "scene/resources/concave_polygon_shape.h"
-#include "scene/resources/convex_polygon_shape.h"
+//#include "scene/resources/concave_polygon_shape.h"
+//#include "scene/resources/convex_polygon_shape.h"
 #include "surface_tool.h"
 
 static const char*_array_name[]={
@@ -100,10 +100,10 @@ bool Mesh::_set(const StringName& p_name, const Variant& p_value) {
 			return false;
 		int idx=sname.substr(8,sl-8).to_int()-1;
 		String what = sname.get_slicec('/',1);
-		if (what=="material")
-			surface_set_material(idx,p_value);
-		else if (what=="name")
-			surface_set_name(idx,p_value);
+		 if (what=="material")
+			 surface_set_material(idx,p_value);
+		 else if (what=="name")
+			 surface_set_name(idx,p_value);
 		return true;
 	}
 
@@ -126,7 +126,7 @@ bool Mesh::_set(const StringName& p_name, const Variant& p_value) {
 			add_custom_surface(p_value);
 			return true;
 
-		}		
+		}
 
 		//create
 		Dictionary d=p_value;
@@ -181,10 +181,10 @@ bool Mesh::_get(const StringName& p_name,Variant &r_ret) const {
 			return false;
 		int idx=sname.substr(8,sl-8).to_int()-1;
 		String what = sname.get_slicec('/',1);
-		if (what=="material")
-			r_ret=surface_get_material(idx);
-		else if (what=="name")
-			r_ret=surface_get_name(idx);
+		 if (what=="material")
+			 r_ret=surface_get_material(idx);
+		// else if (what=="name")
+			// r_ret=surface_get_name(idx);
 		return true;
 	} else if (sname=="custom_aabb/custom_aabb") {
 
@@ -204,8 +204,8 @@ bool Mesh::_get(const StringName& p_name,Variant &r_ret) const {
 	d["morph_arrays"]=surface_get_morph_arrays(idx);
 	d["alphasort"]=surface_is_alpha_sorting_enabled(idx);
 	Ref<Material> m = surface_get_material(idx);
-	if (m.is_valid())
-		d["material"]=m;
+	 if (m.is_valid())
+		 d["material"]=m;
 	String n = surface_get_name(idx);
 	if (n!="")
 		d["name"]=n;
@@ -223,7 +223,7 @@ void Mesh::_get_property_list( List<PropertyInfo> *p_list) const {
 	}
 
 	for (int i=0;i<surfaces.size();i++) {
-		
+
 		p_list->push_back( PropertyInfo( Variant::DICTIONARY,"surfaces/"+itos(i), PROPERTY_HINT_NONE,"",PROPERTY_USAGE_NOEDITOR ) );
 		p_list->push_back( PropertyInfo( Variant::STRING,"surface_"+itos(i+1)+"/name", PROPERTY_HINT_NONE,"",PROPERTY_USAGE_EDITOR ) );
 		p_list->push_back( PropertyInfo( Variant::OBJECT,"surface_"+itos(i+1)+"/material", PROPERTY_HINT_RESOURCE_TYPE,"Material",PROPERTY_USAGE_EDITOR ) );
@@ -238,9 +238,9 @@ void Mesh::_recompute_aabb() {
 
 	// regenerate AABB
 	aabb=AABB();
-		
+
 	for (int i=0;i<surfaces.size();i++) {
-	
+
 		if (i==0)
 			aabb=surfaces[i].aabb;
 		else
@@ -383,7 +383,7 @@ void Mesh::surface_remove(int p_idx) {
 	ERR_FAIL_INDEX(p_idx, surfaces.size() );
 	VisualServer::get_singleton()->mesh_remove_surface(mesh,p_idx);
 	surfaces.remove(p_idx);
-	
+
 	triangle_mesh=Ref<TriangleMesh>();
 	_recompute_aabb();
 	_change_notify();
@@ -428,16 +428,16 @@ bool Mesh::surface_is_alpha_sorting_enabled(int p_idx) const {
 	return surfaces[p_idx].alphasort;
 }
 
-void Mesh::surface_set_material(int p_idx, const Ref<Material>& p_material) {
+ void Mesh::surface_set_material(int p_idx, const Ref<Material>& p_material) {
 
-	ERR_FAIL_INDEX( p_idx, surfaces.size() );
-	if (surfaces[p_idx].material==p_material)
-		return;
-	surfaces[p_idx].material=p_material;
-	VisualServer::get_singleton()->mesh_surface_set_material(mesh, p_idx, p_material.is_null()?RID():p_material->get_rid());
+	 ERR_FAIL_INDEX( p_idx, surfaces.size() );
+	 if (surfaces[p_idx].material==p_material)
+		 return;
+	 surfaces[p_idx].material=p_material;
+	 VisualServer::get_singleton()->mesh_surface_set_material(mesh, p_idx, p_material.is_null()?RID():p_material->get_rid());
 
-	_change_notify("material");
-}
+	 _change_notify("material");
+ }
 
 void Mesh::surface_set_name(int p_idx, const String& p_name) {
 
@@ -460,26 +460,26 @@ void Mesh::surface_set_custom_aabb(int p_idx,const AABB& p_aabb) {
 // set custom aabb too?
 }
 
-Ref<Material> Mesh::surface_get_material(int p_idx)  const {
+ Ref<Material> Mesh::surface_get_material(int p_idx)  const {
 
-	ERR_FAIL_INDEX_V( p_idx, surfaces.size(), Ref<Material>() );
-	return surfaces[p_idx].material;
+	 ERR_FAIL_INDEX_V( p_idx, surfaces.size(), Ref<Material>() );
+	 return surfaces[p_idx].material;
 
-}
+ }
 
 void Mesh::add_surface_from_mesh_data(const Geometry::MeshData& p_mesh_data) {
 
 	VisualServer::get_singleton()->mesh_add_surface_from_mesh_data( mesh, p_mesh_data );
 	AABB aabb;
 	for (int i=0;i<p_mesh_data.vertices.size();i++) {
-	
+
 		if (i==0)
 			aabb.pos=p_mesh_data.vertices[i];
 		else
 			aabb.expand_to(p_mesh_data.vertices[i]);
 	}
 
-	
+
 	Surface s;
 	s.aabb=aabb;
 	if (surfaces.size()==0)
@@ -524,101 +524,101 @@ DVector<Face3> Mesh::get_faces() const {
 	return DVector<Face3>();
 /*
 	for (int i=0;i<surfaces.size();i++) {
-	
+
 		if (VisualServer::get_singleton()->mesh_surface_get_primitive_type( mesh, i ) != VisualServer::PRIMITIVE_TRIANGLES )
 			continue;
-	
+
 		DVector<int> indices;
 		DVector<Vector3> vertices;
-		
+
 		vertices=VisualServer::get_singleton()->mesh_surface_get_array(mesh, i,VisualServer::ARRAY_VERTEX);
-		
+
 		int len=VisualServer::get_singleton()->mesh_surface_get_array_index_len(mesh, i);
 		bool has_indices;
-		
+
 		if (len>0) {
-		
+
 			indices=VisualServer::get_singleton()->mesh_surface_get_array(mesh, i,VisualServer::ARRAY_INDEX);
 			has_indices=true;
-			
+
 		} else {
-		
+
 			len=vertices.size();
 			has_indices=false;
 		}
-	
+
 		if (len<=0)
 			continue;
-			
+
 		DVector<int>::Read indicesr = indices.read();
 		const int *indicesptr = indicesr.ptr();
-		
+
 		DVector<Vector3>::Read verticesr = vertices.read();
 		const Vector3 *verticesptr = verticesr.ptr();
-		
+
 		int old_faces=faces.size();
 		int new_faces=old_faces+(len/3);
-		
+
 		faces.resize(new_faces);
-		
+
 		DVector<Face3>::Write facesw = faces.write();
 		Face3 *facesptr=facesw.ptr();
-		
-	
+
+
 		for (int i=0;i<len/3;i++) {
-		
+
 			Face3 face;
-			
+
 			for (int j=0;j<3;j++) {
-			
+
 				int idx=i*3+j;
 				face.vertex[j] = has_indices ? verticesptr[ indicesptr[ idx ] ] : verticesptr[idx];
 			}
-			
+
 			facesptr[i+old_faces]=face;
 		}
-		
+
 	}
 */
 
 }
 
-Ref<Shape> Mesh::create_convex_shape() const {
+// Ref<Shape> Mesh::create_convex_shape() const {
 
-	DVector<Vector3> vertices;
+	// DVector<Vector3> vertices;
 
-	for(int i=0;i<get_surface_count();i++) {
+	// for(int i=0;i<get_surface_count();i++) {
 
-		Array a = surface_get_arrays(i);
-		DVector<Vector3> v=a[ARRAY_VERTEX];
-		vertices.append_array(v);
+		// Array a = surface_get_arrays(i);
+		// DVector<Vector3> v=a[ARRAY_VERTEX];
+		// vertices.append_array(v);
 
-	}
+	// }
 
-	Ref<ConvexPolygonShape> shape = memnew( ConvexPolygonShape );
-	shape->set_points(vertices);
-	return shape;
-}
+	// Ref<ConvexPolygonShape> shape = memnew( ConvexPolygonShape );
+	// shape->set_points(vertices);
+	// return shape;
+// }
 
-Ref<Shape> Mesh::create_trimesh_shape() const {
+// Ref<Shape> Mesh::create_trimesh_shape() const {
 
-	DVector<Face3> faces = get_faces();
-	if (faces.size()==0)
-		return Ref<Shape>();
+	// DVector<Face3> faces = get_faces();
+	// if (faces.size()==0)
+		// return Ref<Shape>();
 
-	DVector<Vector3> face_points;
-	face_points.resize( faces.size()*3 );
+	// DVector<Vector3> face_points;
+	// face_points.resize( faces.size()*3 );
 
-	for (int i=0;i<face_points.size();i++) {
+	// for (int i=0;i<face_points.size();i++) {
 
-		Face3 f = faces.get( i/3 );
-		face_points.set(i, f.vertex[i%3] );
-	}
+		// Face3 f = faces.get( i/3 );
+		// face_points.set(i, f.vertex[i%3] );
+	// }
 
-	Ref<ConcavePolygonShape> shape = memnew( ConcavePolygonShape );
-	shape->set_faces(face_points);
-	return shape;
-}
+	// Ref<ConcavePolygonShape> shape = memnew( ConcavePolygonShape );
+	// shape->set_faces(face_points);
+	// return shape;
+// }
 
 void Mesh::center_geometry() {
 
@@ -978,8 +978,8 @@ void Mesh::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("surface_get_array_index_len","surf_idx"),&Mesh::surface_get_array_index_len);
 	ObjectTypeDB::bind_method(_MD("surface_get_format","surf_idx"),&Mesh::surface_get_format);
 	ObjectTypeDB::bind_method(_MD("surface_get_primitive_type","surf_idx"),&Mesh::surface_get_primitive_type);
-	ObjectTypeDB::bind_method(_MD("surface_set_material","surf_idx","material:Material"),&Mesh::surface_set_material);
-	ObjectTypeDB::bind_method(_MD("surface_get_material:Material","surf_idx"),&Mesh::surface_get_material);
+	//ObjectTypeDB::bind_method(_MD("surface_set_material","surf_idx","material:Material"),&Mesh::surface_set_material);
+	//ObjectTypeDB::bind_method(_MD("surface_get_material:Material","surf_idx"),&Mesh::surface_get_material);
 	ObjectTypeDB::bind_method(_MD("surface_set_name","surf_idx","name"),&Mesh::surface_set_name);
 	ObjectTypeDB::bind_method(_MD("surface_get_name","surf_idx"),&Mesh::surface_get_name);
 	ObjectTypeDB::bind_method(_MD("center_geometry"),&Mesh::center_geometry);
@@ -993,17 +993,17 @@ void Mesh::_bind_methods() {
 
 	BIND_CONSTANT( NO_INDEX_ARRAY );
 	BIND_CONSTANT( ARRAY_WEIGHTS_SIZE );
-	
+
 	BIND_CONSTANT( ARRAY_VERTEX );
 	BIND_CONSTANT( ARRAY_NORMAL );
 	BIND_CONSTANT( ARRAY_TANGENT );
 	BIND_CONSTANT( ARRAY_COLOR );
-	BIND_CONSTANT( ARRAY_TEX_UV );	
+	BIND_CONSTANT( ARRAY_TEX_UV );
 	BIND_CONSTANT( ARRAY_TEX_UV2 );
 	BIND_CONSTANT( ARRAY_BONES );
 	BIND_CONSTANT( ARRAY_WEIGHTS );
 	BIND_CONSTANT( ARRAY_INDEX );
-	
+
 	BIND_CONSTANT( ARRAY_FORMAT_VERTEX );
 	BIND_CONSTANT( ARRAY_FORMAT_NORMAL );
 	BIND_CONSTANT( ARRAY_FORMAT_TANGENT );
@@ -1013,7 +1013,7 @@ void Mesh::_bind_methods() {
 	BIND_CONSTANT( ARRAY_FORMAT_BONES );
 	BIND_CONSTANT( ARRAY_FORMAT_WEIGHTS );
 	BIND_CONSTANT( ARRAY_FORMAT_INDEX );
-		
+
 	BIND_CONSTANT( PRIMITIVE_POINTS );
 	BIND_CONSTANT( PRIMITIVE_LINES );
 	BIND_CONSTANT( PRIMITIVE_LINE_STRIP );

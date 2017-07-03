@@ -72,7 +72,7 @@ class MeshDataTool : public Reference  {
 
 	Vector<Face> faces;
 
-	Ref<Material> material;
+//	Ref<Material> material;
 protected:
 
 	static void _bind_methods();
@@ -129,8 +129,8 @@ public:
 	void set_face_meta(int p_face,const Variant& p_meta);
 	Vector3 get_face_normal(int p_face) const;
 
-	Ref<Material> get_material() const;
-	void set_material(const Ref<Material> &p_material);
+//	Ref<Material> get_material() const;
+//	void set_material(const Ref<Material> &p_material);
 
 	MeshDataTool();
 };

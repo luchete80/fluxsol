@@ -509,11 +509,6 @@ void EditorFileDialog::update_file_list() {
 		}
 	}
 
-	if (dirs.find("..")==NULL) {
-		//may happen if lacking permissions
-		dirs.push_back("..");
-	}
-
 	dirs.sort_custom<NoCaseComparator>();
 	files.sort_custom<NoCaseComparator>();
 
@@ -595,7 +590,7 @@ void EditorFileDialog::update_file_list() {
 
 			if (get_icon_func) {
 
-
+				
 				Ref<Texture> icon = get_icon_func(base_dir.plus_file(files.front()->get()));
 				//ti->set_icon(0,icon);
 				if (display_mode==DISPLAY_THUMBNAILS) {
@@ -837,6 +832,7 @@ EditorFileDialog::Access EditorFileDialog::get_access() const{
 
 void EditorFileDialog::_make_dir_confirm() {
 
+
 	Error err = dir_access->make_dir( makedirname->get_text() );
 	if (err==OK) {
 		dir_access->change_dir(makedirname->get_text());
@@ -848,7 +844,6 @@ void EditorFileDialog::_make_dir_confirm() {
 	} else {
 		mkdirerr->popup_centered_minsize(Size2(250,50));
 	}
-	makedirname->set_text(""); // reset label
 }
 
 

@@ -29,7 +29,7 @@
 #include "image.h"
 #include <stdio.h>
 #include "print_string.h"
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 #include "set.h"
 #include "sort.h"
 #include "os/os.h"
@@ -361,10 +361,10 @@ void Image::quantize() {
 
 
 
-#else
+//#else
 
 
-void Image::quantize() {} //do none
+//void Image::quantize() {} //do none
 
 
-#endif
+//#endif

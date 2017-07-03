@@ -164,7 +164,7 @@ void SceneTreeEditor::_cell_button_pressed(Object *p_item,int p_column,int p_id)
 	} else if (p_id==BUTTON_VISIBILITY) {
 
 		//LUCIANO: remember to uncomment this.
-		if (n->is_type("Spatial")) {
+		// if (n->is_type("Spatial")) {
 
 			// Spatial *ci = n->cast_to<Spatial>();
 			// if (!ci->is_visible() && ci->get_parent_spatial() && !ci->get_parent_spatial()->is_visible()) {

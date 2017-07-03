@@ -30,7 +30,7 @@
 #define IP_UNIX_H
 
 #include "io/ip.h"
-
+#define WINDOWS_ENABLED //LUCIANO
 #if defined(UNIX_ENABLED) || defined(WINDOWS_ENABLED)
 
 class IP_Unix : public IP {

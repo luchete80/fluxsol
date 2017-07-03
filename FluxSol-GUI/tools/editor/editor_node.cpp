@@ -733,7 +733,6 @@ static Error _fix_imported_scene_paths(Node* node, Node* root, String save_path)
 	return OK;
 };
 
-
 bool EditorNode::_find_and_save_resource(RES res,Map<RES,bool>& processed,int32_t flags) {
 
 	if (res.is_null())

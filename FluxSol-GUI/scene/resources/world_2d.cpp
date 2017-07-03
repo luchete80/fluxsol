@@ -5,7 +5,7 @@
 /*                           GODOT ENGINE                                */
 /*                    http://www.godotengine.org                         */
 /*************************************************************************/
-/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */
+/* Copyright (c) 2007-2015 Juan Linietsky, Ariel Manzur.                 */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -28,12 +28,9 @@
 /*************************************************************************/
 #include "world_2d.h"
 #include "servers/visual_server.h"
-#include "servers/physics_2d_server.h"
-#include "servers/spatial_sound_2d_server.h"
 #include "globals.h"
-#include "scene/2d/visibility_notifier_2d.h"
+
 #include "scene/main/viewport.h"
-#include "scene/2d/camera_2d.h"
 #include "globals.h"
 
 struct SpatialIndexer2D {
@@ -176,7 +173,8 @@ struct SpatialIndexer2D {
 
 		while(!removed.empty()) {
 
-			p_notifier->_exit_viewport(removed.front()->get());
+			//LUCIANO
+			//p_notifier->_exit_viewport(removed.front()->get());
 			removed.pop_front();
 		}
 
@@ -212,7 +210,9 @@ struct SpatialIndexer2D {
 		}
 
 		while(!removed.empty()) {
-			removed.front()->get()->_exit_viewport(p_viewport);
+			//LUCIANO
+			//LUCIANO
+			//removed.front()->get()->_exit_viewport(p_viewport);
 			removed.pop_front();
 		}
 
@@ -271,13 +271,15 @@ struct SpatialIndexer2D {
 			}
 
 			while(!added.empty()) {
-				added.front()->get()->_enter_viewport(E->key());
+				//LUCIANO
+				//added.front()->get()->_enter_viewport(E->key());
 				added.pop_front();
 			}
 
 			while(!removed.empty()) {
 				E->get().notifiers.erase(removed.front()->get());
-				removed.front()->get()->_exit_viewport(E->key());
+				//LUCIANO
+				//removed.front()->get()->_exit_viewport(E->key());
 				removed.pop_front();
 			}
 		}
@@ -353,33 +355,11 @@ void World2D::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("get_space"),&World2D::get_space);
 	ObjectTypeDB::bind_method(_MD("get_sound_space"),&World2D::get_sound_space);
 
-	ObjectTypeDB::bind_method(_MD("get_direct_space_state:Physics2DDirectSpaceState"),&World2D::get_direct_space_state);
-
 }
-
-Physics2DDirectSpaceState *World2D::get_direct_space_state() {
-
-	return Physics2DServer::get_singleton()->space_get_direct_state(space);
-}
-
 
 World2D::World2D() {
 
 	canvas = VisualServer::get_singleton()->canvas_create();
-	space = Physics2DServer::get_singleton()->space_create();
-	sound_space = SpatialSound2DServer::get_singleton()->space_create();
-
-	//set space2D to be more friendly with pixels than meters, by adjusting some constants
-	Physics2DServer::get_singleton()->space_set_active(space,true);
-	Physics2DServer::get_singleton()->area_set_param(space,Physics2DServer::AREA_PARAM_GRAVITY,GLOBAL_DEF("physics_2d/default_gravity",98));
-	Physics2DServer::get_singleton()->area_set_param(space,Physics2DServer::AREA_PARAM_GRAVITY_VECTOR,GLOBAL_DEF("physics_2d/default_gravity_vector",Vector2(0,1)));
-	Physics2DServer::get_singleton()->area_set_param(space,Physics2DServer::AREA_PARAM_LINEAR_DAMP,GLOBAL_DEF("physics_2d/default_density",0.1));
-	Physics2DServer::get_singleton()->area_set_param(space,Physics2DServer::AREA_PARAM_ANGULAR_DAMP,GLOBAL_DEF("physics_2d/default_angular_damp",1));
-	Physics2DServer::get_singleton()->space_set_param(space,Physics2DServer::SPACE_PARAM_CONTACT_RECYCLE_RADIUS,1.0);
-	Physics2DServer::get_singleton()->space_set_param(space,Physics2DServer::SPACE_PARAM_CONTACT_MAX_SEPARATION,1.5);
-	Physics2DServer::get_singleton()->space_set_param(space,Physics2DServer::SPACE_PARAM_BODY_MAX_ALLOWED_PENETRATION,0.3);
-	Physics2DServer::get_singleton()->space_set_param(space,Physics2DServer::SPACE_PARAM_BODY_LINEAR_VELOCITY_SLEEP_TRESHOLD,2);
-	Physics2DServer::get_singleton()->space_set_param(space,Physics2DServer::SPACE_PARAM_CONSTRAINT_DEFAULT_BIAS,0.2);
 
 	indexer = memnew( SpatialIndexer2D );
 
@@ -389,7 +369,5 @@ World2D::World2D() {
 World2D::~World2D() {
 
 	VisualServer::get_singleton()->free(canvas);
-	Physics2DServer::get_singleton()->free(space);
-	SpatialSound2DServer::get_singleton()->free(sound_space);
 	memdelete(indexer);
 }

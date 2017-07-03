@@ -1562,9 +1562,9 @@ Error ResourceInteractiveLoaderXML::poll() {
 
 		obj->set(name,v);
 	}
-#ifdef TOOLS_ENABLED
+//#ifdef TOOLS_ENABLED
 	res->set_edited(false);
-#endif
+//#endif
 	resource_cache.push_back(res); //keep it in mem until finished loading
 	resource_current++;
 	if (main) {
@@ -1818,7 +1818,7 @@ Error ResourceInteractiveLoaderXML::rename_dependencies(FileAccess *p_f, const S
 
 void ResourceInteractiveLoaderXML::open(FileAccess *p_f) {
 
-	error=OK;	
+	error=OK;
 
 	lines=1;
 	f=p_f;

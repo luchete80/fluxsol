@@ -51,18 +51,18 @@ void EditorPlugin::add_custom_control(CustomControlContainer p_location,Control 
 			EditorNode::get_menu_hb()->add_child(p_control);
 		} break;
 		case CONTAINER_SPATIAL_EDITOR_MENU: {
-			//LUCIANO, TODO: REMOVE
+
 			SpatialEditor::get_singleton()->add_control_to_menu_panel(p_control);
 
 		} break;
 		case CONTAINER_SPATIAL_EDITOR_SIDE: {
-		//LUCIANO, TODO: REMOVE
-			 SpatialEditor::get_singleton()->get_palette_split()->add_child(p_control);
-			 SpatialEditor::get_singleton()->get_palette_split()->move_child(p_control,0);
+
+			SpatialEditor::get_singleton()->get_palette_split()->add_child(p_control);
+			SpatialEditor::get_singleton()->get_palette_split()->move_child(p_control,0);
 
 		} break;
 		case CONTAINER_SPATIAL_EDITOR_BOTTOM: {
-//LUCIANO, TODO: REMOVE
+
 			SpatialEditor::get_singleton()->get_shader_split()->add_child(p_control);
 
 		} break;

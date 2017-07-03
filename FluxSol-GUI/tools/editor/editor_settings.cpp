@@ -311,7 +311,7 @@ void EditorSettings::create() {
 	singleton->config_file_path=config_file_path;
 	singleton->settings_path=config_path+"/"+config_dir;
 	singleton->_load_defaults(extra_config);
-	//singleton->setup_network(); //LUCIANO
+	singleton->setup_network();
 	singleton->scan_plugins();
 
 

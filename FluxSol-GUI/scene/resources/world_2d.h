@@ -5,7 +5,7 @@
 /*                           GODOT ENGINE                                */
 /*                    http://www.godotengine.org                         */
 /*************************************************************************/
-/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */
+/* Copyright (c) 2007-2015 Juan Linietsky, Ariel Manzur.                 */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -30,7 +30,6 @@
 #define WORLD_2D_H
 
 #include "resource.h"
-#include "servers/physics_2d_server.h"
 
 class SpatialIndexer2D;
 class VisibilityNotifier2D;
@@ -68,7 +67,6 @@ public:
 	RID get_space();
 	RID get_sound_space();
 
-	Physics2DDirectSpaceState *get_direct_space_state();
 
 	World2D();
 	~World2D();

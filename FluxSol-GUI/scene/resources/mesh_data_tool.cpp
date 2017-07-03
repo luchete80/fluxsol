@@ -34,7 +34,7 @@ void MeshDataTool::clear() {
 	vertices.clear();
 	edges.clear();
 	faces.clear();
-	material = Ref<Material>();
+//	material = Ref<Material>();
 	format=0;
 }
 
@@ -58,7 +58,7 @@ Error MeshDataTool::create_from_surface(const Ref<Mesh>& p_mesh,int p_surface) {
 
 	clear();
 	format = p_mesh->surface_get_format(p_surface);
-	material=p_mesh->surface_get_material(p_surface);
+//	material=p_mesh->surface_get_material(p_surface);
 
 	DVector<Vector3>::Read vr = varray.read();
 
@@ -329,7 +329,7 @@ Error MeshDataTool::commit_to_surface(const Ref<Mesh>& p_mesh) {
 	Ref<Mesh> ncmesh=p_mesh;
 	int sc = ncmesh->get_surface_count();
 	ncmesh->add_surface(Mesh::PRIMITIVE_TRIANGLES,arr);
-	ncmesh->surface_set_material(sc,material);
+//	ncmesh->surface_set_material(sc,material);
 
 	return OK;
 }
@@ -552,15 +552,15 @@ Vector3 MeshDataTool::get_face_normal(int p_face) const {
 
 }
 
-Ref<Material> MeshDataTool::get_material() const {
+//Ref<Material> MeshDataTool::get_material() const {
+//
+//	return material;
+//}
 
-	return material;
-}
-
-void MeshDataTool::set_material(const Ref<Material> &p_material) {
-
-	material=p_material;
-}
+//void MeshDataTool::set_material(const Ref<Material> &p_material) {
+//
+//	material=p_material;
+//}
 
 
 void MeshDataTool::_bind_methods() {
@@ -619,8 +619,8 @@ void MeshDataTool::_bind_methods() {
 
 	ObjectTypeDB::bind_method(_MD("get_face_normal","idx"),&MeshDataTool::get_face_normal);
 
-	ObjectTypeDB::bind_method(_MD("set_material","material:Material"),&MeshDataTool::set_material);
-	ObjectTypeDB::bind_method(_MD("get_material","material"),&MeshDataTool::get_material);
+//	ObjectTypeDB::bind_method(_MD("set_material","material:Material"),&MeshDataTool::set_material);
+//	ObjectTypeDB::bind_method(_MD("get_material","material"),&MeshDataTool::get_material);
 }
 
 MeshDataTool::MeshDataTool(){
