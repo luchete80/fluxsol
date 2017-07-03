@@ -179,7 +179,7 @@ $<TARGET_OBJECTS:app_>
 #SERVER LIBRARY MUST BE LINKED ALSO IN ORDER TO LINK VISUAL SERVER GLES2
 target_link_libraries (${NAME} 
 main
-servers driverstypes core scene
+servers core scene
 windows unix 
 gl_context gles2
 winmm 
