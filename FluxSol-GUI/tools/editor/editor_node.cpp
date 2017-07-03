@@ -5092,26 +5092,26 @@ EditorNode::EditorNode() {
 	native_play_button->hide();
 	native_play_button->get_popup()->connect("item_pressed",this,"_run_in_device");
 	run_native->connect("native_run",this,"_menu_option",varray(RUN_PLAY_NATIVE));
-
-	debug_button = memnew( MenuButton );
-	debug_button->set_flat(true);
-	play_hb->add_child(debug_button);
-	//debug_button->set_toggle_mode(true);
-	debug_button->set_focus_mode(Control::FOCUS_NONE);
-	debug_button->set_icon(gui_base->get_icon("Remote","EditorIcons"));
-	//debug_button->connect("pressed", this,"_menu_option",make_binds(RUN_LIVE_DEBUG));
-	debug_button->set_tooltip("Debug Options");
-
-	p=debug_button->get_popup();
-	p->add_check_item("Live Editing",RUN_LIVE_DEBUG);
-	p->add_check_item("File Server",RUN_FILE_SERVER);
-	p->add_separator();
-	p->add_check_item("Deploy Remote Debug",RUN_DEPLOY_REMOTE_DEBUG);
-	p->add_check_item("Deploy File Server Clients",RUN_DEPLOY_DUMB_CLIENTS);
-	p->add_separator();
-	p->add_check_item("Visible Collision Shapes",RUN_DEBUG_COLLISONS);
-	p->add_check_item("Visible Navigation",RUN_DEBUG_NAVIGATION);
-	p->connect("item_pressed",this,"_menu_option");
+//
+//	debug_button = memnew( MenuButton );
+//	debug_button->set_flat(true);
+//	play_hb->add_child(debug_button);
+//	//debug_button->set_toggle_mode(true);
+//	debug_button->set_focus_mode(Control::FOCUS_NONE);
+//	debug_button->set_icon(gui_base->get_icon("Remote","EditorIcons"));
+//	//debug_button->connect("pressed", this,"_menu_option",make_binds(RUN_LIVE_DEBUG));
+//	debug_button->set_tooltip("Debug Options");
+//
+//	p=debug_button->get_popup();
+//	p->add_check_item("Live Editing",RUN_LIVE_DEBUG);
+//	p->add_check_item("File Server",RUN_FILE_SERVER);
+//	p->add_separator();
+//	p->add_check_item("Deploy Remote Debug",RUN_DEPLOY_REMOTE_DEBUG);
+//	p->add_check_item("Deploy File Server Clients",RUN_DEPLOY_DUMB_CLIENTS);
+//	p->add_separator();
+//	p->add_check_item("Visible Collision Shapes",RUN_DEBUG_COLLISONS);
+//	p->add_check_item("Visible Navigation",RUN_DEBUG_NAVIGATION);
+//	p->connect("item_pressed",this,"_menu_option");
 
 	progress_hb = memnew( BackgroundProgress );
 	menu_hb->add_child(progress_hb);
