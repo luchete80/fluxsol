@@ -30,7 +30,7 @@
 #define PACKED_SCENE_H
 
 #include "resource.h"
-#include "./scene/main/node.h"
+#include "scene/main/node.h"
 
 
 class SceneState : public Reference {
@@ -66,7 +66,7 @@ class SceneState : public Reference {
 		};
 
 		Vector<Property> properties;
-		Vector<int> groups;
+		Vector<int> groups;		
 
 	};
 
@@ -211,10 +211,10 @@ public:
 	void replace_state(Ref<SceneState> p_by);
 
 	virtual void set_path(const String& p_path,bool p_take_over=false);
-//#ifdef TOOLS_ENABLED
+#ifdef TOOLS_ENABLED
 	virtual void set_last_modified_time(uint64_t p_time) { state->set_last_modified_time(p_time); }
 
-//#endif
+#endif
 	Ref<SceneState> get_state();
 
 	PackedScene();

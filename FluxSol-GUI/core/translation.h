@@ -75,7 +75,6 @@ class TranslationServer : public Object {
 
 
 	Set< Ref<Translation> > translations;
-	Ref<Translation> tool_translation;
 
 	bool enabled;
 
@@ -102,9 +101,6 @@ public:
 
 	static Vector<String> get_all_locales();
 	static Vector<String> get_all_locale_names();
-
-	void set_tool_translation(const Ref<Translation>& p_translation);
-	StringName tool_translate(const StringName& p_message) const;
 
 	void setup();
 

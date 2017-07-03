@@ -5,8 +5,7 @@
 /*                           GODOT ENGINE                                */
 /*                    http://www.godotengine.org                         */
 /*************************************************************************/
-/* Copyright (c) 2007-2017 Juan Linietsky, Ariel Manzur.                 */
-/* Copyright (c) 2014-2017 Godot Engine contributors (cf. AUTHORS.md)    */
+/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -31,20 +30,22 @@
 #define IMAGE_LOADER_H
 
 #include "image.h"
-#include "list.h"
-#include "os/file_access.h"
 #include "ustring.h"
+#include "os/file_access.h"
+#include "list.h"
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
 */
 
+
 /**
  * @class ImageScanLineLoader
  * @author Juan Linietsky <reduzio@gmail.com>
- *
-
+ * 
+ 
  */
 class ImageLoader;
+ 
 
 /**
  * @class ImageLoader
@@ -52,14 +53,15 @@ class ImageLoader;
  * Can load images in one go, or by scanline
  */
 
+
 class ImageFormatLoader {
-	friend class ImageLoader;
-
+friend class ImageLoader;
 protected:
-	virtual Error load_image(Image *p_image, FileAccess *p_fileaccess) = 0;
-	virtual void get_recognized_extensions(List<String> *p_extensions) const = 0;
-	bool recognize(const String &p_extension) const;
-
+	virtual Error load_image(Image *p_image,FileAccess *p_fileaccess)=0;
+	virtual void get_recognized_extensions(List<String> *p_extensions) const=0;
+	bool recognize(const String& p_extension) const;
+	
+	
 public:
 	virtual ~ImageFormatLoader() {}
 };
@@ -67,19 +69,23 @@ public:
 class ImageLoader {
 
 	enum {
-		MAX_LOADERS = 8
+		MAX_LOADERS=8
 	};
 
 	static ImageFormatLoader *loader[MAX_LOADERS];
 	static int loader_count;
 
 protected:
-public:
-	static Error load_image(String p_file, Image *p_image, FileAccess *p_custom = NULL);
-	static void get_recognized_extensions(List<String> *p_extensions);
-	static bool recognize(const String &p_extension);
 
+
+public:
+	
+	static Error load_image(String p_file,Image *p_image, FileAccess *p_custom=NULL);
+	static void get_recognized_extensions(List<String> *p_extensions) ;
+	static bool recognize(const String& p_extension) ;
+		
 	static void add_image_format_loader(ImageFormatLoader *p_loader);
+
 };
 
 #endif

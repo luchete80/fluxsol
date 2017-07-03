@@ -31,7 +31,6 @@
 
 #include "io/ip.h"
 
-#define WINDOWS_ENABLED
 #if defined(UNIX_ENABLED) || defined(WINDOWS_ENABLED)
 
 class IP_Unix : public IP {

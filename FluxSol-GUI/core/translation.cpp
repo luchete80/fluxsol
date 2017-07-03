@@ -647,7 +647,7 @@ void TranslationServer::setup() {
 	else
 		set_locale( OS::get_singleton()->get_locale() );
 	fallback = GLOBAL_DEF("locale/fallback","en");
-//#ifdef TOOLS_ENABLED
+#ifdef TOOLS_ENABLED
 
 	{
 		String options="";
@@ -660,28 +660,10 @@ void TranslationServer::setup() {
 		}
 		Globals::get_singleton()->set_custom_property_info("locale/fallback",PropertyInfo(Variant::STRING,"locale/fallback",PROPERTY_HINT_ENUM,options));
 	}
-//#endif
+#endif
 	//load translations
 
 }
-
-void TranslationServer::set_tool_translation(const Ref<Translation>& p_translation) {
-	tool_translation=p_translation;
-}
-
-StringName TranslationServer::tool_translate(const StringName& p_message) const {
-
-	if (tool_translation.is_valid()) {
-		StringName r = tool_translation->get_message(p_message);
-
-		if (r) {
-			return r;
-		}
-	}
-
-	return p_message;
-}
-
 
 void TranslationServer::_bind_methods() {
 

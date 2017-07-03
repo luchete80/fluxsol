@@ -5,8 +5,7 @@
 /*                           GODOT ENGINE                                */
 /*                    http://www.godotengine.org                         */
 /*************************************************************************/
-/* Copyright (c) 2007-2017 Juan Linietsky, Ariel Manzur.                 */
-/* Copyright (c) 2014-2017 Godot Engine contributors (cf. AUTHORS.md)    */
+/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -29,36 +28,22 @@
 /*************************************************************************/
 #include "stream_peer_tcp.h"
 
-StreamPeerTCP *(*StreamPeerTCP::_create)() = NULL;
-
-Error StreamPeerTCP::_connect(const String &p_address, int p_port) {
-
-	IP_Address ip;
-	if (p_address.is_valid_ip_address()) {
-		ip = p_address;
-	} else {
-		ip = IP::get_singleton()->resolve_hostname(p_address);
-		if (!ip.is_valid())
-			return ERR_CANT_RESOLVE;
-	}
-
-	connect(ip, p_port);
-	return OK;
-}
+StreamPeerTCP* (*StreamPeerTCP::_create)()=NULL;
 
 void StreamPeerTCP::_bind_methods() {
 
-	ObjectTypeDB::bind_method(_MD("connect", "host", "port"), &StreamPeerTCP::_connect);
-	ObjectTypeDB::bind_method(_MD("is_connected"), &StreamPeerTCP::is_connected);
-	ObjectTypeDB::bind_method(_MD("get_status"), &StreamPeerTCP::get_status);
-	ObjectTypeDB::bind_method(_MD("get_connected_host"), &StreamPeerTCP::get_connected_host);
-	ObjectTypeDB::bind_method(_MD("get_connected_port"), &StreamPeerTCP::get_connected_port);
-	ObjectTypeDB::bind_method(_MD("disconnect"), &StreamPeerTCP::disconnect);
+	ObjectTypeDB::bind_method(_MD("connect","host","port"),&StreamPeerTCP::connect);
+	ObjectTypeDB::bind_method(_MD("is_connected"),&StreamPeerTCP::is_connected);
+	ObjectTypeDB::bind_method(_MD("get_status"),&StreamPeerTCP::get_status);
+	ObjectTypeDB::bind_method(_MD("get_connected_host"),&StreamPeerTCP::get_connected_host);
+	ObjectTypeDB::bind_method(_MD("get_connected_port"),&StreamPeerTCP::get_connected_port);
+	ObjectTypeDB::bind_method(_MD("disconnect"),&StreamPeerTCP::disconnect);
 
-	BIND_CONSTANT(STATUS_NONE);
-	BIND_CONSTANT(STATUS_CONNECTING);
-	BIND_CONSTANT(STATUS_CONNECTED);
-	BIND_CONSTANT(STATUS_ERROR);
+	BIND_CONSTANT( STATUS_NONE );
+	BIND_CONSTANT( STATUS_CONNECTING );
+	BIND_CONSTANT( STATUS_CONNECTED );
+	BIND_CONSTANT( STATUS_ERROR );
+
 }
 
 Ref<StreamPeerTCP> StreamPeerTCP::create_ref() {
@@ -68,7 +53,7 @@ Ref<StreamPeerTCP> StreamPeerTCP::create_ref() {
 	return Ref<StreamPeerTCP>(_create());
 }
 
-StreamPeerTCP *StreamPeerTCP::create() {
+StreamPeerTCP* StreamPeerTCP::create() {
 
 	if (!_create)
 		return NULL;
@@ -76,8 +61,10 @@ StreamPeerTCP *StreamPeerTCP::create() {
 }
 
 StreamPeerTCP::StreamPeerTCP() {
+
 }
 
-StreamPeerTCP::~StreamPeerTCP(){
+StreamPeerTCP::~StreamPeerTCP() {
 
 };
+

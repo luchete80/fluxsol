@@ -31,8 +31,6 @@
 #include <stdio.h>
 #include "os/file_access.h"
 
-//#define TOOLS_ENABLED //LUCIANO
-
 
 void ResourceImportMetadata::set_editor(const String& p_editor) {
 
@@ -158,14 +156,14 @@ void Resource::_resource_path_changed() {
 
 
 }
-
+	
 void Resource::set_path(const String& p_path, bool p_take_over) {
 
 	if (path_cache==p_path)
 		return;
-
+		
 	if (path_cache!="") {
-
+		
 		ResourceCache::resources.erase(path_cache);
 	}
 
@@ -181,19 +179,19 @@ void Resource::set_path(const String& p_path, bool p_take_over) {
 
 	}
 	path_cache=p_path;
-
+	
 	if (path_cache!="") {
-
+		
 		ResourceCache::resources[path_cache]=this;;
 	}
 
 	_change_notify("resource/path");
 	_resource_path_changed();
-
+	
 }
 
 String Resource::get_path() const {
-
+	
 	return path_cache;
 }
 
@@ -317,61 +315,34 @@ void Resource::notify_change_to_owners() {
 }
 
 void Resource::set_import_metadata(const Ref<ResourceImportMetadata>& p_metadata) {
-//#ifdef TOOLS_ENABLED
+#ifdef TOOLS_ENABLED
 	import_metadata=p_metadata;
-//#endif
+#endif
 }
 
 Ref<ResourceImportMetadata> Resource::get_import_metadata() const {
 
-//#ifdef TOOLS_ENABLED
+#ifdef TOOLS_ENABLED
 	return import_metadata;
-//#else
-//	return Ref<ResourceImportMetadata>();
-//#endif
+#else
+	return Ref<ResourceImportMetadata>();
+#endif
 
 }
-
-//#ifdef TOOLS_ENABLED
-
-uint32_t Resource::hash_edited_version() const {
-
-	uint32_t hash = hash_djb2_one_32(get_edited_version());
-
-	List<PropertyInfo> plist;
-	get_property_list(&plist);
-
-	for (List<PropertyInfo>::Element *E=plist.front();E;E=E->next()) {
-
-		if (E->get().type==Variant::OBJECT && E->get().hint==PROPERTY_HINT_RESOURCE_TYPE) {
-			RES res = get(E->get().name);
-			if (res.is_valid()) {
-				hash = hash_djb2_one_32(res->hash_edited_version(),hash);
-			}
-		}
-	}
-
-	return hash;
-
-}
-
-//#endif
 
 
 Resource::Resource() {
 
-//#ifdef TOOLS_ENABLED
+#ifdef TOOLS_ENABLED
 	last_modified_time=0;
-//#endif
+#endif
 
 	subindex=0;
 }
 
 
-
-
 Resource::~Resource() {
-
+	
 	if (path_cache!="")
 		ResourceCache::resources.erase(path_cache);
 	if (owners.size()) {
@@ -379,12 +350,12 @@ Resource::~Resource() {
 	}
 }
 
-HashMap<String,Resource*> ResourceCache::resources;
+HashMap<String,Resource*> ResourceCache::resources;	
 
 void ResourceCache::clear() {
 	if (resources.size())
 		ERR_PRINT("Resources Still in use at Exit!");
-
+		
 	resources.clear();
 }
 
@@ -403,18 +374,18 @@ void ResourceCache::reload_externals() {
 bool ResourceCache::has(const String& p_path) {
 
 	GLOBAL_LOCK_FUNCTION
-
+	
 	return resources.has(p_path);
 }
 Resource *ResourceCache::get(const String& p_path) {
-
+	
 	GLOBAL_LOCK_FUNCTION
-
+	
 	Resource **res = resources.getptr(p_path);
 	if (!res) {
 		return NULL;
 	}
-
+		
 	return *res;
 }
 

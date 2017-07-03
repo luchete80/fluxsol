@@ -29,6 +29,7 @@
 #include "packed_scene.h"
 #include "globals.h"
 #include "io/resource_loader.h"
+#include "scene/3d/spatial.h"
 #include "scene/gui/control.h"
 #include "scene/2d/node_2d.h"
 #include "scene/main/instance_placeholder.h"
@@ -158,8 +159,12 @@ Node *SceneState::instance(bool p_gen_edit_state) const {
 				}
 				WARN_PRINT(String("Warning node of type "+snames[n.type].operator String()+" does not exist.").ascii().get_data());
 				if (n.parent>=0 && n.parent<nc && ret_nodes[n.parent]) {
-					if (ret_nodes[n.parent]->cast_to<Node2D>()) {
-						 obj = memnew( Node2D );
+					if (ret_nodes[n.parent]->cast_to<Spatial>()) {
+						obj = memnew( Spatial );
+					} else if (ret_nodes[n.parent]->cast_to<Control>()) {
+						obj = memnew( Control );
+					} else if (ret_nodes[n.parent]->cast_to<Node2D>()) {
+						obj = memnew( Node2D );
 					}
 
 				}
@@ -641,7 +646,7 @@ https://github.com/godotengine/godot/issues/3127
 	}
 
 	// Save the right type. If this node was created by an instance
-	// then flag that the node should not be created but reused
+	// then flag that the node should not be created but reused	
 	if (pack_state_stack.empty()) {
 		//this node is not part of an instancing process, so save the type
 		nd.type=_nm_get_string(p_node->get_type(),name_map);
@@ -958,7 +963,7 @@ Ref<SceneState> SceneState::_get_base_scene_state() const {
 
 int SceneState::find_node_by_path(const NodePath& p_node) const {
 
-	if (!node_path_cache.has(p_node)) {
+	if (!node_path_cache.has(p_node)) {		
 		if (_get_base_scene_state().is_valid()) {
 			int idx = _get_base_scene_state()->find_node_by_path(p_node);
 			if (idx>=0) {
@@ -1270,7 +1275,7 @@ Dictionary SceneState::get_bundled_scene() const {
 	rnode_paths.resize(node_paths.size());
 	for(int i=0;i<node_paths.size();i++) {
 		rnode_paths[i]=node_paths[i];
-	}
+	}	
 	d["node_paths"]=rnode_paths;
 
 	Array reditable_instances;
@@ -1488,7 +1493,7 @@ int SceneState::get_connection_flags(int p_idx) const{
 
 Array SceneState::get_connection_binds(int p_idx) const {
 
-	ERR_FAIL_INDEX_V(p_idx,connections.size(),Array());
+	ERR_FAIL_INDEX_V(p_idx,connections.size(),-1);
 	Array binds;
 	for(int i=0;i<connections[p_idx].binds.size();i++) {
 		binds.push_back(variants[connections[p_idx].binds[i]]);
@@ -1652,12 +1657,12 @@ bool PackedScene::can_instance() const {
 
 Node *PackedScene::instance(bool p_gen_edit_state) const {
 
-//#ifndef TOOLS_ENABLED
-//	if (p_gen_edit_state) {
-//		ERR_EXPLAIN("Edit state is only for editors, does not work without tools compiled");
-//		ERR_FAIL_COND_V(p_gen_edit_state,NULL);
-//	}
-//#endif
+#ifndef TOOLS_ENABLED
+	if (p_gen_edit_state) {
+		ERR_EXPLAIN("Edit state is only for editors, does not work without tools compiled");
+		ERR_FAIL_COND_V(p_gen_edit_state,NULL);
+	}
+#endif
 
 	Node *s = state->instance(p_gen_edit_state);
 	if (!s)
@@ -1680,9 +1685,9 @@ void PackedScene::replace_state(Ref<SceneState> p_by) {
 
 	state=p_by;
 	state->set_path(get_path());
-//#ifdef TOOLS_ENABLED
+#ifdef TOOLS_ENABLED
 	state->set_last_modified_time(get_last_modified_time());
-//#endif
+#endif
 
 }
 
@@ -1690,9 +1695,9 @@ void PackedScene::recreate_state() {
 
 	state = Ref<SceneState>( memnew( SceneState ));
 	state->set_path(get_path());
-//#ifdef TOOLS_ENABLED
+#ifdef TOOLS_ENABLED
 	state->set_last_modified_time(get_last_modified_time());
-//#endif
+#endif
 }
 
 Ref<SceneState> PackedScene::get_state() {

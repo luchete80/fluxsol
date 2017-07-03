@@ -51,7 +51,6 @@
 #include "packed_data_container.h"
 #include "func_ref.h"
 #include "input_map.h"
-#include "undo_redo.h"
 
 #ifdef XML_ENABLED
 static ResourceFormatSaverXML *resource_saver_xml=NULL;
@@ -81,7 +80,7 @@ extern void unregister_variant_methods();
 
 void register_core_types() {
 
-
+	
 	_global_mutex=Mutex::create();
 
 
@@ -92,7 +91,7 @@ void register_core_types() {
 
 
 	CoreStringNames::create();
-
+	
 	resource_format_po = memnew( TranslationLoaderPO );
 	ResourceLoader::add_resource_format_loader( resource_format_po );
 
@@ -129,7 +128,7 @@ void register_core_types() {
 //	ObjectTypeDB::register_type<OptimizedSaver>();
 	ObjectTypeDB::register_type<Translation>();
 	ObjectTypeDB::register_type<PHashTranslation>();
-	ObjectTypeDB::register_type<UndoRedo>();
+
 	ObjectTypeDB::register_type<HTTPClient>();
 
 	ObjectTypeDB::register_virtual_type<ResourceInteractiveLoader>();

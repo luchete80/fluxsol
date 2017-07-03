@@ -5,8 +5,7 @@
 /*                           GODOT ENGINE                                */
 /*                    http://www.godotengine.org                         */
 /*************************************************************************/
-/* Copyright (c) 2007-2017 Juan Linietsky, Ariel Manzur.                 */
-/* Copyright (c) 2014-2017 Godot Engine contributors (cf. AUTHORS.md)    */
+/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -30,7 +29,10 @@
 #ifndef JSON_H
 #define JSON_H
 
+
+
 #include "variant.h"
+
 
 class JSON {
 
@@ -62,18 +64,18 @@ class JSON {
 		Variant value;
 	};
 
-	static const char *tk_name[TK_MAX];
+	static const char * tk_name[TK_MAX];
 
-	static String _print_var(const Variant &p_var);
+	static String _print_var(const Variant& p_var);
 
-	static Error _get_token(const CharType *p_str, int &index, int p_len, Token &r_token, int &line, String &r_err_str);
-	static Error _parse_value(Variant &value, Token &token, const CharType *p_str, int &index, int p_len, int &line, String &r_err_str);
-	static Error _parse_array(Array &array, const CharType *p_str, int &index, int p_len, int &line, String &r_err_str);
-	static Error _parse_object(Dictionary &object, const CharType *p_str, int &index, int p_len, int &line, String &r_err_str);
+	static Error _get_token(const CharType *p_str,int &index, int p_len,Token& r_token,int &line,String &r_err_str);
+	static Error _parse_value(Variant &value,Token& token,const CharType *p_str,int &index, int p_len,int &line,String &r_err_str);
+	static Error _parse_array(Array &array,const CharType *p_str,int &index, int p_len,int &line,String &r_err_str);
+	static Error _parse_object(Dictionary &object,const CharType *p_str,int &index, int p_len,int &line,String &r_err_str);
 
 public:
-	static String print(const Dictionary &p_dict);
-	static Error parse(const String &p_json, Dictionary &r_ret, String &r_err_str, int &r_err_line);
+	static String print(const Dictionary& p_dict);
+	static Error parse(const String& p_json,Dictionary& r_ret,String &r_err_str,int &r_err_line);
 };
 
 #endif // JSON_H

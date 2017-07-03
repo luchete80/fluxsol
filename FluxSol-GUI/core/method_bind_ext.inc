@@ -22,7 +22,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -39,15 +39,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -67,7 +67,7 @@ public:
 		_generate_argument_types(6);
 #else
 		set_argument_count(6);
-#endif
+#endif		
 	};
 };
 
@@ -91,7 +91,7 @@ MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6)  ) {
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6>
 class MethodBind6 : public MethodBind {
 public:
-
+	
 	 void (T::*method)(P1, P2, P3, P4, P5, P6) ;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -106,13 +106,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -142,7 +142,7 @@ public:
 		
 		return Variant();
 	}
-
+	
 
 	MethodBind6 () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -150,14 +150,14 @@ public:
 		_generate_argument_types(6);
 #else
 		set_argument_count(6);
-#endif
+#endif		
 	};
 };
 
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6>
 MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6)  ) {
 
-	MethodBind6<T  , P1, P2, P3, P4, P5, P6> * a = memnew( (MethodBind6<T  , P1, P2, P3, P4, P5, P6>) );
+	MethodBind6<T  , P1, P2, P3, P4, P5, P6> * a = memnew( (MethodBind6<T  , P1, P2, P3, P4, P5, P6>) );	
 	a->method=p_method;
 	return a;
 }
@@ -186,7 +186,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -203,15 +203,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -231,7 +231,7 @@ public:
 		_generate_argument_types(6);
 #else
 		set_argument_count(6);
-#endif
+#endif		
 	};
 };
 
@@ -255,7 +255,7 @@ MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6)  ) {
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6>
 class MethodBind6R : public MethodBind {
 public:
-
+	
 	R  (T::*method)(P1, P2, P3, P4, P5, P6) ;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -270,13 +270,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -306,7 +306,7 @@ public:
 		return Variant(ret);
 		
 	}
-
+	
 
 	MethodBind6R () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -314,14 +314,14 @@ public:
 		_generate_argument_types(6);
 #else
 		set_argument_count(6);
-#endif
+#endif		
 	};
 };
 
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6>
 MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6)  ) {
 
-	MethodBind6R<T ,R , P1, P2, P3, P4, P5, P6> * a = memnew( (MethodBind6R<T ,R , P1, P2, P3, P4, P5, P6>) );
+	MethodBind6R<T ,R , P1, P2, P3, P4, P5, P6> * a = memnew( (MethodBind6R<T ,R , P1, P2, P3, P4, P5, P6>) );	
 	a->method=p_method;
 	return a;
 }
@@ -350,7 +350,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -367,15 +367,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -395,7 +395,7 @@ public:
 		_generate_argument_types(6);
 #else
 		set_argument_count(6);
-#endif
+#endif		
 	};
 };
 
@@ -419,7 +419,7 @@ MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6) cons
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6>
 class MethodBind6C : public MethodBind {
 public:
-
+	
 	 void (T::*method)(P1, P2, P3, P4, P5, P6) const;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -434,13 +434,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -470,7 +470,7 @@ public:
 		
 		return Variant();
 	}
-
+	
 
 	MethodBind6C () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -478,14 +478,14 @@ public:
 		_generate_argument_types(6);
 #else
 		set_argument_count(6);
-#endif
+#endif		
 	};
 };
 
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6>
 MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6) const ) {
 
-	MethodBind6C<T  , P1, P2, P3, P4, P5, P6> * a = memnew( (MethodBind6C<T  , P1, P2, P3, P4, P5, P6>) );
+	MethodBind6C<T  , P1, P2, P3, P4, P5, P6> * a = memnew( (MethodBind6C<T  , P1, P2, P3, P4, P5, P6>) );	
 	a->method=p_method;
 	return a;
 }
@@ -514,7 +514,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -531,15 +531,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -559,7 +559,7 @@ public:
 		_generate_argument_types(6);
 #else
 		set_argument_count(6);
-#endif
+#endif		
 	};
 };
 
@@ -583,7 +583,7 @@ MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6) const )
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6>
 class MethodBind6RC : public MethodBind {
 public:
-
+	
 	R  (T::*method)(P1, P2, P3, P4, P5, P6) const;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -598,13 +598,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -634,7 +634,7 @@ public:
 		return Variant(ret);
 		
 	}
-
+	
 
 	MethodBind6RC () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -642,14 +642,14 @@ public:
 		_generate_argument_types(6);
 #else
 		set_argument_count(6);
-#endif
+#endif		
 	};
 };
 
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6>
 MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6) const ) {
 
-	MethodBind6RC<T ,R , P1, P2, P3, P4, P5, P6> * a = memnew( (MethodBind6RC<T ,R , P1, P2, P3, P4, P5, P6>) );
+	MethodBind6RC<T ,R , P1, P2, P3, P4, P5, P6> * a = memnew( (MethodBind6RC<T ,R , P1, P2, P3, P4, P5, P6>) );	
 	a->method=p_method;
 	return a;
 }
@@ -679,7 +679,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -696,15 +696,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -725,7 +725,7 @@ public:
 		_generate_argument_types(7);
 #else
 		set_argument_count(7);
-#endif
+#endif		
 	};
 };
 
@@ -749,7 +749,7 @@ MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6, P7) 
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6, class P7>
 class MethodBind7 : public MethodBind {
 public:
-
+	
 	 void (T::*method)(P1, P2, P3, P4, P5, P6, P7) ;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -765,13 +765,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -802,7 +802,7 @@ public:
 		
 		return Variant();
 	}
-
+	
 
 	MethodBind7 () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -810,14 +810,14 @@ public:
 		_generate_argument_types(7);
 #else
 		set_argument_count(7);
-#endif
+#endif		
 	};
 };
 
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6, class P7>
 MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6, P7)  ) {
 
-	MethodBind7<T  , P1, P2, P3, P4, P5, P6, P7> * a = memnew( (MethodBind7<T  , P1, P2, P3, P4, P5, P6, P7>) );
+	MethodBind7<T  , P1, P2, P3, P4, P5, P6, P7> * a = memnew( (MethodBind7<T  , P1, P2, P3, P4, P5, P6, P7>) );	
 	a->method=p_method;
 	return a;
 }
@@ -847,7 +847,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -864,15 +864,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -893,7 +893,7 @@ public:
 		_generate_argument_types(7);
 #else
 		set_argument_count(7);
-#endif
+#endif		
 	};
 };
 
@@ -917,7 +917,7 @@ MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6, P7)  ) 
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6, class P7>
 class MethodBind7R : public MethodBind {
 public:
-
+	
 	R  (T::*method)(P1, P2, P3, P4, P5, P6, P7) ;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -933,13 +933,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -970,7 +970,7 @@ public:
 		return Variant(ret);
 		
 	}
-
+	
 
 	MethodBind7R () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -978,14 +978,14 @@ public:
 		_generate_argument_types(7);
 #else
 		set_argument_count(7);
-#endif
+#endif		
 	};
 };
 
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6, class P7>
 MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6, P7)  ) {
 
-	MethodBind7R<T ,R , P1, P2, P3, P4, P5, P6, P7> * a = memnew( (MethodBind7R<T ,R , P1, P2, P3, P4, P5, P6, P7>) );
+	MethodBind7R<T ,R , P1, P2, P3, P4, P5, P6, P7> * a = memnew( (MethodBind7R<T ,R , P1, P2, P3, P4, P5, P6, P7>) );	
 	a->method=p_method;
 	return a;
 }
@@ -1015,7 +1015,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -1032,15 +1032,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -1061,7 +1061,7 @@ public:
 		_generate_argument_types(7);
 #else
 		set_argument_count(7);
-#endif
+#endif		
 	};
 };
 
@@ -1085,7 +1085,7 @@ MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6, P7) 
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6, class P7>
 class MethodBind7C : public MethodBind {
 public:
-
+	
 	 void (T::*method)(P1, P2, P3, P4, P5, P6, P7) const;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -1101,13 +1101,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -1138,7 +1138,7 @@ public:
 		
 		return Variant();
 	}
-
+	
 
 	MethodBind7C () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -1146,14 +1146,14 @@ public:
 		_generate_argument_types(7);
 #else
 		set_argument_count(7);
-#endif
+#endif		
 	};
 };
 
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6, class P7>
 MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6, P7) const ) {
 
-	MethodBind7C<T  , P1, P2, P3, P4, P5, P6, P7> * a = memnew( (MethodBind7C<T  , P1, P2, P3, P4, P5, P6, P7>) );
+	MethodBind7C<T  , P1, P2, P3, P4, P5, P6, P7> * a = memnew( (MethodBind7C<T  , P1, P2, P3, P4, P5, P6, P7>) );	
 	a->method=p_method;
 	return a;
 }
@@ -1183,7 +1183,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -1200,15 +1200,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -1229,7 +1229,7 @@ public:
 		_generate_argument_types(7);
 #else
 		set_argument_count(7);
-#endif
+#endif		
 	};
 };
 
@@ -1253,7 +1253,7 @@ MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6, P7) con
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6, class P7>
 class MethodBind7RC : public MethodBind {
 public:
-
+	
 	R  (T::*method)(P1, P2, P3, P4, P5, P6, P7) const;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -1269,13 +1269,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -1306,7 +1306,7 @@ public:
 		return Variant(ret);
 		
 	}
-
+	
 
 	MethodBind7RC () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -1314,14 +1314,14 @@ public:
 		_generate_argument_types(7);
 #else
 		set_argument_count(7);
-#endif
+#endif		
 	};
 };
 
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6, class P7>
 MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6, P7) const ) {
 
-	MethodBind7RC<T ,R , P1, P2, P3, P4, P5, P6, P7> * a = memnew( (MethodBind7RC<T ,R , P1, P2, P3, P4, P5, P6, P7>) );
+	MethodBind7RC<T ,R , P1, P2, P3, P4, P5, P6, P7> * a = memnew( (MethodBind7RC<T ,R , P1, P2, P3, P4, P5, P6, P7>) );	
 	a->method=p_method;
 	return a;
 }
@@ -1352,7 +1352,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -1369,15 +1369,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -1399,7 +1399,7 @@ public:
 		_generate_argument_types(8);
 #else
 		set_argument_count(8);
-#endif
+#endif		
 	};
 };
 
@@ -1423,7 +1423,7 @@ MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, 
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8>
 class MethodBind8 : public MethodBind {
 public:
-
+	
 	 void (T::*method)(P1, P2, P3, P4, P5, P6, P7, P8) ;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -1440,13 +1440,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -1478,7 +1478,7 @@ public:
 		
 		return Variant();
 	}
-
+	
 
 	MethodBind8 () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -1486,14 +1486,14 @@ public:
 		_generate_argument_types(8);
 #else
 		set_argument_count(8);
-#endif
+#endif		
 	};
 };
 
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8>
 MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, P8)  ) {
 
-	MethodBind8<T  , P1, P2, P3, P4, P5, P6, P7, P8> * a = memnew( (MethodBind8<T  , P1, P2, P3, P4, P5, P6, P7, P8>) );
+	MethodBind8<T  , P1, P2, P3, P4, P5, P6, P7, P8> * a = memnew( (MethodBind8<T  , P1, P2, P3, P4, P5, P6, P7, P8>) );	
 	a->method=p_method;
 	return a;
 }
@@ -1524,7 +1524,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -1541,15 +1541,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -1571,7 +1571,7 @@ public:
 		_generate_argument_types(8);
 #else
 		set_argument_count(8);
-#endif
+#endif		
 	};
 };
 
@@ -1595,7 +1595,7 @@ MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, P8)
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8>
 class MethodBind8R : public MethodBind {
 public:
-
+	
 	R  (T::*method)(P1, P2, P3, P4, P5, P6, P7, P8) ;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -1612,13 +1612,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -1650,7 +1650,7 @@ public:
 		return Variant(ret);
 		
 	}
-
+	
 
 	MethodBind8R () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -1658,14 +1658,14 @@ public:
 		_generate_argument_types(8);
 #else
 		set_argument_count(8);
-#endif
+#endif		
 	};
 };
 
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8>
 MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, P8)  ) {
 
-	MethodBind8R<T ,R , P1, P2, P3, P4, P5, P6, P7, P8> * a = memnew( (MethodBind8R<T ,R , P1, P2, P3, P4, P5, P6, P7, P8>) );
+	MethodBind8R<T ,R , P1, P2, P3, P4, P5, P6, P7, P8> * a = memnew( (MethodBind8R<T ,R , P1, P2, P3, P4, P5, P6, P7, P8>) );	
 	a->method=p_method;
 	return a;
 }
@@ -1696,7 +1696,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -1713,15 +1713,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -1743,7 +1743,7 @@ public:
 		_generate_argument_types(8);
 #else
 		set_argument_count(8);
-#endif
+#endif		
 	};
 };
 
@@ -1767,7 +1767,7 @@ MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, 
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8>
 class MethodBind8C : public MethodBind {
 public:
-
+	
 	 void (T::*method)(P1, P2, P3, P4, P5, P6, P7, P8) const;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -1784,13 +1784,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -1822,7 +1822,7 @@ public:
 		
 		return Variant();
 	}
-
+	
 
 	MethodBind8C () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -1830,14 +1830,14 @@ public:
 		_generate_argument_types(8);
 #else
 		set_argument_count(8);
-#endif
+#endif		
 	};
 };
 
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8>
 MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, P8) const ) {
 
-	MethodBind8C<T  , P1, P2, P3, P4, P5, P6, P7, P8> * a = memnew( (MethodBind8C<T  , P1, P2, P3, P4, P5, P6, P7, P8>) );
+	MethodBind8C<T  , P1, P2, P3, P4, P5, P6, P7, P8> * a = memnew( (MethodBind8C<T  , P1, P2, P3, P4, P5, P6, P7, P8>) );	
 	a->method=p_method;
 	return a;
 }
@@ -1868,7 +1868,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -1885,15 +1885,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -1915,7 +1915,7 @@ public:
 		_generate_argument_types(8);
 #else
 		set_argument_count(8);
-#endif
+#endif		
 	};
 };
 
@@ -1939,7 +1939,7 @@ MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, P8)
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8>
 class MethodBind8RC : public MethodBind {
 public:
-
+	
 	R  (T::*method)(P1, P2, P3, P4, P5, P6, P7, P8) const;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -1956,13 +1956,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -1994,7 +1994,7 @@ public:
 		return Variant(ret);
 		
 	}
-
+	
 
 	MethodBind8RC () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -2002,14 +2002,14 @@ public:
 		_generate_argument_types(8);
 #else
 		set_argument_count(8);
-#endif
+#endif		
 	};
 };
 
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8>
 MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, P8) const ) {
 
-	MethodBind8RC<T ,R , P1, P2, P3, P4, P5, P6, P7, P8> * a = memnew( (MethodBind8RC<T ,R , P1, P2, P3, P4, P5, P6, P7, P8>) );
+	MethodBind8RC<T ,R , P1, P2, P3, P4, P5, P6, P7, P8> * a = memnew( (MethodBind8RC<T ,R , P1, P2, P3, P4, P5, P6, P7, P8>) );	
 	a->method=p_method;
 	return a;
 }
@@ -2041,7 +2041,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -2058,15 +2058,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -2089,7 +2089,7 @@ public:
 		_generate_argument_types(9);
 #else
 		set_argument_count(9);
-#endif
+#endif		
 	};
 };
 
@@ -2113,7 +2113,7 @@ MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, 
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9>
 class MethodBind9 : public MethodBind {
 public:
-
+	
 	 void (T::*method)(P1, P2, P3, P4, P5, P6, P7, P8, P9) ;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -2131,13 +2131,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -2170,7 +2170,7 @@ public:
 		
 		return Variant();
 	}
-
+	
 
 	MethodBind9 () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -2178,14 +2178,14 @@ public:
 		_generate_argument_types(9);
 #else
 		set_argument_count(9);
-#endif
+#endif		
 	};
 };
 
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9>
 MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, P8, P9)  ) {
 
-	MethodBind9<T  , P1, P2, P3, P4, P5, P6, P7, P8, P9> * a = memnew( (MethodBind9<T  , P1, P2, P3, P4, P5, P6, P7, P8, P9>) );
+	MethodBind9<T  , P1, P2, P3, P4, P5, P6, P7, P8, P9> * a = memnew( (MethodBind9<T  , P1, P2, P3, P4, P5, P6, P7, P8, P9>) );	
 	a->method=p_method;
 	return a;
 }
@@ -2217,7 +2217,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -2234,15 +2234,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -2265,7 +2265,7 @@ public:
 		_generate_argument_types(9);
 #else
 		set_argument_count(9);
-#endif
+#endif		
 	};
 };
 
@@ -2289,7 +2289,7 @@ MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, P8,
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9>
 class MethodBind9R : public MethodBind {
 public:
-
+	
 	R  (T::*method)(P1, P2, P3, P4, P5, P6, P7, P8, P9) ;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -2307,13 +2307,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -2346,7 +2346,7 @@ public:
 		return Variant(ret);
 		
 	}
-
+	
 
 	MethodBind9R () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -2354,14 +2354,14 @@ public:
 		_generate_argument_types(9);
 #else
 		set_argument_count(9);
-#endif
+#endif		
 	};
 };
 
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9>
 MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, P8, P9)  ) {
 
-	MethodBind9R<T ,R , P1, P2, P3, P4, P5, P6, P7, P8, P9> * a = memnew( (MethodBind9R<T ,R , P1, P2, P3, P4, P5, P6, P7, P8, P9>) );
+	MethodBind9R<T ,R , P1, P2, P3, P4, P5, P6, P7, P8, P9> * a = memnew( (MethodBind9R<T ,R , P1, P2, P3, P4, P5, P6, P7, P8, P9>) );	
 	a->method=p_method;
 	return a;
 }
@@ -2393,7 +2393,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -2410,15 +2410,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -2441,7 +2441,7 @@ public:
 		_generate_argument_types(9);
 #else
 		set_argument_count(9);
-#endif
+#endif		
 	};
 };
 
@@ -2465,7 +2465,7 @@ MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, 
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9>
 class MethodBind9C : public MethodBind {
 public:
-
+	
 	 void (T::*method)(P1, P2, P3, P4, P5, P6, P7, P8, P9) const;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -2483,13 +2483,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -2522,7 +2522,7 @@ public:
 		
 		return Variant();
 	}
-
+	
 
 	MethodBind9C () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -2530,14 +2530,14 @@ public:
 		_generate_argument_types(9);
 #else
 		set_argument_count(9);
-#endif
+#endif		
 	};
 };
 
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9>
 MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, P8, P9) const ) {
 
-	MethodBind9C<T  , P1, P2, P3, P4, P5, P6, P7, P8, P9> * a = memnew( (MethodBind9C<T  , P1, P2, P3, P4, P5, P6, P7, P8, P9>) );
+	MethodBind9C<T  , P1, P2, P3, P4, P5, P6, P7, P8, P9> * a = memnew( (MethodBind9C<T  , P1, P2, P3, P4, P5, P6, P7, P8, P9>) );	
 	a->method=p_method;
 	return a;
 }
@@ -2569,7 +2569,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -2586,15 +2586,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -2617,7 +2617,7 @@ public:
 		_generate_argument_types(9);
 #else
 		set_argument_count(9);
-#endif
+#endif		
 	};
 };
 
@@ -2641,7 +2641,7 @@ MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, P8,
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9>
 class MethodBind9RC : public MethodBind {
 public:
-
+	
 	R  (T::*method)(P1, P2, P3, P4, P5, P6, P7, P8, P9) const;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -2659,13 +2659,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -2698,7 +2698,7 @@ public:
 		return Variant(ret);
 		
 	}
-
+	
 
 	MethodBind9RC () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -2706,14 +2706,14 @@ public:
 		_generate_argument_types(9);
 #else
 		set_argument_count(9);
-#endif
+#endif		
 	};
 };
 
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9>
 MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, P8, P9) const ) {
 
-	MethodBind9RC<T ,R , P1, P2, P3, P4, P5, P6, P7, P8, P9> * a = memnew( (MethodBind9RC<T ,R , P1, P2, P3, P4, P5, P6, P7, P8, P9>) );
+	MethodBind9RC<T ,R , P1, P2, P3, P4, P5, P6, P7, P8, P9> * a = memnew( (MethodBind9RC<T ,R , P1, P2, P3, P4, P5, P6, P7, P8, P9>) );	
 	a->method=p_method;
 	return a;
 }
@@ -2746,7 +2746,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -2763,15 +2763,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -2795,7 +2795,7 @@ public:
 		_generate_argument_types(10);
 #else
 		set_argument_count(10);
-#endif
+#endif		
 	};
 };
 
@@ -2819,7 +2819,7 @@ MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, 
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9, class P10>
 class MethodBind10 : public MethodBind {
 public:
-
+	
 	 void (T::*method)(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10) ;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -2838,13 +2838,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -2878,7 +2878,7 @@ public:
 		
 		return Variant();
 	}
-
+	
 
 	MethodBind10 () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -2886,14 +2886,14 @@ public:
 		_generate_argument_types(10);
 #else
 		set_argument_count(10);
-#endif
+#endif		
 	};
 };
 
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9, class P10>
 MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10)  ) {
 
-	MethodBind10<T  , P1, P2, P3, P4, P5, P6, P7, P8, P9, P10> * a = memnew( (MethodBind10<T  , P1, P2, P3, P4, P5, P6, P7, P8, P9, P10>) );
+	MethodBind10<T  , P1, P2, P3, P4, P5, P6, P7, P8, P9, P10> * a = memnew( (MethodBind10<T  , P1, P2, P3, P4, P5, P6, P7, P8, P9, P10>) );	
 	a->method=p_method;
 	return a;
 }
@@ -2926,7 +2926,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -2943,15 +2943,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -2975,7 +2975,7 @@ public:
 		_generate_argument_types(10);
 #else
 		set_argument_count(10);
-#endif
+#endif		
 	};
 };
 
@@ -2999,7 +2999,7 @@ MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, P8,
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9, class P10>
 class MethodBind10R : public MethodBind {
 public:
-
+	
 	R  (T::*method)(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10) ;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -3018,13 +3018,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -3058,7 +3058,7 @@ public:
 		return Variant(ret);
 		
 	}
-
+	
 
 	MethodBind10R () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -3066,14 +3066,14 @@ public:
 		_generate_argument_types(10);
 #else
 		set_argument_count(10);
-#endif
+#endif		
 	};
 };
 
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9, class P10>
 MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10)  ) {
 
-	MethodBind10R<T ,R , P1, P2, P3, P4, P5, P6, P7, P8, P9, P10> * a = memnew( (MethodBind10R<T ,R , P1, P2, P3, P4, P5, P6, P7, P8, P9, P10>) );
+	MethodBind10R<T ,R , P1, P2, P3, P4, P5, P6, P7, P8, P9, P10> * a = memnew( (MethodBind10R<T ,R , P1, P2, P3, P4, P5, P6, P7, P8, P9, P10>) );	
 	a->method=p_method;
 	return a;
 }
@@ -3106,7 +3106,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -3123,15 +3123,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -3155,7 +3155,7 @@ public:
 		_generate_argument_types(10);
 #else
 		set_argument_count(10);
-#endif
+#endif		
 	};
 };
 
@@ -3179,7 +3179,7 @@ MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, 
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9, class P10>
 class MethodBind10C : public MethodBind {
 public:
-
+	
 	 void (T::*method)(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10) const;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -3198,13 +3198,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -3238,7 +3238,7 @@ public:
 		
 		return Variant();
 	}
-
+	
 
 	MethodBind10C () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -3246,14 +3246,14 @@ public:
 		_generate_argument_types(10);
 #else
 		set_argument_count(10);
-#endif
+#endif		
 	};
 };
 
 template<class T  , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9, class P10>
 MethodBind* create_method_bind( void (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10) const ) {
 
-	MethodBind10C<T  , P1, P2, P3, P4, P5, P6, P7, P8, P9, P10> * a = memnew( (MethodBind10C<T  , P1, P2, P3, P4, P5, P6, P7, P8, P9, P10>) );
+	MethodBind10C<T  , P1, P2, P3, P4, P5, P6, P7, P8, P9, P10> * a = memnew( (MethodBind10C<T  , P1, P2, P3, P4, P5, P6, P7, P8, P9, P10>) );	
 	a->method=p_method;
 	return a;
 }
@@ -3286,7 +3286,7 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return type_name;
 	}
@@ -3303,15 +3303,15 @@ public:
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_MANY_ARGUMENTS;
 			r_error.argument=get_argument_count();
 			return Variant();
-		}
-
+		} 
+		
 		if (p_arg_count<(get_argument_count()-get_default_argument_count())) {
 
 			r_error.error=Variant::CallError::CALL_ERROR_TOO_FEW_ARGUMENTS;
 			r_error.argument=get_argument_count()-get_default_argument_count();
 			return Variant();
 		}
-
+		
 		CHECK_ARG(1);
 		CHECK_ARG(2);
 		CHECK_ARG(3);
@@ -3335,7 +3335,7 @@ public:
 		_generate_argument_types(10);
 #else
 		set_argument_count(10);
-#endif
+#endif		
 	};
 };
 
@@ -3359,7 +3359,7 @@ MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, P8,
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9, class P10>
 class MethodBind10RC : public MethodBind {
 public:
-
+	
 	R  (T::*method)(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10) const;
 #ifdef DEBUG_METHODS_ENABLED
 	virtual Variant::Type _gen_argument_type(int p_arg) const { return _get_argument_type(p_arg); }
@@ -3378,13 +3378,13 @@ public:
 		
 		return Variant::NIL;
 	}
-#endif
+#endif	
 	virtual String get_instance_type() const {
 		return T::get_type_static();
 	}
 
 	virtual Variant call(Object* p_object,const Variant** p_args,int p_arg_count, Variant::CallError& r_error) {
-
+	
 		T *instance=p_object->cast_to<T>();
 		r_error.error=Variant::CallError::CALL_OK;
 #ifdef DEBUG_METHODS_ENABLED
@@ -3418,7 +3418,7 @@ public:
 		return Variant(ret);
 		
 	}
-
+	
 
 	MethodBind10RC () {
 #ifdef DEBUG_METHODS_ENABLED
@@ -3426,14 +3426,14 @@ public:
 		_generate_argument_types(10);
 #else
 		set_argument_count(10);
-#endif
+#endif		
 	};
 };
 
 template<class T ,class R , class P1, class P2, class P3, class P4, class P5, class P6, class P7, class P8, class P9, class P10>
 MethodBind* create_method_bind(R  (T::*p_method)(P1, P2, P3, P4, P5, P6, P7, P8, P9, P10) const ) {
 
-	MethodBind10RC<T ,R , P1, P2, P3, P4, P5, P6, P7, P8, P9, P10> * a = memnew( (MethodBind10RC<T ,R , P1, P2, P3, P4, P5, P6, P7, P8, P9, P10>) );
+	MethodBind10RC<T ,R , P1, P2, P3, P4, P5, P6, P7, P8, P9, P10> * a = memnew( (MethodBind10RC<T ,R , P1, P2, P3, P4, P5, P6, P7, P8, P9, P10>) );	
 	a->method=p_method;
 	return a;
 }

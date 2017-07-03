@@ -44,10 +44,10 @@ bool MeshLibrary::_set(const StringName& p_name, const Variant& p_value) {
 			set_item_name(idx,p_value);
 		else if(what=="mesh")
 			set_item_mesh(idx,p_value);
-//		else if(what=="shape")
-//			set_item_shape(idx,p_value);
-//		else if(what=="preview")
-//			set_item_preview(idx,p_value);
+		else if(what=="shape")
+			set_item_shape(idx,p_value);
+		else if(what=="preview")
+			set_item_preview(idx,p_value);
 		else
 			return false;
 
@@ -68,10 +68,10 @@ bool MeshLibrary::_get(const StringName& p_name,Variant &r_ret) const {
 		r_ret= get_item_name(idx);
 	else if(what=="mesh")
 		r_ret= get_item_mesh(idx);
-//	else if(what=="shape")
-//		r_ret= get_item_shape(idx);
-//	else if(what=="preview")
-//		r_ret= get_item_preview(idx);
+	else if(what=="shape")
+		r_ret= get_item_shape(idx);
+	else if(what=="preview")
+		r_ret= get_item_preview(idx);
 	else
 		return false;
 
@@ -103,7 +103,7 @@ void MeshLibrary::create_item(int p_item) {
 void MeshLibrary::set_item_name(int p_item,const String& p_name) {
 
 	ERR_FAIL_COND(!item_map.has(p_item));
-	item_map[p_item].name=p_name;
+	item_map[p_item].name=p_name;	
 	emit_changed();
 	_change_notify();
 
@@ -119,25 +119,25 @@ void MeshLibrary::set_item_mesh(int p_item,const Ref<Mesh>& p_mesh) {
 
 }
 
-//void MeshLibrary::set_item_shape(int p_item,const Ref<Shape>& p_shape) {
-//
-//	ERR_FAIL_COND(!item_map.has(p_item));
-//	item_map[p_item].shape=p_shape;
-//	_change_notify();
-//	notify_change_to_owners();
-//	emit_changed();
-//	_change_notify();
-//
-//}
+void MeshLibrary::set_item_shape(int p_item,const Ref<Shape>& p_shape) {
 
-//void MeshLibrary::set_item_preview(int p_item,const Ref<Texture>& p_preview) {
-//
-//	ERR_FAIL_COND(!item_map.has(p_item));
-//	item_map[p_item].preview=p_preview;
-//	emit_changed();
-//	_change_notify();
-//
-//}
+	ERR_FAIL_COND(!item_map.has(p_item));
+	item_map[p_item].shape=p_shape;
+	_change_notify();
+	notify_change_to_owners();
+	emit_changed();
+	_change_notify();
+
+}
+
+void MeshLibrary::set_item_preview(int p_item,const Ref<Texture>& p_preview) {
+
+	ERR_FAIL_COND(!item_map.has(p_item));
+	item_map[p_item].preview=p_preview;
+	emit_changed();
+	_change_notify();
+
+}
 String MeshLibrary::get_item_name(int p_item) const {
 
 	ERR_FAIL_COND_V(!item_map.has(p_item),"");
@@ -151,17 +151,17 @@ Ref<Mesh> MeshLibrary::get_item_mesh(int p_item) const {
 
 }
 
-//Ref<Shape> MeshLibrary::get_item_shape(int p_item) const {
-//
-//	ERR_FAIL_COND_V(!item_map.has(p_item),Ref<Shape>());
-//	return item_map[p_item].shape;
-//}
+Ref<Shape> MeshLibrary::get_item_shape(int p_item) const {
 
-//Ref<Texture> MeshLibrary::get_item_preview(int p_item) const {
-//
-//	ERR_FAIL_COND_V(!item_map.has(p_item),Ref<Texture>());
-//	return item_map[p_item].preview;
-//}
+	ERR_FAIL_COND_V(!item_map.has(p_item),Ref<Shape>());
+	return item_map[p_item].shape;
+}
+
+Ref<Texture> MeshLibrary::get_item_preview(int p_item) const {
+
+	ERR_FAIL_COND_V(!item_map.has(p_item),Ref<Texture>());
+	return item_map[p_item].preview;
+}
 
 bool MeshLibrary::has_item(int p_item) const {
 
@@ -223,10 +223,10 @@ void MeshLibrary::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("create_item","id"),&MeshLibrary::create_item);
 	ObjectTypeDB::bind_method(_MD("set_item_name","id","name"),&MeshLibrary::set_item_name);
 	ObjectTypeDB::bind_method(_MD("set_item_mesh","id","mesh:Mesh"),&MeshLibrary::set_item_mesh);
-//	ObjectTypeDB::bind_method(_MD("set_item_shape","id","shape:Shape"),&MeshLibrary::set_item_shape);
-//	ObjectTypeDB::bind_method(_MD("get_item_name","id"),&MeshLibrary::get_item_name);
+	ObjectTypeDB::bind_method(_MD("set_item_shape","id","shape:Shape"),&MeshLibrary::set_item_shape);
+	ObjectTypeDB::bind_method(_MD("get_item_name","id"),&MeshLibrary::get_item_name);
 	ObjectTypeDB::bind_method(_MD("get_item_mesh:Mesh","id"),&MeshLibrary::get_item_mesh);
-//	ObjectTypeDB::bind_method(_MD("get_item_shape:Shape","id"),&MeshLibrary::get_item_shape);
+	ObjectTypeDB::bind_method(_MD("get_item_shape:Shape","id"),&MeshLibrary::get_item_shape);
 	ObjectTypeDB::bind_method(_MD("remove_item","id"),&MeshLibrary::remove_item);
 	ObjectTypeDB::bind_method(_MD("clear"),&MeshLibrary::clear);
 	ObjectTypeDB::bind_method(_MD("get_item_list"),&MeshLibrary::get_item_list);

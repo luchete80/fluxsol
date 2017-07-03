@@ -250,7 +250,7 @@ struct _PHashTranslationCmp {
 };
 
 void PHashTranslation::generate(const Ref<Translation> &p_from) {
-//#ifdef TOOLS_ENABLED
+#ifdef TOOLS_ENABLED
 	List<StringName> keys;
 	p_from->get_message_list(&keys);
 
@@ -402,7 +402,7 @@ void PHashTranslation::generate(const Ref<Translation> &p_from) {
 	ERR_FAIL_COND(btindex!=bucket_table_size);
 	set_locale(p_from->get_locale());
 
-//#endif
+#endif
 }
 
 bool PHashTranslation::_set(const StringName& p_name, const Variant& p_value) {

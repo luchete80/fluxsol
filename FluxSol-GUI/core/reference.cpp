@@ -5,8 +5,7 @@
 /*                           GODOT ENGINE                                */
 /*                    http://www.godotengine.org                         */
 /*************************************************************************/
-/* Copyright (c) 2007-2017 Juan Linietsky, Ariel Manzur.                 */
-/* Copyright (c) 2014-2017 Godot Engine contributors (cf. AUTHORS.md)    */
+/* Copyright (c) 2007-2016 Juan Linietsky, Ariel Manzur.                 */
 /*                                                                       */
 /* Permission is hereby granted, free of charge, to any person obtaining */
 /* a copy of this software and associated documentation files (the       */
@@ -28,7 +27,8 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                */
 /*************************************************************************/
 #include "reference.h"
-#include "script_language.h"
+
+
 
 bool Reference::init_ref() {
 
@@ -38,7 +38,7 @@ bool Reference::init_ref() {
 		// at the same time, which is never likely to happen (would be crazy to do)
 		// so don't do it.
 
-		if (refcount_init.get() > 0) {
+		if (refcount_init.get()>0) {
 			refcount_init.unref();
 			refcount.unref(); // first referencing is already 1, so compensate for the ref above
 		}
@@ -48,35 +48,29 @@ bool Reference::init_ref() {
 
 		return false;
 	}
+
 }
+
 
 void Reference::_bind_methods() {
 
-	ObjectTypeDB::bind_method(_MD("init_ref"), &Reference::init_ref);
-	ObjectTypeDB::bind_method(_MD("reference"), &Reference::reference);
-	ObjectTypeDB::bind_method(_MD("unreference"), &Reference::unreference);
+	ObjectTypeDB::bind_method(_MD("init_ref"),&Reference::init_ref);
+	ObjectTypeDB::bind_method(_MD("reference"),&Reference::reference);
+	ObjectTypeDB::bind_method(_MD("unreference"),&Reference::unreference);
 }
 
 int Reference::reference_get_count() const {
 	return refcount.get();
 }
 
-void Reference::reference() {
+void Reference::reference(){
 
 	refcount.ref();
-	if (get_script_instance()) {
-		get_script_instance()->refcount_incremented();
-	}
+
 }
-bool Reference::unreference() {
+bool Reference::unreference(){
 
-	bool die = refcount.unref();
-
-	if (get_script_instance()) {
-		die = die && get_script_instance()->refcount_decremented();
-	}
-
-	return die;
+	return refcount.unref();
 }
 
 Reference::Reference() {
@@ -85,12 +79,14 @@ Reference::Reference() {
 	refcount_init.init();
 }
 
+
 Reference::~Reference() {
+
 }
 
 Variant WeakRef::get_ref() const {
 
-	if (ref == 0)
+	if (ref==0)
 		return Variant();
 
 	Object *obj = ObjectDB::get_instance(ref);
@@ -106,21 +102,21 @@ Variant WeakRef::get_ref() const {
 }
 
 void WeakRef::set_obj(Object *p_object) {
-	ref = p_object ? p_object->get_instance_ID() : 0;
+	ref=p_object ? p_object->get_instance_ID() : 0;
 }
 
-void WeakRef::set_ref(const REF &p_ref) {
+void WeakRef::set_ref(const REF& p_ref) {
 
-	ref = p_ref.is_valid() ? p_ref->get_instance_ID() : 0;
+	ref=p_ref.is_valid() ? p_ref->get_instance_ID() : 0;
 }
 
 WeakRef::WeakRef() {
-	ref = 0;
+	ref=0;
 }
 
 void WeakRef::_bind_methods() {
 
-	ObjectTypeDB::bind_method(_MD("get_ref:Object"), &WeakRef::get_ref);
+	ObjectTypeDB::bind_method(_MD("get_ref:Object"),&WeakRef::get_ref);
 }
 #if 0
 

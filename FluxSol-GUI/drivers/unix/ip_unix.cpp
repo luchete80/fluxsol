@@ -65,15 +65,13 @@
 IP_Address IP_Unix::_resolve_hostname(const String& p_hostname) {
 
 	struct hostent *he;
-	//LUCIANO
-	// if ((he=gethostbyname(p_hostname.utf8().get_data())) == NULL) {  // get the host info
-		// ERR_PRINT("gethostbyname failed!");
-		// return IP_Address();
-	// }
+	if ((he=gethostbyname(p_hostname.utf8().get_data())) == NULL) {  // get the host info
+		ERR_PRINT("gethostbyname failed!");
+		return IP_Address();
+	}
 	IP_Address ip;
 
-	//LUCIANO
-	//ip.host= *((unsigned long*)he->h_addr);
+	ip.host= *((unsigned long*)he->h_addr);
 
 	return ip;
 
@@ -97,22 +95,21 @@ void IP_Unix::get_local_addresses(List<IP_Address> *r_addresses) const {
 	while (true) {
 
 		addrs = (IP_ADAPTER_ADDRESSES*)memalloc(buf_size);
-		//LUCIANO
-		// int err = GetAdaptersAddresses(AF_INET, GAA_FLAG_SKIP_ANYCAST |
-									   // GAA_FLAG_SKIP_MULTICAST |
-									   // GAA_FLAG_SKIP_DNS_SERVER |
-									   // GAA_FLAG_SKIP_FRIENDLY_NAME,
-									 // NULL, addrs, &buf_size);
-		// if (err == NO_ERROR) {
-			// break;
-		// };
-		// memfree(addrs);
-		// if (err == ERROR_BUFFER_OVERFLOW) {
-			// continue; // will go back and alloc the right size
-		// };
+		int err = GetAdaptersAddresses(AF_INET, GAA_FLAG_SKIP_ANYCAST |
+									   GAA_FLAG_SKIP_MULTICAST |
+									   GAA_FLAG_SKIP_DNS_SERVER |
+									   GAA_FLAG_SKIP_FRIENDLY_NAME,
+									 NULL, addrs, &buf_size);
+		if (err == NO_ERROR) {
+			break;
+		};
+		memfree(addrs);
+		if (err == ERROR_BUFFER_OVERFLOW) {
+			continue; // will go back and alloc the right size
+		};
 
-		// ERR_EXPLAIN("Call to GetAdaptersAddresses failed with error " + itos(err));
-		// ERR_FAIL();
+		ERR_EXPLAIN("Call to GetAdaptersAddresses failed with error " + itos(err));
+		ERR_FAIL();
 		return;
 	};
 
@@ -128,8 +125,7 @@ void IP_Unix::get_local_addresses(List<IP_Address> *r_addresses) const {
 			SOCKADDR_IN* ipv4 = reinterpret_cast<SOCKADDR_IN*>(address->Address.lpSockaddr);
 
 			IP_Address ip;
-			//LUCIANO
-			//ip.host= *((unsigned long*)&ipv4->sin_addr);
+			ip.host= *((unsigned long*)&ipv4->sin_addr);
 
 
 			//inet_ntop(AF_INET, &ipv4->sin_addr, addr_chr, INET_ADDRSTRLEN);
@@ -186,8 +182,7 @@ void IP_Unix::make_default() {
 
 IP* IP_Unix::_create_unix() {
 
-	//LUCIANO
-	//return memnew( IP_Unix );
+	return memnew( IP_Unix );
 }
 
 IP_Unix::IP_Unix() {
