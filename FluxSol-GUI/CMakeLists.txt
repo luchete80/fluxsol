@@ -11,16 +11,6 @@ include_directories("${FLUXSOL_DIR}/Src/FluxSol-Solver")
 set (NAME FluxSol-GUI)
 project(${NAME})
 
-#VTK
-IF(NOT VTK_BINARY_DIR)
-FIND_PACKAGE(VTK)
-IF(NOT VTK_DIR)
-  MESSAGE(FATAL_ERROR "Please set VTK_DIR.")
-ENDIF()
-INCLUDE(${VTK_USE_FILE})
-ENDIF()
-
-
 #DIRECTORIES
 set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
 
@@ -186,6 +176,5 @@ winmm
 opengl32
 stdc++
 Graphics
-${VTK_LIBRARIES}
 )
 

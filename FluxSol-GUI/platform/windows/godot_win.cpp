@@ -35,9 +35,6 @@
 #include <stdio.h>
 #include <locale.h>
 
-#include <vtkOpenGLRenderer.h>
-#include <vtkExternalOpenGLRenderWindow.h>
-#include <ExternalVTKWidget.h>
 
 PCHAR*
     CommandLineToArgvA(
@@ -185,7 +182,7 @@ int main(int _argc, char** _argv) {
 }
 
 HINSTANCE godot_hinstance = NULL;
-//vtkRenderWindow *renWindow=NULL;
+
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)	{
 	godot_hinstance = hInstance;

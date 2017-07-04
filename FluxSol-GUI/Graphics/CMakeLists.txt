@@ -13,19 +13,6 @@ set (ALGLIB_INCLUDE_DIRS "D:/Luciano/Numerico/MecSol/FluxSol/Libs/alglib-3.8.2/s
 #include_directories(${LASPACK_INCLUDE_DIRS})
 include_directories(${ALGLIB_INCLUDE_DIRS})
 
-IF(NOT VTK_BINARY_DIR)
-FIND_PACKAGE(VTK)
-IF(NOT VTK_DIR)
-  MESSAGE(FATAL_ERROR "Please set VTK_DIR.")
-ELSE()
-  MESSAGE("Found VTK. VTKUseFile: ${VTK_USE_FILE}")
-  MESSAGE("VTK Include Dir: ${VTK_INCLUDE_DIRS}")
- ENDIF()
-INCLUDE(${VTK_USE_FILE})
-ENDIF()
-
-include_directories(${VTK_INCLUDE_DIRS})
-
 set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fpermissive")
 
 #add_subdirectory(vtk)
@@ -36,7 +23,6 @@ add_library (${NAME} OBJECT ${sources})
 add_library (Graphics SHARED ${sources})
 
 target_link_libraries (Graphics
-${VTK_LIBRARIES}
 fluxsol-IO
 fluxsol-Type
 fluxsol-Solver

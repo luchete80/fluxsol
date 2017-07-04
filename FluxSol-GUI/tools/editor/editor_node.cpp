@@ -5077,21 +5077,52 @@ EditorNode::EditorNode() {
 	play_cc->set_anchor_and_margin(MARGIN_BOTTOM,Control::ANCHOR_BEGIN,10);
 	play_cc->set_margin(MARGIN_TOP,5);
 
-	top_region = memnew( PanelContainer );
-	top_region->add_style_override("panel",gui_base->get_stylebox("hover","Button"));
-	play_cc->add_child(top_region);
+//	top_region = memnew( PanelContainer );
+//	top_region->add_style_override("panel",gui_base->get_stylebox("hover","Button"));
+//	//play_cc->add_child(top_region);
+//	gui_base->add_child(top_region); //LUCIANO
+//
+//	HBoxContainer *play_hb = memnew( HBoxContainer );
+//	top_region->add_child(play_hb);
+//
+//	run_native = memnew( EditorRunNative);
+//	play_hb->add_child(run_native);
+//	native_play_button = memnew( MenuButton );
+//	native_play_button->set_text("NTV");
+//	menu_hb->add_child(native_play_button);
+//	native_play_button->hide();
+//	native_play_button->get_popup()->connect("item_pressed",this,"_run_in_device");
+//	run_native->connect("native_run",this,"_menu_option",varray(RUN_PLAY_NATIVE));
 
-	HBoxContainer *play_hb = memnew( HBoxContainer );
-	top_region->add_child(play_hb);
+	//////////////////////////////// RIBBONS /////////////////////////////////////
+	// LUCIANO: THESE ARE THE RIBBONS
+	///////////////////////////////////////////////////////////////////////////////
+	tabs = memnew( TabContainer );
+	tabs->set_v_size_flags(Control::SIZE_EXPAND_FILL);
+	tabs->set_area_as_parent_rect();
+    tabs->set_anchor_and_margin(MARGIN_BOTTOM,Control::ANCHOR_BEGIN,10);
+	tabs->set_margin(MARGIN_TOP,5);
 
-	run_native = memnew( EditorRunNative);
-	play_hb->add_child(run_native);
-	native_play_button = memnew( MenuButton );
-	native_play_button->set_text("NTV");
-	menu_hb->add_child(native_play_button);
-	native_play_button->hide();
-	native_play_button->get_popup()->connect("item_pressed",this,"_run_in_device");
-	run_native->connect("native_run",this,"_menu_option",varray(RUN_PLAY_NATIVE));
+	play_cc->add_child(tabs);   //WHICH CONTAINER SHOULD BE THE PARENT?
+
+	VBoxContainer *vbc = memnew( VBoxContainer );
+	vbc->set_name("File");
+	//tabs->add_child(vbc);
+	Control *dbg=vbc;
+
+	HBoxContainer *hbc = memnew( HBoxContainer );
+	vbc->add_child(hbc);
+	hbc->set_v_size_flags(Control::SIZE_EXPAND_FILL);
+	vbc->set_v_size_flags(Control::SIZE_EXPAND_FILL);
+
+    tabs->add_child(dbg);
+	//tabs->move_child(vbc,0);
+
+	//////////////////////////////// END RIBBONS ////////////////////////////////
+
+
+
+	//LUCIANO: THIS WAS THE PLAY , STOP; PAUSE AND DEBUG BUTTONS
 //
 //	debug_button = memnew( MenuButton );
 //	debug_button->set_flat(true);
