@@ -60,7 +60,6 @@ void Input::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("get_joy_name","device"),&Input::get_joy_name);
 	ObjectTypeDB::bind_method(_MD("get_joy_guid","device"),&Input::get_joy_guid);
 	ObjectTypeDB::bind_method(_MD("get_accelerometer"),&Input::get_accelerometer);
-	ObjectTypeDB::bind_method(_MD("get_magnetometer"),&Input::get_magnetometer);
 	//ObjectTypeDB::bind_method(_MD("get_mouse_pos"),&Input::get_mouse_pos); - this is not the function you want
 	ObjectTypeDB::bind_method(_MD("get_mouse_speed"),&Input::get_mouse_speed);
 	ObjectTypeDB::bind_method(_MD("get_mouse_button_mask"),&Input::get_mouse_button_mask);
@@ -79,7 +78,7 @@ void Input::_bind_methods() {
 }
 
 void Input::get_argument_options(const StringName& p_function,int p_idx,List<String>*r_options) const {
-//#ifdef TOOLS_ENABLED
+#ifdef TOOLS_ENABLED
 
 	String pf=p_function;
 	if (p_idx==0 && (pf=="is_action_pressed" || pf=="action_press" || pf=="action_release")) {
@@ -98,7 +97,7 @@ void Input::get_argument_options(const StringName& p_function,int p_idx,List<Str
 
 		}
 	}
-//#endif
+#endif
 
 }
 

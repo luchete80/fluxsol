@@ -324,8 +324,8 @@ float GeometryInstance::get_extra_cull_margin() const{
 
 void GeometryInstance::_bind_methods() {
 
-	// ObjectTypeDB::bind_method(_MD("set_material_override","material"), &GeometryInstance::set_material_override);
-	// ObjectTypeDB::bind_method(_MD("get_material_override"), &GeometryInstance::get_material_override);
+	 ObjectTypeDB::bind_method(_MD("set_material_override","material"), &GeometryInstance::set_material_override);
+	 ObjectTypeDB::bind_method(_MD("get_material_override"), &GeometryInstance::get_material_override);
 
 	ObjectTypeDB::bind_method(_MD("set_flag","flag","value"), &GeometryInstance::set_flag);
 	ObjectTypeDB::bind_method(_MD("get_flag","flag"), &GeometryInstance::get_flag);

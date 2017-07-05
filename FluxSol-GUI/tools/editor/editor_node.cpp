@@ -5077,10 +5077,9 @@ EditorNode::EditorNode() {
 	play_cc->set_anchor_and_margin(MARGIN_BOTTOM,Control::ANCHOR_BEGIN,10);
 	play_cc->set_margin(MARGIN_TOP,5);
 
-//	top_region = memnew( PanelContainer );
-//	top_region->add_style_override("panel",gui_base->get_stylebox("hover","Button"));
-//	//play_cc->add_child(top_region);
-//	gui_base->add_child(top_region); //LUCIANO
+	top_region = memnew( PanelContainer );
+	top_region->add_style_override("panel",gui_base->get_stylebox("hover","Button"));
+	play_cc->add_child(top_region);
 //
 //	HBoxContainer *play_hb = memnew( HBoxContainer );
 //	top_region->add_child(play_hb);
@@ -5103,7 +5102,7 @@ EditorNode::EditorNode() {
     tabs->set_anchor_and_margin(MARGIN_BOTTOM,Control::ANCHOR_BEGIN,10);
 	tabs->set_margin(MARGIN_TOP,5);
 
-	play_cc->add_child(tabs);   //WHICH CONTAINER SHOULD BE THE PARENT?
+	top_region->add_child(tabs);   //WHICH CONTAINER SHOULD BE THE PARENT?
 
 	VBoxContainer *vbc = memnew( VBoxContainer );
 	vbc->set_name("File");

@@ -325,21 +325,21 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 			force_quit=true;
 			return 0;								// Jump Back
 		}
-//		case WM_MOUSELEAVE: {
-//
+		case WM_MOUSELEAVE: {
+
 //			old_invalid=true;
 //			outside=true;
 //			if (main_loop && mouse_mode!=MOUSE_MODE_CAPTURED)
 //				main_loop->notification(MainLoop::NOTIFICATION_WM_MOUSE_EXIT);
 //			if (input)
 //				input->set_mouse_in_window(false);
-//
-//		} break;
+
+		} break;
 		case WM_MOUSEMOVE: {
 
 			if (outside) {
 //				//mouse enter
-
+//
 //				if (main_loop && mouse_mode!=MOUSE_MODE_CAPTURED)
 //					main_loop->notification(MainLoop::NOTIFICATION_WM_MOUSE_ENTER);
 //				if (input)
@@ -359,20 +359,20 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 //				TrackMouseEvent(&tme);
 
 			} //If outside
-//
-//            //LUCIANO: ESTO YA ESTABA COMENTADO
-//			/*
-//			LPARAM extra = GetMessageExtraInfo();
-//			if (IsPenEvent(extra)) {
-//
-//				int idx = extra & 0x7f;
-//				_drag_event(idx, uMsg, wParam, lParam);
-//				if (idx != 0) {
-//					return 0;
-//				};
-//				// fallthrough for mouse event
-//			};
-//			*/
+
+            //LUCIANO: ESTO YA ESTABA COMENTADO
+			/*
+			LPARAM extra = GetMessageExtraInfo();
+			if (IsPenEvent(extra)) {
+
+				int idx = extra & 0x7f;
+				_drag_event(idx, uMsg, wParam, lParam);
+				if (idx != 0) {
+					return 0;
+				};
+				// fallthrough for mouse event
+			};
+			*/
 //
 //
 //			InputEvent event;
@@ -1027,6 +1027,8 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 	}
 	print_line("Initializing Visual Server");
 	visual_server->init();
+
+	input = memnew( InputDefault );
 
 //    //This must be called after itinialize visual server.
 //    //Otherwise, it crashes

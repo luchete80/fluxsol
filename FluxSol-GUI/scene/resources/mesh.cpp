@@ -978,8 +978,8 @@ void Mesh::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("surface_get_array_index_len","surf_idx"),&Mesh::surface_get_array_index_len);
 	ObjectTypeDB::bind_method(_MD("surface_get_format","surf_idx"),&Mesh::surface_get_format);
 	ObjectTypeDB::bind_method(_MD("surface_get_primitive_type","surf_idx"),&Mesh::surface_get_primitive_type);
-	//ObjectTypeDB::bind_method(_MD("surface_set_material","surf_idx","material:Material"),&Mesh::surface_set_material);
-	//ObjectTypeDB::bind_method(_MD("surface_get_material:Material","surf_idx"),&Mesh::surface_get_material);
+	ObjectTypeDB::bind_method(_MD("surface_set_material","surf_idx","material:Material"),&Mesh::surface_set_material);
+	ObjectTypeDB::bind_method(_MD("surface_get_material:Material","surf_idx"),&Mesh::surface_get_material);
 	ObjectTypeDB::bind_method(_MD("surface_set_name","surf_idx","name"),&Mesh::surface_set_name);
 	ObjectTypeDB::bind_method(_MD("surface_get_name","surf_idx"),&Mesh::surface_get_name);
 	ObjectTypeDB::bind_method(_MD("center_geometry"),&Mesh::center_geometry);

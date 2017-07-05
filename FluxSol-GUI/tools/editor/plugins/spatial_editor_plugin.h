@@ -35,7 +35,6 @@
 #include "scene/3d/immediate_geometry.h"
 #include "scene/3d/light.h"
 #include "scene/gui/panel_container.h"
-#include "scene/resources/material.h" //LUCIANO
 /**
 	@author Juan Linietsky <reduzio@gmail.com>
 */
@@ -279,7 +278,7 @@ public:
 };
 
 class SpatialEditor : public VBoxContainer {
-
+	
 	OBJ_TYPE(SpatialEditor, VBoxContainer );
 public:
 
@@ -339,7 +338,7 @@ private:
 
 	Ref<Mesh> selection_box;
 	RID indicators;
-	RID indicators_instance;
+	RID indicators_instance;	
 	RID cursor_mesh;
 	RID cursor_instance;
 	RID indicator_mat;
@@ -353,7 +352,7 @@ private:
 		Spatial *sp;
 		RID poly_instance;
 	};
-
+	
 	Map<uint32_t,Selected> selected;
 */
 	struct Gizmo {
@@ -362,8 +361,8 @@ private:
 		float scale;
 		Transform transform;
 	} gizmo;
-
-
+	
+	
 
 
 	enum MenuOption {
@@ -467,14 +466,14 @@ private:
 	static SpatialEditor *singleton;
 
 	void _node_removed(Node* p_node);
-	SpatialEditorGizmos *gizmos;
+	//SpatialEditorGizmos *gizmos;
 	SpatialEditor();
 
 	void _update_ambient_light_color(const Color& p_color);
 	void _update_default_light_angle();
 	void _default_light_angle_input(const InputEvent& p_event);
 
-protected:
+protected:	
 
 
 
@@ -484,7 +483,7 @@ protected:
 	void _unhandled_key_input(InputEvent p_event);
 
 	static void _bind_methods();
-public:
+public:	
 
 
 	static SpatialEditor *get_singleton() { return singleton; }
@@ -546,9 +545,9 @@ public:
 };
 
 class SpatialEditorPlugin : public EditorPlugin {
-
+	
 	OBJ_TYPE( SpatialEditorPlugin, EditorPlugin );
-
+	
 	SpatialEditor *spatial_editor;
 	EditorNode *editor;
 protected:
@@ -560,7 +559,7 @@ public:
 	SpatialEditor *get_spatial_editor() { return spatial_editor; }
 	virtual String get_name() const { return "3D"; }
 	bool has_main_screen() const { return true; }
-	virtual void make_visible(bool p_visible);
+	virtual void make_visible(bool p_visible);	
 	virtual void edit(Object *p_object);
 	virtual bool handles(Object *p_object) const;
 
