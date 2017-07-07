@@ -42,10 +42,10 @@ void PETSC_KSP_Solver<number>::PETSC_Init()
 
 	char help[100];
 
-    // NOT TO USE THIS!! IT IS CRASHING
-	//argc=0;
-	//args=NULL;
-	//
+    //NOT TO USE THIS!! IT IS CRASHING
+	argc=0;
+	args=NULL;
+
 
 	cout << "Initializing PETSC"<<endl;
 	PetscInitialize(&argc,&args,(char *)0,help);
