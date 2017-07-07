@@ -94,7 +94,7 @@ class _Face
 };
 
 //Operadores aparte
-Vec3D &CalcNormal(const vector <_Vertex> &verts);
+Vec3D CalcNormal(const vector <_Vertex> &verts);
 
 }
 

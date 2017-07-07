@@ -739,7 +739,6 @@ void Fv_CC_Grid::Init_Faces()
             {
                 facenodes.push_back(this->node[facecells[nf][1]]);
             }
-            //_FvFace f(FaceId, Face Vertex number, Face vertex (Vertex format), Face Nodes, )
             _FvFace f(nf,mymap[nf],facevertex,facenodes,boundaryface);
 
             this->face.push_back(f);

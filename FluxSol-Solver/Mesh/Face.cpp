@@ -49,7 +49,7 @@ _Face::_Face(const int &Id, const vector <_Vertex> &verts):null_flux_face(false)
 }
 
 
-Vec3D &CalcNormal(const vector <_Vertex> &verts)
+Vec3D CalcNormal(const vector <_Vertex> &verts)
 {
     Vec3D res;
 	Vec3D ve;
