@@ -8,7 +8,7 @@ PETSC_GAMGSolver.h
 )
 
 set (SOURCES 
-Simple.cpp
+#Simple.cpp
 PETSC_Solver.cpp
 PETSC_GAMGSolver.cpp
 )

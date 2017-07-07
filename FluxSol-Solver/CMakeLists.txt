@@ -190,14 +190,31 @@ if (USE_SHARED_LIB)
 #Before creating library
 set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--export-all-symbols")
 add_library(Type_ SHARED $<TARGET_OBJECTS:Type>)
-add_library(Nastran_ SHARED $<TARGET_OBJECTS:Nastran>)
+add_library(Nastran_ SHARED $<TARGET_OBJECTS:Nastran> $<TARGET_OBJECTS:Utils>)
 
-#add_library(${NAME}lib SHARED FluxSol_lib.cpp 	$<TARGET_OBJECTS:Analysis>
-#												$<TARGET_OBJECTS:Materials>
-#												$<TARGET_OBJECTS:FvTime>
-#												$<TARGET_OBJECTS:Tests>
-#												$<TARGET_OBJECTS:Time>
-#											)
+add_library(${NAME}lib SHARED FluxSol_lib.cpp
+$<TARGET_OBJECTS:Analysis>
+												$<TARGET_OBJECTS:Boundary>
+												$<TARGET_OBJECTS:Field>
+												$<TARGET_OBJECTS:Input>
+												$<TARGET_OBJECTS:Laplacian>
+												$<TARGET_OBJECTS:Materials>
+												$<TARGET_OBJECTS:Mesh>
+												$<TARGET_OBJECTS:Model>
+												$<TARGET_OBJECTS:Nastran>
+												$<TARGET_OBJECTS:FvMesh>
+												$<TARGET_OBJECTS:FvGrad>
+												$<TARGET_OBJECTS:FvTime>
+												$<TARGET_OBJECTS:Output>
+												$<TARGET_OBJECTS:SistEcuac>
+												$<TARGET_OBJECTS:Solver>	
+												$<TARGET_OBJECTS:Tests>
+												$<TARGET_OBJECTS:Time>
+												$<TARGET_OBJECTS:Type>
+												
+)
+
+target_link_libraries (${NAME}lib UDO ${EXTRA_LIBS} ${EXT_LIBS})
 
 else ()
     set (USE_STATIC_LIB ON)
@@ -251,6 +268,8 @@ install (FILES ${NAME}.h DESTINATION include)
 #FLUXSOL EXECUTABLE
 
 add_executable(${NAME} ${SOURCES} UDO)
+add_executable(${NAME}_orig ${SOURCES} UDO)
+target_link_libraries (${NAME}_orig ${NAME}lib)
 
 target_link_libraries (fluxsol-EqnSys fluxsol-Type)
 target_link_libraries (fluxsol-IO UDO fluxsol-EqnSys fluxsol-Laplacian fluxsol-Field fluxsol-Type fluxsol-Utils)

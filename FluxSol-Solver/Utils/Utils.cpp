@@ -20,23 +20,20 @@
     see <http://www.gnu.org/licenses/>.
 
 *************************************************************************/
-#include "Utils.h"
+#include "Utils/Utils.h"
+#include <iostream>     // std::cout
+#include <sstream>      // std::istringstream
+#include <string>       // std::string
 
 using namespace std;
-using namespace FluxSol;
 
-string int2str(int number) {
-        std::stringstream ss;
-        ss << number;
-        return ss.str();
-}
-
-//El campo empieza desde 1 !!!!!!!!!!!!!!!!!!!!
+//Read_Field
+//BEGINS FROM 0
 int Leer_Campo(const string cad, const int campo)
 {
     string strlin=cad;
     string cadtemp;
-    int iniciocad=(campo-1)*8;
+    int iniciocad=campo*8;
 
     for (int k=0;k<8;k++)
     {
@@ -45,7 +42,9 @@ int Leer_Campo(const string cad, const int campo)
     } //Delf for k
 
         int Number;
-        //if ( ! (istringstream(cadtemp) >> Number) ) Number = 0;
+
+        //CAN BE DONE WITH ATOI, STOI, AND SO ON
+        if ( ! (istringstream(cadtemp) >> Number) ) Number = 0;
         //Si no es un entero
         if ( (cadtemp.find(".",0)!=cadtemp.npos))           Number=0;
 
@@ -59,39 +58,43 @@ void listar_vec(const std::vector <T> v, ofstream f)
     f<<v[i]<<endl;
 }
 
-// int SearchVal(const int &i,const std::vector <int> &v)
-// {
-	// int r=-1;
-	// for (int vi=0;vi<v.size();vi++)
-		// if (v[vi]==i)
-			// r=vi;
+int SearchVal(const int &i,std::vector <int> &v)
+{
+	int r=-1;
+	for (int vi=0;vi<v.size();vi++)
+		if (v[vi]==i)
+			r=vi;
 
-	// return r;
-// }
+	return r;
+}
 
 //Devuelve verdadero si los encontro a todos los ind en v
-//bool FindAllVals(std::vector <int> &ind, std::vector <int> &v)
-//{
-//	bool enc=true;
-//	int vi=0;
-//	while (vi<v.size() && enc)
-//	{
-//		bool enc_elem=false;
-//		for (int vind=0;vind<ind.size();vind++)
-//			if (ind[vind]==v[vi])
-//				enc_elem=true;
-//
-//		if(!enc_elem)
-//			enc=false;
-//
-//		vi++;
-//	}
-//	return enc;
-//}
+inline bool FindAllVals(std::vector <int> &ind, std::vector <int> &v)
+{
+	bool r=true;
+    cout << "SEARCHING VALUES"<<endl;
+	bool enc=true;
+	int vi=0;
+	while (vi<v.size() && enc)
+	{
+		bool enc_elem=false;
+		for (int vind=0;vind<ind.size();vind++)
+			if (ind[vind]==v[vi])
+            {
+				enc=true;
+                cout << ind[vind]<< " ";
+            }
+		if (!enc_elem)
+			enc=false;
+		vi++;
+	}
+	cout <<endl;
+	return r;
+}
 
 //Indica la cantidad de elementos del vector ind que encuentra en v
 //Si no encuentra devuelve 0
-//int NumVecElemFound(std::vector <int> &ind, std::vector <int> &v)
+//int & NumVecElemFound(std::vector <int> &ind, std::vector <int> &v)
 //{
 //	int r=0;
 //
@@ -100,22 +103,16 @@ void listar_vec(const std::vector <T> v, ofstream f)
 //	{
 //		bool enc_elem=false;
 //		for (int vind=0;vind<ind.size();vind++)
-//        {
-//            if (ind[vind]==v[vi])
+//			if (ind[vind]==v[vi])
 //				r++;
-//            cout << "vi vind " <<vi << " " <<vind<<endl;
-//        }
-//        cout << "r"<<r<<endl;
 //		vi++;
 //	}
-//	cout <<"extiting"<<endl;
-//
 //	return r;
 //
 //}
 
 //Valores en comun que tienen
-std::vector <int> & CommonValues(std::vector <int> &ind, std::vector <int> &v)
+std::vector <int> CommonValues(std::vector <int> &ind, std::vector <int> &v)
 {
 	vector <int> r;
 
@@ -143,4 +140,9 @@ bool ValueFound(const int &val, std::vector<int> vec)
 
 }
 
-//Math functions
+string int2str(int number)
+{
+        std::stringstream ss;
+        ss << number;
+        return ss.str();
+}

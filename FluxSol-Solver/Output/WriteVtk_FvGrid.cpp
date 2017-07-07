@@ -36,6 +36,7 @@
 #include <limits>
 
 #include "../FiniteVolume/Mesh/FvGrid.h"
+#include "Utils/Utils.h"
 
 
 namespace FluxSol
@@ -47,12 +48,6 @@ using namespace std;
 int timeStep,gid;
 vector<string> varList;
 vector<bool> var_is_vec3d;
-
-string int2str(int number) {
-        std::stringstream ss;
-        ss << number;
-        return ss.str();
-}
 
 //Initially it cat write several meshes
 void Fv_CC_Grid::Write_vtk()

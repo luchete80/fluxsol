@@ -10,7 +10,6 @@ Nastran.cpp
 Nodo.cpp
 Prop.cpp
 SistCoord.cpp
-Varios.cpp
 )
 
 FILE(GLOB _header

@@ -17,6 +17,8 @@
 #include "../Field/Field.h"
 #include "../Field/Field.h"
 
+#include "Utils/Utils.h"
+
 namespace FluxSol
 {
 using namespace std;
@@ -27,15 +29,9 @@ int timeStep,gid;
 vector<string> varList;
 vector<bool> var_is_vec3d;
 
-string int2str(int number) {
-        std::stringstream ss;
-        ss << number;
-        return ss.str();
-}
-
 //Initially it cat write several meshes
 template <typename T>
-void CC_Fv_Field<T>::Write_vtk() 
+void CC_Fv_Field<T>::Write_vtk()
 {
 	//
 	//int Rank;
@@ -99,11 +95,11 @@ void CC_Fv_Field<T>::Write_vtk()
 	//		// Write variable name
 	//		file << "<DataArray Name=\"";
 	//		if (var_is_vec3d[ov]) {
-	//			if (i==0) file << varList[ov] << "_x"; 
-	//			if (i==1) file << varList[ov] << "_y"; 
-	//			if (i==2) file << varList[ov] << "_z"; 
+	//			if (i==0) file << varList[ov] << "_x";
+	//			if (i==1) file << varList[ov] << "_y";
+	//			if (i==2) file << varList[ov] << "_z";
 	//		} else {
-	//			file << varList[ov]; 
+	//			file << varList[ov];
 	//			scalar=true;
 	//		}
 	//		file << "\" type=\"Float32\" format=\"ascii\" >" << endl;
@@ -112,11 +108,11 @@ void CC_Fv_Field<T>::Write_vtk()
 	//		else if (varList[ov]=="rho") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].material.rho(ns[gid].p.node(n),ns[gid].T.node(n)) << endl;
 	//		else if (varList[ov]=="dt") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].T.node(n) << endl;
 	//		else if (varList[ov]=="mu") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].material.viscosity(ns[gid].T.node(n)) << endl;
-	//		else if (varList[ov]=="lambda") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].material.therm_cond(ns[gid].T.node(n)) << endl;	
+	//		else if (varList[ov]=="lambda") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].material.therm_cond(ns[gid].T.node(n)) << endl;
 	//		else if (varList[ov]=="Cp") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].material.Cp(ns[gid].T.node(n)) << endl;
 	//		else if (varList[ov]=="resp") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].update[0].node(n) << endl;
 	//		else if (varList[ov]=="resT") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].update[4].node(n) << endl;
-	//		else if (varList[ov]=="limiterp") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].limiter[0].node(n) << endl; 
+	//		else if (varList[ov]=="limiterp") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].limiter[0].node(n) << endl;
 	//		else if (varList[ov]=="limiterT") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].limiter[4].node(n) << endl;
 	//		else if (varList[ov]=="k") for (int n=0;n<grid[gid].nodeCount;++n) file << rans[gid].k.node(n) << endl;
 	//		else if (varList[ov]=="omega") for (int n=0;n<grid[gid].nodeCount;++n) file << rans[gid].omega.node(n) << endl;
@@ -125,7 +121,7 @@ void CC_Fv_Field<T>::Write_vtk()
 	//			for (int n=0;n<grid[gid].nodeCount;++n) file << fabs(ns[gid].V.node(n))/ns[gid].material.a(ns[gid].p.node(n),ns[gid].T.node(n)) << endl;
 	//		}
 	//		// Vectors
-	//		else if (varList[ov]=="V") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].V.node(n)[i] << endl; 
+	//		else if (varList[ov]=="V") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].V.node(n)[i] << endl;
 	//		else if (varList[ov]=="gradp") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].gradp.node(n)[i] << endl;
 	//		else if (varList[ov]=="gradu") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].gradu.node(n)[i] << endl;
 	//		else if (varList[ov]=="gradv") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].gradv.node(n)[i] << endl;
@@ -136,16 +132,16 @@ void CC_Fv_Field<T>::Write_vtk()
 	//			} else if (equations[gid]==HEAT) {
 	//				for (int n=0;n<grid[gid].nodeCount;++n) file << hc[gid].gradT.node(n)[i] << endl;
 	//			}
-	//		}				
+	//		}
 	//		else if (varList[ov]=="gradrho") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].gradrho.node(n)[i] << endl;
 	//		else if (varList[ov]=="resV") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].update[1].node(n) << endl;
 	//		else if (varList[ov]=="limiterV") for (int n=0;n<grid[gid].nodeCount;++n) file << ns[gid].limiter[1].node(n) << endl;
 	//		else if (varList[ov]=="gradk") for (int n=0;n<grid[gid].nodeCount;++n) file << rans[gid].gradk.node(n)[i] << endl;
-	//		else if (varList[ov]=="gradomega") for (int n=0;n<grid[gid].nodeCount;++n) file << rans[gid].gradomega.node(n)[i] << endl;	
+	//		else if (varList[ov]=="gradomega") for (int n=0;n<grid[gid].nodeCount;++n) file << rans[gid].gradomega.node(n)[i] << endl;
 	//		file << "</DataArray>" << endl;
 	//		if (scalar) break;
 	//	}
-	//	
+	//
 	//}
 	//
 	//file << "</PointData>" << endl;

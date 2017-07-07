@@ -11,19 +11,19 @@
 #include "FluentMesh.h"
 #include "FvGrid.h"
 
+#include "Utils.h"
+
 using namespace std;
 
 using namespace FluxSol;
+
+struct myclass myobject;
 
 vector< vector<double> > process_nodes(const vector<string> &data);
 vector< vector<int> > process_cells(const vector<string> &data);
 vector< vector<int> > cells_connectivity(const vector< vector<int> > &raw_data, const int &cellqty);
 vector<string> patches_names(const vector<string> &data);
 vector<Patch> create_patches(const vector<string> &data, const vector<string> &pname);
-
-struct myclass {
-  bool operator() (int i,int j) { return (i<j);}
-} myobject;
 
 FluentMesh::FluentMesh(const string &file) {
     vector<string> data;
