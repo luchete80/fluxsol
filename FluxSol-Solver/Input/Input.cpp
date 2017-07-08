@@ -403,20 +403,20 @@ void InputFile::read_inputs(void) {
 //	section("grid",0).subsection("material").register_double("Cp",optional,1000.);
 //	section("grid",0).subsection("material").register_double("density",optional,0.);
 //
-//	section("grid",0).registerSubsection("IC",numbered,required);
-//	section("grid",0).subsection("IC",0).register_string("region",optional,"box");
-//	section("grid",0).subsection("IC",0).register_Vec3D("corner_1",optional,-1.e20);
-//	section("grid",0).subsection("IC",0).register_Vec3D("corner_2",optional,1e20);
-//	section("grid",0).subsection("IC",0).register_Vec3D("center",optional);
-//	section("grid",0).subsection("IC",0).register_Vec3D("axisdirection",optional);
-//	section("grid",0).subsection("IC",0).register_double("radius",optional);
-//	section("grid",0).subsection("IC",0).register_double("height",optional);
-//	section("grid",0).subsection("IC",0).register_double("p",optional);
-//	section("grid",0).subsection("IC",0).register_Vec3D("V",optional);
-//	section("grid",0).subsection("IC",0).register_double("T",optional);
-//	section("grid",0).subsection("IC",0).register_double("rho",optional);
-//	section("grid",0).subsection("IC",0).register_double("turbulenceintensity",optional,1.e-2);
-//	section("grid",0).subsection("IC",0).register_double("eddyviscosityratio",optional,0.1);
+	section("grid",0).registerSubsection("IC",numbered,required);
+	section("grid",0).subsection("IC",0).register_string("region",optional,"box");
+	section("grid",0).subsection("IC",0).register_Vec3D("corner_1",optional,-1.e20);
+	section("grid",0).subsection("IC",0).register_Vec3D("corner_2",optional,1e20);
+	section("grid",0).subsection("IC",0).register_Vec3D("center",optional);
+	section("grid",0).subsection("IC",0).register_Vec3D("axisdirection",optional);
+	section("grid",0).subsection("IC",0).register_double("radius",optional);
+	section("grid",0).subsection("IC",0).register_double("height",optional);
+	section("grid",0).subsection("IC",0).register_double("p",optional);
+	section("grid",0).subsection("IC",0).register_Vec3D("U",optional);
+	section("grid",0).subsection("IC",0).register_double("T",optional);
+	section("grid",0).subsection("IC",0).register_double("rho",optional);
+	section("grid",0).subsection("IC",0).register_double("turbulenceintensity",optional,1.e-2);
+	section("grid",0).subsection("IC",0).register_double("eddyviscosityratio",optional,0.1);
 
     //section("grid",0).registerSubsection("patch",numbered,required);
 	//section("grid",0).subsection("patch",0).register_string("type",required);
@@ -640,9 +640,9 @@ InputFile::UField()
             //UD_PatchField<Vec3D> *udo2=new _PatchField<Vec3D>(numfaces);
 
             // TO MODIFY, THIS MUST BE PASSED TO UD_VELOCITYFIELD CONSTRUCTOR
-            cout << "Resizing to " << GridPtr->vBoundary().vPatch(meshp).Num_Faces() << "faces" << endl;
+            //cout << "Resizing to " << GridPtr->vBoundary().vPatch(meshp).Num_Faces() << "faces" << endl;
             udo->Resize(GridPtr->vBoundary().vPatch(meshp).Num_Faces());
-            cout << "Patch Addr "<< &GridPtr->vBoundary().vPatch(meshp)<<endl;
+            //cout << "Patch Addr "<< &GridPtr->vBoundary().vPatch(meshp)<<endl;
 
             udo->AddPatch(GridPtr->vBoundary().vPatch(meshp));
 
@@ -663,7 +663,7 @@ InputFile::UField()
             bf.Add_UDOAddr(udo);
 
 
-            cout << "Exiting"<<endl;
+            //cout << "Exiting"<<endl;
 
             //if ()
             //udo.
@@ -681,7 +681,7 @@ InputFile::UField()
     cout << "[I] Patch Loop End."<<endl;
 
     //_BoundaryField<Vec3D> bf(GridPtr->vBoundary(),cvalues);
-    cout << "Creating ret field"<<endl;
+    //cout << "Creating ret field"<<endl;
     _CC_Fv_Field <Vec3D> ret(*GridPtr, bf);
 
 
