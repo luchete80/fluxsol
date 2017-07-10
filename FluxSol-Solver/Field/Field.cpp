@@ -83,15 +83,6 @@ _Field<T> & _Field<T>::operator=(T val)
 	return *this;
 }
 
-//template <typename T>
-//void _Field<T>::operator=(const double &val)
-//{
-//	for (int v=0;v<value.size();v++)
-//	{
-//		value[v]=val;
-//	}
-//}
-
 template <typename T>
 void _Field<T>::StorePrevValues()
 {

@@ -405,6 +405,7 @@ void InputFile::read_inputs(void) {
 //
 	section("grid",0).registerSubsection("IC",numbered,required);
 	section("grid",0).subsection("IC",0).register_string("region",optional,"box");
+    section("grid",0).subsection("IC",0).register_string("def",optional,"none");            //LUCIANO: How field is defined
 	section("grid",0).subsection("IC",0).register_Vec3D("corner_1",optional,-1.e20);
 	section("grid",0).subsection("IC",0).register_Vec3D("corner_2",optional,1e20);
 	section("grid",0).subsection("IC",0).register_Vec3D("center",optional);
@@ -580,7 +581,27 @@ InputFile::UField()
     int numpatches=GridPtr->vBoundary().Num_Patches();
     vector<int> asoc(numpatches,-1);   //Relation between Patch and bcond, size refers to patch
     vector <Vec3D> cvalues(numpatches,Vec3D(0.));   //Def cvalues
+    Vec3D constant;
     vector <int> validpf_id;                        //Refers to global boundary condition
+
+    // Itinializing internal Boundary Conditions
+//	IC_1(
+//		rho=1.; V=[10.,0.,0.]; p=0.;
+//		turbulence intensity=1.e-4;
+//		eddy viscosity ratio=0.1;
+//	);
+    // TO MODIFY: THIS SUPPOSES ONLY ONE MESH IS PRESENT
+    string def=section("grid",0).subsection("IC",0).get_string("def");
+
+    if (def=="constant" || def=="none")
+    {
+        cout << "[I] Internal Velocity Field definition type is "<<def<<endl;
+        constant=section("grid",0).subsection("IC",0).get_Vec3D("U");
+        //cout << "[I] Field ..."<<endl;
+
+    }
+
+
 
     int validpfnum=0;        //valid patchfield number
 
@@ -683,6 +704,7 @@ InputFile::UField()
     //_BoundaryField<Vec3D> bf(GridPtr->vBoundary(),cvalues);
     //cout << "Creating ret field"<<endl;
     _CC_Fv_Field <Vec3D> ret(*GridPtr, bf);
+    ret=constant;
 
 
     return ret;

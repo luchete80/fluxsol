@@ -85,21 +85,21 @@ Fv_CC_Grid & Fv_CC_Grid::operator=(const Fv_CC_Grid & right)
     this->num_cells=right.num_cells;
     this->num_verts=right.num_verts;
 
-    cout << "Equalling cells, "<< right.num_cells << endl;
+    //cout << "Equalling cells, "<< right.num_cells << endl;
 
     for (int c=0;c<right.num_cells;c++)
     {
         this->cell.push_back(right.Cell(c));
         this->node.push_back(right.Node_(c));
     }
-    cout << "Equalling verts "<< right.num_verts << endl;
+    //cout << "Equalling verts "<< right.num_verts << endl;
     for (int v=0;v<right.num_verts;v++) this->vert.push_back(right.Vertex(v));
-    cout << "Equalling faces "<<endl;
+    //cout << "Equalling faces "<<endl;
     for (int f=0;f<right.num_faces;f++) this->face.push_back(right.Face(f));
 
     this->boundary=right.vBoundary();
 
-    cout << "Setting up cell neigbours"<<endl;
+    //cout << "Setting up cell neigbours"<<endl;
     this->SetFaceLocalCellNeighbours(); //New
     this->Create_IntFaces();
 
@@ -609,6 +609,7 @@ void Fv_CC_Grid::Init_Faces()
         clock_t ittime_begin, ittime_end, ittime_temp;
         ittime_end = clock();
         cout << "[I] Creating Faces..."<<endl;
+        cout << "[I] Completed: "<<endl;
 
         for (cellit=cell.begin();cellit!=cell.end();cellit++)
         {
@@ -1397,12 +1398,12 @@ const std::string  Fv_CC_Grid::Read_NASTRAN() {
             pidloc_it=pidloc.find(pid);
             if (pidloc_it!=pidloc.end()) //pid already created
             {
-                cout << "Existent pid "<< pid << ", element" <<idcell<<endl;
+//                cout << "Existent pid "<< pid << ", element" <<idcell<<endl;
                 patchelem[pidloc_it->second].push_back(idcell);
             }
             else
             {
-                cout << "Found new pid "<< pid << ", element" <<idcell<<endl;
+//                cout << "Found new pid "<< pid << ", element" <<idcell<<endl;
                 pidloc.insert(std::pair <int,int> (pid,found_pids));
                 patchelem.push_back(vector<int>(1,idcell));
                 found_pids++;

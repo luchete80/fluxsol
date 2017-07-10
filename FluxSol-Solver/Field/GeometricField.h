@@ -97,7 +97,7 @@ namespace FluxSol
 //		}
         virtual void Calculate()   //For User Defined Objects, inherited from field
         {
-            cout << "Base PatchField Calculate"<<endl;
+//            cout << "Base PatchField Calculate"<<endl;
             this->AssignValue(this->cvalue);
         }
 
@@ -146,7 +146,7 @@ namespace FluxSol
 			for (int np = 0; np<b.Num_Patches(); np++)
 			{
 				//_PatchField < T > *pf=new _PatchField(b.vPatch(np),cvals[np]);
-				patchfield.push_back(new _PatchField<T>(b.vPatch(np),cvals[np]));
+				patchfield.push_back(new _PatchField<T>(b.vPatch(np),cvals[np])); //TO MODIFY: ALLOCATE AT ONCE
 			}
 
 		}

@@ -91,9 +91,7 @@ void Archivo::Iniciar(string cad)
 {
 	nombre=cad;
 	ifstream fen (cad.c_str(), ifstream::in);
-	cout << "Creando Cadenas (Si demora modificar push_back).....) " <<endl;
 	//Abro archivo
-	cout<< "Abriendo archivo..."<<cad<<endl ;
 	int i=0;
 	string s;
 	while(getline(fen, s)) // Discards newline char

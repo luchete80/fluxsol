@@ -130,7 +130,7 @@ void Modelo::Leer_Elementos()
 //HAGO LAS DOS COSAS CREO UN INDICE DE ASOCIACIONES
 void Modelo::Asociar_Ids_Nodos()
 {
-	cout << "Asociando Indices" <<endl;
+	cout << "[I] Associating NASTRAN Indexes" <<endl;
 	vector <int> v,conect;
 
 	int nummax=0;
@@ -154,10 +154,10 @@ void Modelo::Asociar_Ids_Nodos()
 		IdNodoInterno[idn]=n;
 	}
 
-    cout << "Asigning element connectivity..."<<endl;
+    //cout << "Asigning element connectivity..."<<endl;
 	for (int i=0;i<numelem;i++)
 	{
-	    cout << "Element "<<i<<endl;
+//	    cout << "Element "<<i<<endl;
 //	    cout << "Element nodes: "<<Elementos[i].NumNodes()<<endl;
 	    v.assign(Elementos[i].NumNodes(),-1);
 	    //cout << "Element "<<i<<endl;
@@ -168,7 +168,7 @@ void Modelo::Asociar_Ids_Nodos()
 //		cout << "asigning"<<endl;
 //		cout <<"connect [0]"<<conect[0]<<endl;
 //		cout << "id nodo interno"<<IdNodoInterno[conect[0]]<<endl;
-		for (int nn=0;nn<Elementos[i].NumNodes();nn++)		cout << conect[nn] <<" ";
+//		for (int nn=0;nn<Elementos[i].NumNodes();nn++)		cout << conect[nn] <<" ";
 		for (int nn=0;nn<Elementos[i].NumNodes();nn++)		v[nn]=IdNodoInterno[conect[nn]];
 
         cout << endl;
