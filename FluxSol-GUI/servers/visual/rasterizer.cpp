@@ -370,7 +370,7 @@ RID Rasterizer::fixed_material_create() {
 		material_set_param(mat,_fixed_material_param_names[i],fm.param[i]); //must be there
 	}
 	fixed_material_dirty_list.add(&fm.dirty_list);
-	//print_line("FMC: "+itos(mat.get_id()));	
+	//print_line("FMC: "+itos(mat.get_id()));
 	return mat;
 }
 
@@ -379,28 +379,28 @@ RID Rasterizer::fixed_material_create() {
 
 void Rasterizer::fixed_material_set_parameter(RID p_material, VS::FixedMaterialParam p_parameter, const Variant& p_value){
 
-	// Map<RID,FixedMaterial*>::Element *E = fixed_materials.find(p_material);
-	// ERR_FAIL_COND(!E);
-	// FixedMaterial &fm=*E->get();
-	// RID material=E->key();
-	// ERR_FAIL_INDEX(p_parameter,VS::FIXED_MATERIAL_PARAM_MAX);
+	 Map<RID,FixedMaterial*>::Element *E = fixed_materials.find(p_material);
+	 ERR_FAIL_COND(!E);
+	 FixedMaterial &fm=*E->get();
+	 RID material=E->key();
+	 ERR_FAIL_INDEX(p_parameter,VS::FIXED_MATERIAL_PARAM_MAX);
 
-	// if ((p_parameter==VS::FIXED_MATERIAL_PARAM_DIFFUSE || p_parameter==VS::FIXED_MATERIAL_PARAM_SPECULAR || p_parameter==VS::FIXED_MATERIAL_PARAM_EMISSION)) {
+	 if ((p_parameter==VS::FIXED_MATERIAL_PARAM_DIFFUSE || p_parameter==VS::FIXED_MATERIAL_PARAM_SPECULAR || p_parameter==VS::FIXED_MATERIAL_PARAM_EMISSION)) {
 
-		// if (p_value.get_type()!=Variant::COLOR) {
-			// ERR_EXPLAIN(String(_fixed_material_param_names[p_parameter])+" expects Color");
-			// ERR_FAIL();
-		// }
-	// } else {
+		 if (p_value.get_type()!=Variant::COLOR) {
+			 ERR_EXPLAIN(String(_fixed_material_param_names[p_parameter])+" expects Color");
+			 ERR_FAIL();
+		 }
+	 } else {
 
-		// if (!p_value.is_num()) {
-			// ERR_EXPLAIN(String(_fixed_material_param_names[p_parameter])+" expects scalar");
-			// ERR_FAIL();
-		// }
-	// }
+		 if (!p_value.is_num()) {
+			 ERR_EXPLAIN(String(_fixed_material_param_names[p_parameter])+" expects scalar");
+			 ERR_FAIL();
+		 }
+	 }
 
-	// fm.param[p_parameter]=p_value;
-	// VS::get_singleton()->material_set_param(material,_fixed_material_param_names[p_parameter],p_value);
+	 fm.param[p_parameter]=p_value;
+	 //VS::get_singleton()->material_set_param(material,_fixed_material_param_names[p_parameter],p_value);
 
 
 }

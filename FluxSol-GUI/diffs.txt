@@ -6,12 +6,14 @@ diff -bur /d/Luciano/Programas-Src/godot-src-2.0-stable/scene/ /d/Luciano/Numeri
 
 diff -bur /d/Luciano/Programas-Src/godot-src-2.0-stable/servers/ /d/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-GUI/servers >  /d/Luciano/servers.txt
 
-diff -bur /d/Luciano/Programas-Src/godot-src-2.0-stable/drivers/gles2 /d/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-GUI/drivers/gles2 >  /d/Luciano/gles2.txt
+diff -bur /d/Luciano/Programas-Src/godot-src-2.0-stable/drivers/gles2 /d/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-GUI/drivers/gles2 >  /d/Luciano/gles2.diff
 
-diff -bur /d/Luciano/Programas-Src/godot-src-2.0-stable/tools/editor /d/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-GUI/tools/editor >  /d/Luciano/tools_editor.txt
+diff -bur /d/Luciano/Programas-Src/godot-src-2.0-stable/tools/editor /d/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-GUI/tools/editor >  /d/Luciano/tools_editor.diff
 
 diff -bur /d/Luciano/Programas-Src/godot-src-2.0-stable/scene/resources /d/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-GUI/scene/resources >  /d/Luciano/scene_resources.txt
 
 diff -bur /d/Luciano/Programas-Src/godot-src-2.0-stable/drivers/unix /d/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-GUI/drivers/unix  >  /d/Luciano/drivers_unix.txt
 
 diff -bur /d/Luciano/Programas-Src/godot-src-2.0-stable/platform/windows /d/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-GUI/platform/windows  >  /d/Luciano/windows.txt
+
+diff -bur /d/Luciano/Programas-Src/godot-src-2.0-stable/core /d/Luciano/Numerico/MecSol/FluxSol/Src/FluxSol-GUI/core  >  /d/Luciano/core.diff

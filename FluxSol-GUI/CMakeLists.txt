@@ -178,3 +178,46 @@ stdc++
 Graphics
 )
 
+# add_executable (${NAME}_test $<TARGET_OBJECTS:app_> $<TARGET_OBJECTS:core_> 
+# $<TARGET_OBJECTS:corebind_>
+# $<TARGET_OBJECTS:coreio_>
+# $<TARGET_OBJECTS:coremath_>
+# $<TARGET_OBJECTS:coreos_> 
+
+						# $<TARGET_OBJECTS:scene_> 
+                         # $<TARGET_OBJECTS:scene2d_>
+						 # $<TARGET_OBJECTS:scene3d_>
+						 # $<TARGET_OBJECTS:sceneio_>
+						  # $<TARGET_OBJECTS:scenemain_>
+						  # $<TARGET_OBJECTS:sceneresources_>
+						 # $<TARGET_OBJECTS:sceneresources_>
+						 # $<TARGET_OBJECTS:defaulttheme_>
+						 # $<TARGET_OBJECTS:scenegui_>
+						 # $<TARGET_OBJECTS:servers_> 
+						   # $<TARGET_OBJECTS:visualserver_>
+				
+
+						# $<TARGET_OBJECTS:zlib_>
+
+						# $<TARGET_OBJECTS:gl_context_>
+
+						# $<TARGET_OBJECTS:gles2_> 
+						# $<TARGET_OBJECTS:visualserver_>
+
+						# $<TARGET_OBJECTS:png_>
+
+						# $<TARGET_OBJECTS:windows_>
+
+						# $<TARGET_OBJECTS:unix_>
+
+						# $<TARGET_OBJECTS:nrex_>
+
+					# $<TARGET_OBJECTS:main_>
+					# $<TARGET_OBJECTS:driverstypes_>
+
+						# $<TARGET_OBJECTS:editor_>
+							# $<TARGET_OBJECTS:editorplugins_>
+							# $<TARGET_OBJECTS:editorioplugins_>
+				# )
+
+# target_link_libraries (${NAME}_test opengl32 Shlwapi winmm stdc++)
