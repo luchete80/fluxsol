@@ -5344,6 +5344,17 @@ EditorNode::EditorNode() {
 	search_bar->add_child(clear_button);
 	clear_button->connect("pressed",this,"_clear_search_box");
 
+	property_editor = memnew( PropertyEditor );
+	property_editor->set_autoclear(true);
+	property_editor->set_show_categories(true);
+	property_editor->set_v_size_flags(Control::SIZE_EXPAND_FILL);
+	property_editor->set_use_doc_hints(true);
+
+	property_editor->hide_top_label();
+	property_editor->register_text_enter(search_box);
+
+	prop_editor_base->add_child( property_editor );
+	property_editor->set_undo_redo(&editor_data.get_undo_redo());
 
 
 	scenes_dock = memnew( ScenesDock(this) );

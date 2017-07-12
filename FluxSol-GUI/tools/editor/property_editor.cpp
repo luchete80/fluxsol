@@ -2162,7 +2162,7 @@ void PropertyEditor::_check_reload_status(const String&p_name, TreeItem* item) {
 
 			//}
 
-		}		
+		}
 
 	}
 
@@ -2495,23 +2495,25 @@ void PropertyEditor::update_tree() {
 			sep->set_selectable(1,false);
 			sep->set_custom_bg_color(0,get_color("prop_category","Editor"));
 			sep->set_custom_bg_color(1,get_color("prop_category","Editor"));
-
-			if (use_doc_hints) {
-				StringName type=p.name;
-				if (!class_descr_cache.has(type)) {
-
-					String descr;
-					DocData *dd=EditorHelp::get_doc_data();
-					Map<String,DocData::ClassDoc>::Element *E=dd->class_list.find(type);
-					if (E) {
-						descr=E->get().brief_description;
-					}
-					class_descr_cache[type]=descr.world_wrap(80);
-
-				}
-
-				sep->set_tooltip(0,"Class: "+p.name+":\n\n"+class_descr_cache[type]);
-			}
+// LUCIANO, DOC IS DISABLE
+//
+//			if (use_doc_hints) {
+//				StringName type=p.name;
+//				if (!class_descr_cache.has(type)) {
+//
+//					String descr;
+//					DocData *dd=EditorHelp::get_doc_data();
+//					Map<String,DocData::ClassDoc>::Element *E=dd->class_list.find(type);
+//					if (E) {
+//						descr=E->get().brief_description;
+//					}
+//					class_descr_cache[type]=descr.world_wrap(80);
+//
+//				}
+//
+//				sep->set_tooltip(0,"Class: "+p.name+":\n\n"+class_descr_cache[type]);
+//			}
+//
 			//sep->set_custom_color(0,Color(1,1,1));
 
 
@@ -2576,40 +2578,41 @@ void PropertyEditor::update_tree() {
 		item->set_text(0, name);
 		item->set_tooltip(0, p.name);
 
-		if (use_doc_hints) {
-			StringName setter;
-			StringName type;
-			if (ObjectTypeDB::get_setter_and_type_for_property(obj->get_type_name(),p.name,type,setter)) {
-
-				String descr;
-				bool found=false;
-				Map<StringName,Map<StringName,String> >::Element *E=descr_cache.find(type);
-				if (E) {
-
-					Map<StringName,String>::Element *F=E->get().find(setter);
-					if (F) {
-						found=true;
-						descr=F->get();
-					}
-				}
-				if (!found) {
-
-					DocData *dd=EditorHelp::get_doc_data();
-					Map<String,DocData::ClassDoc>::Element *E=dd->class_list.find(type);
-					if (E) {
-						for(int i=0;i<E->get().methods.size();i++) {
-							if (E->get().methods[i].name==setter.operator String()) {
-								descr=E->get().methods[i].description.strip_edges().world_wrap(80);
-							}
-						}
-					}
-
-					descr_cache[type][setter]=descr;
-				}
-
-				item->set_tooltip(0, "Property: "+p.name+"\n\n"+descr);
-			}
-		}
+		//LUCIANO
+//		if (use_doc_hints) {
+//			StringName setter;
+//			StringName type;
+//			if (ObjectTypeDB::get_setter_and_type_for_property(obj->get_type_name(),p.name,type,setter)) {
+//
+//				String descr;
+//				bool found=false;
+//				Map<StringName,Map<StringName,String> >::Element *E=descr_cache.find(type);
+//				if (E) {
+//
+//					Map<StringName,String>::Element *F=E->get().find(setter);
+//					if (F) {
+//						found=true;
+//						descr=F->get();
+//					}
+//				}
+//				if (!found) {
+//
+//					DocData *dd=EditorHelp::get_doc_data();
+//					Map<String,DocData::ClassDoc>::Element *E=dd->class_list.find(type);
+//					if (E) {
+//						for(int i=0;i<E->get().methods.size();i++) {
+//							if (E->get().methods[i].name==setter.operator String()) {
+//								descr=E->get().methods[i].description.strip_edges().world_wrap(80);
+//							}
+//						}
+//					}
+//
+//					descr_cache[type][setter]=descr;
+//				}
+//
+//				item->set_tooltip(0, "Property: "+p.name+"\n\n"+descr);
+//			}
+//		}
 		//EditorHelp::get_doc_data();
 
 		Dictionary d;
