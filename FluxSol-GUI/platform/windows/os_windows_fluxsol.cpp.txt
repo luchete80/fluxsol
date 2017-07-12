@@ -31,6 +31,7 @@
 #include "os_windows.h"
 #include "drivers/nedmalloc/memory_pool_static_nedmalloc.h"
 #include "drivers/unix/memory_pool_static_malloc.h"
+#include "drivers/unix/ip_unix.h"
 #include "os/memory_pool_dynamic_static.h"
 #include "drivers/windows/thread_windows.h"
 #include "drivers/windows/semaphore_windows.h"
@@ -55,6 +56,8 @@
 
 #include "shlobj.h"
 #include <regstr.h>
+#include <process.h>
+//
 
 static const WORD MAX_CONSOLE_LINES = 1500;
 
@@ -70,7 +73,6 @@ extern "C" {
 #define WM_MOUSEHWHEEL 0x020e
 #endif
 
-//#define STDOUT_FILE
 
 extern HINSTANCE godot_hinstance;
 
@@ -177,10 +179,11 @@ void OS_Windows::initialize_core() {
 	//RedirectIOToConsole();
 	maximized=false;
 	minimized=false;
+	borderless=false;
 
-	ThreadWindows::make_default();	
-	SemaphoreWindows::make_default();	
-	MutexWindows::make_default();	
+	ThreadWindows::make_default();
+	SemaphoreWindows::make_default();
+	MutexWindows::make_default();
 
 	FileAccess::make_default<FileAccessWindows>(FileAccess::ACCESS_RESOURCES);
 	FileAccess::make_default<FileAccessWindows>(FileAccess::ACCESS_USERDATA);
@@ -190,10 +193,10 @@ void OS_Windows::initialize_core() {
 	DirAccess::make_default<DirAccessWindows>(DirAccess::ACCESS_USERDATA);
 	DirAccess::make_default<DirAccessWindows>(DirAccess::ACCESS_FILESYSTEM);
 
-	// TCPServerWinsock::make_default();
-	// StreamPeerWinsock::make_default();
-	// PacketPeerUDPWinsock::make_default();
-	
+	//TCPServerWinsock::make_default();
+	//StreamPeerWinsock::make_default();
+	//PacketPeerUDPWinsock::make_default();
+
 	mempool_static = new MemoryPoolStaticMalloc;
 #if 1
 	mempool_dynamic = memnew( MemoryPoolDynamicStatic );
@@ -203,7 +206,7 @@ void OS_Windows::initialize_core() {
 	mempool_dynamic = memnew( MemoryPoolDynamicPrealloc(buffer,DYNPOOL_SIZE) );
 
 #endif
-	
+
 	   // We need to know how often the clock is updated
 	if( !QueryPerformanceFrequency((LARGE_INTEGER *)&ticks_per_second) )
 		ticks_per_second = 1000;
@@ -295,69 +298,69 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 			};
 
 			return 0;								// Return To The Message Loop
-		}
+		}break;
 
 		case WM_PAINT:
-
 			Main::force_redraw();
 			break;
 
-		case WM_SYSCOMMAND:							// Intercept System Commands
-		{
-			switch (wParam)							// Check System Calls
-			{
-				case SC_SCREENSAVE:					// Screensaver Trying To Start?
-				case SC_MONITORPOWER:				// Monitor Trying To Enter Powersave?
-				return 0;							// Prevent From Happening
-				case SC_KEYMENU:
-					if ((lParam>>16)<=0)
-						return 0;
-			}
-			break;									// Exit
-		}
+//		case WM_SYSCOMMAND:							// Intercept System Commands
+//		{
+//			switch (wParam)							// Check System Calls
+//			{
+//				case SC_SCREENSAVE:					// Screensaver Trying To Start?
+//				case SC_MONITORPOWER:				// Monitor Trying To Enter Powersave?
+//				return 0;							// Prevent From Happening
+//				case SC_KEYMENU:
+//					if ((lParam>>16)<=0)
+//						return 0;
+//			}
+//			break;									// Exit
+//		}
 
 		case WM_CLOSE:								// Did We Receive A Close Message?
 		{
 			if (main_loop)
 				main_loop->notification(MainLoop::NOTIFICATION_WM_QUIT_REQUEST);
-			//force_quit=true;
+			force_quit=true;
 			return 0;								// Jump Back
 		}
 		case WM_MOUSELEAVE: {
 
-			old_invalid=true;
-			outside=true;
-			if (main_loop && mouse_mode!=MOUSE_MODE_CAPTURED)
-				main_loop->notification(MainLoop::NOTIFICATION_WM_MOUSE_EXIT);
-			if (input)
-				input->set_mouse_in_window(false);
+//			old_invalid=true;
+//			outside=true;
+//			if (main_loop && mouse_mode!=MOUSE_MODE_CAPTURED)
+//				main_loop->notification(MainLoop::NOTIFICATION_WM_MOUSE_EXIT);
+//			if (input)
+//				input->set_mouse_in_window(false);
 
 		} break;
 		case WM_MOUSEMOVE: {
 
 			if (outside) {
-				//mouse enter
+//				//mouse enter
+//
+//				if (main_loop && mouse_mode!=MOUSE_MODE_CAPTURED)
+//					main_loop->notification(MainLoop::NOTIFICATION_WM_MOUSE_ENTER);
+//				if (input)
+//					input->set_mouse_in_window(true);
+//
+//				CursorShape c=cursor_shape;
+//				cursor_shape=CURSOR_MAX;
+//				set_cursor_shape(c);
+//				outside=false;
+//
+//				//Once-Off notification, must call again....
+//				TRACKMOUSEEVENT tme;
+//				tme.cbSize=sizeof(TRACKMOUSEEVENT);
+//				tme.dwFlags=TME_LEAVE;
+//				tme.hwndTrack=hWnd;
+//				tme.dwHoverTime=HOVER_DEFAULT;
+//				TrackMouseEvent(&tme);
 
-				if (main_loop && mouse_mode!=MOUSE_MODE_CAPTURED)
-					main_loop->notification(MainLoop::NOTIFICATION_WM_MOUSE_ENTER);
-				if (input)
-					input->set_mouse_in_window(true);
+			} //If outside
 
-				CursorShape c=cursor_shape;
-				cursor_shape=CURSOR_MAX;
-				set_cursor_shape(c);
-				outside=false;
-
-				//Once-Off notification, must call again....
-				TRACKMOUSEEVENT tme;
-				tme.cbSize=sizeof(TRACKMOUSEEVENT);
-				tme.dwFlags=TME_LEAVE;
-				tme.hwndTrack=hWnd;
-				tme.dwHoverTime=HOVER_DEFAULT;
-				TrackMouseEvent(&tme);
-
-			}
-
+            //LUCIANO: ESTO YA ESTABA COMENTADO
 			/*
 			LPARAM extra = GetMessageExtraInfo();
 			if (IsPenEvent(extra)) {
@@ -370,63 +373,63 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 				// fallthrough for mouse event
 			};
 			*/
+//
+//
+//			InputEvent event;
+//			event.type=InputEvent::MOUSE_MOTION;
+//			event.ID=++last_id;
+//			InputEventMouseMotion &mm=event.mouse_motion;
+//
+//			mm.mod.control=(wParam&MK_CONTROL)!=0;
+//			mm.mod.shift=(wParam&MK_SHIFT)!=0;
+//			mm.mod.alt=alt_mem;
+//
+//			mm.button_mask|=(wParam&MK_LBUTTON)?(1<<0):0;
+//			mm.button_mask|=(wParam&MK_RBUTTON)?(1<<1):0;
+//			mm.button_mask|=(wParam&MK_MBUTTON)?(1<<2):0;
+//			last_button_state=mm.button_mask;
+//			/*mm.button_mask|=(wParam&MK_XBUTTON1)?(1<<5):0;
+//			mm.button_mask|=(wParam&MK_XBUTTON2)?(1<<6):0;*/
+//			mm.x=GET_X_LPARAM(lParam);
+//			mm.y=GET_Y_LPARAM(lParam);
+//
+//			if (mouse_mode==MOUSE_MODE_CAPTURED) {
+//
+//				Point2i c(video_mode.width/2,video_mode.height/2);
+//				if (Point2i(mm.x,mm.y)==c) {
+//					center=c;
+//					return 0;
+//				}
+//
+//				Point2i ncenter(mm.x,mm.y);
+//				mm.x = old_x + (mm.x-center.x);
+//				mm.y = old_y + (mm.y-center.y);
+//				center=ncenter;
+//				POINT pos = { (int) c.x, (int) c.y };
+//				ClientToScreen(hWnd, &pos);
+//				SetCursorPos(pos.x, pos.y);
+//
+//			}
+//
+//			input->set_mouse_pos(Point2(mm.x,mm.y));
+//			mm.speed_x=input->get_mouse_speed().x;
+//			mm.speed_y=input->get_mouse_speed().y;
+//
+//			if (old_invalid) {
+//
+//				old_x=mm.x;
+//				old_y=mm.y;
+//				old_invalid=false;
+//			}
+//
+//			mm.relative_x=mm.x-old_x;
+//			mm.relative_y=mm.y-old_y;
+//			old_x=mm.x;
+//			old_y=mm.y;
+//			if (main_loop)
+//				input->parse_input_event(event);
 
 
-			InputEvent event;
-			event.type=InputEvent::MOUSE_MOTION;
-			event.ID=++last_id;
-			InputEventMouseMotion &mm=event.mouse_motion;
-
-			mm.mod.control=(wParam&MK_CONTROL)!=0;
-			mm.mod.shift=(wParam&MK_SHIFT)!=0;
-			mm.mod.alt=alt_mem;
-
-			mm.button_mask|=(wParam&MK_LBUTTON)?(1<<0):0;
-			mm.button_mask|=(wParam&MK_RBUTTON)?(1<<1):0;
-			mm.button_mask|=(wParam&MK_MBUTTON)?(1<<2):0;
-			last_button_state=mm.button_mask;
-			/*mm.button_mask|=(wParam&MK_XBUTTON1)?(1<<5):0;
-			mm.button_mask|=(wParam&MK_XBUTTON2)?(1<<6):0;*/
-			mm.x=GET_X_LPARAM(lParam);
-			mm.y=GET_Y_LPARAM(lParam);
-
-			if (mouse_mode==MOUSE_MODE_CAPTURED) {
-
-				Point2i c(video_mode.width/2,video_mode.height/2);
-				if (Point2i(mm.x,mm.y)==c) {
-					center=c;
-					return 0;
-				}
-
-				Point2i ncenter(mm.x,mm.y);
-				mm.x = old_x + (mm.x-center.x);
-				mm.y = old_y + (mm.y-center.y);
-				center=ncenter;
-				POINT pos = { (int) c.x, (int) c.y };
-				ClientToScreen(hWnd, &pos);
-				SetCursorPos(pos.x, pos.y);
-
-			}
-
-			input->set_mouse_pos(Point2(mm.x,mm.y));
-			mm.speed_x=input->get_mouse_speed().x;
-			mm.speed_y=input->get_mouse_speed().y;
-
-			if (old_invalid) {
-
-				old_x=mm.x;
-				old_y=mm.y;
-				old_invalid=false;
-			}
-
-			mm.relative_x=mm.x-old_x;
-			mm.relative_y=mm.y-old_y;
-			old_x=mm.x;
-			old_y=mm.y;
-			if (main_loop)
-				input->parse_input_event(event);
-
-			
 
 		} break;
 		case WM_LBUTTONDOWN:
@@ -476,7 +479,7 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 				} break;
 				case WM_MBUTTONUP: {
 					mb.pressed=false;
-					mb.button_index=3;					
+					mb.button_index=3;
 				} break;
 				case WM_RBUTTONDOWN: {
 					mb.pressed=true;
@@ -551,7 +554,7 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 			mb.button_mask|=(wParam&MK_XBUTTON1)?(1<<5):0;
 			mb.button_mask|=(wParam&MK_XBUTTON2)?(1<<6):0;*/
 			mb.x=GET_X_LPARAM(lParam);
-			mb.y=GET_Y_LPARAM(lParam);			
+			mb.y=GET_Y_LPARAM(lParam);
 
 			if (mouse_mode==MOUSE_MODE_CAPTURED) {
 
@@ -606,104 +609,149 @@ LRESULT OS_Windows::WndProc(HWND hWnd,UINT uMsg, WPARAM	wParam,	LPARAM	lParam) {
 			video_mode.height=HIWORD(lParam);
 			//return 0;								// Jump Back
 		} break;
-		case WM_SYSKEYDOWN:
-		case WM_SYSKEYUP:
-		case WM_KEYUP:
-		case WM_KEYDOWN: {
-
-
-			if (wParam==VK_SHIFT)
-				shift_mem=uMsg==WM_KEYDOWN;
-			if (wParam==VK_CONTROL)
-				control_mem=uMsg==WM_KEYDOWN;
-			if (wParam==VK_MENU) {
-				alt_mem=(uMsg==WM_KEYDOWN || uMsg==WM_SYSKEYDOWN);
-				if (lParam&(1<<24))
-					gr_mem=alt_mem;
-			}
-
-			//if (wParam==VK_WIN) TODO wtf is this?
-			//	meta_mem=uMsg==WM_KEYDOWN;
-
-
-		} //fallthrough
-		case WM_CHAR: {
-
-			ERR_BREAK(key_event_pos >= KEY_EVENT_BUFFER_SIZE);
-
-			// Make sure we don't include modifiers for the modifier key itself.
-			KeyEvent ke;
-			ke.mod_state.shift= (wParam != VK_SHIFT) ? shift_mem : false;
-			ke.mod_state.alt= (! (wParam == VK_MENU && (uMsg == WM_KEYDOWN || uMsg == WM_SYSKEYDOWN))) ? alt_mem : false;
-			ke.mod_state.control= (wParam != VK_CONTROL) ? control_mem : false;
-			ke.mod_state.meta=meta_mem;
-			ke.uMsg=uMsg;
-
-			if (ke.uMsg==WM_SYSKEYDOWN)
-				ke.uMsg=WM_KEYDOWN;
-			if (ke.uMsg==WM_SYSKEYUP)
-				ke.uMsg=WM_KEYUP;
-
-
-			/*if (ke.uMsg==WM_KEYDOWN && alt_mem && uMsg!=WM_SYSKEYDOWN) {
-				//altgr hack for intl keyboards, not sure how good it is
-				//windows is weeeeird
-				ke.mod_state.alt=false;
-				ke.mod_state.control=false;
-				print_line("")
-			}*/
-
-
-			ke.wParam=wParam;
-			ke.lParam=lParam;
-			key_event_buffer[key_event_pos++]=ke;
-
-		} break;
-		case WM_INPUTLANGCHANGEREQUEST: {
-
-			print_line("input lang change");
-		} break;
-
-		#if WINVER >= 0x0700 // for windows 7
-		case WM_TOUCH: {
-
-			BOOL bHandled = FALSE;
-			UINT cInputs = LOWORD(wParam);
-			PTOUCHINPUT pInputs = memnew_arr(TOUCHINPUT, cInputs);
-			if (pInputs){
-				if (GetTouchInputInfo((HTOUCHINPUT)lParam, cInputs, pInputs, sizeof(TOUCHINPUT))){
-					for (UINT i=0; i < cInputs; i++){
-						TOUCHINPUT ti = pInputs[i];
-						//do something with each touch input entry
-						if (ti.dwFlags & TOUCHEVENTF_MOVE) {
-
-							_drag_event(ti.x / 100, ti.y / 100, ti.dwID);
-						} else if (ti.dwFlags & (TOUCHEVENTF_UP | TOUCHEVENTF_DOWN)) {
-
-							_touch_event(ti.dwFlags & TOUCHEVENTF_DOWN != 0, ti.x / 100, ti.y / 100, ti.dwID);
-						};
-					}
-					bHandled = TRUE;
-				}else{
-					 /* handle the error here */
-				}
-				memdelete_arr(pInputs);
-			}else{
-				/* handle the error here, probably out of memory */
-			}
-			if (bHandled) {
-				CloseTouchInputHandle((HTOUCHINPUT)lParam);
-				return 0;
-			};
-
-		} break;
-
-		#endif
-		case WM_DEVICECHANGE: {
-
-			//joystick->probe_joysticks();
-		} break;
-
+//		case WM_SYSKEYDOWN:
+//		case WM_SYSKEYUP:
+//		case WM_KEYUP:
+//		case WM_KEYDOWN: {
+//
+//
+//			if (wParam==VK_SHIFT)
+//				shift_mem=uMsg==WM_KEYDOWN;
+//			if (wParam==VK_CONTROL)
+//				control_mem=uMsg==WM_KEYDOWN;
+//			if (wParam==VK_MENU) {
+//				alt_mem=(uMsg==WM_KEYDOWN || uMsg==WM_SYSKEYDOWN);
+//				if (lParam&(1<<24))
+//					gr_mem=alt_mem;
+//			}
+//
+//			//if (wParam==VK_WIN) TODO wtf is this?
+//			//	meta_mem=uMsg==WM_KEYDOWN;
+//
+//
+//		} //fallthrough
+//		case WM_CHAR: {
+//
+//			ERR_BREAK(key_event_pos >= KEY_EVENT_BUFFER_SIZE);
+//
+//			// Make sure we don't include modifiers for the modifier key itself.
+//			KeyEvent ke;
+//			ke.mod_state.shift= (wParam != VK_SHIFT) ? shift_mem : false;
+//			ke.mod_state.alt= (! (wParam == VK_MENU && (uMsg == WM_KEYDOWN || uMsg == WM_SYSKEYDOWN))) ? alt_mem : false;
+//			ke.mod_state.control= (wParam != VK_CONTROL) ? control_mem : false;
+//			ke.mod_state.meta=meta_mem;
+//			ke.uMsg=uMsg;
+//
+//			if (ke.uMsg==WM_SYSKEYDOWN)
+//				ke.uMsg=WM_KEYDOWN;
+//			if (ke.uMsg==WM_SYSKEYUP)
+//				ke.uMsg=WM_KEYUP;
+//
+//
+//			/*if (ke.uMsg==WM_KEYDOWN && alt_mem && uMsg!=WM_SYSKEYDOWN) {
+//				//altgr hack for intl keyboards, not sure how good it is
+//				//windows is weeeeird
+//				ke.mod_state.alt=false;
+//				ke.mod_state.control=false;
+//				print_line("")
+//			}*/
+//
+//
+//			ke.wParam=wParam;
+//			ke.lParam=lParam;
+//			key_event_buffer[key_event_pos++]=ke;
+//
+//		} break;
+//		case WM_INPUTLANGCHANGEREQUEST: {
+//
+//			print_line("input lang change");
+//		} break;
+//
+//		#if WINVER >= 0x0700 // for windows 7
+//		case WM_TOUCH: {
+//
+//			BOOL bHandled = FALSE;
+//			UINT cInputs = LOWORD(wParam);
+//			PTOUCHINPUT pInputs = memnew_arr(TOUCHINPUT, cInputs);
+//			if (pInputs){
+//				if (GetTouchInputInfo((HTOUCHINPUT)lParam, cInputs, pInputs, sizeof(TOUCHINPUT))){
+//					for (UINT i=0; i < cInputs; i++){
+//						TOUCHINPUT ti = pInputs[i];
+//						//do something with each touch input entry
+//						if (ti.dwFlags & TOUCHEVENTF_MOVE) {
+//
+//							_drag_event(ti.x / 100, ti.y / 100, ti.dwID);
+//						} else if (ti.dwFlags & (TOUCHEVENTF_UP | TOUCHEVENTF_DOWN)) {
+//
+//							_touch_event(ti.dwFlags & TOUCHEVENTF_DOWN != 0, ti.x / 100, ti.y / 100, ti.dwID);
+//						};
+//					}
+//					bHandled = TRUE;
+//				}else{
+//					 /* handle the error here */
+//				}
+//				memdelete_arr(pInputs);
+//			}else{
+//				/* handle the error here, probably out of memory */
+//			}
+//			if (bHandled) {
+//				CloseTouchInputHandle((HTOUCHINPUT)lParam);
+//				return 0;
+//			};
+//
+//		} break;
+//
+//		#endif
+//		case WM_DEVICECHANGE: {
+//
+//			//joystick->probe_joysticks();
+//		} break;
+//		case WM_SETCURSOR: {
+//
+//			if(LOWORD(lParam) == HTCLIENT) {
+//				if(mouse_mode == MOUSE_MODE_HIDDEN) {
+//					//Hide the cursor
+//					if(hCursor == NULL)
+//						hCursor = SetCursor(NULL);
+//					else
+//						SetCursor(NULL);
+//				}
+//				else {
+//					if(hCursor != NULL) {
+//						SetCursor(hCursor);
+//						hCursor = NULL;
+//					}
+//				}
+//			}
+//
+//		} break;
+//		case WM_DROPFILES: {
+//
+//			HDROP hDropInfo = NULL;
+//			hDropInfo = (HDROP) wParam;
+//			const int buffsize=4096;
+//			wchar_t buf[buffsize];
+//
+//			int fcount = DragQueryFileW(hDropInfo, 0xFFFFFFFF,NULL,0);
+//
+//			Vector<String> files;
+//
+//			for(int i=0;i<fcount;i++) {
+//
+//				DragQueryFileW(hDropInfo, i, buf, buffsize);
+//				String file=buf;
+//				files.push_back(file);
+//			}
+//
+//			if (files.size() && main_loop) {
+//				main_loop->drop_files(files,0);
+//			}
+//
+//
+//		} break;
+//
+//
+//
 		default: {
 
 			if (user_proc) {
@@ -807,7 +855,13 @@ BOOL CALLBACK OS_Windows::MonitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPR
 	minfo.rect.pos.y=lprcMonitor->top;
 	minfo.rect.size.x=lprcMonitor->right - lprcMonitor->left;
 	minfo.rect.size.y=lprcMonitor->bottom - lprcMonitor->top;
-
+#ifdef HIDPI_SUPPORT
+	UINT dpix,dpiy;
+	GetDpiForMonitor(hMonitor,MDT_EFFECTIVE_DPI,&dpix,&dpiy);
+	minfo.dpi=(dpix + dpiy)/2;
+#else
+	minfo.dpi=72;
+#endif
 	self->monitor_info.push_back(minfo);
 
 	return TRUE;
@@ -817,16 +871,15 @@ BOOL CALLBACK OS_Windows::MonitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPR
 void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_audio_driver) {
 
 
-
     main_loop=NULL;
     outside=true;
 
 	WNDCLASSEXW	wc;
-	
+
 	video_mode=p_desired;
 	//printf("**************** desired %s, mode %s\n", p_desired.fullscreen?"true":"false", video_mode.fullscreen?"true":"false");
 	RECT WindowRect;
-	
+
 	WindowRect.left=0;
 	WindowRect.right=video_mode.width;
 	WindowRect.top=0;
@@ -840,18 +893,32 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 	wc.cbWndExtra= 0;
 	//wc.hInstance = hInstance;
 	wc.hInstance = godot_hinstance ? godot_hinstance : GetModuleHandle(NULL);
-	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);		
+	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
 	wc.hCursor = NULL;//LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = NULL;
-	wc.lpszMenuName	= NULL;	
+	wc.lpszMenuName	= NULL;
 	wc.lpszClassName	= L"Engine";
 
 	if (!RegisterClassExW(&wc)) {
 		MessageBox(NULL,"Failed To Register The Window Class.","ERROR",MB_OK|MB_ICONEXCLAMATION);
-		return;											// Return 
+		return;											// Return
 	}
-	
-	
+
+//    glwin = CreateWindow ( "Test",
+//                     "Draw Window",
+//                     WS_OVERLAPPEDWINDOW |
+//			WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
+//                     0,
+//                     0,
+//                     100,
+//                     100,
+//                     NULL,//hWnd,
+//                     NULL,
+//                     glhinstance,
+//                     NULL);
+
+    secondsToDelay = 0.1;
+
 	EnumDisplayMonitors(NULL,NULL,MonitorEnumProc,0);
 
 	print_line("DETECTED MONITORS: "+itos(monitor_info.size()));
@@ -861,7 +928,7 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 		DEVMODE current;
 		memset(&current,0,sizeof(current));
 		EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &current);
-		
+
 		WindowRect.right  = current.dmPelsWidth;
 		WindowRect.bottom = current.dmPelsHeight;
 
@@ -884,11 +951,11 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 	DWORD		dwExStyle;
 	DWORD		dwStyle;
 
-	if (video_mode.fullscreen) {
+	if (video_mode.fullscreen||video_mode.borderless_window) {
 
 		dwExStyle=WS_EX_APPWINDOW;
 		dwStyle=WS_POPUP;
-		
+
 	} else {
 		dwExStyle=WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
 		dwStyle=WS_OVERLAPPEDWINDOW;
@@ -905,11 +972,11 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 	if (windowid) {
 
 		// strtoull on mingw
-		#ifdef MINGW_ENABLED
+		//#ifdef MINGW_ENABLED
 		hWnd = (HWND)strtoull(windowid, NULL, 0);
-		#else
-		hWnd = (HWND)_strtoui64(windowid, NULL, 0);
-		#endif
+		//#else
+		//hWnd = (HWND)_strtoui64(windowid, NULL, 0);
+		//#endif
 		SetLastError(0);
 		user_proc = (WNDPROC)GetWindowLongPtr(hWnd, GWLP_WNDPROC);
 		SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)(WNDPROC)::WndProc);
@@ -930,78 +997,152 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 		video_mode.fullscreen = false;
 	} else {
 
-		if (!(hWnd=CreateWindowExW(dwExStyle,L"Engine",L"", dwStyle|WS_CLIPSIBLINGS|WS_CLIPCHILDREN, 0, 0,WindowRect.right-WindowRect.left,WindowRect.bottom-WindowRect.top, NULL,NULL,	hInstance,NULL))) {
+		if (!(hWnd=CreateWindowExW(dwExStyle,L"Engine",L"", dwStyle|WS_CLIPSIBLINGS|WS_CLIPCHILDREN, (GetSystemMetrics(SM_CXSCREEN)-WindowRect.right)/2, (GetSystemMetrics(SM_CYSCREEN)-WindowRect.bottom)/2, WindowRect.right-WindowRect.left,WindowRect.bottom-WindowRect.top, NULL,NULL, hInstance,NULL))) {
 			MessageBoxW(NULL,L"Window Creation Error.",L"ERROR",MB_OK|MB_ICONEXCLAMATION);
 			return;								// Return FALSE
 		}
 
 
 	};
-	
-#if defined(OPENGL_ENABLED) || defined(GLES2_ENABLED) || defined(LEGACYGL_ENABLED)
+
 	gl_context = memnew( ContextGL_Win(hWnd,false) );
 	gl_context->initialize();
 	rasterizer = memnew( RasterizerGLES2 );
-#else
- #ifdef DX9_ENABLED
-	rasterizer = memnew( RasterizerDX9(hWnd) );
- #endif
-#endif
 
+////
+////	//TOMODIFY!!!
+////	//COLOCAR VTK
 	visual_server = memnew( VisualServerRaster(rasterizer) );
-	if (get_render_thread_mode()!=RENDER_THREAD_UNSAFE) {
 
-		visual_server =memnew(VisualServerWrapMT(visual_server,get_render_thread_mode()==RENDER_SEPARATE_THREAD));
-	}
-
-	//
-	//physics_server = memnew( PhysicsServerSW );
-	//physics_server->init();
-
-	// physics_2d_server = Physics2DServerWrapMT::init_server<Physics2DServerSW>();
-	// physics_2d_server->init();
+// // NOT CONNECT THIS WITH VTK; DOES NOT WORK TO USE ANOTHER THREAD TO RENDER
+//	 if (get_render_thread_mode()!=RENDER_THREAD_UNSAFE) {
+//        print_line("Render Thread unsafe");
+//        //visual_server =memnew(VisualServerWrapMT(visual_server,get_render_thread_mode()==RENDER_SEPARATE_THREAD));
+//	 }
 
 	if (!is_no_window_mode_enabled()) {
 		ShowWindow(hWnd,SW_SHOW);						// Show The Window
 		SetForegroundWindow(hWnd);						// Slightly Higher Priority
 		SetFocus(hWnd);									// Sets Keyboard Focus To
 	}
-
-/*
-		DEVMODE dmScreenSettings;					// Device Mode
-		memset(&dmScreenSettings,0,sizeof(dmScreenSettings));		// Makes Sure Memory's Cleared
-		dmScreenSettings.dmSize=sizeof(dmScreenSettings);		// Size Of The Devmode Structure
-		dmScreenSettings.dmPelsWidth	= width;			// Selected Screen Width
-		dmScreenSettings.dmPelsHeight	= height;			// Selected Screen Height
-		dmScreenSettings.dmBitsPerPel	= bits;				// Selected Bits Per Pixel
-		dmScreenSettings.dmFields=DM_BITSPERPEL|DM_PELSWIDTH|DM_PELSHEIGHT;
-		if (ChangeDisplaySettings(&dmScreenSettings,CDS_FULLSCREEN)!=DISP_CHANGE_SUCCESSFUL)
-
-
-
-
-  */
-	visual_server->init();	
+	print_line("Initializing Visual Server");
+	visual_server->init();
 
 	input = memnew( InputDefault );
-	//joystick = memnew (joystick_windows(input, &hWnd));
 
-	//AudioDriverManagerSW::get_driver(p_audio_driver)->set_singleton();
+//    //This must be called after itinialize visual server.
+//    //Otherwise, it crashes
+//    gvtk_viewport=new MyFrame(hWnd);
 
-	// if (AudioDriverManagerSW::get_driver(p_audio_driver)->init()!=OK) {
 
-		// ERR_PRINT("Initializing audio failed.");
-	// }
+//     vtkwin = CreateWindow("button","Exit",
+//                      WS_CHILD | WS_VISIBLE | SS_CENTER,
+//                      0,0,1,1,
+//                      hWnd,(HMENU)2,
+//                      (HINSTANCE)vtkGetWindowLong(hWnd,vtkGWL_HINSTANCE),
+//                      NULL);
+//        HINSTANCE hi;
+//     vtkwin = CreateWindow("button",NULL,
+//                  WS_CHILD | WS_VISIBLE | SS_CENTER,
+//                  100,100,400,400,
+//                  hWnd,NULL,
+//                  //(HINSTANCE)vtkGetWindowLong(hWnd,vtkGWL_HINSTANCE),
+//                  godot_hinstance,
+//                  NULL);
+//
+//   /// VTK STUFF //////
+//  ren=vtkOpenGLRenderer::New();
+//  vtkExternalOpenGLRenderWindow *renWindowext = vtkExternalOpenGLRenderWindow::New();
+//  renWindow = vtkRenderWindow::New();
+//  externalVTKWidget=ExternalVTKWidget::New();
+//
+//  ///// ORIRINAL WAY
+//  renWindow->SetParentId(hWnd);
+//  renWindow->SetSize(400,400);
+//  renWindow->InitializeFromCurrentContext(); //IF THIS COMMAND IS NOT CALLED, GODOT WIDGETS NEVER RENDERED
+//  renWindow->AddRenderer(ren);
+//  renWindow->Render();
+//
+////
+///////// NEW WAY
+////renWindowext->SetParentId(vtkwin);
+//  renWindowext->SetSize(200,200);
+//  externalVTKWidget->SetRenderWindow(renWindowext);
+//
+////
+////   // vtkNew<vtkCallbackCommand> callback;
+////    //callback->SetCallback(MakeCurrentCallback);
+////    //renWindowext->InitializeFromCurrentContext();
+//  ren = externalVTKWidget->AddRenderer(); //WHEN VTKRENDERWINDOW IS EXTERNAL
+//  externalVTKWidget->GetRenderWindow()->Render();
+//
+// ren->SetBackground(0.5,0.5,0.5);
+//  // create an actor and give it cone geometry
+//  vtkConeSource *cone = vtkConeSource::New();
+//  cone->SetResolution(8);
+//  vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
+//  coneMapper->SetInputConnection(cone->GetOutputPort());
+//  vtkActor *coneActor = vtkActor::New();
+//  coneActor->SetMapper(coneMapper);
+//  coneActor->GetProperty()->SetColor(1.0, 0.0, 1.0);
+//  coneActor->GetProperty()->SetInterpolationToFlat();
+//
+//  // assign our actor to the renderer
+//  ren->AddActor(coneActor);
+//
+//    coneActor->RotateX(45.0);
+//    coneActor->RotateY(45.0);
+//    ren->ResetCamera();
+//
+//
+//  double lightPosition[3] = {0, 0, 1};
+//
+//  // Create a light
+//  double lightFocalPoint[3] = {0,0,0};
+//
+//  vtkSmartPointer<vtkLight> light = vtkSmartPointer<vtkLight>::New();
+//  light->SetLightTypeToSceneLight();
+//  light->SetPosition(lightPosition[0], lightPosition[1], lightPosition[2]);
+//  light->SetPositional(true); // required for vtkLightActor below
+//  light->SetConeAngle(10);
+//  light->SetFocalPoint(lightFocalPoint[0], lightFocalPoint[1], lightFocalPoint[2]);
+//  light->SetDiffuseColor(1,0,0);
+//  light->SetAmbientColor(0,1,0);
+//  light->SetSpecularColor(0,0,1);
+//   //vtkLightCollection* originalLights = renderer->GetLights();
+//  //PRINT_LINE("Originally there are " << originalLights->GetNumberOfItems() << " lights." << std::endl;
+//  vtkSmartPointer<vtkLightActor> lightActor = vtkSmartPointer<vtkLightActor>::New();
+//  lightActor->SetLight(light);
+//  ren->AddViewProp(lightActor);
 
-	//sample_manager = memnew( SampleManagerMallocSW );
-	//audio_server = memnew( AudioServerSW(sample_manager) );
+//
+//  vtkSmartPointer<vtkCallbackCommand> modifiedCallback =
+//    vtkSmartPointer<vtkCallbackCommand>::New();
+//  modifiedCallback->SetCallback (CameraModifiedCallback);
 
-	//audio_server->init();
+//
+//  ////////////// CONTROL /////////////////
+//  ren->GetActiveCamera()->AddObserver(vtkCommand::ModifiedEvent,modifiedCallback);
+////    vtkSmartPointer<vtkImageInteractionCallback1> callback =
+////    vtkSmartPointer<vtkImageInteractionCallback1>::New();
+//
+////    vtkSmartPointer<vtkWindowsModInteractionCallback> callbackwinmod =
+////    vtkSmartPointer<vtkWindowsModInteractionCallback>::New();
+//
+//	//callback->SetRenderer(ren);
+//    //callbackwinmod->SetRenderer(ren);
+//
+//	///////////////////////////////
+//
+//
+//
+//  //ren->Delete();
+//  //renWindow->Delete();
+//  cone->Delete();
+//  coneMapper->Delete();
+//  coneActor->Delete();
 
-	// spatial_sound_server = memnew( SpatialSoundServerSW );
-	// spatial_sound_server->init();
-	// spatial_sound_2d_server = memnew( SpatialSound2DServerSW );
-	// spatial_sound_2d_server->init();
+	print_line("Visual Server initiated");
 
 	TRACKMOUSEEVENT tme;
 	tme.cbSize=sizeof(TRACKMOUSEEVENT);
@@ -1014,8 +1155,17 @@ void OS_Windows::initialize(const VideoMode& p_desired,int p_video_driver,int p_
 
 	_ensure_data_dir();
 
+	DragAcceptFiles(hWnd,true);
+    print_line("ENDING OS_INITIALIZE()");
 
-}
+    //LUCIANO
+//    controltest=memnew(Control);
+//    timer_controltest=memnew(Timer);
+////    timer_controltest->connect("timeout",this,"OnTimer");
+////    controltest->add_child(timer_controltest);
+
+
+}//Initialize
 
 void OS_Windows::set_clipboard(const String& p_text) {
 
@@ -1104,7 +1254,7 @@ void OS_Windows::delete_main_loop() {
 
 void OS_Windows::set_main_loop( MainLoop * p_main_loop ) {
 
-	input->set_main_loop(p_main_loop);
+	input->set_main_loop(p_main_loop); //LUCIANO
 	main_loop=p_main_loop;
 }
 
@@ -1116,7 +1266,7 @@ void OS_Windows::finalize() {
 	main_loop=NULL;
 
 	//memdelete(joystick);
-	memdelete(input);
+	//memdelete(input);
 
 	visual_server->finish();
 	memdelete(visual_server);
@@ -1124,8 +1274,10 @@ void OS_Windows::finalize() {
 	if (gl_context)
 		memdelete(gl_context);
 #endif
-	if (rasterizer)
-		memdelete(rasterizer);
+
+	//TOMODIFY: CERRAR EL RASTERIZER
+	// if (rasterizer)
+		// memdelete(rasterizer);
 
 	if (user_proc) {
 		SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)user_proc);
@@ -1163,8 +1315,8 @@ void OS_Windows::finalize_core() {
 	delete mempool_static;
 
 
-	// TCPServerWinsock::cleanup();
-	// StreamPeerWinsock::cleanup();
+	//TCPServerWinsock::cleanup();
+	//StreamPeerWinsock::cleanup();
 }
 
 void OS_Windows::vprint(const char* p_format, va_list p_list, bool p_stderr) {
@@ -1209,7 +1361,6 @@ void OS_Windows::set_mouse_mode(MouseMode p_mode) {
 
 	if (mouse_mode==p_mode)
 		return;
-	ShowCursor(p_mode==MOUSE_MODE_VISIBLE);
 	mouse_mode=p_mode;
 	if (p_mode==MOUSE_MODE_CAPTURED) {
 		RECT clipRect;
@@ -1280,7 +1431,7 @@ OS::VideoMode OS_Windows::get_video_mode(int p_screen) const {
 }
 void OS_Windows::get_fullscreen_mode_list(List<VideoMode> *p_list,int p_screen) const {
 
-	
+
 }
 
 int OS_Windows::get_screen_count() const {
@@ -1316,6 +1467,14 @@ Size2 OS_Windows::get_screen_size(int p_screen) const{
 
 	ERR_FAIL_INDEX_V(p_screen,monitor_info.size(),Point2());
 	return Vector2( monitor_info[p_screen].rect.size );
+
+}
+
+int OS_Windows::get_screen_dpi(int p_screen) const {
+
+	ERR_FAIL_INDEX_V(p_screen,monitor_info.size(),72);
+	UINT dpix,dpiy;
+	return monitor_info[p_screen].dpi;
 
 }
 Point2 OS_Windows::get_window_position() const{
@@ -1477,7 +1636,7 @@ void OS_Windows::set_window_resizable(bool p_enabled){
 		if (p_enabled) {
 			SetWindowLongPtr(hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW | WS_VISIBLE);
 		} else {
-			SetWindowLongPtr(hWnd, GWL_STYLE, WS_CAPTION | WS_POPUPWINDOW | WS_VISIBLE);
+			SetWindowLongPtr(hWnd, GWL_STYLE, WS_CAPTION | WS_MINIMIZEBOX | WS_POPUPWINDOW | WS_VISIBLE);
 
 		}
 
@@ -1527,6 +1686,14 @@ bool OS_Windows::is_window_maximized() const{
 	return maximized;
 }
 
+
+void OS_Windows::set_borderless_window(int p_borderless) {
+	video_mode.borderless_window = p_borderless;
+}
+
+bool OS_Windows::get_borderless_window() {
+	return video_mode.borderless_window;
+}
 
 void OS_Windows::print_error(const char* p_function, const char* p_file, int p_line, const char* p_code, const char* p_rationale, ErrorType p_type) {
 
@@ -1714,18 +1881,18 @@ void OS_Windows::delay_usec(uint32_t p_usec) const {
                 Sleep(1);
         else
                 Sleep(p_usec / 1000);
-	
+
 }
 uint64_t OS_Windows::get_ticks_usec() const {
 
       	uint64_t ticks;
-        uint64_t time; 
+        uint64_t time;
         // This is the number of clock ticks since start
         if( !QueryPerformanceCounter((LARGE_INTEGER *)&ticks) )
                 ticks = (UINT64)timeGetTime();
         // Divide by frequency to get the time in seconds
         time = ticks * 1000000L / ticks_per_second;
-        // Subtract the time at game start to get  
+        // Subtract the time at game start to get
         // the time since the game started
         time -= ticks_start;
         return time;
@@ -1737,17 +1904,52 @@ void OS_Windows::process_events() {
 	MSG msg;
 
 	//last_id = joystick->process_joysticks(last_id);
-	
-	while(PeekMessageW(&msg,NULL,0,0,PM_REMOVE)) {
+
+	//while(PeekMessageW(&msg,NULL,0,0,PM_REMOVE)) { //LUCIANO
+//http://www.cplusplus.com/forum/beginner/38860/
+	while(GetMessage(&msg, NULL, 0, 0) > 0){
 
 
 		TranslateMessage(&msg);
 		DispatchMessageW(&msg);
-		
+//		Main::iteration(); //ESTO ES MIO
+		if (Main::iteration()==true)
+			break;
+		/// ALL THIS IS NEW
+//
+//   glClearColor(1.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
+//   glClearDepth(100.0f);
+//   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the color buffer
+//          //glEnable(GL_DEPTH_TEST);
+//
+//
+//             //glFlush();  // Render now
+//   glBegin(GL_TRIANGLES);
+//     glVertex3f(-0.5,-0.5,1.0);
+//     glVertex3f(1.5,0.0,1.0);
+//     glVertex3f(0.0,1.5,1.0);
+//   glEnd();
+//
+//    externalVTKWidget->GetRenderWindow()->Render();
+//    OS::get_singleton()->swap_buffers();
+//        ////////////
+
+        secondsPassed = (clock() - startTime) / CLOCKS_PER_SEC;
+        if(secondsPassed >= secondsToDelay)
+        {
+            startTime=clock();
+            //theVTKApp->Render();
+            //theVTKApp->OnTimer();
+            //im_vtk_window->draw();
+            //cout << "timeout"<<endl;
+
+        }
+
+
 	}
 
-	process_key_events();
-
+	//process_key_events();
+	//return msg.wParam; //LUCIANO
 }
 
 void OS_Windows::set_cursor_shape(CursorShape p_shape) {
@@ -1874,6 +2076,10 @@ Error OS_Windows::kill(const ProcessID& p_pid) {
 
 	return ret != 0?OK:FAILED;
 };
+
+int OS_Windows::get_process_ID() const {
+	return _getpid();
+}
 
 Error OS_Windows::set_cwd(const String& p_cwd) {
 
@@ -2031,25 +2237,24 @@ void OS_Windows::swap_buffers() {
 
 
 void OS_Windows::run() {
-
+    //print_line("Os Run"); //LUCIANO
 	if (!main_loop)
 		return;
-		
-	main_loop->init();
-		
-	uint64_t last_ticks=get_ticks_usec();
-	
+
+	main_loop->init(); //LUCIANO
+
+	//uint64_t last_ticks=get_ticks_usec();
+
 	int frames=0;
 	uint64_t frame=0;
-	
-	while (!force_quit) {
-	
+
+	while (!force_quit) { //LUCIANO
+
 		process_events(); // get rid of pending events
-		if (Main::iteration()==true)
-			break;
-	};
-	
-	main_loop->finish();
+
+	}; //LUCIANO
+
+	main_loop->finish(); //LUCIANO
 
 }
 
@@ -2063,8 +2268,8 @@ MainLoop *OS_Windows::get_main_loop() const {
 String OS_Windows::get_system_dir(SystemDir p_dir) const {
 
 
-	int id;
 
+	int id;
 
 
 	switch(p_dir) {
@@ -2130,6 +2335,7 @@ String OS_Windows::get_joy_guid(int p_device) const {
 
 OS_Windows::OS_Windows(HINSTANCE _hInstance) {
 
+
 	key_event_pos=0;
 	force_quit=false;
 	alt_mem=false;
@@ -2149,18 +2355,19 @@ OS_Windows::OS_Windows(HINSTANCE _hInstance) {
 #endif
 	user_proc = NULL;
 
-// #ifdef RTAUDIO_ENABLED
-	// AudioDriverManagerSW::add_driver(&driver_rtaudio);
-// #endif
+#ifdef RTAUDIO_ENABLED
+	//AudioDriverManagerSW::add_driver(&driver_rtaudio);
+#endif
 
 }
 
 
-OS_Windows::~OS_Windows() 
+OS_Windows::~OS_Windows()
 {
 #ifdef STDOUT_FILE
 	fclose(stdo);
 #endif
+//vtkriw->Delete();
 }
 
 
