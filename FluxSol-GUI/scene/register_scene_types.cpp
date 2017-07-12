@@ -391,9 +391,9 @@ void register_scene_types() {
 //	ObjectTypeDB::register_type<Particles>();
 	ObjectTypeDB::register_type<Position3D>();
 //	ObjectTypeDB::register_type<Quad>();
-//	ObjectTypeDB::register_type<NavigationMeshInstance>();
-//	ObjectTypeDB::register_type<NavigationMesh>();
-//	ObjectTypeDB::register_type<Navigation>();
+	ObjectTypeDB::register_type<NavigationMeshInstance>();
+	ObjectTypeDB::register_type<NavigationMesh>();
+	ObjectTypeDB::register_type<Navigation>();
 
 	OS::get_singleton()->yield(); //may take time to init
 

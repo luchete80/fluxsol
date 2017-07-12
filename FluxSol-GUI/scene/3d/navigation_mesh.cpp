@@ -229,9 +229,9 @@ void NavigationMeshInstance::set_enabled(bool p_enabled) {
 	if (debug_view) {
 		MeshInstance *dm=debug_view->cast_to<MeshInstance>();
 		if (is_enabled()) {
-//			dm->set_material_override( get_tree()->get_debug_navigation_material() );
+			dm->set_material_override( get_tree()->get_debug_navigation_material() );
 		} else {
-//			dm->set_material_override( get_tree()->get_debug_navigation_disabled_material() );
+			dm->set_material_override( get_tree()->get_debug_navigation_disabled_material() );
 		}
 
 	}
@@ -276,9 +276,9 @@ void NavigationMeshInstance::_notification(int p_what) {
 				MeshInstance *dm = memnew( MeshInstance );
 				dm->set_mesh( navmesh->get_debug_mesh() );
 				if (is_enabled()) {
-//					dm->set_material_override( get_tree()->get_debug_navigation_material() );
+					dm->set_material_override( get_tree()->get_debug_navigation_material() );
 				} else {
-//					dm->set_material_override( get_tree()->get_debug_navigation_disabled_material() );
+					dm->set_material_override( get_tree()->get_debug_navigation_disabled_material() );
 				}
 				add_child(dm);
 				debug_view=dm;

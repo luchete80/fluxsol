@@ -1046,7 +1046,7 @@ void CanvasItem::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("edit_rotate","degrees"),&CanvasItem::edit_rotate);
 
 	ObjectTypeDB::bind_method(_MD("get_item_rect"),&CanvasItem::get_item_rect);
-	//ObjectTypeDB::bind_method(_MD("get_transform"),&CanvasItem::get_transform);
+	ObjectTypeDB::bind_method(_MD("get_transform"),&CanvasItem::get_transform);
 	ObjectTypeDB::bind_method(_MD("get_canvas_item"),&CanvasItem::get_canvas_item);
 
 	ObjectTypeDB::bind_method(_MD("is_visible"),&CanvasItem::is_visible);
@@ -1085,7 +1085,7 @@ void CanvasItem::_bind_methods() {
 	ObjectTypeDB::bind_method(_MD("draw_texture_rect","texture:Texture","rect","tile","modulate","transpose"),&CanvasItem::draw_texture_rect,DEFVAL(Color(1,1,1)),DEFVAL(false));
 	ObjectTypeDB::bind_method(_MD("draw_texture_rect_region","texture:Texture","rect","src_rect","modulate","transpose"),&CanvasItem::draw_texture_rect_region,DEFVAL(Color(1,1,1)),DEFVAL(false));
 	ObjectTypeDB::bind_method(_MD("draw_style_box","style_box:StyleBox","rect"),&CanvasItem::draw_style_box);
-	ObjectTypeDB::bind_method(_MD("draw_primitive","points","colors","uvs","texture:Texture","width"),&CanvasItem::draw_primitive,DEFVAL(Variant()),DEFVAL(1.0));
+	ObjectTypeDB::bind_method(_MD("draw_primitive","points","colors","uvs","texture:Texture","width"),&CanvasItem::draw_primitive,DEFVAL(Array()),DEFVAL(Ref<Texture>()),DEFVAL(1.0));
 	ObjectTypeDB::bind_method(_MD("draw_polygon","points","colors","uvs","texture:Texture"),&CanvasItem::draw_polygon,DEFVAL(Vector2Array()),DEFVAL(Variant()));
 	ObjectTypeDB::bind_method(_MD("draw_colored_polygon","points","color","uvs","texture:Texture"),&CanvasItem::draw_colored_polygon,DEFVAL(Vector2Array()),DEFVAL(Variant()));
 	ObjectTypeDB::bind_method(_MD("draw_string","font:Font","pos","text","modulate","clip_w"),&CanvasItem::draw_string,DEFVAL(Color(1,1,1)),DEFVAL(-1));
