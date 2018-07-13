@@ -211,7 +211,7 @@ namespace FluxSol
         //GeomField(const GeomField<T> &field):_Field<T>(field.Numberofvals()){this->GridPtr=&field.Grid();}
 		//NON VIRTUAL!
 		virtual _Grid & Grid(){ return *GridPtr; }
-		const _Grid  & ConstGrid()const{ return this->GridPtr; }
+		const _Grid  & ConstGrid()const{ return *GridPtr; }
 		//Conveccion, interpolacion o reconstruccion, de solo una celda
 		//THIS IS OLD. FIELD DOES NOT RETURN AN EQ SYSTEM BECAUSE REFER TO EQSYS AND THIS TO FVGRID
 		//AT THE SAME TIME FVGRID REFERS TO GEOMFIELD AND THIS TO FIELD, AND FIELD TO EQSYS
