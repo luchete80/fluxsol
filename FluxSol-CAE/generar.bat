@@ -5,6 +5,7 @@ set VTK_DIR=D:\Luciano\Numerico\Libs\vtk-6.3.0-release-qt-opengl-sin-threads
 set QT_DIR=D:\Luciano\Numerico\Libs\QtSDK-5.2.1-x86_64-seh
 
 set FLUXSOL_DIR=D:\Luciano\Numerico\MecSol\FluxSol
+set FLUXSOL_EXTLIBS_DIR=D:\Luciano\Numerico\Libs
 
 set PETSC_DIR=D:\Luciano\Programas\cygwin64\petsc-3.4.4
 set PETSC_ARCH=arch-mswin-mpi1-release
