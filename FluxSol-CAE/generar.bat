@@ -15,7 +15,7 @@ set MPI_INC_DIR=D:\Luciano\Programas\Microsoft-HPCPack-2008R2\Inc
 
 set PARMETIS_DIR=D:\Luciano\Numerico\Libs\parmetis-4.0.3
 
-set PATH=D:\Luciano\Programas\x86_64-4.9.1-posix-seh-rt_v3-rev0\mingw64\bin;D:\Luciano\Programas\cmake-2.8.12.2-win32-x86\bin;%FLUXSOL_DIR%\Bin_CodeBlocks\FluxSol;%VTK_DIR%
+set PATH=D:\Luciano\Programas\mingw\bin;D:\Luciano\Programas\cmake\bin;%FLUXSOL_DIR%\Bin_CodeBlocks\FluxSol;%VTK_DIR%
 
 set CMAKE_PREFIX_PATH=%QT_DIR%;C:\Windows\SysWOW64;%QT_DIR%\lib\cmake
 

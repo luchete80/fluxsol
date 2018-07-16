@@ -13,13 +13,13 @@ set (FLUXSOL_DIR "$ENV{FLUXSOL_DIR}")
 
 #set (LASPACK_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/laspack/src)
 set (CGNS_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src)
-set (ALGLIB_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/src)
+set (ALGLIB_INCLUDE_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.14.0/src)
 
 set (CGNS_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/cgnslib_3.2.1/src/lib)
-set (ALGLIB_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.8.2/bin)
+set (ALGLIB_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/alglib-3.14.0/bin)
 #set (LASPACK_LIBRARY_DIRS ${FLUXSOL_DIR}/Libs/laspack/bin)
 
-set (FLUXSOL_LIB_DIR ${FLUXSOL_DIR}/Bin_Branches/master)
+set (FLUXSOL_LIB_DIR ${FLUXSOL_DIR}/Bin_Solver)
 
 
 if (USE_PETSC)

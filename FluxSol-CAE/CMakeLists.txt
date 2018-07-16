@@ -271,7 +271,7 @@ add_executable(${NAME} #MACOSX_BUNDLE
 
   #qt5_use_modules($<TARGET_OBJECTS:Mesh> Core Gui Widgets)
   qt5_use_modules(${NAME} Core Gui Widgets)
-  target_link_libraries(${NAME} ${VTK_LIBRARIES} ${FLUXSOL_LIB} laspack alglib ${EXTRA_LIBS} )
+  target_link_libraries(${NAME} ${VTK_LIBRARIES} ${FLUXSOL_LIB} alglib ${EXTRA_LIBS} )
 								
 else()
   find_package(Qt4 REQUIRED)
