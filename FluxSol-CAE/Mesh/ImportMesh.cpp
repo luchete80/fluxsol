@@ -17,8 +17,9 @@ void SimpleView::ImportMesh(const string &filename)
 	if (!fileName.isEmpty())
 	{
 
-        std::string extension =
-        vtksys::SystemTools::GetFilenameLastExtension(fileName.toStdString().c_str());
+		std::string extension =".cgns";
+        //std::string extension =
+        //vtksys::SystemTools::GetFilenameLastExtension(fileName.toStdString().c_str());
 
 
 	    vtkUnstructuredGrid *ugrid;

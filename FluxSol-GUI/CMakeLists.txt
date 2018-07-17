@@ -5,8 +5,13 @@ include (CheckIncludeFiles)
 include (CheckIncludeFileCXX)
 include (CheckCXXSourceCompiles)
 
+
+option (USE_PETSC "Enable PETSc support (required for parallel)" ON)
+
 include (../defs.cmake)
 include_directories("${FLUXSOL_DIR}/Src/FluxSol-Solver")
+include_directories(${CGNS_INCLUDE_DIRS})
+include_directories(${ALGLIB_INCLUDE_DIRS})
 
 set (NAME FluxSol-GUI)
 project(${NAME})

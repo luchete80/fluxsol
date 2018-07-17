@@ -608,8 +608,9 @@ void SimpleView::slotOpenResults()
 	{
 
         vtkDataSet *dataSet;
-        std::string extension =
-          vtksys::SystemTools::GetFilenameLastExtension(fileName.toStdString().c_str());
+		std::string extension = ".vtu";
+        //std::string extension =
+          //vtksys::SystemTools::GetFilenameLastExtension(fileName.toStdString().c_str());
 
         // Dispatch based on the file extension
         if (extension == ".vtu")
