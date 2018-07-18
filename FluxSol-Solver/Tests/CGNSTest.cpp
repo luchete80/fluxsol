@@ -34,14 +34,17 @@
 #include <set>
 #include <vector>
 #include <list>
+#include <iostream>
 
 using namespace FluxSol;
+
+using namespace std;
 
 GridRawData raw;
 
 //ORIGINAL
 //void _Grid::Read_InitialCGNS() {
-void Read_InitialCGNS() {
+int main() {
 
 	int fileIndex,baseIndex,nBases,nSections,nBocos;
 	double block_stitch_tolerance=1.e-7;
@@ -58,6 +61,8 @@ void Read_InitialCGNS() {
 	int globalNodeCount=0;
 	int globalCellCount=0;
 	int globalFaceCount=0;
+	
+	cout << "Opening File" <<endl;
 
 	cg_open("test.cgns",MODE_READ,&fileIndex);
 
